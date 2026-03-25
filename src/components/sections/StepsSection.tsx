@@ -37,8 +37,6 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
 
   const handleVerMais = async (passoNumero: number, exemplo: string) => {
     if (explanations[passoNumero]) {
-      // Toggle visibility by removing or keep it? The prompt said "gerará uma parágrafo".
-      // Maybe just generating is enough, if already generated do nothing or clear.
       return;
     }
 
@@ -138,15 +136,17 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
                     </div>
                     {!explanations[passo.numero] && (
                       <Button 
-                        variant="ghost" 
+                        variant="secondary" 
                         size="sm" 
-                        className="h-7 text-xs px-2 text-accent-foreground hover:text-accent-foreground/80 hover:bg-accent/20"
+                        className="h-8 text-xs px-3 font-semibold bg-accent/40 text-accent-foreground hover:bg-accent/50 border border-accent/40 shadow-sm transition-all"
                         onClick={() => handleVerMais(passo.numero, passo.exemplo)}
                         disabled={loadingExp[passo.numero]}
                       >
                         {loadingExp[passo.numero] ? (
-                          <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                        ) : null}
+                          <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
+                        ) : (
+                          <Sparkles className="h-3 w-3 mr-1.5 opacity-70" />
+                        )}
                         Ver mais
                       </Button>
                     )}
