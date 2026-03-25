@@ -8,8 +8,8 @@ const corsHeaders = {
 };
 
 const requestSchema = z.object({
-  exemplo: z.string().min(1).max(5000),
-  contexto: z.string().max(2000).optional().default(""),
+  exemplo: z.string().min(1).max(2000),
+  contexto: z.string().min(1).max(500),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').trim();
@@ -57,7 +57,7 @@ serve(async (req) => {
     }
 
     const { exemplo, contexto } = validationResult.data;
-    const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. Fale em português. \n\nContexto do assunto: ${sanitize(contexto || "")}\n\nExemplo Prático: ${sanitize(exemplo)}\n\nSua explicação:`;
+    const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. Fale em português. \n\nContexto do assunto: ${sanitize(contexto)}\n\nExemplo Prático: ${sanitize(exemplo)}\n\nSua explicação:`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;

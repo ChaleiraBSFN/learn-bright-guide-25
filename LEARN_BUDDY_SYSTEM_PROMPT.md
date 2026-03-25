@@ -208,6 +208,7 @@ Sem markdown, sem explicações, sem "```json", apenas o JSON puro.
   - Explicação passo a passo do raciocínio.
 - O "Aplicação Real" deve ser um problema do mundo real.
 - Os exercícios devem ser ORIGINAIS e criativos.
+- CRÍTICO: NÃO crie exercícios que dependam de interpretar imagens, figuras, gráficos ou vídeos. Gere APENAS exercícios baseados em texto, que demandam apenas conhecimento teórico e leitura.
 
 ## Erros Comuns
 - Liste no MÍNIMO 5 erros.
@@ -374,6 +375,7 @@ E deve retornar:
 - Varie os níveis: "Básico", "Intermediário", "Avançado", "Desafio".
 - Crie exercícios ORIGINAIS e criativos — NÃO repita exercícios genéricos.
 - Use contextos variados e números diferentes a cada geração.
+- CRÍTICO: NÃO crie exercícios que dependam de interpretar imagens, figuras, gráficos ou vídeos. Gere APENAS exercícios baseados em texto, que demandam apenas conhecimento teórico e leitura.
 
 ---
 
