@@ -1,0 +1,34 @@
+project_id = "vtyzdwmajcemmtmjjssv"
+
+[functions.generate-study-content]
+verify_jwt = false
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.verify-stripe-payment]
+verify_jwt = false
+
+[functions.notify-pix-upload]
+verify_jwt = false
+
+[functions.create-feature-checkout]
+verify_jwt = false
+
+[functions.verify-feature-payment]
+verify_jwt = false
+
+[functions.notify-support-request]
+verify_jwt = false
+
+[functions.generate-exercises]
+verify_jwt = false
+
+[functions.create-user]
+verify_jwt = false
+
+[functions.correct-exercise]
+verify_jwt = false
+
+[functions.generate-images]
+verify_jwt = false
