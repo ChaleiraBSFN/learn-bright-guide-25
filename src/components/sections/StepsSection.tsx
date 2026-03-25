@@ -42,7 +42,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
 
     setLoadingExp(prev => ({ ...prev, [passoNumero]: true }));
     try {
-      const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. Fale em português. \n\nContexto do assunto: ${data.titulo || ""}\n\nExemplo Prático: ${exemplo}\n\nSua explicação:`;
+      const prompt = `Gere um parágrafo detalhado de 5 a 6 linhas (cerca de 5 a 6 frases) explicando e expandindo o seguinte exemplo prático de forma muito clara, didática e aprofundada, com foco em realmente ensinar o estudante. O texto DEVE ter cerca de 5 a 6 linhas de conteúdo rico e fácil de ler. Fale em português. \n\nContexto do assunto: ${data.titulo || ""}\n\nExemplo Prático: ${exemplo}\n\nSua explicação detalhada:`;
       const apiKey = "AIzaSyBy5wvMZmdh2igShEJJsErRzAC2c6A9u70";
       
       const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
@@ -198,7 +198,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
                       ))}
                     </ul>
                     {explanations[passo.numero] && (
-                      <div className="mt-4 p-4 md:p-5 bg-background shadow-sm rounded-xl border border-accent/30 text-base md:text-lg text-foreground/95 leading-relaxed whitespace-pre-wrap animate-in fade-in zoom-in-95 duration-300">
+                      <div className="mt-4 p-4 md:p-5 bg-background shadow-sm rounded-xl border border-accent/30 text-sm md:text-base text-foreground/90 leading-relaxed whitespace-pre-wrap animate-in fade-in zoom-in-95 duration-300">
                         {explanations[passo.numero]}
                       </div>
                     )}
