@@ -8,7 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Settings2, Loader2, Map, Users, Megaphone, BookOpen, Zap, Trophy } from 'lucide-react';
+import { ArrowLeft, Settings2, Loader2, Map, Users, Megaphone, BookOpen, Zap } from 'lucide-react';
 
 interface PlatformSettings {
   trailEnabled: boolean;
@@ -16,7 +16,6 @@ interface PlatformSettings {
   updateNoticesEnabled: boolean;
   creditsEnabled: boolean;
   contentGenerationEnabled: boolean;
-  rankingEnabled: boolean;
 }
 
 const defaultSettings: PlatformSettings = {
@@ -25,7 +24,6 @@ const defaultSettings: PlatformSettings = {
   updateNoticesEnabled: true,
   creditsEnabled: true,
   contentGenerationEnabled: true,
-  rankingEnabled: true,
 };
 
 const PlatformControl = () => {
@@ -54,7 +52,6 @@ const PlatformControl = () => {
     const updated = { ...settings, [key]: value };
     setSettings(updated);
     localStorage.setItem('lb_platform_settings', JSON.stringify(updated));
-    window.dispatchEvent(new Event('lb_settings_changed'));
     toast({ title: 'Configuração atualizada!', description: `${key} agora está ${value ? 'ativado' : 'desativado'}.` });
   };
 
@@ -103,13 +100,6 @@ const PlatformControl = () => {
       title: 'Geração de Conteúdo',
       description: 'Controle mestre: desativa toda geração de conteúdo e exercícios da plataforma.',
       color: 'text-destructive',
-    },
-    {
-      key: 'rankingEnabled' as const,
-      icon: Trophy,
-      title: 'Ranking Público',
-      description: 'Ativa ou desativa a exibição do botão de ranking (leaderboard) para os usuários.',
-      color: 'text-yellow-500',
     },
   ];
 

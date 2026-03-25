@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Download, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,31 +17,6 @@ export const FloatingActions = () => {
   const [isInstalled] = useState(
     window.matchMedia('(display-mode: standalone)').matches
   );
-  
-  const [rankingEnabled, setRankingEnabled] = useState(true);
-
-  useEffect(() => {
-    const checkSettings = () => {
-      const stored = localStorage.getItem('lb_platform_settings');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (parsed.rankingEnabled !== undefined) {
-            setRankingEnabled(parsed.rankingEnabled);
-          }
-        } catch (e) {}
-      }
-    };
-    checkSettings();
-    window.addEventListener('storage', checkSettings);
-    window.addEventListener('lb_settings_changed', checkSettings);
-    const interval = setInterval(checkSettings, 2000);
-    return () => {
-      window.removeEventListener('storage', checkSettings);
-      window.removeEventListener('lb_settings_changed', checkSettings);
-      clearInterval(interval);
-    };
-  }, []);
 
   return (
     <>
@@ -63,23 +38,21 @@ export const FloatingActions = () => {
           </TooltipContent>
         </Tooltip>
 
-        {rankingEnabled && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowRanking(true)}
-                className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-yellow-500/30 hover:bg-yellow-500 hover:text-white transition-all shadow-[0_4px_14px_-3px_hsl(45_100%_50%/0.4),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.15)]"
-              >
-                <Trophy className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="left">
-              Ranking Público
-            </TooltipContent>
-          </Tooltip>
-        )}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setShowRanking(true)}
+              className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-yellow-500/30 hover:bg-yellow-500 hover:text-white transition-all shadow-[0_4px_14px_-3px_hsl(45_100%_50%/0.4),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.15)]"
+            >
+              <Trophy className="h-5 w-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            Ranking Público
+          </TooltipContent>
+        </Tooltip>
 
         {/* Study Groups */}
         <StudyGroups />
