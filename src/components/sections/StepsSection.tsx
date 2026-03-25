@@ -1,5 +1,9 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ListOrdered, Lightbulb, BookOpen, Sparkles, Loader2 } from "lucide-react";
+import { ListOrdered, Lightbulb, BookOpen, Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface AIImage {
   tipo: "ai";
@@ -26,8 +30,39 @@ interface StepsSectionProps {
 
 export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: StepsSectionProps) {
   const { t } = useTranslation();
+  const [explanations, setExplanations] = useState<Record<number, string>>({});
+  const [loadingExp, setLoadingExp] = useState<Record<number, boolean>>({});
 
   const getStepImage = (index: number) => stepImages?.find(img => img.label === `step-${index}`);
+
+  const handleVerMais = async (passoNumero: number, exemplo: string) => {
+    if (explanations[passoNumero]) {
+      // Toggle visibility by removing or keep it? The prompt said "gerará uma parágrafo".
+      // Maybe just generating is enough, if already generated do nothing or clear.
+      return;
+    }
+
+    setLoadingExp(prev => ({ ...prev, [passoNumero]: true }));
+    try {
+      const { data: result, error } = await supabase.functions.invoke('explain-example', {
+        body: { 
+          exemplo, 
+          contexto: data.titulo 
+        }
+      });
+
+      if (error) throw error;
+
+      if (result?.explicacao) {
+        setExplanations(prev => ({ ...prev, [passoNumero]: result.explicacao }));
+      }
+    } catch (error) {
+      console.error("Erro ao gerar explicação:", error);
+      toast.error("Erro ao gerar explicação. Tente novamente mais tarde.");
+    } finally {
+      setLoadingExp(prev => ({ ...prev, [passoNumero]: false }));
+    }
+  };
 
   return (
     <section className="section-card bg-card border border-border fade-in" style={{ animationDelay: '0.3s' }}>
@@ -94,11 +129,27 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
                 </div>
 
                 <div className="rounded-xl bg-accent/20 p-3 md:p-5 border border-accent/30 space-y-2 md:space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent-foreground" />
-                    <span className="text-xs md:text-sm font-semibold uppercase tracking-wider text-accent-foreground">
-                      {t('sections.practicalExample')}
-                    </span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent-foreground" />
+                      <span className="text-xs md:text-sm font-semibold uppercase tracking-wider text-accent-foreground">
+                        {t('sections.practicalExample')}
+                      </span>
+                    </div>
+                    {!explanations[passo.numero] && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 text-xs px-2 text-accent-foreground hover:text-accent-foreground/80 hover:bg-accent/20"
+                        onClick={() => handleVerMais(passo.numero, passo.exemplo)}
+                        disabled={loadingExp[passo.numero]}
+                      >
+                        {loadingExp[passo.numero] ? (
+                          <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                        ) : null}
+                        Ver mais
+                      </Button>
+                    )}
                   </div>
                   <div className="pl-0 md:pl-7">
                     <ul className="space-y-1.5 text-xs md:text-sm text-foreground">
@@ -109,6 +160,11 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
                         </li>
                       ))}
                     </ul>
+                    {explanations[passo.numero] && (
+                      <div className="mt-4 p-3 bg-background/50 rounded-lg border border-accent/20 text-sm text-foreground/90 whitespace-pre-wrap animate-in fade-in slide-in-from-top-2">
+                        {explanations[passo.numero]}
+                      </div>
+                    )}
                   </div>
                 </div>
 

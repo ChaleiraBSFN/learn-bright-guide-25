@@ -228,7 +228,8 @@ Rules:
   * Write ALL explanations, concepts, titles, and descriptions in ${lang}
   * BUT keep the foreign language words, examples, and vocabulary items in their ORIGINAL foreign language script (e.g., Russian in Cyrillic, Japanese in Kanji/Hiragana, Chinese in Hanzi, etc.)
   * The "exemplo" and "pergunta"/"resposta" fields should contain the foreign language words being studied
-- ONLY output JSON, no extra text.`;
+- ONLY output JSON, no extra text.
+- CRITICAL: NÃO crie exercícios que dependam de interpretar imagens, figuras, gráficos ou vídeos. Gere APENAS exercícios baseados em texto, que demandam apenas conhecimento teórico e leitura.`;
 }
 
 serve(async (req) => {
