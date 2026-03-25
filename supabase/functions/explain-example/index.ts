@@ -9,16 +9,20 @@ const corsHeaders = {
 
 const requestSchema = z.object({
   exemplo: z.string().min(1).max(5000),
-  contexto: z.string().max(2000).optional().default(""),
+  contexto: z.string().nullable().optional().transform(v => v || ""),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').trim();
 
 async function callGeminiDirect(prompt: string, apiKey: string): Promise<string | null> {
-  const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-1.5-flash"];
+  const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
   for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
+        console.log(`[Gemini] Trying ${model} (attempt ${attempt + 1})...`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
+        
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
@@ -28,16 +32,31 @@ async function callGeminiDirect(prompt: string, apiKey: string): Promise<string 
               contents: [{ role: "user", parts: [{ text: prompt }] }],
               generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
             }),
+            signal: controller.signal,
           }
         );
+        clearTimeout(timeoutId);
+        
         if (response.ok) {
           const data = await response.json();
           const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) return text;
+          if (text) {
+            console.log(`[Gemini] Success with ${model}`);
+            return text;
+          } else {
+             console.log(`[Gemini] ${model} empty response. Details:`, data);
+          }
+        } else {
+           const errorBody = await response.text();
+           console.log(`[Gemini] ${model} HTTP ${response.status}:`, errorBody);
         }
+        
+        if (response.status === 429) { console.log(`[Gemini] ${model} rate limited, next...`); break; }
+        if (response.status >= 500) { console.log(`[Gemini] ${model} server error, retrying...`); continue; }
         break;
-      } catch (e) {
-        if (attempt === 0) continue;
+      } catch (e: any) {
+        console.error(`[Gemini] ${model}:`, e.message);
+        if (e.name === 'AbortError' && attempt === 0) continue;
         break;
       }
     }

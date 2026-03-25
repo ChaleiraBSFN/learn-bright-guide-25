@@ -54,9 +54,9 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
       if (result?.explicacao) {
         setExplanations(prev => ({ ...prev, [passoNumero]: result.explicacao }));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao gerar explicação:", error);
-      toast.error("Erro ao gerar explicação. Tente novamente mais tarde.");
+      toast.error(error.message || "Erro ao gerar explicação. Tente novamente mais tarde.");
     } finally {
       setLoadingExp(prev => ({ ...prev, [passoNumero]: false }));
     }
