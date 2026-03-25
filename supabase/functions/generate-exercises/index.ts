@@ -134,8 +134,7 @@ JSON format:
   {"tipo":"dissertativa","numero":2,"nivel":"string","enunciado":"question","respostaEsperada":"ideal answer","explicacao":"1 sentence","criterios":["c1","c2"]}
 ],"resumoTema":"2 sentences"}
 
-Rules: Keep JSON keys in Portuguese. Be concise. Vary difficulty. ONLY JSON output.
-- CRITICAL: NÃO crie exercícios que dependam de interpretar imagens, figuras, gráficos ou vídeos. Gere APENAS exercícios baseados em texto, que demandam apenas conhecimento teórico e leitura.`;
+Rules: Keep JSON keys in Portuguese. Be concise. Vary difficulty. ONLY JSON output.`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
