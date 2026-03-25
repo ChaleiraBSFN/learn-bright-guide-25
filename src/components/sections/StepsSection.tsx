@@ -198,7 +198,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
                       ))}
                     </ul>
                     {explanations[passo.numero] && (
-                      <div className="mt-4 p-3 bg-background/50 rounded-lg border border-accent/20 text-sm text-foreground/90 whitespace-pre-wrap animate-in fade-in slide-in-from-top-2">
+                      <div className="mt-4 p-4 md:p-5 bg-background shadow-sm rounded-xl border border-accent/30 text-base md:text-lg text-foreground/95 leading-relaxed whitespace-pre-wrap animate-in fade-in zoom-in-95 duration-300">
                         {explanations[passo.numero]}
                       </div>
                     )}

@@ -28,35 +28,40 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
     const loadRanking = async () => {
       setLoading(true);
       try {
-        // Fetching all achievements to group them in JS
-        // In a real large app, this should be a DB view or RPC
+        // Get all achievements
         const { data: achievements, error } = await (supabase.from as any)('user_achievements')
-          .select(`
-            user_id,
-            profiles 
-            (
-              display_name,
-              email
-            )
-          `);
+          .select('user_id');
           
         if (error) throw error;
         
         // Group and count
-        const counts: Record<string, { name: string, score: number }> = {};
+        const counts: Record<string, { score: number }> = {};
         achievements?.forEach((ach: any) => {
           const uid = ach.user_id;
-          const profile = ach.profiles;
-          const name = profile?.display_name || profile?.email?.split('@')[0] || 'Aluno Anonimo';
-          
           if (!counts[uid]) {
-            counts[uid] = { name, score: 0 };
+            counts[uid] = { score: 0 };
           }
           counts[uid].score += 1;
         });
+
+        // Find users to get names/emails
+        const userIds = Object.keys(counts);
+        let profiles: any[] = [];
+
+        if (userIds.length > 0) {
+          const { data: profs } = await (supabase.from as any)('profiles')
+            .select('user_id, display_name, email')
+            .in('user_id', userIds);
+          
+          if (profs) profiles = profs;
+        }
         
-        const sorted = Object.entries(counts)
-          .map(([userId, data]) => ({ userId, ...data }))
+        const sorted = userIds
+          .map((userId) => {
+            const profile = profiles.find((p: any) => p.user_id === userId);
+            const name = profile?.display_name || profile?.email?.split('@')[0] || 'Estudante Anônimo';
+            return { userId, name, score: counts[userId].score };
+          })
           .sort((a, b) => b.score - a.score)
           .slice(0, 100); // Top 100
           
