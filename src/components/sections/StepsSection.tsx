@@ -44,29 +44,50 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
     try {
       const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. Fale em português. \n\nContexto do assunto: ${data.titulo || ""}\n\nExemplo Prático: ${exemplo}\n\nSua explicação:`;
       const apiKey = "AIzaSyBy5wvMZmdh2igShEJJsErRzAC2c6A9u70";
-      const model = "gemini-2.0-flash"; // Modelo super rápido para explicações
       
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
-          }),
-        }
-      );
+      const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
+      let text = null;
+      let lastError = null;
+      let lastStatus = 0;
 
-      if (!response.ok) {
-        throw new Error("Erro na comunicação com a IA.");
+      for (const model of models) {
+        try {
+          const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
+              }),
+            }
+          );
+
+          if (response.ok) {
+            const responseData = await response.json();
+            text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text) break;
+          } else {
+            lastStatus = response.status;
+            const errBody = await response.json().catch(() => ({}));
+            lastError = new Error(errBody.error?.message || `Erro HTTP ${response.status}`);
+            if (response.status === 429) {
+               continue; // Se bater cota, tenta o próximo modelo
+            } else {
+               break; // Outro erro, cai fora do loop
+            }
+          }
+        } catch (e: any) {
+          lastError = e;
+        }
       }
 
-      const responseData = await response.json();
-      const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
-
       if (!text) {
-        throw new Error("A resposta da IA veio vazia.");
+        if (lastStatus === 429) {
+           throw new Error("Limite de proteção da IA excedido (você clicou muito rápido). Por favor aguarde 1 minuto e tente novamente.");
+        }
+        throw lastError || new Error("A resposta da IA falhou.");
       }
 
       setExplanations(prev => ({ ...prev, [passoNumero]: text.trim() }));
