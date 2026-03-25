@@ -42,34 +42,18 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
 
     setLoadingExp(prev => ({ ...prev, [passoNumero]: true }));
     try {
-      const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. Fale em português. \n\nContexto do assunto: ${data.titulo || ""}\n\nExemplo Prático: ${exemplo}\n\nSua explicação:`;
-      const apiKey = "AIzaSyBy5wvMZmdh2igShEJJsErRzAC2c6A9u70";
-      const model = "gemini-2.0-flash"; // Modelo super rápido para explicações
-      
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
-          }),
+      const { data: result, error } = await supabase.functions.invoke('explain-example', {
+        body: { 
+          exemplo, 
+          contexto: data.titulo 
         }
-      );
+      });
 
-      if (!response.ok) {
-        throw new Error("Erro na comunicação com a IA.");
+      if (error) throw error;
+
+      if (result?.explicacao) {
+        setExplanations(prev => ({ ...prev, [passoNumero]: result.explicacao }));
       }
-
-      const responseData = await response.json();
-      const text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!text) {
-        throw new Error("A resposta da IA veio vazia.");
-      }
-
-      setExplanations(prev => ({ ...prev, [passoNumero]: text.trim() }));
     } catch (error: any) {
       console.error("Erro ao gerar explicação:", error);
       toast.error(error.message || "Erro ao gerar explicação. Tente novamente mais tarde.");
