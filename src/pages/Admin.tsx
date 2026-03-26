@@ -16,6 +16,10 @@ const AdminAchievementsEditor = ({ onBack }: { onBack: () => void }) => {
   const [editingNodes, setEditingNodes] = useState<TrailNodeDef[]>(nodes);
   const { toast } = useToast();
 
+  useEffect(() => {
+    setEditingNodes(nodes);
+  }, [nodes]);
+
   const updateNode = (id: number, field: keyof TrailNodeDef, value: any) => {
     setEditingNodes(prev => prev.map(n => n.id === id ? { ...n, [field]: value } : n));
   };
