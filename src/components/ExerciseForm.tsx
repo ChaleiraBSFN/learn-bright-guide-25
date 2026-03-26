@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { GraduationCap, Dumbbell, Hash, Zap } from "lucide-react";
+import { GraduationCap, Dumbbell, Hash, Zap, Lock } from "lucide-react";
 import { ExerciseFormData } from "@/types/exercises";
 
 interface ExerciseFormProps {
