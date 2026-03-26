@@ -135,9 +135,14 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || !tema || !nivel || !prazo}
+        disabled={isLoading || !tema || !nivel || !prazo || generationDisabled}
       >
-        {isLoading ? (
+        {generationDisabled ? (
+          <>
+            <Lock className="h-5 w-5" />
+            {t('form.generationDisabled', 'Geração Desativada')}
+          </>
+        ) : isLoading ? (
           <>
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
             {t('form.generating')}
