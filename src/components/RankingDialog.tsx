@@ -95,10 +95,10 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
             <div className="text-center p-8 flex flex-col items-center justify-center gap-3">
               <Trophy className="h-10 w-10 text-muted-foreground/30 mb-2" />
               <p className="text-muted-foreground text-sm font-medium">
-                Nenhum progresso real encontrado ainda.
+                Ninguém pontuou no Ranking Global ainda! 🚀
               </p>
               <p className="text-xs text-muted-foreground/60 max-w-[250px]">
-                Se você é o administrador, certifique-se de executar o arquivo SQL <b>20260324000000_user_achievements.sql</b> no Supabase para inicializar os perfis reais!
+                Gere resumos, faça quizzes e avance na Trilha de Progresso para ser o primeiro a aparecer aqui e garantir o primeiro lugar!
               </p>
             </div>
           ) : (
