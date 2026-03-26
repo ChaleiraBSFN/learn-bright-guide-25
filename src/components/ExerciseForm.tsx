@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { GraduationCap, Dumbbell, Hash, Zap } from "lucide-react";
+import { GraduationCap, Dumbbell, Hash, Zap, Lock } from "lucide-react";
 import { ExerciseFormData } from "@/types/exercises";
 
 interface ExerciseFormProps {
@@ -18,6 +18,26 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
   const [quantidade, setQuantidade] = useState("5");
   const [dificuldade, setDificuldade] = useState("variado");
   const { t } = useTranslation();
+  const [generationDisabled, setGenerationDisabled] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      try {
+        const stored = localStorage.getItem('lb_platform_settings');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setGenerationDisabled(parsed.contentGenerationEnabled === false);
+        }
+      } catch (e) {}
+    };
+    check();
+    window.addEventListener('lb_settings_changed', check);
+    window.addEventListener('storage', check);
+    return () => {
+      window.removeEventListener('lb_settings_changed', check);
+      window.removeEventListener('storage', check);
+    };
+  }, []);
 
   const niveis = [
     { value: "fundamental1", label: t('form.levelFundamental1') },
@@ -119,9 +139,14 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || !tema || !nivel}
+        disabled={isLoading || !tema || !nivel || generationDisabled}
       >
-        {isLoading ? (
+        {generationDisabled ? (
+          <>
+            <Lock className="h-5 w-5" />
+            {t('exercises.generationDisabled', 'Geração Desativada')}
+          </>
+        ) : isLoading ? (
           <>
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
             {t('exercises.generating')}

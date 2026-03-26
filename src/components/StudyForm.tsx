@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BookOpen, GraduationCap, Calendar, HelpCircle, Sparkles } from "lucide-react";
+import { BookOpen, GraduationCap, Calendar, HelpCircle, Sparkles, Lock } from "lucide-react";
 import { StudyFormData } from "@/types/study";
 
 
@@ -20,6 +20,26 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
   const [prazo, setPrazo] = useState("");
   const [duvidas, setDuvidas] = useState("");
   const { t } = useTranslation();
+  const [generationDisabled, setGenerationDisabled] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      try {
+        const stored = localStorage.getItem('lb_platform_settings');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setGenerationDisabled(parsed.contentGenerationEnabled === false);
+        }
+      } catch (e) {}
+    };
+    check();
+    window.addEventListener('lb_settings_changed', check);
+    window.addEventListener('storage', check);
+    return () => {
+      window.removeEventListener('lb_settings_changed', check);
+      window.removeEventListener('storage', check);
+    };
+  }, []);
 
   const niveis = [
     { value: "fundamental1", label: t('form.levelFundamental1') },
@@ -115,9 +135,14 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || !tema || !nivel || !prazo}
+        disabled={isLoading || !tema || !nivel || !prazo || generationDisabled}
       >
-        {isLoading ? (
+        {generationDisabled ? (
+          <>
+            <Lock className="h-5 w-5" />
+            {t('form.generationDisabled', 'Geração Desativada')}
+          </>
+        ) : isLoading ? (
           <>
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
             {t('form.generating')}
