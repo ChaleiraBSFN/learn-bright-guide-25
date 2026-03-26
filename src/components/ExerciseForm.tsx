@@ -139,9 +139,14 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || !tema || !nivel}
+        disabled={isLoading || !tema || !nivel || generationDisabled}
       >
-        {isLoading ? (
+        {generationDisabled ? (
+          <>
+            <Lock className="h-5 w-5" />
+            {t('exercises.generationDisabled', 'Geração Desativada')}
+          </>
+        ) : isLoading ? (
           <>
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
             {t('exercises.generating')}
