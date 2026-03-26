@@ -52,8 +52,24 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
           .eq('user_id', user.id);
           
         if (error) throw error;
-        // @ts-ignore
-        setCompletedIds(data?.map(r => r.achievement_id) || []);
+        
+        let ids = data?.map((r: any) => r.achievement_id) || [];
+
+        // SINCRONIZAÇÃO AUTOMÁTICA: 
+        // Se o usuário tinha progresso "preso" no localStorage antes da tabela existir, envie para a nuvem agora!
+        const stored = JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]');
+        if (stored.length > 0) {
+          const missingInCloud = stored.filter((id: number) => !ids.includes(id));
+          if (missingInCloud.length > 0) {
+            console.log("Enviando progresso local antigo para a nuvem...", missingInCloud);
+            for (const mId of missingInCloud) {
+               await (supabase.from as any)('user_achievements').insert({ user_id: user.id, achievement_id: mId }).catch(() => {});
+            }
+            ids = [...ids, ...missingInCloud];
+          }
+        }
+
+        setCompletedIds(ids);
       } catch (err) {
         console.log('Fallback para localStorage', err);
         const stored = JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]');
