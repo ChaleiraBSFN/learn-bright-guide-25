@@ -24,7 +24,7 @@ const AdminAchievementsEditor = ({ onBack }: { onBack: () => void }) => {
     const newId = Math.max(0, ...editingNodes.map(n => n.id)) + 1;
     const newNode: TrailNodeDef = {
       id: newId, title: 'Nova Conquista', type: 'challenge', creditReward: 1, iconName: 'Star',
-      x: 100, y: 150, parents: [], objective: 'Descrição do objetivo aqui.', triggerType: 'none', triggerRequirement: 0
+      x: 100, y: 150, parents: [], objective: 'Descrição do objetivo aqui.', timeRequiredMinutes: 0
     };
     setEditingNodes([...editingNodes, newNode]);
   };
@@ -116,21 +116,8 @@ const AdminAchievementsEditor = ({ onBack }: { onBack: () => void }) => {
                   <Input value={node.parents.join(', ')} onChange={e => updateNode(node.id, 'parents', e.target.value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)))} />
                 </div>
                 <div>
-                  <Label>Gatilho (Como desbloqueia?)</Label>
-                  <Select value={node.triggerType || 'none'} onValueChange={v => updateNode(node.id, 'triggerType', v === 'none' ? undefined : v)}>
-                    <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Manual / Clássico</SelectItem>
-                      <SelectItem value="generate_study">Gerar Resumo/Material</SelectItem>
-                      <SelectItem value="generate_quiz">Gerar Quiz</SelectItem>
-                      <SelectItem value="quiz_score">Acertar Questões no Quiz</SelectItem>
-                      <SelectItem value="time_focused">Tempo Focado (Minutos)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>Requisito (Qtd. Acertos/Minutos)</Label>
-                  <Input type="number" value={node.triggerRequirement || node.timeRequiredMinutes || 0} onChange={e => updateNode(node.id, 'triggerRequirement', parseInt(e.target.value) || 0)} />
+                  <Label>Tempo Necessário (Em Minutos)</Label>
+                  <Input type="number" value={node.timeRequiredMinutes || 0} onChange={e => updateNode(node.id, 'timeRequiredMinutes', parseInt(e.target.value) || 0)} />
                 </div>
               </div>
               <div className="md:col-span-12">

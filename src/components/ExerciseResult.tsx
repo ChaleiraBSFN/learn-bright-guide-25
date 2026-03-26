@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useAchievements } from "@/hooks/useAchievements";
 import { ImagesSection } from "./sections/ImagesSection";
 
 interface ExerciseResultProps {
@@ -34,7 +33,6 @@ export function ExerciseResult({ content, aiImages, webImages, imagesLoading }: 
   const [score, setScore] = useState<{ correct: number; total: number } | null>(null);
   const { t, i18n } = useTranslation();
   const { toast } = useToast();
-  const { checkAndUnlock } = useAchievements();
 
   const handleAnswer = (exerciseIndex: number, answer: string) => {
     if (revealed[exerciseIndex]) return;
@@ -58,9 +56,6 @@ export function ExerciseResult({ content, aiImages, webImages, imagesLoading }: 
     const totalObjective = content.exercicios.filter(e => e.tipo === "objetiva").length;
     const totalSubjCorrect = content.exercicios.filter((e, i) => e.tipo === "dissertativa" && corrections[i]?.correto).length;
     setScore({ correct: correct, total: totalObjective + Object.keys(corrections).filter(k => content.exercicios[Number(k)]?.tipo === "dissertativa").length || content.exercicios.length });
-    
-    // Evaluate achievements mapped to quiz scores dynamically
-    checkAndUnlock('quiz_score', correct);
   };
 
   const handleCorrectSubjective = async (index: number, ex: ExerciseSubjective) => {

@@ -22,14 +22,12 @@ export interface TrailNodeDef {
   parents: number[];
   objective?: string;
   timeRequiredMinutes?: number;
-  triggerType?: 'generate_study' | 'generate_quiz' | 'quiz_score' | 'time_focused' | 'none';
-  triggerRequirement?: number;
 }
 
 export const defaultTrailNodes: TrailNodeDef[] = [
-  { id: 1, title: 'Primeiro Passo', type: 'challenge', creditReward: 1, iconName: 'BookOpen', x: 100, y: 150, parents: [], objective: "Gere seu primeiro resumo, mapa mental ou material (Ação: Gerar Estudo).", triggerType: 'generate_study' },
-  { id: 2, title: 'Quiz Relâmpago', type: 'quiz', creditReward: 1, iconName: 'Zap', x: 300, y: 70, parents: [1], objective: "Gere o seu primeiro exercício inteligente (Ação: Gerar Exercício).", triggerType: 'generate_quiz' },
-  { id: 3, title: 'Estudante Focado', type: 'challenge', creditReward: 2, iconName: 'Flame', x: 300, y: 230, parents: [1], objective: "Fique 5 minutos focado estudando pela plataforma.", timeRequiredMinutes: 5, triggerType: 'time_focused', triggerRequirement: 5 },
+  { id: 1, title: 'Primeiro Passo', type: 'challenge', creditReward: 1, iconName: 'BookOpen', x: 100, y: 150, parents: [], objective: "Gere seu primeiro resumo, mapa mental ou material (Ação: Gerar Estudo)." },
+  { id: 2, title: 'Quiz Relâmpago', type: 'quiz', creditReward: 1, iconName: 'Zap', x: 300, y: 70, parents: [1], objective: "Gere o seu primeiro exercício inteligente (Ação: Gerar Exercício)." },
+  { id: 3, title: 'Estudante Focado', type: 'challenge', creditReward: 2, iconName: 'Flame', x: 300, y: 230, parents: [1], objective: "Fique 5 minutos focado estudando pela plataforma.", timeRequiredMinutes: 5 },
   { id: 4, title: 'Conquista!', type: 'milestone', creditReward: 3, iconName: 'Trophy', x: 500, y: 150, parents: [2, 3] },
   { id: 5, title: 'Mestre do Quiz', type: 'quiz', creditReward: 1, iconName: 'Brain', x: 700, y: 70, parents: [4] },
   { id: 6, title: 'Sequência Fogo', type: 'challenge', creditReward: 2, iconName: 'Flame', x: 700, y: 230, parents: [4] },
@@ -74,64 +72,53 @@ export const useAchievements = () => {
   const { toast } = useToast();
   const { nodes } = useAchievementData();
 
-  const checkAndUnlock = useCallback(async (actionType?: string, actionValue?: number, explicitNodeId?: number) => {
+  const checkAndUnlock = useCallback(async (actionType?: string, explicitNodeId?: number) => {
     if (!user) return;
 
-    let targetNodeIds: number[] = [];
-    
-    if (explicitNodeId) {
-      targetNodeIds.push(explicitNodeId);
-    } else if (actionType) {
-      const matches = nodes.filter(n => {
-         if (n.triggerType === actionType) {
-             const req = n.triggerRequirement || n.timeRequiredMinutes || 0;
-             if (req > 0 && actionValue !== undefined) {
-                 return actionValue >= req;
-             }
-             return true;
-         }
-         // Compatibilidade com nós antigos sem triggerType salvo
-         if (actionType === 'time_focused' && !n.triggerType && n.timeRequiredMinutes) {
-             return actionValue !== undefined && actionValue >= n.timeRequiredMinutes;
-         }
-         if (actionType === 'generate_study' && n.id === 1 && !n.triggerType) return true;
-         if (actionType === 'generate_quiz' && n.id === 2 && !n.triggerType) return true;
-         return false;
-      });
-      targetNodeIds.push(...matches.map(n => n.id));
-    }
+    let targetNodeId: number | null = null;
+    if (actionType === 'generate_study') targetNodeId = 1;
+    else if (actionType === 'generate_quiz') targetNodeId = 2;
+    else if (explicitNodeId) targetNodeId = explicitNodeId;
 
-    if (targetNodeIds.length === 0) return;
+    if (!targetNodeId) return;
 
-    for (const targetNodeId of targetNodeIds) {
-      const nodeConf = nodes.find(n => n.id === targetNodeId);
-      if (!nodeConf) continue;
+    const nodeConf = nodes.find(n => n.id === targetNodeId);
+    if (!nodeConf) return;
 
-      try {
-        const { error } = await (supabase.from as any)('user_achievements').insert({ user_id: user.id, achievement_id: targetNodeId });
-        if (error && error.code !== '23505') throw error;
-        
-        if (!error) {
-          await addCredits(nodeConf.creditReward);
-          toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
-        }
-      } catch (err) {
-        const key = `achievements_v2_${user.id}`;
-        const stored = JSON.parse(localStorage.getItem(key) || '[]');
-        if (!stored.includes(targetNodeId)) {
-          stored.push(targetNodeId);
-          localStorage.setItem(key, JSON.stringify(stored));
-          await addCredits(nodeConf.creditReward);
-          toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
-        }
+    try {
+      const { error } = await (supabase.from as any)('user_achievements').insert({ user_id: user.id, achievement_id: targetNodeId });
+      if (error && error.code !== '23505') throw error;
+      
+      if (!error) {
+        await addCredits(nodeConf.creditReward);
+        toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
+      }
+    } catch (err) {
+      const key = `achievements_v2_${user.id}`;
+      const stored = JSON.parse(localStorage.getItem(key) || '[]');
+      if (!stored.includes(targetNodeId)) {
+        stored.push(targetNodeId);
+        localStorage.setItem(key, JSON.stringify(stored));
+        await addCredits(nodeConf.creditReward);
+        toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
       }
     }
   }, [user, addCredits, toast, nodes]);
 
   const checkAndUnlockTime = useCallback(async (totalMinutes: number) => {
     if (!user) return;
-    await checkAndUnlock('time_focused', totalMinutes);
-  }, [user, checkAndUnlock]);
+    const timeNodes = nodes.filter(n => n.timeRequiredMinutes && n.timeRequiredMinutes > 0 && n.timeRequiredMinutes <= totalMinutes);
+    if (timeNodes.length === 0) return;
+    
+    const key = `achievements_v2_${user.id}`;
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    
+    for (const node of timeNodes) {
+      if (!stored.includes(node.id)) {
+        await checkAndUnlock(undefined, node.id);
+      }
+    }
+  }, [user, nodes, checkAndUnlock]);
 
   return { checkAndUnlock, checkAndUnlockTime };
 };
