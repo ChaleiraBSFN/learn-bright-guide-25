@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,15 @@ import { useToast } from '@/hooks/use-toast';
 import { Lock, Loader2, Eye, EyeOff, CheckCircle, Mail } from 'lucide-react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
+
+const resetSchema = z.object({
+  email: z.string().trim().email(),
+  password: z.string().min(6),
+  confirmPassword: z.string().min(6),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'password_mismatch',
+  path: ['confirmPassword'],
+});
 
 const ResetPassword = () => {
   const { t } = useTranslation();
@@ -23,80 +33,129 @@ const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [isRecovery, setIsRecovery] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState('');
   const [sessionReady, setSessionReady] = useState(false);
+  const [isRecovery, setIsRecovery] = useState(false);
 
   useEffect(() => {
-    // Listen for PASSWORD_RECOVERY event from the auth callback
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        setIsRecovery(true);
-        setSessionReady(true);
-        if (session?.user?.email) {
-          setRecoveryEmail(session.user.email);
+    let cancelled = false;
+
+    const verifyRecoverySession = async () => {
+      try {
+        setSessionReady(false);
+        setIsRecovery(false);
+        setRecoveryEmail('');
+
+        await supabase.auth.signOut({ scope: 'local' });
+
+        const hashParams = new URLSearchParams(window.location.hash.replace('#', ''));
+        const searchParams = new URLSearchParams(window.location.search);
+
+        const hashType = hashParams.get('type');
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+        const code = searchParams.get('code');
+        const queryType = searchParams.get('type');
+
+        let verifiedEmail = '';
+
+        if (hashType === 'recovery' && accessToken && refreshToken) {
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (!error && data.session?.user?.email) {
+            verifiedEmail = data.session.user.email;
+          }
+        } else if (queryType === 'recovery' && code) {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error && data.session?.user?.email) {
+            verifiedEmail = data.session.user.email;
+          }
+        }
+
+        if (!cancelled && verifiedEmail) {
+          setRecoveryEmail(verifiedEmail);
+          setIsRecovery(true);
+        } else if (!cancelled) {
+          await supabase.auth.signOut({ scope: 'local' });
+          setIsRecovery(false);
+          setRecoveryEmail('');
+        }
+      } catch {
+        if (!cancelled) {
+          await supabase.auth.signOut({ scope: 'local' });
+          setIsRecovery(false);
+          setRecoveryEmail('');
+        }
+      } finally {
+        if (!cancelled) {
+          setSessionReady(true);
         }
       }
-    });
+    };
 
-    // Check URL hash for recovery tokens
-    const hash = window.location.hash;
-    const params = new URLSearchParams(hash.replace('#', ''));
-    const accessToken = params.get('access_token');
-    const type = params.get('type');
+    verifyRecoverySession();
 
-    if (type === 'recovery' && accessToken) {
-      setIsRecovery(true);
-      // Set the session from the URL tokens
-      const refreshToken = params.get('refresh_token') || '';
-      supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      }).then(({ data }) => {
-        setSessionReady(true);
-        if (data?.user?.email) {
-          setRecoveryEmail(data.user.email);
-        }
-      }).catch(() => {
-        setSessionReady(true);
-      });
-    } else {
-      // Give a moment for the auth state change listener to fire
-      setTimeout(() => {
-        setSessionReady(true);
-      }, 2000);
-    }
-
-    return () => subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (recoveryEmail && email.trim().toLowerCase() !== recoveryEmail.toLowerCase()) {
+    if (!isRecovery || !recoveryEmail) {
+      toast({ title: t('settings.error'), description: t('settings.invalidResetLinkDesc'), variant: 'destructive' });
+      return;
+    }
+
+    const parsed = resetSchema.safeParse({
+      email,
+      password,
+      confirmPassword,
+    });
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]?.message;
+      if (firstIssue === 'password_mismatch') {
+        toast({ title: t('settings.error'), description: t('auth.passwordsDoNotMatch'), variant: 'destructive' });
+      } else if (!email.trim()) {
+        toast({ title: t('settings.error'), description: t('auth.invalidEmail'), variant: 'destructive' });
+      } else {
+        toast({ title: t('settings.error'), description: t('auth.passwordMinLength'), variant: 'destructive' });
+      }
+      return;
+    }
+
+    if (parsed.data.email.trim().toLowerCase() !== recoveryEmail.toLowerCase()) {
       toast({ title: t('settings.error'), description: t('settings.emailMismatch'), variant: 'destructive' });
       return;
     }
 
-    if (password.length < 6) {
-      toast({ title: t('settings.error'), description: t('auth.passwordMinLength'), variant: 'destructive' });
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast({ title: t('settings.error'), description: t('auth.passwordsDoNotMatch'), variant: 'destructive' });
+    setSaving(true);
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session?.user?.email || sessionData.session.user.email.toLowerCase() !== recoveryEmail.toLowerCase()) {
+      setSaving(false);
+      await supabase.auth.signOut({ scope: 'local' });
+      setIsRecovery(false);
+      toast({ title: t('settings.error'), description: t('settings.invalidResetLinkDesc'), variant: 'destructive' });
       return;
     }
 
-    setSaving(true);
-    const { error } = await supabase.auth.updateUser({ password });
+    const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
     setSaving(false);
 
     if (error) {
       toast({ title: t('settings.error'), description: t('settings.passwordUpdateError'), variant: 'destructive' });
-    } else {
-      setSuccess(true);
-      toast({ title: t('settings.success'), description: t('settings.passwordUpdated') });
+      return;
     }
+
+    setSuccess(true);
+    toast({ title: t('settings.success'), description: t('settings.passwordUpdated') });
+    window.history.replaceState({}, document.title, '/reset-password');
   };
 
   if (success) {
@@ -108,8 +167,8 @@ const ResetPassword = () => {
             <CheckCircle className="h-16 w-16 text-primary mx-auto" />
             <h2 className="text-xl font-bold text-foreground">{t('settings.passwordUpdated')}</h2>
             <p className="text-muted-foreground">{t('settings.passwordUpdatedDesc')}</p>
-            <Button onClick={() => navigate('/')} className="mt-4">
-              {t('settings.goHome')}
+            <Button onClick={() => navigate('/auth')} className="mt-4">
+              {t('auth.backToLogin')}
             </Button>
           </CardContent>
         </Card>
@@ -141,8 +200,8 @@ const ResetPassword = () => {
             <Button onClick={() => navigate('/forgot-password')} variant="outline" className="mt-2">
               {t('auth.forgotPassword')}
             </Button>
-            <Button onClick={() => navigate('/')} className="mt-2">
-              {t('settings.goHome')}
+            <Button onClick={() => navigate('/auth')} className="mt-2">
+              {t('auth.backToLogin')}
             </Button>
           </CardContent>
         </Card>
@@ -184,6 +243,7 @@ const ResetPassword = () => {
                   placeholder={t('settings.confirmYourEmail')}
                   className="mt-1"
                   required
+                  autoComplete="email"
                 />
                 <p className="text-xs text-muted-foreground mt-1">{t('settings.emailVerifyNote')}</p>
               </div>
@@ -197,6 +257,7 @@ const ResetPassword = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••"
                     minLength={6}
+                    autoComplete="new-password"
                   />
                   <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -213,6 +274,7 @@ const ResetPassword = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••"
                     minLength={6}
+                    autoComplete="new-password"
                   />
                   <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full" onClick={() => setShowConfirm(!showConfirm)}>
                     {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -221,7 +283,7 @@ const ResetPassword = () => {
               </div>
 
               <p className="text-xs text-muted-foreground">{t('auth.passwordHint')}</p>
-              
+
               <Button type="submit" className="w-full text-base font-bold py-5" disabled={saving || !email.trim()}>
                 {saving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 🔐 {t('settings.updatePassword')}

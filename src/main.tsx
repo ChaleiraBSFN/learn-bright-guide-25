@@ -4,45 +4,60 @@ import App from "./App.tsx";
 import "./index.css";
 import "./i18n";
 
-// Force immediate update when new SW is available
+const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches;
+
 const updateSW = registerSW({
+  immediate: true,
   onNeedRefresh() {
-    // Auto-update without asking
+    updateSW(true);
     window.location.reload();
   },
   onOfflineReady() {
     console.log("App ready for offline use");
   },
-  immediate: true,
+  onRegisteredSW(_swUrl, registration) {
+    if (!registration) return;
+
+    const runUpdate = async () => {
+      try {
+        await registration.update();
+        if (registration.waiting) {
+          updateSW(true);
+        }
+      } catch (error) {
+        console.error("SW update check failed", error);
+      }
+    };
+
+    runUpdate();
+    setInterval(runUpdate, isStandalone() ? 5000 : 15000);
+  },
 });
 
-// Check for updates every 15 seconds (more aggressive)
-setInterval(() => {
-  updateSW(true);
-}, 15 * 1000);
+const forceUpdateCheck = async () => {
+  try {
+    const registration = await navigator.serviceWorker?.getRegistration();
+    await registration?.update();
+    updateSW(true);
+  } catch (error) {
+    console.error("Manual update check failed", error);
+  }
+};
 
-// Check on visibility change (when user switches back to the app)
+navigator.serviceWorker?.addEventListener("controllerchange", () => {
+  window.location.reload();
+});
+
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
-    updateSW(true);
+    forceUpdateCheck();
   }
 });
 
-// Check on focus (covers more mobile scenarios)
-window.addEventListener("focus", () => {
-  updateSW(true);
-});
-
-// Check on online event (when network comes back)
-window.addEventListener("online", () => {
-  updateSW(true);
-});
-
-// For standalone PWA: force check on app resume / page show
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted || window.matchMedia('(display-mode: standalone)').matches) {
-    updateSW(true);
-  }
+window.addEventListener("focus", forceUpdateCheck);
+window.addEventListener("online", forceUpdateCheck);
+window.addEventListener("pageshow", () => {
+  forceUpdateCheck();
 });
 
 createRoot(document.getElementById("root")!).render(<App />);
