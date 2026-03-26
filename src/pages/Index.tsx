@@ -52,20 +52,6 @@ interface WebImage {
   descricao: string;
 }
 
-interface PlatformSettings {
-  exercisesEnabled: boolean;
-  studyGenEnabled: boolean;
-  rankingEnabled: boolean;
-}
-
-const getSettings = (): PlatformSettings => {
-  try {
-    const stored = localStorage.getItem('lb_platform_settings');
-    if (stored) return JSON.parse(stored);
-  } catch (e) {}
-  return { exercisesEnabled: true, studyGenEnabled: true, rankingEnabled: true };
-};
-
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFinishingStudy, setIsFinishingStudy] = useState(false);
@@ -76,13 +62,7 @@ const Index = () => {
   const [isFinishingExercise, setIsFinishingExercise] = useState(false);
   const [exerciseContent, setExerciseContent] = useState<ExerciseContent | null>(null);
 
-  const [settings, setSettings] = useState<PlatformSettings>(getSettings());
-  const [activeTab, setActiveTab] = useState(() => {
-    const s = getSettings();
-    if (s.studyGenEnabled) return "study";
-    if (s.exercisesEnabled) return "exercises";
-    return "history";
-  });
+  const [activeTab, setActiveTab] = useState("study");
   
   // Image states
   const [aiImages, setAiImages] = useState<AIImage[]>([]);
@@ -96,29 +76,6 @@ const Index = () => {
   const { hasCredits, useCredit } = useCredits();
   const [isTranslating, setIsTranslating] = useState(false);
   const contentLanguageRef = useRef(i18n.language);
-
-  // Sync settings when Admin alters them across tabs
-  useEffect(() => {
-    const handleSettingsChange = () => {
-      const s = getSettings();
-      setSettings(s);
-      if (!s.studyGenEnabled && activeTab === 'study') {
-        setActiveTab(s.exercisesEnabled ? 'exercises' : 'history');
-      } else if (!s.exercisesEnabled && activeTab === 'exercises') {
-        setActiveTab(s.studyGenEnabled ? 'study' : 'history');
-      }
-    };
-    window.addEventListener('lb_settings_changed', handleSettingsChange);
-    // Also listen to storage events if changed in another tab
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'lb_platform_settings') handleSettingsChange();
-    };
-    window.addEventListener('storage', handleStorage);
-    return () => {
-      window.removeEventListener('lb_settings_changed', handleSettingsChange);
-      window.removeEventListener('storage', handleStorage);
-    };
-  }, [activeTab]);
 
   // Translate content when language changes
   useEffect(() => {
@@ -495,19 +452,15 @@ const Index = () => {
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full grid h-auto gap-3 bg-transparent p-0" style={{ gridTemplateColumns: `repeat(${[settings.studyGenEnabled, settings.exercisesEnabled, true].filter(Boolean).length}, minmax(0, 1fr))` }}>
-                  {settings.studyGenEnabled && (
-                    <TabsTrigger value="study" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
-                      <BookOpen className="h-4 w-4" />
-                      <span className="hidden sm:inline">{t('tabs.study')}</span>
-                    </TabsTrigger>
-                  )}
-                  {settings.exercisesEnabled && (
-                    <TabsTrigger value="exercises" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
-                      <PenTool className="h-4 w-4" />
-                      <span className="hidden sm:inline">{t('tabs.exercises')}</span>
-                    </TabsTrigger>
-                  )}
+                <TabsList className="w-full grid grid-cols-3 h-auto gap-3 bg-transparent p-0">
+                  <TabsTrigger value="study" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                    <BookOpen className="h-4 w-4" />
+                    <span className="hidden sm:inline">{t('tabs.study')}</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="exercises" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                    <PenTool className="h-4 w-4" />
+                    <span className="hidden sm:inline">{t('tabs.exercises')}</span>
+                  </TabsTrigger>
                   <TabsTrigger value="history" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <History className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.history')}</span>
