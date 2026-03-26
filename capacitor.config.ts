@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Learn Buddy',
   webDir: 'dist',
   server: {
-    url: 'https://9687ee74-66ca-4d7e-ac8e-7257bce45838.lovableproject.com?forceHideBadge=true',
+    url: 'https://learn-bright-guide-25.lovable.app?forceHideBadge=true',
     cleartext: true,
   },
 };
