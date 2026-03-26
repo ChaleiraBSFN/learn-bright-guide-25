@@ -20,6 +20,26 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
   const [prazo, setPrazo] = useState("");
   const [duvidas, setDuvidas] = useState("");
   const { t } = useTranslation();
+  const [generationDisabled, setGenerationDisabled] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      try {
+        const stored = localStorage.getItem('lb_platform_settings');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setGenerationDisabled(parsed.contentGenerationEnabled === false);
+        }
+      } catch (e) {}
+    };
+    check();
+    window.addEventListener('lb_settings_changed', check);
+    window.addEventListener('storage', check);
+    return () => {
+      window.removeEventListener('lb_settings_changed', check);
+      window.removeEventListener('storage', check);
+    };
+  }, []);
 
   const niveis = [
     { value: "fundamental1", label: t('form.levelFundamental1') },
