@@ -58,10 +58,15 @@ const UpdateNoticesAdmin = () => {
 
   const loadNotices = async () => {
     setLoading(true);
-    const { data, error } = await (supabase.from as any)('update_notices')
+    const { data, error } = await supabase
+      .from('update_notices')
       .select('*')
       .order('created_at', { ascending: false });
-    if (!error && data) setNotices(data);
+    if (error) {
+      toast({ title: 'Erro', description: 'Não foi possível carregar os avisos.', variant: 'destructive' });
+    } else {
+      setNotices(data ?? []);
+    }
     setLoading(false);
   };
 
@@ -75,7 +80,7 @@ const UpdateNoticesAdmin = () => {
       return;
     }
     setSaving(true);
-    const { error } = await (supabase.from as any)('update_notices').insert({
+    const { error } = await supabase.from('update_notices').insert({
       title: title.trim(),
       message: message.trim(),
       type,
@@ -89,17 +94,31 @@ const UpdateNoticesAdmin = () => {
     }
     setTitle('');
     setMessage('');
+    localStorage.setItem('lb_update_notices_refresh', String(Date.now()));
+    window.dispatchEvent(new Event('lb_update_notices_changed'));
     toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
     loadNotices();
   };
 
   const handleToggle = async (id: string, currentActive: boolean) => {
-    await (supabase.from as any)('update_notices').update({ active: !currentActive }).eq('id', id);
+    const { error } = await supabase.from('update_notices').update({ active: !currentActive }).eq('id', id);
+    if (error) {
+      toast({ title: 'Erro', description: error.message, variant: 'destructive' });
+      return;
+    }
+    localStorage.setItem('lb_update_notices_refresh', String(Date.now()));
+    window.dispatchEvent(new Event('lb_update_notices_changed'));
     loadNotices();
   };
 
   const handleDelete = async (id: string) => {
-    await (supabase.from as any)('update_notices').delete().eq('id', id);
+    const { error } = await supabase.from('update_notices').delete().eq('id', id);
+    if (error) {
+      toast({ title: 'Erro', description: error.message, variant: 'destructive' });
+      return;
+    }
+    localStorage.setItem('lb_update_notices_refresh', String(Date.now()));
+    window.dispatchEvent(new Event('lb_update_notices_changed'));
     toast({ title: 'Aviso removido!' });
     loadNotices();
   };

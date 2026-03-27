@@ -62,7 +62,42 @@ export const defaultTrailNodes: TrailNodeDef[] = [
   { id: 27, title: 'Dedicação Total', type: 'challenge', creditReward: 6, iconName: 'Flame', x: 3700, y: 230, parents: [25], objective: "Fique 90 minutos focado.", timeRequiredMinutes: 90, triggerType: 'time_focused', triggerRequirement: 90 },
   { id: 28, title: 'Troféu Diamante', type: 'milestone', creditReward: 15, iconName: 'Crown', x: 3900, y: 150, parents: [26, 27] },
   { id: 29, title: 'Lenda Suprema', type: 'reward', creditReward: 20, iconName: 'Crown', x: 4100, y: 150, parents: [28], objective: "A conquista final! Parabéns, você é uma lenda!" },
+  // Fase 7 — Ascensão
+  { id: 30, title: 'Retomada Brilhante', type: 'challenge', creditReward: 4, iconName: 'BookOpen', x: 4300, y: 70, parents: [29], objective: 'Gere mais um conteúdo de estudo para seguir sua jornada.', triggerType: 'generate_study' },
+  { id: 31, title: 'Quiz Turbo', type: 'quiz', creditReward: 4, iconName: 'Zap', x: 4300, y: 230, parents: [29], objective: 'Gere mais um exercício para treinar ainda mais.', triggerType: 'generate_quiz' },
+  { id: 32, title: 'Foco de Titã', type: 'challenge', creditReward: 6, iconName: 'Flame', x: 4500, y: 150, parents: [30, 31], objective: 'Fique 105 minutos focado estudando.', timeRequiredMinutes: 105, triggerType: 'time_focused', triggerRequirement: 105 },
+  { id: 33, title: 'Marco Celestial', type: 'milestone', creditReward: 8, iconName: 'Trophy', x: 4700, y: 150, parents: [32] },
+  { id: 34, title: 'Baú Astral', type: 'reward', creditReward: 10, iconName: 'Gift', x: 4900, y: 150, parents: [33], objective: 'Você desbloqueou uma recompensa extra na trilha!' },
+  // Fase 8 — Órbita
+  { id: 35, title: 'Rota do Conhecimento', type: 'challenge', creditReward: 5, iconName: 'Target', x: 5100, y: 70, parents: [34], objective: 'Gere um novo material completo para avançar.', triggerType: 'generate_study' },
+  { id: 36, title: 'Especial Quiz Master', type: 'quiz', creditReward: 5, iconName: 'Brain', x: 5100, y: 230, parents: [34], objective: 'Gere um novo exercício especial.', triggerType: 'generate_quiz' },
+  { id: 37, title: 'Sequência Diária Pro', type: 'challenge', creditReward: 7, iconName: 'Flame', x: 5300, y: 150, parents: [35, 36], objective: 'Fique 120 minutos focado estudando.', timeRequiredMinutes: 120, triggerType: 'time_focused', triggerRequirement: 120 },
+  { id: 38, title: 'Troféu Galáctico', type: 'milestone', creditReward: 10, iconName: 'Crown', x: 5500, y: 150, parents: [37] },
+  { id: 39, title: 'Recompensa Prisma', type: 'reward', creditReward: 12, iconName: 'Star', x: 5700, y: 150, parents: [38], objective: 'Uma recompensa rara para quem mantém o ritmo.' },
+  // Fase 9 — Constelação
+  { id: 40, title: 'Nova Expedição', type: 'challenge', creditReward: 5, iconName: 'MapPin', x: 5900, y: 70, parents: [39], objective: 'Gere outro conteúdo de estudo e continue explorando.', triggerType: 'generate_study' },
+  { id: 41, title: 'Quiz Estelar', type: 'quiz', creditReward: 6, iconName: 'Zap', x: 5900, y: 230, parents: [39], objective: 'Gere mais um exercício avançado.', triggerType: 'generate_quiz' },
+  { id: 42, title: 'Mente Inabalável', type: 'challenge', creditReward: 8, iconName: 'Flame', x: 6100, y: 150, parents: [40, 41], objective: 'Fique 135 minutos focado estudando.', timeRequiredMinutes: 135, triggerType: 'time_focused', triggerRequirement: 135 },
+  { id: 43, title: 'Pódio Supremo', type: 'milestone', creditReward: 12, iconName: 'Trophy', x: 6300, y: 150, parents: [42] },
+  { id: 44, title: 'Tesouro Lendário', type: 'reward', creditReward: 14, iconName: 'Gift', x: 6500, y: 150, parents: [43], objective: 'Você alcançou um prêmio lendário na trilha.' },
+  // Fase 10 — Infinito
+  { id: 45, title: 'Biblioteca Infinita', type: 'challenge', creditReward: 6, iconName: 'BookOpen', x: 6700, y: 70, parents: [44], objective: 'Gere mais um estudo de alto nível.', triggerType: 'generate_study' },
+  { id: 46, title: 'Desafio Final Quiz', type: 'quiz', creditReward: 6, iconName: 'Brain', x: 6700, y: 230, parents: [44], objective: 'Gere o quiz final desta trilha expandida.', triggerType: 'generate_quiz' },
+  { id: 47, title: 'Foco do Infinito', type: 'challenge', creditReward: 10, iconName: 'Flame', x: 6900, y: 150, parents: [45, 46], objective: 'Fique 150 minutos focado estudando.', timeRequiredMinutes: 150, triggerType: 'time_focused', triggerRequirement: 150 },
+  { id: 48, title: 'Imperador da Trilha', type: 'milestone', creditReward: 15, iconName: 'Crown', x: 7100, y: 150, parents: [47] },
+  { id: 49, title: 'Universo Dominado', type: 'reward', creditReward: 25, iconName: 'Crown', x: 7300, y: 150, parents: [48], objective: 'A trilha completa agora é sua. Você dominou todo o mapa!' },
 ];
+
+const mergeTrailNodes = (storedNodes: TrailNodeDef[]) => {
+  const defaultMap = new Map(defaultTrailNodes.map((node) => [node.id, node]));
+  const mergedStored = storedNodes.map((node) => ({
+    ...defaultMap.get(node.id),
+    ...node,
+  }));
+  const missingDefaults = defaultTrailNodes.filter((node) => !storedNodes.some((stored) => stored.id === node.id));
+
+  return [...mergedStored, ...missingDefaults].sort((a, b) => a.id - b.id);
+};
 
 export const useAchievementData = () => {
   const [nodes, setNodes] = useState<TrailNodeDef[]>(defaultTrailNodes);
@@ -71,11 +106,18 @@ export const useAchievementData = () => {
     const stored = localStorage.getItem('lb_custom_achievements');
     if (stored) {
       try {
-        setNodes(JSON.parse(stored));
+        const parsed = JSON.parse(stored) as TrailNodeDef[];
+        const merged = mergeTrailNodes(parsed);
+        setNodes(merged);
+        localStorage.setItem('lb_custom_achievements', JSON.stringify(merged));
       } catch (e) {
         console.error("Failed to parse custom achievements", e);
+        setNodes(defaultTrailNodes);
       }
+      return;
     }
+
+    setNodes(defaultTrailNodes);
   };
 
   useEffect(() => {
