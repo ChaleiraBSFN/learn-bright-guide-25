@@ -464,6 +464,8 @@ const Index = () => {
             >
               {/* Engine Notice Banner */}
               <EngineNoticeBanner />
+              {/* Update Notices */}
+              <UpdateNoticeBanner />
 
               {/* Hero Section */}
               <div className="text-center space-y-3 md:space-y-4 px-2">
