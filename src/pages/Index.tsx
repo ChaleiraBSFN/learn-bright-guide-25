@@ -18,6 +18,7 @@ import { UserMenu } from "@/components/UserMenu";
 import { SupportChat } from "@/components/SupportChat";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
+import { UpdateNoticeBanner } from "@/components/UpdateNoticeBanner";
 import { FloatingActions } from "@/components/FloatingActions";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { useAuth } from "@/hooks/useAuth";
@@ -463,6 +464,8 @@ const Index = () => {
             >
               {/* Engine Notice Banner */}
               <EngineNoticeBanner />
+              {/* Update Notices */}
+              <UpdateNoticeBanner />
 
               {/* Hero Section */}
               <div className="text-center space-y-3 md:space-y-4 px-2">

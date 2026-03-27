@@ -10,13 +10,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Megaphone, Loader2, Plus, Trash2, Send } from 'lucide-react';
+import { ArrowLeft, Megaphone, Loader2, Trash2, Send } from 'lucide-react';
 
 interface UpdateNotice {
   id: string;
   title: string;
   message: string;
-  type: 'feature' | 'improvement' | 'bugfix' | 'announcement';
+  type: string;
   active: boolean;
   created_at: string;
 }
@@ -40,7 +40,7 @@ const UpdateNoticesAdmin = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdmin();
   const { toast } = useToast();
-  
+
   const [notices, setNotices] = useState<UpdateNotice[]>([]);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
@@ -56,46 +56,52 @@ const UpdateNoticesAdmin = () => {
     if (!adminLoading && !isAdmin && user) navigate('/');
   }, [isAdmin, adminLoading, user, navigate]);
 
-  // Load notices from localStorage (simple approach - can migrate to DB later)
-  useEffect(() => {
-    const stored = localStorage.getItem('lb_update_notices');
-    if (stored) {
-      setNotices(JSON.parse(stored));
-    }
+  const loadNotices = async () => {
+    setLoading(true);
+    const { data, error } = await (supabase.from as any)('update_notices')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error && data) setNotices(data);
     setLoading(false);
-  }, []);
-
-  const saveNotices = (updated: UpdateNotice[]) => {
-    setNotices(updated);
-    localStorage.setItem('lb_update_notices', JSON.stringify(updated));
   };
 
-  const handleAdd = () => {
+  useEffect(() => {
+    if (user && isAdmin) loadNotices();
+  }, [user, isAdmin]);
+
+  const handleAdd = async () => {
     if (!title.trim() || !message.trim()) {
       toast({ title: 'Erro', description: 'Preencha título e mensagem.', variant: 'destructive' });
       return;
     }
-    const newNotice: UpdateNotice = {
-      id: crypto.randomUUID(),
+    setSaving(true);
+    const { error } = await (supabase.from as any)('update_notices').insert({
       title: title.trim(),
       message: message.trim(),
-      type: type as any,
+      type,
       active: true,
-      created_at: new Date().toISOString(),
-    };
-    saveNotices([newNotice, ...notices]);
+      created_by: user?.id,
+    });
+    setSaving(false);
+    if (error) {
+      toast({ title: 'Erro', description: error.message, variant: 'destructive' });
+      return;
+    }
     setTitle('');
     setMessage('');
     toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
+    loadNotices();
   };
 
-  const handleToggle = (id: string) => {
-    saveNotices(notices.map(n => n.id === id ? { ...n, active: !n.active } : n));
+  const handleToggle = async (id: string, currentActive: boolean) => {
+    await (supabase.from as any)('update_notices').update({ active: !currentActive }).eq('id', id);
+    loadNotices();
   };
 
-  const handleDelete = (id: string) => {
-    saveNotices(notices.filter(n => n.id !== id));
+  const handleDelete = async (id: string) => {
+    await (supabase.from as any)('update_notices').delete().eq('id', id);
     toast({ title: 'Aviso removido!' });
+    loadNotices();
   };
 
   if (authLoading || adminLoading || loading) {
@@ -121,7 +127,6 @@ const UpdateNoticesAdmin = () => {
           </div>
         </div>
 
-        {/* Create Notice */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-lg">Criar Novo Aviso</CardTitle>
@@ -151,13 +156,12 @@ const UpdateNoticesAdmin = () => {
                 ))}
               </div>
             </div>
-            <Button onClick={handleAdd} className="gap-2">
-              <Send className="h-4 w-4" /> Publicar Aviso
+            <Button onClick={handleAdd} className="gap-2" disabled={saving}>
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Publicar Aviso
             </Button>
           </CardContent>
         </Card>
 
-        {/* Existing Notices */}
         <div className="space-y-3">
           {notices.length === 0 && (
             <p className="text-center text-muted-foreground py-8">Nenhum aviso publicado ainda.</p>
@@ -168,8 +172,8 @@ const UpdateNoticesAdmin = () => {
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <Badge variant="outline" className={`text-[10px] ${typeColors[notice.type]}`}>
-                        {typeLabels[notice.type]}
+                      <Badge variant="outline" className={`text-[10px] ${typeColors[notice.type] || typeColors.announcement}`}>
+                        {typeLabels[notice.type] || '📢 Anúncio'}
                       </Badge>
                       {!notice.active && <Badge variant="outline" className="text-[10px]">Inativo</Badge>}
                     </div>
@@ -180,7 +184,7 @@ const UpdateNoticesAdmin = () => {
                     </p>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button size="sm" variant={notice.active ? 'outline' : 'default'} className="text-xs h-7" onClick={() => handleToggle(notice.id)}>
+                    <Button size="sm" variant={notice.active ? 'outline' : 'default'} className="text-xs h-7" onClick={() => handleToggle(notice.id, notice.active)}>
                       {notice.active ? 'Desativar' : 'Ativar'}
                     </Button>
                     <Button size="sm" variant="ghost" className="h-7 text-destructive" onClick={() => handleDelete(notice.id)}>
