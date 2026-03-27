@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Megaphone } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { X } from 'lucide-react';
 
 interface UpdateNotice {
   id: string;
@@ -23,22 +22,66 @@ export const UpdateNoticeBanner = () => {
   const [notices, setNotices] = useState<UpdateNotice[]>([]);
   const [dismissed, setDismissed] = useState<string[]>([]);
 
+  const loadNotices = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('update_notices')
+      .select('id, title, message, type, created_at')
+      .eq('active', true)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    if (error) {
+      console.error('Error loading update notices:', error);
+      return;
+    }
+
+    setNotices(data ?? []);
+  }, []);
+
   useEffect(() => {
     const stored = localStorage.getItem('lb_dismissed_notices');
     if (stored) {
       try { setDismissed(JSON.parse(stored)); } catch {}
     }
 
-    const load = async () => {
-      const { data, error } = await (supabase.from as any)('update_notices')
-        .select('id, title, message, type, created_at')
-        .eq('active', true)
-        .order('created_at', { ascending: false })
-        .limit(5);
-      if (!error && data) setNotices(data);
+    loadNotices();
+
+    const handleRefresh = () => {
+      loadNotices();
     };
-    load();
-  }, []);
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === 'lb_update_notices_refresh' || event.key === 'lb_dismissed_notices') {
+        loadNotices();
+        if (event.key === 'lb_dismissed_notices' && event.newValue) {
+          try {
+            setDismissed(JSON.parse(event.newValue));
+          } catch {}
+        }
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        loadNotices();
+      }
+    };
+
+    const intervalId = window.setInterval(loadNotices, 15000);
+
+    window.addEventListener('focus', handleRefresh);
+    window.addEventListener('storage', handleStorage);
+    window.addEventListener('lb_update_notices_changed', handleRefresh);
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', handleRefresh);
+      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('lb_update_notices_changed', handleRefresh);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [loadNotices]);
 
   const dismiss = (id: string) => {
     const updated = [...dismissed, id];
@@ -46,7 +89,7 @@ export const UpdateNoticeBanner = () => {
     localStorage.setItem('lb_dismissed_notices', JSON.stringify(updated));
   };
 
-  const visible = notices.filter(n => !dismissed.includes(n.id));
+  const visible = useMemo(() => notices.filter((n) => !dismissed.includes(n.id)), [notices, dismissed]);
   if (visible.length === 0) return null;
 
   return (
