@@ -5,17 +5,69 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-async function generateImageGemini(prompt: string, apiKey: string, modelIndex = 0): Promise<string | null> {
-  const models = ["gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-1.5-flash"];
-  // Use text-to-image via Imagen through Gemini, or use generateContent with image response
+async function generateImageViaGateway(prompt: string, lovableKey: string): Promise<string | null> {
+  const models = ["google/gemini-3.1-flash-image-preview", "google/gemini-3-pro-image-preview"];
+  
+  for (const model of models) {
+    try {
+      console.log(`[Image Gateway] Trying ${model}...`);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000);
+
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${lovableKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content: prompt }],
+          modalities: ["image", "text"],
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (response.status === 429) {
+        console.log(`[Image Gateway] ${model} rate limited`);
+        continue;
+      }
+      if (response.status === 402) {
+        console.log(`[Image Gateway] Payment required`);
+        return null;
+      }
+      if (!response.ok) {
+        console.log(`[Image Gateway] ${model} HTTP ${response.status}`);
+        continue;
+      }
+
+      const data = await response.json();
+      const images = data.choices?.[0]?.message?.images;
+      if (images && images.length > 0) {
+        const imageUrl = images[0]?.image_url?.url;
+        if (imageUrl) {
+          console.log(`[Image Gateway] Success with ${model}`);
+          return imageUrl;
+        }
+      }
+    } catch (e: any) {
+      if (e.name === "AbortError") console.log(`[Image Gateway] ${model} timed out`);
+      else console.error(`[Image Gateway] ${model}:`, e.message);
+    }
+  }
+  return null;
+}
+
+async function generateImageGeminiFallback(prompt: string, apiKey: string, modelIndex = 0): Promise<string | null> {
   const imageModels = ["gemini-3.1-flash-image-preview", "gemini-3-pro-image-preview"];
   
-  // Try image models first, starting from the assigned index to distribute load
   for (let i = 0; i < imageModels.length; i++) {
     const model = imageModels[(modelIndex + i) % imageModels.length];
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 9000);
+      const timeout = setTimeout(() => controller.abort(), 15000);
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -32,10 +84,7 @@ async function generateImageGemini(prompt: string, apiKey: string, modelIndex = 
 
       clearTimeout(timeout);
 
-      if (response.status === 429) {
-        console.log(`[Image] ${model} rate limited`);
-        continue;
-      }
+      if (response.status === 429) { console.log(`[Fallback] ${model} rate limited`); continue; }
       if (!response.ok) continue;
 
       const data = await response.json();
@@ -48,9 +97,9 @@ async function generateImageGemini(prompt: string, apiKey: string, modelIndex = 
           }
         }
       }
-    } catch (e) {
-      if (e.name === "AbortError") console.log(`[Image] ${model} timed out`);
-      else console.error(`[Image] ${model}:`, e.message);
+    } catch (e: any) {
+      if (e.name === "AbortError") console.log(`[Fallback] ${model} timed out`);
+      else console.error(`[Fallback] ${model}:`, e.message);
     }
   }
   return null;
@@ -71,8 +120,10 @@ serve(async (req) => {
       );
     }
 
+    const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY");
     const GEMINI_KEY = Deno.env.get("GOOGLE_GEMINI_API_KEY");
-    if (!GEMINI_KEY) throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+    
+    if (!LOVABLE_KEY && !GEMINI_KEY) throw new Error("No API keys configured");
 
     const sanitizedTema = tema.replace(/[<>]/g, "").replace(/```/g, "").trim().slice(0, 200);
     const sanitizedNivel = (nivel || "medio").replace(/[<>]/g, "").trim().slice(0, 50);
@@ -86,7 +137,6 @@ serve(async (req) => {
     const audience = nivelLabel[sanitizedNivel] || "students";
     const shortPrompt = (desc: string) => `${desc} about "${sanitizedTema}" for ${audience}. White background, flat design, vibrant colors, no text.`;
 
-    // 3 base images + up to 5 step images = 6-8 total
     const prompts: { label: string; prompt: string }[] = [
       { label: "summary", prompt: shortPrompt("Clean colorful educational infographic with icons and arrows") },
       { label: "mindmap-center", prompt: shortPrompt("Mind map with central topic and 4-5 colorful branches with icons") },
@@ -106,36 +156,45 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Generating ${prompts.length} images in parallel for: ${sanitizedTema}`);
+    console.log(`Generating ${prompts.length} images for: ${sanitizedTema}`);
 
-    // Fire ALL requests in parallel - distribute across models to reduce rate limiting
-    const results = await Promise.allSettled(
-      prompts.map((p, i) => generateImageGemini(p.prompt, GEMINI_KEY, i % 2))
-    );
-
-    const descMap: Record<string, string> = {
-      summary: `Infográfico: ${sanitizedTema}`,
-      "mindmap-center": `Mapa mental: ${sanitizedTema}`,
-      diagram: `Diagrama: ${sanitizedTema}`,
+    // Use Lovable AI Gateway first, fallback to direct Gemini
+    const generateImage = async (prompt: string, index: number): Promise<string | null> => {
+      if (LOVABLE_KEY) {
+        const result = await generateImageViaGateway(prompt, LOVABLE_KEY);
+        if (result) return result;
+      }
+      if (GEMINI_KEY) {
+        return await generateImageGeminiFallback(prompt, GEMINI_KEY, index % 2);
+      }
+      return null;
     };
 
-    const aiImages = results
-      .map((r, i) => {
-        if (r.status === "fulfilled" && r.value) {
-          const label = prompts[i].label;
-          const isStep = label.startsWith("step-");
-          return {
-            tipo: "ai" as const,
-            label,
-            url: r.value,
+    // Generate images sequentially with small delay to avoid rate limits
+    const aiImages: any[] = [];
+    for (let i = 0; i < prompts.length; i++) {
+      const p = prompts[i];
+      try {
+        const result = await generateImage(p.prompt, i);
+        if (result) {
+          const isStep = p.label.startsWith("step-");
+          aiImages.push({
+            tipo: "ai",
+            label: p.label,
+            url: result,
             descricao: isStep
-              ? `Ilustração: ${(Array.isArray(passos) && passos[parseInt(label.split("-")[1])]?.titulo) || sanitizedTema}`
-              : descMap[label] || sanitizedTema,
-          };
+              ? `Ilustração: ${(Array.isArray(passos) && passos[parseInt(p.label.split("-")[1])]?.titulo) || sanitizedTema}`
+              : p.label === "summary" ? `Infográfico: ${sanitizedTema}`
+              : p.label === "mindmap-center" ? `Mapa mental: ${sanitizedTema}`
+              : `Diagrama: ${sanitizedTema}`,
+          });
         }
-        return null;
-      })
-      .filter(Boolean);
+      } catch (e: any) {
+        console.error(`Error generating image ${p.label}:`, e.message);
+      }
+      // Small delay between requests
+      if (i < prompts.length - 1) await new Promise(r => setTimeout(r, 500));
+    }
 
     console.log(`Generated ${aiImages.length} AI images`);
 
@@ -143,7 +202,7 @@ serve(async (req) => {
       JSON.stringify({ aiImages, webImages: [], tema: sanitizedTema }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in generate-images:", error);
     const status = error.message?.includes("429") ? 429 : 500;
     return new Response(
