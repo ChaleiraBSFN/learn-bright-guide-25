@@ -150,7 +150,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             </div>
           )}
 
-          <div className="relative w-[1450px] h-[400px] p-8">
+          <div className="relative w-[7500px] h-[400px] p-8">
             {/* SVG Connections */}
             <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
               <defs>
