@@ -27,7 +27,7 @@ const AdminAchievementsEditor = ({ onBack }: { onBack: () => void }) => {
   const addNode = () => {
     const newId = Math.max(0, ...editingNodes.map(n => n.id)) + 1;
     const newNode: TrailNodeDef = {
-      id: newId, title: 'Nova Conquista', type: 'challenge', creditReward: 1, iconName: 'Star',
+      id: newId, title: 'Nova Conquista', description: 'Descrição do desafio aqui.', type: 'challenge', creditReward: 1, iconName: 'Star',
       x: 100, y: 150, parents: [], objective: 'Descrição do objetivo aqui.', triggerType: 'none', triggerRequirement: 0
     };
     setEditingNodes([...editingNodes, newNode]);
