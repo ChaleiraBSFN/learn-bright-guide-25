@@ -14,6 +14,7 @@ export type IconName = keyof typeof availableIcons;
 export interface TrailNodeDef {
   id: number;
   title: string;
+  description: string;
   type: 'challenge' | 'quiz' | 'milestone' | 'reward';
   creditReward: number;
   iconName: IconName;
