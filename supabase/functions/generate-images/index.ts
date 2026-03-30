@@ -8,8 +8,9 @@ const corsHeaders = {
 async function generateSvgImage(prompt: string, lovableKey: string): Promise<string | null> {
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 10000);
+    const timer = setTimeout(() => controller.abort(), 15000);
 
+    console.log("[SVG] Calling gateway...");
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -20,35 +21,40 @@ async function generateSvgImage(prompt: string, lovableKey: string): Promise<str
         model: "google/gemini-2.5-flash-lite",
         messages: [{
           role: "user",
-          content: `Generate a clean, educational SVG illustration. ${prompt}
+          content: `Generate a clean educational SVG illustration. ${prompt}
 
-RULES:
-- Return ONLY valid SVG code, nothing else
-- SVG must have viewBox="0 0 800 600"
-- Use vibrant, flat design colors
-- Include relevant icons/shapes for the topic
-- Use text elements for labels (font-family="Arial")
-- Keep it simple but informative
-- NO markdown, NO code blocks, ONLY the raw <svg>...</svg>`
+Return ONLY valid SVG code. The SVG must have viewBox="0 0 800 600". Use vibrant flat design colors, include relevant shapes and text labels with font-family="Arial". No markdown, no code blocks, only raw <svg>...</svg>`
         }],
       }),
       signal: controller.signal,
     });
 
     clearTimeout(timer);
-    if (!response.ok) return null;
+    console.log(`[SVG] Gateway response: ${response.status}`);
+    
+    if (!response.ok) {
+      const body = await response.text();
+      console.error(`[SVG] Error body: ${body.slice(0, 200)}`);
+      return null;
+    }
 
     const data = await response.json();
     let svgText = data.choices?.[0]?.message?.content || "";
+    console.log(`[SVG] Got response length: ${svgText.length}`);
     
-    // Extract SVG from response
+    // Extract SVG from response (handle code blocks too)
+    svgText = svgText.replace(/```xml\s*/g, "").replace(/```svg\s*/g, "").replace(/```\s*/g, "");
     const svgMatch = svgText.match(/<svg[\s\S]*?<\/svg>/i);
-    if (!svgMatch) return null;
+    if (!svgMatch) {
+      console.error("[SVG] No SVG found in response");
+      return null;
+    }
     
     const svg = svgMatch[0];
     const base64 = btoa(unescape(encodeURIComponent(svg)));
     return `data:image/svg+xml;base64,${base64}`;
-  } catch {
+  } catch (e: any) {
+    console.error(`[SVG] Exception: ${e.message}`);
     return null;
   }
 }
@@ -82,7 +88,6 @@ serve(async (req) => {
     };
     const audience = nivelLabel[sanitizedNivel] || "estudantes";
 
-    // Build max 3 prompts for speed
     const prompts: { label: string; prompt: string }[] = [
       { label: "summary", prompt: `Infográfico educacional sobre "${sanitizedTema}" para ${audience}. Mostre os principais conceitos com ícones, setas e cores vibrantes.` },
       { label: "mindmap-center", prompt: `Mapa mental sobre "${sanitizedTema}" para ${audience}. Tópico central conectado a 4-5 ramos coloridos com ícones representativos.` },
@@ -92,7 +97,7 @@ serve(async (req) => {
       const titulo = typeof passos[0] === "string" ? passos[0] : passos[0]?.titulo || passos[0]?.conceito || "Passo 1";
       prompts.push({
         label: "step-0",
-        prompt: `Ilustração educacional simples de "${String(titulo).replace(/[<>]/g, "").trim().slice(0, 100)}" no contexto de "${sanitizedTema}" para ${audience}.`
+        prompt: `Ilustração educacional de "${String(titulo).replace(/[<>]/g, "").trim().slice(0, 100)}" no contexto de "${sanitizedTema}" para ${audience}.`
       });
     } else {
       prompts.push({
@@ -103,7 +108,6 @@ serve(async (req) => {
 
     console.log(`Generating ${prompts.length} SVG images in PARALLEL for: ${sanitizedTema}`);
 
-    // Generate ALL images in parallel for maximum speed
     const results = await Promise.allSettled(
       prompts.map(p => generateSvgImage(p.prompt, LOVABLE_KEY))
     );
