@@ -5,41 +5,52 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-async function generateImage(prompt: string, lovableKey: string, timeout = 12000): Promise<string | null> {
-  const models = ["google/gemini-3.1-flash-image-preview", "google/gemini-3-pro-image-preview"];
-  
-  for (const model of models) {
-    try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), timeout);
+async function generateSvgImage(prompt: string, lovableKey: string): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
 
-      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${lovableKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model,
-          messages: [{ role: "user", content: prompt }],
-          modalities: ["image", "text"],
-        }),
-        signal: controller.signal,
-      });
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${lovableKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-lite",
+        messages: [{
+          role: "user",
+          content: `Generate a clean, educational SVG illustration. ${prompt}
 
-      clearTimeout(timer);
+RULES:
+- Return ONLY valid SVG code, nothing else
+- SVG must have viewBox="0 0 800 600"
+- Use vibrant, flat design colors
+- Include relevant icons/shapes for the topic
+- Use text elements for labels (font-family="Arial")
+- Keep it simple but informative
+- NO markdown, NO code blocks, ONLY the raw <svg>...</svg>`
+        }],
+      }),
+      signal: controller.signal,
+    });
 
-      if (response.status === 429 || response.status === 402) continue;
-      if (!response.ok) continue;
+    clearTimeout(timer);
+    if (!response.ok) return null;
 
-      const data = await response.json();
-      const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-      if (imageUrl) return imageUrl;
-    } catch {
-      continue;
-    }
+    const data = await response.json();
+    let svgText = data.choices?.[0]?.message?.content || "";
+    
+    // Extract SVG from response
+    const svgMatch = svgText.match(/<svg[\s\S]*?<\/svg>/i);
+    if (!svgMatch) return null;
+    
+    const svg = svgMatch[0];
+    const base64 = btoa(unescape(encodeURIComponent(svg)));
+    return `data:image/svg+xml;base64,${base64}`;
+  } catch {
+    return null;
   }
-  return null;
 }
 
 serve(async (req) => {
@@ -64,39 +75,37 @@ serve(async (req) => {
     const sanitizedNivel = (nivel || "medio").replace(/[<>]/g, "").trim().slice(0, 50);
 
     const nivelLabel: Record<string, string> = {
-      fundamental1: "elementary school children",
-      fundamental2: "high school students",
-      medio: "college students",
-      superior: "graduate students",
+      fundamental1: "crianças do ensino fundamental",
+      fundamental2: "adolescentes do ensino médio",
+      medio: "estudantes universitários",
+      superior: "estudantes de pós-graduação",
     };
-    const audience = nivelLabel[sanitizedNivel] || "students";
-    const shortPrompt = (desc: string) => `${desc} about "${sanitizedTema}" for ${audience}. White background, flat design, vibrant colors, no text.`;
+    const audience = nivelLabel[sanitizedNivel] || "estudantes";
 
     // Build max 3 prompts for speed
     const prompts: { label: string; prompt: string }[] = [
-      { label: "summary", prompt: shortPrompt("Clean colorful educational infographic with icons and arrows") },
-      { label: "mindmap-center", prompt: shortPrompt("Mind map with central topic and 4-5 colorful branches with icons") },
+      { label: "summary", prompt: `Infográfico educacional sobre "${sanitizedTema}" para ${audience}. Mostre os principais conceitos com ícones, setas e cores vibrantes.` },
+      { label: "mindmap-center", prompt: `Mapa mental sobre "${sanitizedTema}" para ${audience}. Tópico central conectado a 4-5 ramos coloridos com ícones representativos.` },
     ];
 
     if (Array.isArray(passos) && passos.length > 0) {
-      const step = passos[0];
-      const titulo = typeof step === "string" ? step : step?.titulo || step?.conceito || "Step 1";
+      const titulo = typeof passos[0] === "string" ? passos[0] : passos[0]?.titulo || passos[0]?.conceito || "Passo 1";
       prompts.push({
         label: "step-0",
-        prompt: shortPrompt(`Simple illustration of "${String(titulo).replace(/[<>]/g, "").trim().slice(0, 100)}"`)
+        prompt: `Ilustração educacional simples de "${String(titulo).replace(/[<>]/g, "").trim().slice(0, 100)}" no contexto de "${sanitizedTema}" para ${audience}.`
       });
     } else {
       prompts.push({
         label: "diagram",
-        prompt: shortPrompt("Educational diagram showing relationships between key concepts with boxes and arrows")
+        prompt: `Diagrama educacional mostrando relações entre conceitos-chave de "${sanitizedTema}" para ${audience}. Use caixas, setas e cores.`
       });
     }
 
-    console.log(`Generating ${prompts.length} images in PARALLEL for: ${sanitizedTema}`);
+    console.log(`Generating ${prompts.length} SVG images in PARALLEL for: ${sanitizedTema}`);
 
     // Generate ALL images in parallel for maximum speed
     const results = await Promise.allSettled(
-      prompts.map(p => generateImage(p.prompt, LOVABLE_KEY, 12000))
+      prompts.map(p => generateSvgImage(p.prompt, LOVABLE_KEY))
     );
 
     const aiImages: any[] = [];
@@ -104,21 +113,19 @@ serve(async (req) => {
       const result = results[i];
       if (result.status === "fulfilled" && result.value) {
         const p = prompts[i];
-        const isStep = p.label.startsWith("step-");
         aiImages.push({
           tipo: "ai",
           label: p.label,
           url: result.value,
-          descricao: isStep
-            ? `Ilustração: ${(Array.isArray(passos) && passos[0]?.titulo) || sanitizedTema}`
-            : p.label === "summary" ? `Infográfico: ${sanitizedTema}`
+          descricao: p.label === "summary" ? `Infográfico: ${sanitizedTema}`
             : p.label === "mindmap-center" ? `Mapa mental: ${sanitizedTema}`
+            : p.label.startsWith("step-") ? `Ilustração: ${(Array.isArray(passos) && passos[0]?.titulo) || sanitizedTema}`
             : `Diagrama: ${sanitizedTema}`,
         });
       }
     }
 
-    console.log(`Generated ${aiImages.length}/${prompts.length} images`);
+    console.log(`Generated ${aiImages.length}/${prompts.length} SVG images`);
 
     return new Response(
       JSON.stringify({ aiImages, webImages: [], tema: sanitizedTema }),
