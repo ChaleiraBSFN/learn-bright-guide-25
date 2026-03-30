@@ -150,7 +150,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             </div>
           )}
 
-          <div className="relative w-[1450px] h-[400px] p-8">
+          <div className="relative w-[7500px] h-[400px] p-8">
             {/* SVG Connections */}
             <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
               <defs>
@@ -227,9 +227,15 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                     )}
                   </div>
 
-                  <h4 className={`font-bold text-center text-[11px] leading-tight px-1 mb-1 ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
+                  <h4 className={`font-bold text-center text-[11px] leading-tight px-1 mb-0.5 ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
                     {node.title}
                   </h4>
+
+                  {node.description && !isLocked && (
+                    <p className="text-[8px] text-muted-foreground text-center leading-tight px-1 mb-1 line-clamp-2">
+                      {node.description}
+                    </p>
+                  )}
                   
                   <div className="flex items-center gap-1 justify-center">
                     <Badge variant="outline" className={`text-[9px] px-1 py-0 h-4 border-transparent ${isCompleted ? 'bg-primary/20 text-primary' : 'bg-orange-500/10 text-orange-600'}`}>

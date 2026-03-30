@@ -41,6 +41,7 @@ const AdminAchievements = () => {
     const newNode: TrailNodeDef = {
       id: maxId + 1,
       title: `Novo Nó ${maxId + 1}`,
+      description: 'Descrição do desafio aqui.',
       type: 'challenge',
       creditReward: 1,
       iconName: 'Star',
