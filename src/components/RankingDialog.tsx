@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Trophy, Medal, Star, Crown, ChevronRight } from 'lucide-react';
+import { Trophy, Star, Crown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface RankingUser {
@@ -18,74 +17,85 @@ interface RankingDialogProps {
 }
 
 export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
-  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [ranking, setRanking] = useState<RankingUser[]>([]);
 
   useEffect(() => {
     if (!open) return;
-    
+
+    let cancelled = false;
+
     const loadRanking = async () => {
       setLoading(true);
       try {
-        // Get all achievements
         const { data: achievements, error } = await (supabase.from as any)('user_achievements')
-          .select('user_id');
-          
+          .select('user_id, achievement_id');
+
         if (error) throw error;
-        
-        // Group and count
-        const counts: Record<string, { score: number }> = {};
-        achievements?.forEach((ach: any) => {
-          const uid = ach.user_id;
-          if (!counts[uid]) {
-            counts[uid] = { score: 0 };
-          }
-          counts[uid].score += 1;
+
+        const perUser = new Map<string, Set<number>>();
+        achievements?.forEach((achievement: any) => {
+          const userId = achievement.user_id;
+          const achievementId = Number(achievement.achievement_id);
+          if (!userId || !Number.isFinite(achievementId)) return;
+          if (!perUser.has(userId)) perUser.set(userId, new Set<number>());
+          perUser.get(userId)!.add(achievementId);
         });
 
-        // Find users to get names/emails
-        const userIds = Object.keys(counts);
+        const userIds = Array.from(perUser.keys());
         let profiles: any[] = [];
 
         if (userIds.length > 0) {
-          const { data: profs } = await (supabase.from as any)('profiles')
+          const { data: profileRows } = await (supabase.from as any)('profiles')
             .select('user_id, display_name, email')
             .in('user_id', userIds);
-          
-          if (profs) profiles = profs;
+          profiles = profileRows || [];
         }
-        
-        const sorted = userIds
+
+        const nextRanking = userIds
           .map((userId) => {
-            const profile = profiles.find((p: any) => p.user_id === userId);
-            const name = profile?.display_name || profile?.email?.split('@')[0] || 'Estudante Anônimo';
-            return { userId, name, score: counts[userId].score };
+            const profile = profiles.find((item) => item.user_id === userId);
+            return {
+              userId,
+              name: profile?.display_name || profile?.email?.split('@')[0] || 'Estudante Anônimo',
+              score: perUser.get(userId)?.size || 0,
+            };
           })
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 100); // Top 100
-          
-        setRanking(sorted);
-      } catch (err) {
-        console.error("Falha ao carregar ranking do banco real", err);
-        setRanking([]);
+          .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
+          .slice(0, 100);
+
+        if (!cancelled) setRanking(nextRanking);
+      } catch (error) {
+        console.error('Falha ao carregar ranking:', error);
+        if (!cancelled) setRanking([]);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-      setLoading(false);
     };
-    
+
     loadRanking();
+    const intervalId = window.setInterval(loadRanking, 15000);
+    const refresh = () => loadRanking();
+    window.addEventListener('achievements_changed', refresh);
+    window.addEventListener('storage', refresh);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+      window.removeEventListener('achievements_changed', refresh);
+      window.removeEventListener('storage', refresh);
+    };
   }, [open]);
 
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-md max-h-[85vh] p-0 overflow-hidden flex flex-col bg-zinc-50 dark:bg-zinc-950">
-        
+    <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
+      <DialogContent className="max-w-md max-h-[85vh] p-0 overflow-hidden flex flex-col bg-card">
         <DialogHeader className="p-5 pb-4 border-b border-border bg-card/95 backdrop-blur-md">
           <DialogTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
+            <Trophy className="h-5 w-5 text-primary" />
             Ranking de Conquistas
           </DialogTitle>
-          <p className="text-xs text-muted-foreground pt-1">Os melhores estudantes da plataforma com mais nós destravados na Trilha.</p>
+          <p className="text-xs text-muted-foreground pt-1">Usuários reais com mais conquistas únicas destravadas.</p>
         </DialogHeader>
 
         <ScrollArea className="flex-1 p-4">
@@ -94,56 +104,43 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
           ) : ranking.length === 0 ? (
             <div className="text-center p-8 flex flex-col items-center justify-center gap-3">
               <Trophy className="h-10 w-10 text-muted-foreground/30 mb-2" />
-              <p className="text-muted-foreground text-sm font-medium">
-                Ninguém pontuou no Ranking Global ainda! 🚀
-              </p>
-              <p className="text-xs text-muted-foreground/60 max-w-[250px]">
-                Gere resumos, faça quizzes e avance na Trilha de Progresso para ser o primeiro a aparecer aqui e garantir o primeiro lugar!
-              </p>
+              <p className="text-muted-foreground text-sm font-medium">Ninguém pontuou no ranking ainda.</p>
             </div>
           ) : (
             <div className="space-y-3 pb-4">
               {ranking.map((user, index) => {
                 const isTop3 = index < 3;
                 return (
-                  <div 
-                    key={user.userId} 
-                    className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                      index === 0 ? 'bg-yellow-500/10 border-yellow-500/30' : 
-                      index === 1 ? 'bg-zinc-200/50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700' :
-                      index === 2 ? 'bg-orange-500/5 border-orange-500/20' : 
-                      'bg-card border-border'
+                  <div
+                    key={user.userId}
+                    className={`flex items-center justify-between p-3 rounded-xl border ${
+                      index === 0
+                        ? 'bg-primary/10 border-primary/30'
+                        : index === 1
+                        ? 'bg-secondary/10 border-secondary/30'
+                        : index === 2
+                        ? 'bg-accent/10 border-accent/30'
+                        : 'bg-card border-border'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold ${
-                        index === 0 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-400' :
-                        index === 1 ? 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300' :
-                        index === 2 ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-400' :
-                        'bg-muted text-muted-foreground'
-                      }`}>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold ${isTop3 ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground'}`}>
                         {index === 0 ? <Crown className="h-4 w-4" /> : `#${index + 1}`}
                       </div>
-                      <span className={`font-semibold text-sm ${isTop3 ? 'text-foreground' : 'text-foreground/80'}`}>
+                      <span className={`font-semibold text-sm truncate ${isTop3 ? 'text-foreground' : 'text-foreground/80'}`}>
                         {user.name}
                       </span>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className={`gap-1 ${
-                        isTop3 ? 'border-primary/30 text-primary bg-primary/5' : 'border-border text-muted-foreground'
-                      }`}>
-                        <Star className="h-3 w-3" />
-                        {user.score} conquistas
-                      </Badge>
-                    </div>
+                    <Badge variant="outline" className={`${isTop3 ? 'border-primary/30 text-primary bg-primary/5' : 'border-border text-muted-foreground'} gap-1 shrink-0`}>
+                      <Star className="h-3 w-3" />
+                      {user.score}
+                    </Badge>
                   </div>
                 );
               })}
             </div>
           )}
         </ScrollArea>
-
       </DialogContent>
     </Dialog>
   );
