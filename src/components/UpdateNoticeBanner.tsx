@@ -18,11 +18,30 @@ const typeIcons: Record<string, string> = {
   announcement: '📢',
 };
 
+const noticesEnabled = () => {
+  try {
+    const stored = localStorage.getItem('lb_platform_settings');
+    if (!stored) return true;
+    const parsed = JSON.parse(stored);
+    return parsed.updateNoticesEnabled !== false;
+  } catch {
+    return true;
+  }
+};
+
 export const UpdateNoticeBanner = () => {
   const [notices, setNotices] = useState<UpdateNotice[]>([]);
   const [dismissed, setDismissed] = useState<string[]>([]);
+  const [enabled, setEnabled] = useState(true);
 
   const loadNotices = useCallback(async () => {
+    if (!noticesEnabled()) {
+      setEnabled(false);
+      setNotices([]);
+      return;
+    }
+
+    setEnabled(true);
     const { data, error } = await supabase
       .from('update_notices')
       .select('id, title, message, type, created_at')
@@ -41,18 +60,22 @@ export const UpdateNoticeBanner = () => {
   useEffect(() => {
     const stored = localStorage.getItem('lb_dismissed_notices');
     if (stored) {
-      try { setDismissed(JSON.parse(stored)); } catch {}
+      try {
+        setDismissed(JSON.parse(stored));
+      } catch {}
     }
 
-    loadNotices();
-
-    const handleRefresh = () => {
+    const syncSettings = () => {
+      setEnabled(noticesEnabled());
       loadNotices();
     };
 
+    syncSettings();
+
+    const handleRefresh = () => loadNotices();
     const handleStorage = (event: StorageEvent) => {
-      if (event.key === 'lb_update_notices_refresh' || event.key === 'lb_dismissed_notices') {
-        loadNotices();
+      if (event.key === 'lb_update_notices_refresh' || event.key === 'lb_dismissed_notices' || event.key === 'lb_platform_settings') {
+        syncSettings();
         if (event.key === 'lb_dismissed_notices' && event.newValue) {
           try {
             setDismissed(JSON.parse(event.newValue));
@@ -61,25 +84,16 @@ export const UpdateNoticeBanner = () => {
       }
     };
 
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        loadNotices();
-      }
-    };
-
-    const intervalId = window.setInterval(loadNotices, 15000);
-
     window.addEventListener('focus', handleRefresh);
     window.addEventListener('storage', handleStorage);
     window.addEventListener('lb_update_notices_changed', handleRefresh);
-    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('lb_settings_changed', syncSettings);
 
     return () => {
-      window.clearInterval(intervalId);
       window.removeEventListener('focus', handleRefresh);
       window.removeEventListener('storage', handleStorage);
       window.removeEventListener('lb_update_notices_changed', handleRefresh);
-      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('lb_settings_changed', syncSettings);
     };
   }, [loadNotices]);
 
@@ -89,13 +103,13 @@ export const UpdateNoticeBanner = () => {
     localStorage.setItem('lb_dismissed_notices', JSON.stringify(updated));
   };
 
-  const visible = useMemo(() => notices.filter((n) => !dismissed.includes(n.id)), [notices, dismissed]);
-  if (visible.length === 0) return null;
+  const visible = useMemo(() => notices.filter((notice) => !dismissed.includes(notice.id)), [notices, dismissed]);
+  if (!enabled || visible.length === 0) return null;
 
   return (
     <div className="space-y-2">
       <AnimatePresence>
-        {visible.map(notice => (
+        {visible.map((notice) => (
           <motion.div
             key={notice.id}
             initial={{ opacity: 0, y: -10 }}
@@ -103,10 +117,7 @@ export const UpdateNoticeBanner = () => {
             exit={{ opacity: 0, height: 0 }}
             className="relative rounded-xl border border-primary/20 bg-primary/5 p-3 pr-8"
           >
-            <button
-              onClick={() => dismiss(notice.id)}
-              className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
-            >
+            <button onClick={() => dismiss(notice.id)} className="absolute top-2 right-2 text-muted-foreground hover:text-foreground">
               <X className="h-3.5 w-3.5" />
             </button>
             <div className="flex items-start gap-2">

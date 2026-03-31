@@ -100,6 +100,23 @@ const mergeTrailNodes = (storedNodes: TrailNodeDef[]) => {
   return [...mergedStored, ...missingDefaults].sort((a, b) => a.id - b.id);
 };
 
+const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
+
+const readLocalAchievementIds = (userId: string): number[] => {
+  try {
+    const raw = JSON.parse(localStorage.getItem(getAchievementStorageKey(userId)) || '[]');
+    return [...new Set((Array.isArray(raw) ? raw : []).map(Number).filter(Number.isFinite))].sort((a, b) => a - b);
+  } catch {
+    return [];
+  }
+};
+
+const writeLocalAchievementIds = (userId: string, ids: number[]) => {
+  const normalized = [...new Set(ids)].sort((a, b) => a - b);
+  localStorage.setItem(getAchievementStorageKey(userId), JSON.stringify(normalized));
+  window.dispatchEvent(new Event('achievements_changed'));
+};
+
 export const useAchievementData = () => {
   const [nodes, setNodes] = useState<TrailNodeDef[]>(defaultTrailNodes);
 
@@ -112,7 +129,7 @@ export const useAchievementData = () => {
         setNodes(merged);
         localStorage.setItem('lb_custom_achievements', JSON.stringify(merged));
       } catch (e) {
-        console.error("Failed to parse custom achievements", e);
+        console.error('Failed to parse custom achievements', e);
         setNodes(defaultTrailNodes);
       }
       return;
@@ -124,8 +141,15 @@ export const useAchievementData = () => {
   useEffect(() => {
     loadNodes();
     const handleUpdate = () => loadNodes();
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === 'lb_custom_achievements') loadNodes();
+    };
     window.addEventListener('achievements_updated', handleUpdate);
-    return () => window.removeEventListener('achievements_updated', handleUpdate);
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      window.removeEventListener('achievements_updated', handleUpdate);
+      window.removeEventListener('storage', handleStorage);
+    };
   }, []);
 
   const saveNodes = (newNodes: TrailNodeDef[]) => {
@@ -143,59 +167,96 @@ export const useAchievements = () => {
   const { toast } = useToast();
   const { nodes } = useAchievementData();
 
+  const syncCompletedIds = useCallback(async (): Promise<Set<number>> => {
+    if (!user) return new Set();
+
+    const localIds = readLocalAchievementIds(user.id);
+
+    try {
+      const { data, error } = await (supabase.from as any)('user_achievements')
+        .select('achievement_id')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      const cloudIds = [...new Set((data || []).map((item: any) => Number(item.achievement_id)).filter(Number.isFinite))];
+      const merged = [...new Set([...cloudIds, ...localIds])].sort((a, b) => a - b);
+      writeLocalAchievementIds(user.id, merged);
+      return new Set(merged);
+    } catch {
+      return new Set(localIds);
+    }
+  }, [user]);
+
   const checkAndUnlock = useCallback(async (actionType?: string, actionValue?: number, explicitNodeId?: number) => {
     if (!user) return;
 
-    let targetNodeIds: number[] = [];
-    
+    const completed = await syncCompletedIds();
+    const queue: number[] = [];
+    const queued = new Set<number>();
+
+    const canUnlock = (node: TrailNodeDef) => node.parents.every((parentId) => completed.has(parentId));
+
+    const enqueue = (nodeId: number) => {
+      const node = nodes.find((item) => item.id === nodeId);
+      if (!node || completed.has(nodeId) || queued.has(nodeId) || !canUnlock(node)) return;
+      queued.add(nodeId);
+      queue.push(nodeId);
+    };
+
     if (explicitNodeId) {
-      targetNodeIds.push(explicitNodeId);
+      enqueue(explicitNodeId);
     } else if (actionType) {
-      const matches = nodes.filter(n => {
-         if (n.triggerType === actionType) {
-             const req = n.triggerRequirement || n.timeRequiredMinutes || 0;
-             if (req > 0 && actionValue !== undefined) {
-                 return actionValue >= req;
-             }
-             return true;
-         }
-         // Compatibilidade com nós antigos sem triggerType salvo
-         if (actionType === 'time_focused' && !n.triggerType && n.timeRequiredMinutes) {
-             return actionValue !== undefined && actionValue >= n.timeRequiredMinutes;
-         }
-         if (actionType === 'generate_study' && n.id === 1 && !n.triggerType) return true;
-         if (actionType === 'generate_quiz' && n.id === 2 && !n.triggerType) return true;
-         return false;
+      nodes.forEach((node) => {
+        const requirement = node.triggerRequirement || node.timeRequiredMinutes || 0;
+        const meetsRequirement = requirement > 0 ? actionValue !== undefined && actionValue >= requirement : true;
+
+        if (node.triggerType === actionType && meetsRequirement) {
+          enqueue(node.id);
+          return;
+        }
+
+        if (actionType === 'time_focused' && !node.triggerType && node.timeRequiredMinutes && actionValue !== undefined && actionValue >= node.timeRequiredMinutes) {
+          enqueue(node.id);
+          return;
+        }
+
+        if (actionType === 'generate_study' && node.id === 1 && !node.triggerType) enqueue(node.id);
+        if (actionType === 'generate_quiz' && node.id === 2 && !node.triggerType) enqueue(node.id);
       });
-      targetNodeIds.push(...matches.map(n => n.id));
     }
 
-    if (targetNodeIds.length === 0) return;
+    const queueAutoUnlocks = () => {
+      nodes.forEach((node) => {
+        if (node.parents.length === 0) return;
+        if (node.triggerType && node.triggerType !== 'none') return;
+        enqueue(node.id);
+      });
+    };
 
-    for (const targetNodeId of targetNodeIds) {
-      const nodeConf = nodes.find(n => n.id === targetNodeId);
-      if (!nodeConf) continue;
+    while (queue.length > 0) {
+      const targetNodeId = queue.shift()!;
+      const nodeConf = nodes.find((node) => node.id === targetNodeId);
+      if (!nodeConf || completed.has(targetNodeId)) continue;
 
       try {
         const { error } = await (supabase.from as any)('user_achievements').insert({ user_id: user.id, achievement_id: targetNodeId });
         if (error && error.code !== '23505') throw error;
-        
-        if (!error) {
-          await addCredits(nodeConf.creditReward);
-          toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
-        }
-      } catch (err) {
-        const key = `achievements_v2_${user.id}`;
-        const stored = JSON.parse(localStorage.getItem(key) || '[]');
-        if (!stored.includes(targetNodeId)) {
-          stored.push(targetNodeId);
-          localStorage.setItem(key, JSON.stringify(stored));
-          await addCredits(nodeConf.creditReward);
-          toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
-        }
+      } catch (error) {
+        console.warn('Achievement sync fallback to local storage:', error);
       }
+
+      completed.add(targetNodeId);
+      writeLocalAchievementIds(user.id, [...completed]);
+      await addCredits(nodeConf.creditReward);
+      toast({
+        title: 'Conquista Desbloqueada! 🏆',
+        description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!`,
+      });
+
+      queueAutoUnlocks();
     }
-  }, [user, addCredits, toast, nodes]);
+  }, [user, syncCompletedIds, nodes, addCredits, toast]);
 
   const checkAndUnlockTime = useCallback(async (totalMinutes: number) => {
     if (!user) return;
@@ -211,15 +272,16 @@ export const useTimeTracker = () => {
 
   useEffect(() => {
     if (!user) return;
+
+    const key = `lb_session_minutes_${user.id}`;
     const interval = setInterval(() => {
-      const key = `lb_session_minutes_${user.id}`;
       const current = parseInt(localStorage.getItem(key) || '0', 10);
       const newVal = current + 1;
       localStorage.setItem(key, String(newVal));
       checkAndUnlockTime(newVal);
     }, 60000);
 
-    const current = parseInt(localStorage.getItem(`lb_session_minutes_${user.id}`) || '0', 10);
+    const current = parseInt(localStorage.getItem(key) || '0', 10);
     checkAndUnlockTime(current);
 
     return () => clearInterval(interval);

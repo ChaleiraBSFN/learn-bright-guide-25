@@ -574,6 +574,7 @@ const Index = () => {
                 webImages={webImages}
                 imagesLoading={imagesLoading}
                 onGenerateExercise={(taskDescription) => {
+                  setStudyContent(null);
                   handleExerciseSubmit({
                     tema: taskDescription,
                     nivel: "medio",

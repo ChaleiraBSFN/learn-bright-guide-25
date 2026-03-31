@@ -56,6 +56,7 @@ const ResetPassword = () => {
         const refreshToken = hashParams.get('refresh_token');
         const code = searchParams.get('code');
         const queryType = searchParams.get('type');
+        const tokenHash = searchParams.get('token_hash');
 
         let verifiedEmail = '';
 
@@ -70,6 +71,14 @@ const ResetPassword = () => {
           }
         } else if (queryType === 'recovery' && code) {
           const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error && data.session?.user?.email) {
+            verifiedEmail = data.session.user.email;
+          }
+        } else if (queryType === 'recovery' && tokenHash) {
+          const { data, error } = await supabase.auth.verifyOtp({
+            type: 'recovery',
+            token_hash: tokenHash,
+          });
           if (!error && data.session?.user?.email) {
             verifiedEmail = data.session.user.email;
           }
