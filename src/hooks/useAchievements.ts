@@ -102,10 +102,15 @@ const mergeTrailNodes = (storedNodes: TrailNodeDef[]) => {
 
 const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
 
+const normalizeAchievementIds = (value: unknown): number[] => {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.map((item) => Number(item)).filter((item) => Number.isFinite(item)))].sort((a, b) => a - b);
+};
+
 const readLocalAchievementIds = (userId: string): number[] => {
   try {
     const raw = JSON.parse(localStorage.getItem(getAchievementStorageKey(userId)) || '[]');
-    return [...new Set((Array.isArray(raw) ? raw : []).map(Number).filter(Number.isFinite))].sort((a, b) => a - b);
+    return normalizeAchievementIds(raw);
   } catch {
     return [];
   }
@@ -179,8 +184,8 @@ export const useAchievements = () => {
 
       if (error) throw error;
 
-      const cloudIds = [...new Set((data || []).map((item: any) => Number(item.achievement_id)).filter(Number.isFinite))];
-      const merged = [...new Set([...cloudIds, ...localIds])].sort((a, b) => a - b);
+      const cloudIds = normalizeAchievementIds((data || []).map((item: any) => item.achievement_id));
+      const merged = normalizeAchievementIds([...cloudIds, ...localIds]);
       writeLocalAchievementIds(user.id, merged);
       return new Set(merged);
     } catch {
