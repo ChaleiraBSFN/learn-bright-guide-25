@@ -77,9 +77,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
     };
     
     // Alvo de problema corrigido: só carregar se estiver aberto ou carregar em background para não perder estado
-    if (open) {
-      loadProgress();
-    }
+    loadProgress();
     
     window.addEventListener('achievement_unlocked', loadProgress);
     return () => window.removeEventListener('achievement_unlocked', loadProgress);
@@ -99,14 +97,15 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
     if (isCompleted) statusText = "Concluído ✅";
     if (isLocked) statusText = "Bloqueado 🔒";
 
-    let objective = node.objective || "Continue usando o aplicativo para desbloquear essa conquista. A conclusão é automática dependendo do desafio.";
+    let descriptionText = node.description || "Continue usando o aplicativo para desbloquear essa conquista. A conclusão é automática dependendo do desafio.";
 
     toast({ 
       title: `${node.title} (${statusText})`, 
       description: isCompleted 
-        ? `Você já ganhou +${node.creditReward} créditos por essa conquista!` 
-        : `Objetivo: ${objective} \nRecompensa: +${node.creditReward} créditos. A conclusão é automática.`,
-      duration: 6000,
+        ? `${descriptionText}\nVocê já concluiu este e ganhou +${node.creditReward} créditos!` 
+        : `${descriptionText}\nObjetivo: ${node.objective}\nRecompensa: +${node.creditReward} créditos.`,
+      duration: 7000,
+      className: "border-primary/50"
     });
   };
 

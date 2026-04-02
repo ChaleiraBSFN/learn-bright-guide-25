@@ -150,7 +150,7 @@ serve(async (req) => {
     const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}" at level "${sanitize(nivel)}". Respond ONLY in ${lang}. ONLY valid JSON.
 ${imagemBase64 ? "\nSe uma imagem foi fornecida como contexto visual na requisição, crie os exercícios baseados no conteúdo, elementos ou raciocínio presentes na imagem.\n" : ""}
 
-~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. Difficulty: ${dificuldade}.
+~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. Timestamp: ${Date.now()}. Difficulty: ${dificuldade}. Make sure the questions uniquely differ from previous generations.
 
 JSON format:
 {"titulo":"string","descricao":"1 sentence","exercicios":[

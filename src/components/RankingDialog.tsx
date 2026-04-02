@@ -47,24 +47,23 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
 
         // Find users to get names/emails
         const userIds = Object.keys(counts);
+        const topUserIds = userIds.sort((a, b) => counts[b].score - counts[a].score).slice(0, 100);
         let profiles: any[] = [];
 
-        if (userIds.length > 0) {
+        if (topUserIds.length > 0) {
           const { data: profs } = await (supabase.from as any)('profiles')
             .select('user_id, display_name, email')
-            .in('user_id', userIds);
+            .in('user_id', topUserIds);
           
           if (profs) profiles = profs;
         }
         
-        const sorted = userIds
+        const sorted = topUserIds
           .map((userId) => {
             const profile = profiles.find((p: any) => p.user_id === userId);
-            const name = profile?.display_name || profile?.email?.split('@')[0] || 'Estudante Anônimo';
+            const name = profile?.display_name || (profile?.email ? profile.email.split('@')[0] : 'Estudante Anônimo');
             return { userId, name, score: counts[userId].score };
-          })
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 100); // Top 100
+          });
           
         setRanking(sorted);
       } catch (err) {
