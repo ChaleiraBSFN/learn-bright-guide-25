@@ -98,5 +98,5 @@ export const useCredits = () => {
 
   const hasCredits = credits !== null && credits > 0;
 
-  return { credits, maxCredits, loading, hasCredits, useCredit, addCredits };
+  return { credits, maxCredits, loading, hasCredits, consumeCredit: useCredit, addCredits };
 };

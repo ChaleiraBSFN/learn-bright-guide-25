@@ -93,7 +93,7 @@ const Index = () => {
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const { hasCredits, useCredit } = useCredits();
+  const { hasCredits, consumeCredit } = useCredits();
   const [isTranslating, setIsTranslating] = useState(false);
   const contentLanguageRef = useRef(i18n.language);
 
@@ -277,7 +277,7 @@ const Index = () => {
       // Set content first (renders behind overlay), then play finish animation
       setStudyContent(content);
       contentLanguageRef.current = i18n.language;
-      await useCredit();
+      await consumeCredit();
       saveToHistory("study", data.tema, data.nivel, content, { prazo: data.prazo });
 
       toast({
@@ -367,7 +367,7 @@ const Index = () => {
       // Set content first (renders behind overlay), then play finish animation
       setExerciseContent(content);
       contentLanguageRef.current = i18n.language;
-      await useCredit();
+      await consumeCredit();
       saveToHistory("exercise", data.tema, data.nivel, content, { quantidade: data.quantidade, dificuldade: data.dificuldade });
 
       toast({
