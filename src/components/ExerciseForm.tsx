@@ -37,10 +37,9 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalTema = tema || (imagemBase64 ? "Analisar e gerar exercícios para a imagem anexada" : "");
-    if (!finalTema || !nivel) return;
+    if (!tema || !nivel) return;
     onSubmit({
-      tema: finalTema,
+      tema,
       nivel,
       quantidade: parseInt(quantidade),
       dificuldade,

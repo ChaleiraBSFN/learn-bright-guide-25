@@ -32,11 +32,10 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalTema = tema || (imagemBase64 ? "Analisar a imagem anexada" : "");
-    if (!finalTema || !nivel || !prazo) return;
+    if (!tema || !nivel || !prazo) return;
     
     onSubmit({
-      tema: finalTema,
+      tema,
       nivel,
       prazo: parseInt(prazo),
       duvidas,

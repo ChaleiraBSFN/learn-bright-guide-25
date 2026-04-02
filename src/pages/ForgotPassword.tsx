@@ -31,7 +31,7 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: 'https://studdybuddy.com.br/reset-password',
       });
       if (error) throw error;
       setSent(true);
