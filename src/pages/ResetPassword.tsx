@@ -46,8 +46,6 @@ const ResetPassword = () => {
         setIsRecovery(false);
         setRecoveryEmail('');
 
-        await supabase.auth.signOut({ scope: 'local' });
-
         const hashParams = new URLSearchParams(window.location.hash.replace('#', ''));
         const searchParams = new URLSearchParams(window.location.search);
 
@@ -87,6 +85,7 @@ const ResetPassword = () => {
         if (!cancelled && verifiedEmail) {
           setRecoveryEmail(verifiedEmail);
           setIsRecovery(true);
+          window.history.replaceState({}, document.title, '/reset-password');
         } else if (!cancelled) {
           await supabase.auth.signOut({ scope: 'local' });
           setIsRecovery(false);
@@ -162,6 +161,7 @@ const ResetPassword = () => {
       return;
     }
 
+    await supabase.auth.signOut({ scope: 'local' });
     setSuccess(true);
     toast({ title: t('settings.success'), description: t('settings.passwordUpdated') });
     window.history.replaceState({}, document.title, '/reset-password');

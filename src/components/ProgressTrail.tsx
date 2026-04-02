@@ -53,11 +53,11 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
           
         if (error) throw error;
         
-        let ids = data?.map((r: any) => r.achievement_id) || [];
+        let ids = [...new Set((data || []).map((r: any) => Number(r.achievement_id)).filter((value: number) => Number.isFinite(value)))];
 
         // SINCRONIZAÇÃO AUTOMÁTICA: 
         // Se o usuário tinha progresso "preso" no localStorage antes da tabela existir, envie para a nuvem agora!
-        const stored = JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]');
+        const stored = [...new Set(JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]').map((value: unknown) => Number(value)).filter((value: number) => Number.isFinite(value)))];
         if (stored.length > 0) {
           const missingInCloud = stored.filter((id: number) => !ids.includes(id));
           if (missingInCloud.length > 0) {
@@ -72,13 +72,28 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
         setCompletedIds(ids);
       } catch (err) {
         console.log('Fallback para localStorage', err);
-        const stored = JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]');
+        const stored = [...new Set(JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]').map((value: unknown) => Number(value)).filter((value: number) => Number.isFinite(value)))];
         setCompletedIds(stored);
       }
       setLoading(false);
     };
     
     loadProgress();
+
+    const refresh = () => loadProgress();
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === `achievements_v2_${user.id}`) {
+        loadProgress();
+      }
+    };
+
+    window.addEventListener('achievements_changed', refresh);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('achievements_changed', refresh);
+      window.removeEventListener('storage', handleStorage);
+    };
   }, [open, user]);
 
   const handleNodeClick = async (node: TrailNodeDef, isCompleted: boolean, isLocked: boolean) => {
