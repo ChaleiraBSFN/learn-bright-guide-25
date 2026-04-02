@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { GraduationCap, Dumbbell, Hash, Zap } from "lucide-react";
 import { ExerciseFormData } from "@/types/exercises";
+import { ImageUpload } from "./ImageUpload";
 
 interface ExerciseFormProps {
   onSubmit: (data: ExerciseFormData) => void;
@@ -17,6 +18,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
   const [nivel, setNivel] = useState("");
   const [quantidade, setQuantidade] = useState("5");
   const [dificuldade, setDificuldade] = useState("variado");
+  const [imagemBase64, setImagemBase64] = useState<string | undefined>();
   const { t } = useTranslation();
 
   const niveis = [
@@ -41,6 +43,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
       nivel,
       quantidade: parseInt(quantidade),
       dificuldade,
+      imagemBase64,
     });
   };
 
@@ -113,6 +116,8 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
           </Select>
         </div>
       </div>
+
+      <ImageUpload onImageChange={setImagemBase64} disabled={isLoading} />
 
       <Button
         type="submit"

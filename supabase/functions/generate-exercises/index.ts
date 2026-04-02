@@ -13,6 +13,7 @@ const requestSchema = z.object({
   quantidade: z.number().int().min(1).max(20).default(5),
   dificuldade: z.string().optional().default("variado"),
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
+  imagemBase64: z.string().optional().nullable(),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').replace(/```/g, '').trim();
@@ -29,7 +30,7 @@ const languageMap: Record<string, string> = {
   de: "Deutsch", it: "Italiano", ja: "日本語", zh: "中文", ru: "Русский",
 };
 
-async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: number): Promise<string | null> {
+async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: number, imagemBase64?: string | null): Promise<string | null> {
   const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
   for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
@@ -37,13 +38,35 @@ async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: numbe
         console.log(`[Gemini] Trying ${model} (attempt ${attempt + 1})...`);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 90000);
+        const parts: any[] = [{ text: prompt }];
+
+        if (imagemBase64) {
+          let mimeType = "image/jpeg";
+          let data = imagemBase64;
+          
+          if (imagemBase64.startsWith("data:")) {
+            const matches = imagemBase64.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
+            if (matches && matches.length === 3) {
+              mimeType = matches[1];
+              data = matches[2];
+            }
+          }
+          
+          parts.push({
+            inlineData: {
+              mimeType,
+              data: data,
+            }
+          });
+        }
+
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              contents: [{ role: "user", parts: [{ text: prompt }] }],
+              contents: [{ role: "user", parts }],
               generationConfig: { temperature: 0.7, maxOutputTokens: maxTokens, responseMimeType: "application/json" },
             }),
             signal: controller.signal,
@@ -120,11 +143,12 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, nivel, quantidade, dificuldade, idioma } = validationResult.data;
+    const { tema, nivel, quantidade, dificuldade, idioma, imagemBase64 } = validationResult.data;
     const lang = languageMap[idioma] || "Português (Brasil)";
     const seed = Math.floor(Math.random() * 1000000);
 
     const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}" at level "${sanitize(nivel)}". Respond ONLY in ${lang}. ONLY valid JSON.
+${imagemBase64 ? "\nSe uma imagem foi fornecida como contexto visual na requisição, crie os exercícios baseados no conteúdo, elementos ou raciocínio presentes na imagem.\n" : ""}
 
 ~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. Difficulty: ${dificuldade}.
 
@@ -139,7 +163,7 @@ Rules: Keep JSON keys in Portuguese. Be concise. Vary difficulty. ONLY JSON outp
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
 
-    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, 4096);
+    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, 4096, imagemBase64);
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });

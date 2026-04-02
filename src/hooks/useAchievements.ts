@@ -114,6 +114,7 @@ export const useAchievements = () => {
         if (!error) {
           await addCredits(nodeConf.creditReward);
           toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
+          window.dispatchEvent(new Event('achievement_unlocked'));
         }
       } catch (err) {
         const key = `achievements_v2_${user.id}`;
@@ -123,6 +124,7 @@ export const useAchievements = () => {
           localStorage.setItem(key, JSON.stringify(stored));
           await addCredits(nodeConf.creditReward);
           toast({ title: "Conquista Desbloqueada! 🏆", description: `Você completou "${nodeConf.title}" e ganhou +${nodeConf.creditReward} créditos!` });
+          window.dispatchEvent(new Event('achievement_unlocked'));
         }
       }
     }

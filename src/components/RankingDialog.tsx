@@ -30,7 +30,8 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
       try {
         // Get all achievements
         const { data: achievements, error } = await (supabase.from as any)('user_achievements')
-          .select('user_id');
+          .select('user_id')
+          .limit(50000); // Increased limit to include more users in the ranking
           
         if (error) throw error;
         

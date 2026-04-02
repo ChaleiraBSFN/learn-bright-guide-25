@@ -88,4 +88,5 @@ export interface StudyFormData {
   prazo: number;
   duvidas: string;
   isPremium?: boolean;
+  imagemBase64?: string;
 }

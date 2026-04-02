@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BookOpen, GraduationCap, Calendar, HelpCircle, Sparkles } from "lucide-react";
 import { StudyFormData } from "@/types/study";
+import { ImageUpload } from "./ImageUpload";
 
 
 interface StudyFormProps {
@@ -19,6 +20,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
   const [nivel, setNivel] = useState("");
   const [prazo, setPrazo] = useState("");
   const [duvidas, setDuvidas] = useState("");
+  const [imagemBase64, setImagemBase64] = useState<string | undefined>();
   const { t } = useTranslation();
 
   const niveis = [
@@ -37,6 +39,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
       nivel,
       prazo: parseInt(prazo),
       duvidas,
+      imagemBase64,
     });
   };
 
@@ -109,6 +112,8 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
           className="bg-card"
         />
       </div>
+
+      <ImageUpload onImageChange={setImagemBase64} disabled={isLoading} />
 
       <Button
         type="submit"

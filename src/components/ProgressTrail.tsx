@@ -42,7 +42,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!open || !user) return;
+    if (!user) return;
     
     const loadProgress = async () => {
       setLoading(true);
@@ -55,8 +55,6 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
         
         let ids = data?.map((r: any) => r.achievement_id) || [];
 
-        // SINCRONIZAÇÃO AUTOMÁTICA: 
-        // Se o usuário tinha progresso "preso" no localStorage antes da tabela existir, envie para a nuvem agora!
         const stored = JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]');
         if (stored.length > 0) {
           const missingInCloud = stored.filter((id: number) => !ids.includes(id));
@@ -78,7 +76,13 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
       setLoading(false);
     };
     
-    loadProgress();
+    // Alvo de problema corrigido: só carregar se estiver aberto ou carregar em background para não perder estado
+    if (open) {
+      loadProgress();
+    }
+    
+    window.addEventListener('achievement_unlocked', loadProgress);
+    return () => window.removeEventListener('achievement_unlocked', loadProgress);
   }, [open, user]);
 
   const handleNodeClick = async (node: TrailNodeDef, isCompleted: boolean, isLocked: boolean) => {

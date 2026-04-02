@@ -126,8 +126,9 @@ const Index = () => {
       if (newLang === contentLanguageRef.current) return;
       
       const hasContent = studyContent || exerciseContent;
+      contentLanguageRef.current = newLang;
+      
       if (!hasContent) {
-        contentLanguageRef.current = newLang;
         return;
       }
 
@@ -146,7 +147,9 @@ const Index = () => {
           );
           if (response.ok) {
             const translated = await response.json();
-            setStudyContent(translated);
+            if (contentLanguageRef.current === newLang) {
+              setStudyContent(translated);
+            }
           }
         }
 
@@ -157,11 +160,11 @@ const Index = () => {
           );
           if (response.ok) {
             const translated = await response.json();
-            setExerciseContent(translated);
+            if (contentLanguageRef.current === newLang) {
+              setExerciseContent(translated);
+            }
           }
         }
-
-        contentLanguageRef.current = newLang;
       } catch (error) {
         console.error("Translation error:", error);
         toast({ title: t('premium.error'), description: "Translation failed", variant: "destructive" });
@@ -252,6 +255,7 @@ const Index = () => {
           body: JSON.stringify({ 
             tema: data.tema, nivel: data.nivel, prazo: data.prazo,
             duvidas: data.duvidas, idioma: i18n.language,
+            imagemBase64: data.imagemBase64,
           }),
           signal: controller.signal,
         }
@@ -312,6 +316,7 @@ const Index = () => {
     }
     setIsExerciseLoading(true);
     setExerciseContent(null);
+    setStudyContent(null); // Clear study content so the view shifts to exercise
     setAiImages([]);
     setWebImages([]);
 
@@ -336,6 +341,7 @@ const Index = () => {
             tema: data.tema, nivel: data.nivel,
             quantidade: data.quantidade, dificuldade: data.dificuldade,
             idioma: i18n.language,
+            imagemBase64: data.imagemBase64,
           }),
           signal: controller.signal,
         }

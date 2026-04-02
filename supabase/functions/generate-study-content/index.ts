@@ -13,6 +13,7 @@ const requestSchema = z.object({
   prazo: z.number().int().min(1).max(365),
   duvidas: z.string().max(1000).optional().nullable(),
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
+  imagemBase64: z.string().optional().nullable(),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').replace(/```/g, '').trim();
@@ -117,7 +118,7 @@ function getSubjectStyle(tema: string): { style: string; temperature: number } {
 }
 
 // === AI PROVIDERS ===
-async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: number, temperature: number = 0.4): Promise<string | null> {
+async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: number, temperature: number = 0.4, imagemBase64?: string | null): Promise<string | null> {
   const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
   for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
@@ -125,13 +126,36 @@ async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: numbe
         console.log(`[Gemini] Trying ${model} (attempt ${attempt + 1})...`);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 90000);
+        const parts: any[] = [{ text: prompt }];
+
+        if (imagemBase64) {
+          // Extrair config base64 pura e mimeType se houver data:image/png;base64,
+          let mimeType = "image/jpeg";
+          let data = imagemBase64;
+          
+          if (imagemBase64.startsWith("data:")) {
+            const matches = imagemBase64.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
+            if (matches && matches.length === 3) {
+              mimeType = matches[1];
+              data = matches[2];
+            }
+          }
+          
+          parts.push({
+            inlineData: {
+              mimeType,
+              data: data,
+            }
+          });
+        }
+
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              contents: [{ role: "user", parts: [{ text: prompt }] }],
+              contents: [{ role: "user", parts }],
               generationConfig: { temperature, maxOutputTokens: maxTokens, responseMimeType: "application/json" },
             }),
             signal: controller.signal,
@@ -275,8 +299,9 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, nivel, prazo, duvidas, idioma } = validationResult.data;
-    const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium);
+    const { tema, nivel, prazo, duvidas, idioma, imagemBase64 } = validationResult.data;
+    const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium) +
+                   (imagemBase64 ? "\n\nA uma imagem fornecida na requisição. Use-a como contexto primário para gerar o plano de estudos detalhado e exercícios, extraia textos, equações, ou explique diagramas visuais caso presentes. Seu texto ainda deve seguir estritamente o formato JSON." : "");
     const { temperature } = getSubjectStyle(tema);
     
     const maxDays = Math.min(prazo, 30);
@@ -287,7 +312,7 @@ serve(async (req) => {
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
 
-    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, maxTokens, temperature);
+    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, maxTokens, temperature, imagemBase64);
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Serviço indisponível. Tente novamente." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Learn Buddy</string>
+    <string name="title_activity_main">Learn Buddy</string>
+    <string name="package_name">com.learnbuddy.app</string>
+    <string name="custom_url_scheme">com.learnbuddy.app</string>
+</resources>

@@ -19,6 +19,8 @@ export const FloatingActions = () => {
   );
   
   const [rankingEnabled, setRankingEnabled] = useState(true);
+  const [trailEnabled, setTrailEnabled] = useState(true);
+  const [groupsEnabled, setGroupsEnabled] = useState(true);
 
   useEffect(() => {
     const checkSettings = () => {
@@ -28,6 +30,12 @@ export const FloatingActions = () => {
           const parsed = JSON.parse(stored);
           if (parsed.rankingEnabled !== undefined) {
             setRankingEnabled(parsed.rankingEnabled);
+          }
+          if (parsed.trailEnabled !== undefined) {
+            setTrailEnabled(parsed.trailEnabled);
+          }
+          if (parsed.groupsEnabled !== undefined) {
+            setGroupsEnabled(parsed.groupsEnabled);
           }
         } catch (e) {}
       }
@@ -46,22 +54,23 @@ export const FloatingActions = () => {
   return (
     <>
       <div className="fixed right-4 bottom-24 md:bottom-8 z-40 flex flex-col gap-3">
-        {/* Progress Trail Button */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setShowTrail(true)}
-              className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all shadow-[0_4px_14px_-3px_hsl(var(--primary)/0.4),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--primary)/0.15)]"
-            >
-              <Map className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="left">
-            {t('trail.title', 'Trilha de Progresso')}
-          </TooltipContent>
-        </Tooltip>
+        {trailEnabled && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setShowTrail(true)}
+                className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all shadow-[0_4px_14px_-3px_hsl(var(--primary)/0.4),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--primary)/0.15)]"
+              >
+                <Map className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              {t('trail.title', 'Trilha de Progresso')}
+            </TooltipContent>
+          </Tooltip>
+        )}
 
         {rankingEnabled && (
           <Tooltip>
@@ -82,7 +91,7 @@ export const FloatingActions = () => {
         )}
 
         {/* Study Groups */}
-        <StudyGroups />
+        {groupsEnabled && <StudyGroups />}
 
         {/* Install Button */}
         {!isInstalled && (

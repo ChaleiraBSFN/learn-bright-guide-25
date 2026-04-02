@@ -34,4 +34,5 @@ export interface ExerciseFormData {
   nivel: string;
   quantidade: number;
   dificuldade: string;
+  imagemBase64?: string;
 }
