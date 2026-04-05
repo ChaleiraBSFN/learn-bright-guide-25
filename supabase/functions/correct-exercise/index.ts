@@ -39,7 +39,7 @@ async function callGeminiDirect(prompt: string, apiKey: string): Promise<string 
       }
       if (response.status === 429) { console.log(`[Gemini] ${model} rate limited, next...`); continue; }
       console.error(`[Gemini] ${model} error: ${response.status}`);
-    } catch (e) { console.error(`[Gemini] ${model}:`, e.message); }
+    } catch (e: any) { console.error(`[Gemini] ${model}:`, e.message); }
   }
   return null;
 }
