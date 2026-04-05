@@ -64,9 +64,13 @@ const getSettings = (): PlatformSettings => {
     const stored = localStorage.getItem('lb_platform_settings');
     if (stored) {
       const raw = JSON.parse(stored);
+      // If old format had contentGenerationEnabled=false but no explicit studyGenEnabled/exercisesEnabled,
+      // migrate: use contentGenerationEnabled value. Otherwise default true.
+      const hasExplicitStudy = 'studyGenEnabled' in raw;
+      const hasExplicitExercises = 'exercisesEnabled' in raw;
       return {
-        exercisesEnabled: raw.exercisesEnabled ?? raw.contentGenerationEnabled ?? true,
-        studyGenEnabled: raw.studyGenEnabled ?? raw.contentGenerationEnabled ?? true,
+        exercisesEnabled: hasExplicitExercises ? raw.exercisesEnabled : (raw.contentGenerationEnabled ?? true),
+        studyGenEnabled: hasExplicitStudy ? raw.studyGenEnabled : (raw.contentGenerationEnabled ?? true),
         rankingEnabled: raw.rankingEnabled ?? true,
         trailEnabled: raw.trailEnabled ?? true,
       };
