@@ -171,7 +171,7 @@ async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: numbe
         if (response.status >= 500) { console.log(`[Gemini] ${model} server error, retrying...`); continue; }
         console.error(`[Gemini] ${model} error: ${response.status}`);
         break;
-      } catch (e) {
+      } catch (e: any) {
         console.error(`[Gemini] ${model}:`, e.message);
         if (e.name === 'AbortError' && attempt === 0) continue;
         break;

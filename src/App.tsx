@@ -11,7 +11,7 @@ import ManageUsers from "./pages/ManageUsers";
 import SupportAdmin from "./pages/SupportAdmin";
 import Install from "./pages/Install";
 import EngineNoticesAdmin from "./pages/EngineNoticesAdmin";
-import AdminAchievements from "./pages/AdminAchievements";
+
 import Settings from "./pages/Settings";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";

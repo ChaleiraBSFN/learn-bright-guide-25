@@ -48,7 +48,7 @@ async function generateImageGemini(prompt: string, apiKey: string, modelIndex = 
           }
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       if (e.name === "AbortError") console.log(`[Image] ${model} timed out`);
       else console.error(`[Image] ${model}:`, e.message);
     }
@@ -143,7 +143,7 @@ serve(async (req) => {
       JSON.stringify({ aiImages, webImages: [], tema: sanitizedTema }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in generate-images:", error);
     const status = error.message?.includes("429") ? 429 : 500;
     return new Response(
