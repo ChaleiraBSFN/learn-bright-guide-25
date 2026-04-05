@@ -142,7 +142,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
                         ) : (
                           <Sparkles className="h-3 w-3 mr-1.5 opacity-70" />
                         )}
-                        Ver mais
+                        {t('sections.seeMore', 'Ver mais')}
                       </Button>
                     )}
                   </div>
