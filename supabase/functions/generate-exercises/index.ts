@@ -147,9 +147,12 @@ serve(async (req) => {
     const lang = languageMap[idioma] || "Português (Brasil)";
     const seed = Math.floor(Math.random() * 1000000);
 
-    const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}" at level "${sanitize(nivel)}". Respond ONLY in ${lang}. ONLY valid JSON.
-${imagemBase64 ? "\nSe uma imagem foi fornecida como contexto visual na requisição, crie os exercícios baseados no conteúdo, elementos ou raciocínio presentes na imagem.\n" : ""}
+    const imageInstructions = imagemBase64 
+      ? `\nIMPORTANT: An image was provided. Analyze the image carefully. If it contains exercises or questions, SOLVE them step by step and include the solutions. Create the exercises based on what you see in the image, preserving the original questions and providing detailed solutions.\n`
+      : "";
 
+    const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}" at level "${sanitize(nivel)}". Respond ONLY in ${lang}. ONLY valid JSON.
+${imageInstructions}
 ~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. Difficulty: ${dificuldade}.
 
 JSON format:
