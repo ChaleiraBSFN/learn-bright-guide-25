@@ -36,64 +36,22 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
   const getStepImage = (index: number) => stepImages?.find(img => img.label === `step-${index}`);
 
   const handleVerMais = async (passoNumero: number, exemplo: string) => {
-    if (explanations[passoNumero]) {
-      return;
-    }
+    if (explanations[passoNumero]) return;
 
     setLoadingExp(prev => ({ ...prev, [passoNumero]: true }));
     try {
-      const prompt = `Gere um parágrafo detalhado de 5 a 6 linhas (cerca de 5 a 6 frases) explicando e expandindo o seguinte exemplo prático de forma muito clara, didática e aprofundada, com foco em realmente ensinar o estudante. O texto DEVE ter cerca de 5 a 6 linhas de conteúdo rico e fácil de ler. Fale em português. \n\nContexto do assunto: ${data.titulo || ""}\n\nExemplo Prático: ${exemplo}\n\nSua explicação detalhada:`;
-      const apiKey = "AIzaSyBy5wvMZmdh2igShEJJsErRzAC2c6A9u70";
-      
-      const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
-      let text = null;
-      let lastError = null;
-      let lastStatus = 0;
+      const { data: result, error } = await supabase.functions.invoke('explain-example', {
+        body: { exemplo, contexto: data.titulo || "" },
+      });
 
-      for (const model of models) {
-        try {
-          const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                contents: [{ role: "user", parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
-              }),
-            }
-          );
+      if (error) throw new Error(error.message || "Erro ao gerar explicação.");
+      if (result?.error) throw new Error(result.error);
+      if (!result?.explicacao) throw new Error("Resposta vazia da IA.");
 
-          if (response.ok) {
-            const responseData = await response.json();
-            text = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) break;
-          } else {
-            lastStatus = response.status;
-            const errBody = await response.json().catch(() => ({}));
-            lastError = new Error(errBody.error?.message || `Erro HTTP ${response.status}`);
-            if (response.status === 429) {
-               continue; // Se bater cota, tenta o próximo modelo
-            } else {
-               break; // Outro erro, cai fora do loop
-            }
-          }
-        } catch (e: any) {
-          lastError = e;
-        }
-      }
-
-      if (!text) {
-        if (lastStatus === 429) {
-           throw new Error("Limite de proteção da IA excedido (você clicou muito rápido). Por favor aguarde 1 minuto e tente novamente.");
-        }
-        throw lastError || new Error("A resposta da IA falhou.");
-      }
-
-      setExplanations(prev => ({ ...prev, [passoNumero]: text.trim() }));
+      setExplanations(prev => ({ ...prev, [passoNumero]: result.explicacao }));
     } catch (error: any) {
       console.error("Erro ao gerar explicação:", error);
-      toast.error(error.message || "Erro ao gerar explicação. Tente novamente mais tarde.");
+      toast.error(error.message || t('sections.explainError', 'Erro ao gerar explicação. Tente novamente.'));
     } finally {
       setLoadingExp(prev => ({ ...prev, [passoNumero]: false }));
     }
@@ -184,7 +142,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
                         ) : (
                           <Sparkles className="h-3 w-3 mr-1.5 opacity-70" />
                         )}
-                        Ver mais
+                        {t('sections.seeMore', 'Ver mais')}
                       </Button>
                     )}
                   </div>
