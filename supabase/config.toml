@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.generate-images]
 verify_jwt = false
+
+[functions.explain-example]
+verify_jwt = false
