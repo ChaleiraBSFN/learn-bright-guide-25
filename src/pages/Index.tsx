@@ -56,14 +56,23 @@ interface PlatformSettings {
   exercisesEnabled: boolean;
   studyGenEnabled: boolean;
   rankingEnabled: boolean;
+  trailEnabled: boolean;
 }
 
 const getSettings = (): PlatformSettings => {
   try {
     const stored = localStorage.getItem('lb_platform_settings');
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const raw = JSON.parse(stored);
+      return {
+        exercisesEnabled: raw.exercisesEnabled ?? raw.contentGenerationEnabled ?? true,
+        studyGenEnabled: raw.studyGenEnabled ?? raw.contentGenerationEnabled ?? true,
+        rankingEnabled: raw.rankingEnabled ?? true,
+        trailEnabled: raw.trailEnabled ?? true,
+      };
+    }
   } catch (e) {}
-  return { exercisesEnabled: true, studyGenEnabled: true, rankingEnabled: true };
+  return { exercisesEnabled: true, studyGenEnabled: true, rankingEnabled: true, trailEnabled: true };
 };
 
 const Index = () => {
