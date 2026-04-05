@@ -15,7 +15,8 @@ interface PlatformSettings {
   groupsEnabled: boolean;
   updateNoticesEnabled: boolean;
   creditsEnabled: boolean;
-  contentGenerationEnabled: boolean;
+  studyGenEnabled: boolean;
+  exercisesEnabled: boolean;
   rankingEnabled: boolean;
 }
 
@@ -24,7 +25,8 @@ const defaultSettings: PlatformSettings = {
   groupsEnabled: true,
   updateNoticesEnabled: true,
   creditsEnabled: true,
-  contentGenerationEnabled: true,
+  studyGenEnabled: true,
+  exercisesEnabled: true,
   rankingEnabled: true,
 };
 
@@ -46,7 +48,16 @@ const PlatformControl = () => {
 
   useEffect(() => {
     const stored = localStorage.getItem('lb_platform_settings');
-    if (stored) setSettings(JSON.parse(stored));
+    if (stored) {
+      const raw = JSON.parse(stored);
+      // Migrate old contentGenerationEnabled to new separate keys
+      setSettings({
+        ...defaultSettings,
+        ...raw,
+        studyGenEnabled: raw.studyGenEnabled ?? raw.contentGenerationEnabled ?? true,
+        exercisesEnabled: raw.exercisesEnabled ?? raw.contentGenerationEnabled ?? true,
+      });
+    }
     setLoading(false);
   }, []);
 
@@ -98,11 +109,18 @@ const PlatformControl = () => {
       color: 'text-secondary',
     },
     {
-      key: 'contentGenerationEnabled' as const,
+      key: 'studyGenEnabled' as const,
       icon: BookOpen,
-      title: 'Geração de Conteúdo',
-      description: 'Controle mestre: desativa toda geração de conteúdo e exercícios da plataforma.',
+      title: 'Geração de Conteúdo de Estudo',
+      description: 'Controla a geração de resumos, mapas mentais e materiais de estudo.',
       color: 'text-destructive',
+    },
+    {
+      key: 'exercisesEnabled' as const,
+      icon: BookOpen,
+      title: 'Geração de Exercícios',
+      description: 'Controla a geração de exercícios e quizzes da plataforma.',
+      color: 'text-orange-500',
     },
     {
       key: 'rankingEnabled' as const,
