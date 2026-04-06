@@ -95,18 +95,18 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
       return;
     }
 
-    let statusText = "Em andamento";
-    if (isCompleted) statusText = "Concluído ✅";
-    if (isLocked) statusText = "Bloqueado 🔒";
+    let statusText = "🔓 Em andamento";
+    if (isCompleted) statusText = "✅ Concluído";
+    if (isLocked) statusText = "🔒 Bloqueado";
 
-    let objective = node.objective || "Continue usando o aplicativo para desbloquear essa conquista. A conclusão é automática dependendo do desafio.";
+    const objective = node.objective || "Continue usando o aplicativo para desbloquear essa conquista.";
 
     toast({ 
-      title: `${node.title} (${statusText})`, 
+      title: `${node.title} — ${statusText}`, 
       description: isCompleted 
-        ? `Você já ganhou +${node.creditReward} créditos por essa conquista!` 
-        : `Objetivo: ${objective} \nRecompensa: +${node.creditReward} créditos. A conclusão é automática.`,
-      duration: 6000,
+        ? `${objective}\n\n🎉 Você já ganhou +${node.creditReward} créditos!` 
+        : `📋 ${objective}\n\n🎁 Recompensa: +${node.creditReward} créditos (automático).`,
+      duration: 7000,
     });
   };
 
