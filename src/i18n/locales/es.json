@@ -84,6 +84,8 @@
     "concept": "Concepto",
     "practicalExample": "Ejemplo Práctico",
     "importantTip": "Consejo Importante",
+    "seeMore": "Ver más",
+    "explainError": "Error al generar explicación. Inténtalo de nuevo.",
     "viewAnswer": "Ver Respuesta",
     "howToAvoid": "Cómo evitar",
     "tasks": "Tareas",

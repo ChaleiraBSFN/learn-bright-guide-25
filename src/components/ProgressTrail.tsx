@@ -154,7 +154,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             </div>
           )}
 
-          <div className="relative w-[1450px] h-[400px] p-8">
+          <div className="relative w-[3100px] h-[400px] p-8">
             {/* SVG Connections */}
             <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
               <defs>
@@ -209,7 +209,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05, duration: 0.3 }}
                   style={{ left: node.x, top: node.y }}
-                  className={`absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center p-3 rounded-2xl w-40 transition-all duration-300 shadow-md backdrop-blur-md
+                  className={`absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center p-2 rounded-2xl w-36 transition-all duration-300 shadow-md backdrop-blur-md
                     ${isLocked 
                       ? 'bg-muted/80 border-2 border-dashed border-border opacity-70 cursor-not-allowed filter grayscale drop-shadow-none'
                       : isCompleted
@@ -231,9 +231,15 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                     )}
                   </div>
 
-                  <h4 className={`font-bold text-center text-[11px] leading-tight px-1 mb-1 ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
+                  <h4 className={`font-bold text-center text-[11px] leading-tight px-1 mb-0.5 ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
                     {node.title}
                   </h4>
+                  
+                  {node.objective && (
+                    <p className={`text-[8px] leading-tight text-center px-1 mb-1 line-clamp-2 ${isLocked ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}>
+                      {node.objective}
+                    </p>
+                  )}
                   
                   <div className="flex items-center gap-1 justify-center">
                     <Badge variant="outline" className={`text-[9px] px-1 py-0 h-4 border-transparent ${isCompleted ? 'bg-primary/20 text-primary' : 'bg-orange-500/10 text-orange-600'}`}>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 import { ListOrdered, Lightbulb, BookOpen, Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,8 +41,9 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
 
     setLoadingExp(prev => ({ ...prev, [passoNumero]: true }));
     try {
+      const lang = i18n.language || 'pt-BR';
       const { data: result, error } = await supabase.functions.invoke('explain-example', {
-        body: { exemplo, contexto: data.titulo || "" },
+        body: { exemplo, contexto: data.titulo || "", idioma: lang },
       });
 
       if (error) throw new Error(error.message || "Erro ao gerar explicação.");

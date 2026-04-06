@@ -84,6 +84,8 @@
     "concept": "Концепция",
     "practicalExample": "Пример",
     "importantTip": "Совет",
+    "seeMore": "Узнать больше",
+    "explainError": "Ошибка при генерации объяснения. Попробуйте снова.",
     "viewAnswer": "Показать ответ",
     "howToAvoid": "Как избежать",
     "tasks": "Задания",
