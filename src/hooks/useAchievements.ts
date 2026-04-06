@@ -72,10 +72,25 @@ export const useAchievementData = () => {
     const stored = localStorage.getItem('lb_custom_achievements');
     if (stored) {
       try {
-        setNodes(JSON.parse(stored));
+        const parsed: TrailNodeDef[] = JSON.parse(stored);
+        // Merge: always use defaultTrailNodes as base, overlay stored custom data
+        // but ensure objectives from defaults are preserved if stored ones are missing
+        const merged = defaultTrailNodes.map(defaultNode => {
+          const storedNode = parsed.find(n => n.id === defaultNode.id);
+          if (storedNode) {
+            return { ...defaultNode, ...storedNode, objective: storedNode.objective || defaultNode.objective };
+          }
+          return defaultNode;
+        });
+        // Add any extra custom nodes not in defaults
+        const extraNodes = parsed.filter(n => !defaultTrailNodes.find(d => d.id === n.id));
+        setNodes([...merged, ...extraNodes]);
       } catch (e) {
         console.error("Failed to parse custom achievements", e);
+        setNodes(defaultTrailNodes);
       }
+    } else {
+      setNodes(defaultTrailNodes);
     }
   };
 
