@@ -84,6 +84,8 @@
     "concept": "概念",
     "practicalExample": "実例",
     "importantTip": "重要なヒント",
+    "seeMore": "もっと見る",
+    "explainError": "説明の生成中にエラーが発生しました。もう一度お試しください。",
     "viewAnswer": "回答を見る",
     "howToAvoid": "避ける方法",
     "tasks": "タスク",

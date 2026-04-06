@@ -84,6 +84,8 @@
     "concept": "概念",
     "practicalExample": "实例",
     "importantTip": "提示",
+    "seeMore": "了解更多",
+    "explainError": "生成解释时出错，请重试。",
     "viewAnswer": "查看答案",
     "howToAvoid": "如何避免",
     "tasks": "任务",
