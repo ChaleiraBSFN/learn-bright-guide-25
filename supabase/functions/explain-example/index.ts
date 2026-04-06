@@ -10,6 +10,7 @@ const corsHeaders = {
 const requestSchema = z.object({
   exemplo: z.string().min(1).max(5000),
   contexto: z.string().nullable().optional().transform(v => v || ""),
+  idioma: z.string().nullable().optional().transform(v => v || "pt-BR"),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').trim();
@@ -75,8 +76,16 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { exemplo, contexto } = validationResult.data;
-    const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. Fale em português. \n\nContexto do assunto: ${sanitize(contexto || "")}\n\nExemplo Prático: ${sanitize(exemplo)}\n\nSua explicação:`;
+    const { exemplo, contexto, idioma } = validationResult.data;
+    
+    const langMap: Record<string, string> = {
+      'pt-BR': 'português brasileiro', 'en': 'English', 'es': 'español',
+      'fr': 'français', 'de': 'Deutsch', 'it': 'italiano',
+      'zh': '中文', 'ja': '日本語', 'ru': 'русский',
+    };
+    const langName = langMap[idioma || 'pt-BR'] || 'português brasileiro';
+    
+    const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. IMPORTANTE: Responda INTEIRAMENTE no idioma: ${langName}. \n\nContexto do assunto: ${sanitize(contexto || "")}\n\nExemplo Prático: ${sanitize(exemplo)}\n\nSua explicação (em ${langName}):`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
