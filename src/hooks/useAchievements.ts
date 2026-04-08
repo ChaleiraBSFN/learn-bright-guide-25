@@ -33,35 +33,29 @@ type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
 const TRAIL_STORAGE_KEY = 'lb_custom_achievements_v2';
 const LEGACY_TRAIL_STORAGE_KEY = 'lb_custom_achievements';
 const TRAIL_VERSION = 'trail-49-v1';
-// Winding road positions — S-curve snake path like a game board road
+// Organic winding S-curve — nodes placed ALONG the curve, not in rows
 const MANUAL_POSITIONS: [number, number][] = [
-  // Row 1 → right (1-5)
-  [120, 80],  [300, 60],  [480, 90],  [650, 55],  [820, 80],
-  // Curve down-right (6-7)
-  [920, 180], [880, 300],
-  // Row 2 ← left (8-12)
-  [720, 340], [540, 310], [370, 350], [200, 320], [80, 360],
-  // Curve down-left (13-14)
-  [60, 470],  [120, 570],
-  // Row 3 → right (15-19)
-  [280, 550], [450, 580], [620, 545], [790, 575], [930, 540],
-  // Curve down-right (20-21)
-  [960, 650], [900, 750],
-  // Row 4 ← left (22-26)
-  [730, 780], [560, 750], [390, 790], [220, 760], [80, 800],
-  // Curve down-left (27-28)
-  [50, 900],  [110, 1000],
-  // Row 5 → right (29-33)
-  [270, 980], [440, 1010], [610, 975], [780, 1005], [940, 970],
-  // Curve down-right (34-35)
-  [970, 1080], [910, 1170],
-  // Row 6 ← left (36-40)
-  [740, 1200], [570, 1170], [400, 1205], [230, 1175], [90, 1210],
-  // Curve down-left (41-42)
-  [60, 1310], [130, 1400],
-  // Row 7 → finale (43-49)
-  [300, 1380], [470, 1410], [640, 1375], [800, 1405], [900, 1500],
-  [720, 1550], [520, 1580],
+  // Curve 1: starts top-left, sweeps right and down
+  [140, 60],  [280, 100], [430, 70],  [570, 130], [700, 90],
+  [830, 160], [900, 280],
+  // Curve 2: swoops left and down
+  [820, 380], [680, 430], [530, 390], [380, 450], [240, 410],
+  [130, 490], [100, 620],
+  // Curve 3: sweeps right again with wave
+  [190, 720], [340, 680], [490, 730], [640, 690], [800, 740],
+  [920, 660], [960, 790],
+  // Curve 4: dips left with bounce
+  [880, 900], [730, 860], [580, 920], [420, 870], [270, 930],
+  [140, 880], [80, 1010],
+  // Curve 5: rises right with oscillation
+  [180, 1110], [330, 1060], [490, 1110], [650, 1050], [810, 1100],
+  [940, 1040], [980, 1170],
+  // Curve 6: descends left
+  [870, 1260], [710, 1220], [550, 1270], [390, 1230], [240, 1290],
+  [120, 1240], [70, 1370],
+  // Curve 7: finale sweep right
+  [190, 1460], [350, 1420], [520, 1470], [690, 1430], [840, 1490],
+  [720, 1570], [520, 1610],
 ];
 
 const trailBlueprints: TrailBlueprint[] = [
