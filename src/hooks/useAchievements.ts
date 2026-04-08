@@ -33,11 +33,30 @@ type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
 const TRAIL_STORAGE_KEY = 'lb_custom_achievements_v2';
 const LEGACY_TRAIL_STORAGE_KEY = 'lb_custom_achievements';
 const TRAIL_VERSION = 'trail-49-v1';
-const TRAIL_COLS = 5;
-const NODE_W = 160;
-const NODE_H = 140;
-const PAD_X = 120;
-const PAD_Y = 100;
+// Hand-crafted positions for an organic adventure map with diagonals
+const MANUAL_POSITIONS: [number, number][] = [
+  // Phase 1 — Início (1-7)
+  [320, 80],   [520, 130],  [400, 220],  [200, 180],  [100, 290],
+  [280, 340],  [460, 310],
+  // Phase 2 — Aprendiz (8-14)
+  [640, 240],  [780, 320],  [620, 400],  [440, 440],  [260, 490],
+  [140, 420],  [320, 560],
+  // Phase 3 — Intermediário (15-21)
+  [520, 530],  [700, 480],  [840, 420],  [900, 560],  [760, 620],
+  [560, 660],  [380, 700],
+  // Phase 4 — Avançado (22-28)
+  [200, 650],  [100, 780],  [260, 840],  [440, 800],  [620, 770],
+  [800, 730],  [920, 680],
+  // Phase 5 — Especialista (29-35)
+  [980, 800],  [840, 870],  [660, 900],  [480, 930],  [300, 960],
+  [140, 920],  [60, 1060],
+  // Phase 6 — Mestre (36-42)
+  [220, 1100], [400, 1060], [580, 1100], [740, 1040], [900, 1000],
+  [980, 1120], [800, 1180],
+  // Phase 7 — Lenda (43-49)
+  [620, 1220], [440, 1260], [260, 1200], [120, 1280], [300, 1380],
+  [500, 1360], [700, 1400],
+];
 
 const trailBlueprints: TrailBlueprint[] = [
   { title: 'Primeiro Resumo', type: 'challenge', creditReward: 1, iconName: 'BookOpen', objective: 'Gere seu primeiro conteúdo de estudo para iniciar a trilha.', triggerType: 'generate_study', triggerRequirement: 1 },
@@ -95,24 +114,14 @@ const normalizeIds = (ids: unknown[]) => Array.from(new Set(ids.map((id) => Numb
 const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
 
 const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
-  // Serpentine map: rows zigzag left-right with slight vertical jitter for organic feel
-  const jitterX = [0, 12, -8, 15, -12, 6, -10, 8, -5, 14];
-  const jitterY = [0, 8, -6, 10, -8, 5, -10, 7, -4, 12];
-
   return blueprints.map((node, index) => {
-    const row = Math.floor(index / TRAIL_COLS);
-    const col = index % TRAIL_COLS;
-    const isEvenRow = row % 2 === 0;
-    const visualCol = isEvenRow ? col : TRAIL_COLS - 1 - col;
-    const jx = jitterX[index % jitterX.length];
-    const jy = jitterY[index % jitterY.length];
-
+    const pos = MANUAL_POSITIONS[index] || [120 + (index % 5) * 160, 80 + Math.floor(index / 5) * 140];
     return {
       ...node,
       id: index + 1,
-      x: PAD_X + visualCol * NODE_W + jx,
-      y: PAD_Y + row * NODE_H + jy,
-      parents: index === 0 ? [] : [index], // parent = previous node id
+      x: pos[0],
+      y: pos[1],
+      parents: index === 0 ? [] : [index],
     };
   });
 };
