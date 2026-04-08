@@ -10,20 +10,20 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useAchievementData, availableIcons, TrailNodeDef } from '@/hooks/useAchievements';
+import { useAchievementData, availableIcons, TrailNodeDef, loadUserCompletedAchievements } from '@/hooks/useAchievements';
 
 const nodeColors: Record<string, string> = {
   challenge: 'from-primary to-primary/80',
   quiz: 'from-secondary to-secondary/80',
   milestone: 'from-accent to-accent/80',
-  reward: 'from-purple-500 to-pink-500',
+  reward: 'from-accent to-primary',
 };
 
 const nodeBorderColors: Record<string, string> = {
   challenge: 'border-primary/50',
   quiz: 'border-secondary/50',
   milestone: 'border-accent/50',
-  reward: 'border-purple-500/50',
+  reward: 'border-accent/50',
 };
 
 interface ProgressTrailProps {
@@ -34,55 +34,72 @@ interface ProgressTrailProps {
 export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { credits, addCredits } = useCredits();
+  const { credits } = useCredits();
   const { toast } = useToast();
   const { nodes: trailNodes } = useAchievementData();
   
   const [completedIds, setCompletedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
+  const mapWidth = Math.max(...trailNodes.map((node) => node.x), 0) + 220;
+  const mapHeight = Math.max(...trailNodes.map((node) => node.y), 0) + 200;
 
   useEffect(() => {
-    if (!user) return;
-    
     const loadProgress = async () => {
+      if (!user) {
+        setCompletedIds([]);
+        return;
+      }
+
       setLoading(true);
       try {
-        const { data, error } = await (supabase.from as any)('user_achievements')
-          .select('achievement_id')
-          .eq('user_id', user.id);
-          
-        if (error) throw error;
-        
-        let ids = data?.map((r: any) => r.achievement_id) || [];
-
-        const stored = JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]');
-        if (stored.length > 0) {
-          const missingInCloud = stored.filter((id: number) => !ids.includes(id));
-          if (missingInCloud.length > 0) {
-            console.log("Enviando progresso local antigo para a nuvem...", missingInCloud);
-            for (const mId of missingInCloud) {
-               await (supabase.from as any)('user_achievements').insert({ user_id: user.id, achievement_id: mId }).catch(() => {});
-            }
-            ids = [...ids, ...missingInCloud];
-          }
-        }
-
+        const ids = await loadUserCompletedAchievements(user.id);
         setCompletedIds(ids);
-      } catch (err) {
-        console.log('Fallback para localStorage', err);
-        const stored = JSON.parse(localStorage.getItem(`achievements_v2_${user.id}`) || '[]');
-        setCompletedIds(stored);
+      } catch {
+        setCompletedIds([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    
-    // Alvo de problema corrigido: só carregar se estiver aberto ou carregar em background para não perder estado
-    if (open) {
-      loadProgress();
-    }
-    
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') loadProgress();
+    };
+
+    if (open) loadProgress();
+
+    const interval = window.setInterval(() => {
+      if (open) loadProgress();
+    }, 15000);
+
+    const channel = user && open
+      ? supabase
+          .channel(`user-achievements-${user.id}`)
+          .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'user_achievements',
+            filter: `user_id=eq.${user.id}`,
+          }, loadProgress)
+          .subscribe()
+      : null;
+
     window.addEventListener('achievement_unlocked', loadProgress);
-    return () => window.removeEventListener('achievement_unlocked', loadProgress);
+    window.addEventListener('achievements_updated', loadProgress);
+    window.addEventListener('storage', loadProgress);
+    window.addEventListener('focus', loadProgress);
+    window.addEventListener('online', loadProgress);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener('achievement_unlocked', loadProgress);
+      window.removeEventListener('achievements_updated', loadProgress);
+      window.removeEventListener('storage', loadProgress);
+      window.removeEventListener('focus', loadProgress);
+      window.removeEventListener('online', loadProgress);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (channel) supabase.removeChannel(channel);
+    };
   }, [open, user]);
 
   const handleNodeClick = async (node: TrailNodeDef, isCompleted: boolean, isLocked: boolean) => {
@@ -114,7 +131,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col p-0 bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
+      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] flex flex-col p-0 bg-background overflow-hidden">
         
         {/* HEADER */}
         <DialogHeader className="z-10 bg-background/95 backdrop-blur-sm border-b border-border p-4 pb-3">
@@ -140,7 +157,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
         </DialogHeader>
 
         {/* MAP CONTAINER */}
-        <div className="flex-1 w-full overflow-auto relative min-h-[400px] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] dark:bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-20">
+        <div className="flex-1 w-full overflow-auto relative min-h-[520px] bg-muted/20">
           
           {/* Subtle grid overlay to enhance map feel */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
@@ -154,7 +171,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             </div>
           )}
 
-          <div className="relative w-[3100px] h-[400px] p-8">
+          <div className="relative p-8" style={{ width: mapWidth, height: mapHeight }}>
             {/* SVG Connections */}
             <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
               <defs>
@@ -209,12 +226,12 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05, duration: 0.3 }}
                   style={{ left: node.x, top: node.y }}
-                  className={`absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center p-2 rounded-2xl w-36 transition-all duration-300 shadow-md backdrop-blur-md
+                  className={`absolute -translate-x-1/2 -translate-y-1/2 flex min-h-[124px] flex-col items-center justify-center p-2.5 rounded-2xl w-40 sm:w-44 transition-all duration-300 shadow-md backdrop-blur-md
                     ${isLocked 
                       ? 'bg-muted/80 border-2 border-dashed border-border opacity-70 cursor-not-allowed filter grayscale drop-shadow-none'
                       : isCompleted
-                      ? 'bg-card/90 border-2 border-primary/40 shadow-[0_0_15px_-3px_hsl(var(--primary)/0.3)] ring-1 ring-primary/20'
-                      : 'bg-card/95 border-2 border-primary shadow-[0_0_20px_-3px_hsl(var(--primary)/0.6)] ring-4 ring-primary/20 cursor-pointer hover:shadow-[0_0_25px_-3px_hsl(var(--primary)/0.8)] scale-[1.02]'
+                      ? `bg-card/90 border-2 ${nodeBorderColors[node.type]} shadow-[0_0_15px_-3px_hsl(var(--primary)/0.3)] ring-1 ring-primary/20`
+                      : `bg-card/95 border-2 ${nodeBorderColors[node.type]} shadow-[0_0_20px_-3px_hsl(var(--primary)/0.6)] ring-4 ring-primary/20 cursor-pointer hover:shadow-[0_0_25px_-3px_hsl(var(--primary)/0.8)] scale-[1.02]`
                     }`}
                 >
                   <div className={`relative shrink-0 h-10 w-10 mb-2 rounded-xl flex items-center justify-center shadow-inner
@@ -231,18 +248,18 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                     )}
                   </div>
 
-                  <h4 className={`font-bold text-center text-[11px] leading-tight px-1 mb-0.5 ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
+                  <h4 className={`font-bold text-center text-xs leading-tight px-1 mb-1 ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
                     {node.title}
                   </h4>
                   
                   {node.objective && (
-                    <p className={`text-[8px] leading-tight text-center px-1 mb-1 line-clamp-2 ${isLocked ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}>
+                    <p className={`text-[10px] leading-tight text-center px-1 mb-2 line-clamp-3 ${isLocked ? 'text-muted-foreground/70' : 'text-muted-foreground'}`}>
                       {node.objective}
                     </p>
                   )}
                   
                   <div className="flex items-center gap-1 justify-center">
-                    <Badge variant="outline" className={`text-[9px] px-1 py-0 h-4 border-transparent ${isCompleted ? 'bg-primary/20 text-primary' : 'bg-orange-500/10 text-orange-600'}`}>
+                    <Badge variant="outline" className={`text-[10px] px-2 py-0 h-5 border-transparent ${isCompleted ? 'bg-primary/20 text-primary' : 'bg-accent/20 text-foreground'}`}>
                       {isCompleted ? 'Feito' : `+${node.creditReward} Créditos`}
                     </Badge>
                   </div>
