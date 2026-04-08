@@ -33,29 +33,29 @@ type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
 const TRAIL_STORAGE_KEY = 'lb_custom_achievements_v2';
 const LEGACY_TRAIL_STORAGE_KEY = 'lb_custom_achievements';
 const TRAIL_VERSION = 'trail-49-v1';
-// Hand-crafted positions for an organic adventure map with diagonals
+// Hand-crafted organic map positions — asymmetric, diagonal, adventure-style
 const MANUAL_POSITIONS: [number, number][] = [
-  // Phase 1 — Início (1-7)
-  [320, 80],   [520, 130],  [400, 220],  [200, 180],  [100, 290],
-  [280, 340],  [460, 310],
-  // Phase 2 — Aprendiz (8-14)
-  [640, 240],  [780, 320],  [620, 400],  [440, 440],  [260, 490],
-  [140, 420],  [320, 560],
-  // Phase 3 — Intermediário (15-21)
-  [520, 530],  [700, 480],  [840, 420],  [900, 560],  [760, 620],
-  [560, 660],  [380, 700],
-  // Phase 4 — Avançado (22-28)
-  [200, 650],  [100, 780],  [260, 840],  [440, 800],  [620, 770],
-  [800, 730],  [920, 680],
-  // Phase 5 — Especialista (29-35)
-  [980, 800],  [840, 870],  [660, 900],  [480, 930],  [300, 960],
-  [140, 920],  [60, 1060],
-  // Phase 6 — Mestre (36-42)
-  [220, 1100], [400, 1060], [580, 1100], [740, 1040], [900, 1000],
-  [980, 1120], [800, 1180],
-  // Phase 7 — Lenda (43-49)
-  [620, 1220], [440, 1260], [260, 1200], [120, 1280], [300, 1380],
-  [500, 1360], [700, 1400],
+  // Phase 1 — Início (scattered start)
+  [280, 70],   [460, 50],   [600, 140],  [380, 190],  [180, 160],
+  [90, 280],   [250, 320],
+  // Phase 2 — Aprendiz (diagonal drift right)
+  [430, 260],  [620, 200],  [780, 280],  [700, 400],  [520, 380],
+  [340, 450],  [160, 430],
+  // Phase 3 — Intermediário (sweep left-center)
+  [80, 560],   [240, 600],  [420, 550],  [590, 620],  [770, 560],
+  [900, 480],  [960, 620],
+  // Phase 4 — Avançado (drop down right)
+  [830, 720],  [640, 750],  [460, 700],  [280, 760],  [110, 710],
+  [60, 850],   [200, 930],
+  // Phase 5 — Especialista (zigzag center)
+  [390, 880],  [560, 930],  [740, 870],  [900, 940],  [820, 1060],
+  [620, 1030], [440, 1080],
+  // Phase 6 — Mestre (spread wide)
+  [260, 1040], [100, 1140], [250, 1230], [450, 1190], [650, 1160],
+  [840, 1200], [970, 1120],
+  // Phase 7 — Lenda (converge to finale)
+  [920, 1300], [720, 1330], [510, 1290], [340, 1360], [180, 1430],
+  [400, 1480], [600, 1520],
 ];
 
 const trailBlueprints: TrailBlueprint[] = [
