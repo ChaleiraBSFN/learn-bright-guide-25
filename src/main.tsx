@@ -4,45 +4,46 @@ import App from "./App.tsx";
 import "./index.css";
 import "./i18n";
 
-// Force immediate update when new SW is available
-const updateSW = registerSW({
-  onNeedRefresh() {
-    // Auto-update without asking
-    window.location.reload();
-  },
-  onOfflineReady() {
-    console.log("App ready for offline use");
-  },
-  immediate: true,
-});
-
-// Check for updates every 15 seconds (more aggressive)
-setInterval(() => {
-  updateSW(true);
-}, 15 * 1000);
-
-// Check on visibility change (when user switches back to the app)
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    updateSW(true);
+const isInIframe = (() => {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
   }
-});
+})();
 
-// Check on focus (covers more mobile scenarios)
-window.addEventListener("focus", () => {
-  updateSW(true);
-});
+const isPreviewHost = window.location.hostname.includes("id-preview--") || window.location.hostname.includes("lovableproject.com");
 
-// Check on online event (when network comes back)
-window.addEventListener("online", () => {
-  updateSW(true);
-});
+if (isInIframe || isPreviewHost) {
+  navigator.serviceWorker?.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => registration.unregister());
+  });
+} else {
+  const updateSW = registerSW({
+    onNeedRefresh() {
+      window.location.reload();
+    },
+    onOfflineReady() {
+      console.log("App ready for offline use");
+    },
+    immediate: true,
+  });
 
-// For standalone PWA: force check on app resume / page show
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted || window.matchMedia('(display-mode: standalone)').matches) {
-    updateSW(true);
-  }
-});
+  const forceUpdate = () => updateSW(true);
+
+  setInterval(forceUpdate, 15 * 1000);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") forceUpdate();
+  });
+
+  window.addEventListener("focus", forceUpdate);
+  window.addEventListener("online", forceUpdate);
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted || window.matchMedia('(display-mode: standalone)').matches) {
+      forceUpdate();
+    }
+  });
+}
 
 createRoot(document.getElementById("root")!).render(<App />);
