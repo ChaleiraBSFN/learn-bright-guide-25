@@ -92,16 +92,36 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
   const progressPercent = trailNodes.length > 0 ? (completedIds.length / trailNodes.length) * 100 : 0;
 
-  // Build curved SVG paths between connected nodes
+  // Build smooth S-curve road path between nodes
   const buildPath = (from: TrailNodeDef, to: TrailNodeDef) => {
     const dx = to.x - from.x;
     const dy = to.y - from.y;
-    // Create a smooth bezier curve
-    const cx1 = from.x + dx * 0.5;
-    const cy1 = from.y;
-    const cx2 = from.x + dx * 0.5;
-    const cy2 = to.y;
+    // Use control points that create a natural road curve
+    const tension = Math.min(Math.abs(dx), Math.abs(dy)) * 0.6;
+    const cx1 = from.x + dx * 0.4;
+    const cy1 = from.y + (Math.abs(dy) < 40 ? tension * 0.3 : 0);
+    const cx2 = to.x - dx * 0.4;
+    const cy2 = to.y - (Math.abs(dy) < 40 ? tension * 0.3 : 0);
     return `M ${from.x} ${from.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${to.x} ${to.y}`;
+  };
+
+  // Build the full road spline through all nodes in order
+  const buildRoadSpline = () => {
+    if (trailNodes.length < 2) return '';
+    const sorted = [...trailNodes].sort((a, b) => a.id - b.id);
+    let d = `M ${sorted[0].x} ${sorted[0].y}`;
+    for (let i = 1; i < sorted.length; i++) {
+      const prev = sorted[i - 1];
+      const curr = sorted[i];
+      const dx = curr.x - prev.x;
+      const dy = curr.y - prev.y;
+      const cx1 = prev.x + dx * 0.45;
+      const cy1 = prev.y;
+      const cx2 = curr.x - dx * 0.45;
+      const cy2 = curr.y;
+      d += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${curr.x} ${curr.y}`;
+    }
+    return d;
   };
 
   return (
@@ -154,21 +174,40 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                   <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
+              {/* Background road (thick, dark) */}
+              <path
+                d={buildRoadSpline()}
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={28}
+                className="stroke-zinc-300 dark:stroke-zinc-800"
+              />
+              {/* Road center dashes */}
+              <path
+                d={buildRoadSpline()}
+                fill="none"
+                strokeLinecap="round"
+                strokeWidth={3}
+                strokeDasharray="12,10"
+                className="stroke-zinc-400/50 dark:stroke-zinc-600/50"
+              />
+              {/* Completed progress overlay on road */}
               {trailNodes.map(node =>
                 node.parents.map(parentId => {
                   const parent = trailNodes.find(n => n.id === parentId);
                   if (!parent) return null;
                   const unlocked = completedIds.includes(parent.id);
+                  if (!unlocked) return null;
                   return (
                     <path
-                      key={`${parent.id}-${node.id}`}
+                      key={`progress-${parent.id}-${node.id}`}
                       d={buildPath(parent, node)}
                       fill="none"
                       strokeLinecap="round"
-                      strokeWidth={unlocked ? 4 : 2}
-                      strokeDasharray={unlocked ? 'none' : '8,6'}
-                      className={unlocked ? 'stroke-primary' : 'stroke-border dark:stroke-zinc-700'}
-                      filter={unlocked ? 'url(#glow)' : undefined}
+                      strokeWidth={28}
+                      className="stroke-primary/30"
+                      filter="url(#glow)"
                       style={{ transition: 'all 0.5s ease' }}
                     />
                   );
