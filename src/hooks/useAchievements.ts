@@ -33,29 +33,35 @@ type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
 const TRAIL_STORAGE_KEY = 'lb_custom_achievements_v2';
 const LEGACY_TRAIL_STORAGE_KEY = 'lb_custom_achievements';
 const TRAIL_VERSION = 'trail-49-v1';
-// Hand-crafted organic map positions — asymmetric, diagonal, adventure-style
+// Winding road positions — S-curve snake path like a game board road
 const MANUAL_POSITIONS: [number, number][] = [
-  // Phase 1 — Início (scattered start)
-  [280, 70],   [460, 50],   [600, 140],  [380, 190],  [180, 160],
-  [90, 280],   [250, 320],
-  // Phase 2 — Aprendiz (diagonal drift right)
-  [430, 260],  [620, 200],  [780, 280],  [700, 400],  [520, 380],
-  [340, 450],  [160, 430],
-  // Phase 3 — Intermediário (sweep left-center)
-  [80, 560],   [240, 600],  [420, 550],  [590, 620],  [770, 560],
-  [900, 480],  [960, 620],
-  // Phase 4 — Avançado (drop down right)
-  [830, 720],  [640, 750],  [460, 700],  [280, 760],  [110, 710],
-  [60, 850],   [200, 930],
-  // Phase 5 — Especialista (zigzag center)
-  [390, 880],  [560, 930],  [740, 870],  [900, 940],  [820, 1060],
-  [620, 1030], [440, 1080],
-  // Phase 6 — Mestre (spread wide)
-  [260, 1040], [100, 1140], [250, 1230], [450, 1190], [650, 1160],
-  [840, 1200], [970, 1120],
-  // Phase 7 — Lenda (converge to finale)
-  [920, 1300], [720, 1330], [510, 1290], [340, 1360], [180, 1430],
-  [400, 1480], [600, 1520],
+  // Row 1 → right (1-5)
+  [120, 80],  [300, 60],  [480, 90],  [650, 55],  [820, 80],
+  // Curve down-right (6-7)
+  [920, 180], [880, 300],
+  // Row 2 ← left (8-12)
+  [720, 340], [540, 310], [370, 350], [200, 320], [80, 360],
+  // Curve down-left (13-14)
+  [60, 470],  [120, 570],
+  // Row 3 → right (15-19)
+  [280, 550], [450, 580], [620, 545], [790, 575], [930, 540],
+  // Curve down-right (20-21)
+  [960, 650], [900, 750],
+  // Row 4 ← left (22-26)
+  [730, 780], [560, 750], [390, 790], [220, 760], [80, 800],
+  // Curve down-left (27-28)
+  [50, 900],  [110, 1000],
+  // Row 5 → right (29-33)
+  [270, 980], [440, 1010], [610, 975], [780, 1005], [940, 970],
+  // Curve down-right (34-35)
+  [970, 1080], [910, 1170],
+  // Row 6 ← left (36-40)
+  [740, 1200], [570, 1170], [400, 1205], [230, 1175], [90, 1210],
+  // Curve down-left (41-42)
+  [60, 1310], [130, 1400],
+  // Row 7 → finale (43-49)
+  [300, 1380], [470, 1410], [640, 1375], [800, 1405], [900, 1500],
+  [720, 1550], [520, 1580],
 ];
 
 const trailBlueprints: TrailBlueprint[] = [
