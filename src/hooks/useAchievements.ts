@@ -33,11 +33,11 @@ type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
 const TRAIL_STORAGE_KEY = 'lb_custom_achievements_v2';
 const LEGACY_TRAIL_STORAGE_KEY = 'lb_custom_achievements';
 const TRAIL_VERSION = 'trail-49-v1';
-const TRAIL_COLUMNS = 7;
-const TRAIL_START_X = 140;
-const TRAIL_START_Y = 120;
-const TRAIL_STEP_X = 180;
-const TRAIL_STEP_Y = 150;
+const TRAIL_COLS = 5;
+const NODE_W = 160;
+const NODE_H = 140;
+const PAD_X = 120;
+const PAD_Y = 100;
 
 const trailBlueprints: TrailBlueprint[] = [
   { title: 'Primeiro Resumo', type: 'challenge', creditReward: 1, iconName: 'BookOpen', objective: 'Gere seu primeiro conteúdo de estudo para iniciar a trilha.', triggerType: 'generate_study', triggerRequirement: 1 },
@@ -94,19 +94,28 @@ const trailBlueprints: TrailBlueprint[] = [
 const normalizeIds = (ids: unknown[]) => Array.from(new Set(ids.map((id) => Number(id)).filter((id) => Number.isFinite(id) && id > 0))).sort((a, b) => a - b);
 const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
 
-const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => blueprints.map((node, index) => {
-  const row = Math.floor(index / TRAIL_COLUMNS);
-  const col = index % TRAIL_COLUMNS;
-  const visualCol = row % 2 === 0 ? col : TRAIL_COLUMNS - 1 - col;
+const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
+  // Serpentine map: rows zigzag left-right with slight vertical jitter for organic feel
+  const jitterX = [0, 12, -8, 15, -12, 6, -10, 8, -5, 14];
+  const jitterY = [0, 8, -6, 10, -8, 5, -10, 7, -4, 12];
 
-  return {
-    ...node,
-    id: index + 1,
-    x: TRAIL_START_X + visualCol * TRAIL_STEP_X,
-    y: TRAIL_START_Y + row * TRAIL_STEP_Y,
-    parents: index === 0 ? [] : [index],
-  };
-});
+  return blueprints.map((node, index) => {
+    const row = Math.floor(index / TRAIL_COLS);
+    const col = index % TRAIL_COLS;
+    const isEvenRow = row % 2 === 0;
+    const visualCol = isEvenRow ? col : TRAIL_COLS - 1 - col;
+    const jx = jitterX[index % jitterX.length];
+    const jy = jitterY[index % jitterY.length];
+
+    return {
+      ...node,
+      id: index + 1,
+      x: PAD_X + visualCol * NODE_W + jx,
+      y: PAD_Y + row * NODE_H + jy,
+      parents: index === 0 ? [] : [index], // parent = previous node id
+    };
+  });
+};
 
 export const defaultTrailNodes: TrailNodeDef[] = createTrailNodes(trailBlueprints);
 
