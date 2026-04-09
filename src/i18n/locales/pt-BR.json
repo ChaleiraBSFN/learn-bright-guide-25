@@ -553,7 +553,27 @@
     "empty": "Ninguém pontuou no Ranking Global ainda! 🚀",
     "emptyHint": "Gere resumos, faça quizzes e avance na Trilha de Progresso para ser o primeiro a aparecer aqui!",
     "achievements": "conquistas",
-    "anonymousStudent": "Estudante Anônimo"
+    "anonymousStudent": "Estudante Anônimo",
+    "myRank": "Meu Rank",
+    "rankMap": "Mapa de Ranks",
+    "globalTop": "Top Global",
+    "nextRank": "Próximo rank",
+    "achievementsLeft": "conquistas restantes",
+    "maxRank": "Você atingiu o rank máximo!",
+    "noSurreal": "Ninguém atingiu o rank máximo ainda!",
+    "noSurrealHint": "Complete todos os desafios da trilha para aparecer aqui!",
+    "allPlayers": "Todos os jogadores",
+    "youAreHere": "Você está aqui"
+  },
+  "ranks": {
+    "bronze": "Bronze",
+    "silver": "Prata",
+    "gold": "Ouro",
+    "platinum": "Platina",
+    "diamond": "Diamante",
+    "elite": "Elite",
+    "legend": "Lenda",
+    "surreal": "Surreal"
   },
   "trail": {
     "title": "Trilha de Conquistas",
