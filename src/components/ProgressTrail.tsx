@@ -46,6 +46,52 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
   const { nodes: trailNodes } = useAchievementData();
 
   const [completedIds, setCompletedIds] = useState<number[]>([]);
+  const [translatedNodes, setTranslatedNodes] = useState<Record<string, Record<number, { title: string; objective: string }>>>({});
+  const [translatingLang, setTranslatingLang] = useState<string | null>(null);
+
+  const currentLang = i18n.language;
+
+  // Translate trail nodes when language is not pt-BR
+  const translateTrailNodes = useCallback(async (lang: string, nodes: TrailNodeDef[]) => {
+    if (lang === 'pt-BR' || lang === 'pt' || translatedNodes[lang]) return;
+    setTranslatingLang(lang);
+    try {
+      const toTranslate: Record<string, string> = {};
+      nodes.forEach(n => {
+        toTranslate[`title_${n.id}`] = n.title;
+        toTranslate[`obj_${n.id}`] = n.objective || '';
+      });
+      const { data, error } = await supabase.functions.invoke('translate-content', {
+        body: { content: toTranslate, targetLanguage: lang },
+      });
+      if (!error && data) {
+        const mapped: Record<number, { title: string; objective: string }> = {};
+        nodes.forEach(n => {
+          mapped[n.id] = {
+            title: data[`title_${n.id}`] || n.title,
+            objective: data[`obj_${n.id}`] || n.objective || '',
+          };
+        });
+        setTranslatedNodes(prev => ({ ...prev, [lang]: mapped }));
+      }
+    } catch (e) {
+      console.error('Trail translation error:', e);
+    }
+    setTranslatingLang(null);
+  }, [translatedNodes]);
+
+  useEffect(() => {
+    if (open && currentLang !== 'pt-BR' && currentLang !== 'pt' && trailNodes.length > 0) {
+      translateTrailNodes(currentLang, trailNodes);
+    }
+  }, [open, currentLang, trailNodes, translateTrailNodes]);
+
+  const getNodeText = useCallback((node: TrailNodeDef) => {
+    const lang = currentLang;
+    if (lang === 'pt-BR' || lang === 'pt') return { title: node.title, objective: node.objective || '' };
+    const t = translatedNodes[lang]?.[node.id];
+    return t || { title: node.title, objective: node.objective || '' };
+  }, [currentLang, translatedNodes]);
 
   const completedSet = useMemo(() => new Set(completedIds), [completedIds]);
   const completedCount = useMemo(() => trailNodes.filter((node) => completedSet.has(node.id)).length, [trailNodes, completedSet]);
