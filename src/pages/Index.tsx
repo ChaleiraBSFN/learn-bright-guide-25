@@ -18,6 +18,7 @@ import { UserMenu } from "@/components/UserMenu";
 import { SupportChat } from "@/components/SupportChat";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
+import { UpdateNoticeBanner } from "@/components/UpdateNoticeBanner";
 import { FloatingActions } from "@/components/FloatingActions";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { useAuth } from "@/hooks/useAuth";
@@ -471,6 +472,9 @@ const Index = () => {
               exit="exit"
               className="mx-auto max-w-2xl space-y-8"
             >
+              {/* Update Notice Banner */}
+              <UpdateNoticeBanner />
+
               {/* Engine Notice Banner */}
               <EngineNoticeBanner />
 
