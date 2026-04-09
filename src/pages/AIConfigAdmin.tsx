@@ -181,7 +181,7 @@ const AIConfigAdmin = () => {
         </div>
 
         <Tabs defaultValue="metrics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="metrics" className="flex items-center gap-2">
               <Gauge className="h-4 w-4" /> Métricas
             </TabsTrigger>
@@ -190,6 +190,9 @@ const AIConfigAdmin = () => {
             </TabsTrigger>
             <TabsTrigger value="capabilities" className="flex items-center gap-2">
               <Eye className="h-4 w-4" /> Capacidades
+            </TabsTrigger>
+            <TabsTrigger value="footer" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" /> Rodapé
             </TabsTrigger>
           </TabsList>
 
