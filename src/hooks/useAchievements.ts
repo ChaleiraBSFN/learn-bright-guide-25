@@ -6,7 +6,16 @@ import { useToast } from '@/hooks/use-toast';
 import { BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin } from 'lucide-react';
 
 export const availableIcons = {
-  BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin,
+  BookOpen,
+  Zap,
+  Flame,
+  Trophy,
+  Brain,
+  Target,
+  Gift,
+  Crown,
+  Star,
+  MapPin,
 };
 
 export type IconName = keyof typeof availableIcons;
@@ -32,30 +41,16 @@ type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
 
 const TRAIL_STORAGE_KEY = 'lb_custom_achievements_v2';
 const LEGACY_TRAIL_STORAGE_KEY = 'lb_custom_achievements';
-const TRAIL_VERSION = 'trail-49-v1';
-// Organic winding S-curve — nodes placed ALONG the curve, not in rows
+const TRAIL_VERSION = 'trail-visual-editor-v2';
+
 const MANUAL_POSITIONS: [number, number][] = [
-  // Curve 1: starts top-left, sweeps right and down
-  [140, 60],  [280, 100], [430, 70],  [570, 130], [700, 90],
-  [830, 160], [900, 280],
-  // Curve 2: swoops left and down
-  [820, 380], [680, 430], [530, 390], [380, 450], [240, 410],
-  [130, 490], [100, 620],
-  // Curve 3: sweeps right again with wave
-  [190, 720], [340, 680], [490, 730], [640, 690], [800, 740],
-  [920, 660], [960, 790],
-  // Curve 4: dips left with bounce
-  [880, 900], [730, 860], [580, 920], [420, 870], [270, 930],
-  [140, 880], [80, 1010],
-  // Curve 5: rises right with oscillation
-  [180, 1110], [330, 1060], [490, 1110], [650, 1050], [810, 1100],
-  [940, 1040], [980, 1170],
-  // Curve 6: descends left
-  [870, 1260], [710, 1220], [550, 1270], [390, 1230], [240, 1290],
-  [120, 1240], [70, 1370],
-  // Curve 7: finale sweep right
-  [190, 1460], [350, 1420], [520, 1470], [690, 1430], [840, 1490],
-  [720, 1570], [520, 1610],
+  [140, 60], [280, 100], [430, 70], [570, 130], [700, 90], [830, 160], [900, 280],
+  [820, 380], [680, 430], [530, 390], [380, 450], [240, 410], [130, 490], [100, 620],
+  [190, 720], [340, 680], [490, 730], [640, 690], [800, 740], [920, 660], [960, 790],
+  [880, 900], [730, 860], [580, 920], [420, 870], [270, 930], [140, 880], [80, 1010],
+  [180, 1110], [330, 1060], [490, 1110], [650, 1050], [810, 1100], [940, 1040], [980, 1170],
+  [870, 1260], [710, 1220], [550, 1270], [390, 1230], [240, 1290], [120, 1240], [70, 1370],
+  [190, 1460], [350, 1420], [520, 1470], [690, 1430], [840, 1490], [720, 1570], [520, 1610],
 ];
 
 const trailBlueprints: TrailBlueprint[] = [
@@ -107,11 +102,33 @@ const trailBlueprints: TrailBlueprint[] = [
   { title: 'Domínio do Conteúdo', type: 'challenge', creditReward: 9, iconName: 'Star', objective: 'Gere 18 materiais de estudo e domine a construção de conteúdo.', triggerType: 'generate_study', triggerRequirement: 18 },
   { title: 'Precisão Total', type: 'quiz', creditReward: 9, iconName: 'Brain', objective: 'Crie 18 listas de exercícios para alcançar precisão máxima na prática.', triggerType: 'generate_quiz', triggerRequirement: 18 },
   { title: 'Foco Supremo', type: 'challenge', creditReward: 10, iconName: 'Flame', objective: 'Acumule 300 minutos de estudo focado e prove resistência total.', triggerType: 'time_focused', timeRequiredMinutes: 300, triggerRequirement: 300 },
-  { title: 'Lenda Learn Buddy', type: 'reward', creditReward: 20, iconName: 'Crown', objective: 'Complete todos os 49 desafios da trilha para se tornar uma verdadeira lenda.', triggerType: 'none' },
+  { title: 'Lenda Learn Buddy', type: 'reward', creditReward: 20, iconName: 'Crown', objective: 'Complete todos os desafios da trilha para se tornar uma verdadeira lenda.', triggerType: 'none' },
 ];
 
 const normalizeIds = (ids: unknown[]) => Array.from(new Set(ids.map((id) => Number(id)).filter((id) => Number.isFinite(id) && id > 0))).sort((a, b) => a - b);
 const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
+
+export const sortTrailNodes = (nodes: TrailNodeDef[]) => [...nodes].sort((a, b) => a.id - b.id);
+
+export const createDraftTrailNode = (id: number, x: number, y: number, parentId?: number): TrailNodeDef => ({
+  id,
+  title: `Novo Desafio ${id}`,
+  type: 'challenge',
+  creditReward: 1,
+  iconName: 'Star',
+  x,
+  y,
+  parents: parentId ? [parentId] : [],
+  objective: 'Descreva aqui o que o aluno precisa fazer para concluir este desafio.',
+  triggerType: 'none',
+  triggerRequirement: 0,
+});
+
+const isTrailType = (value: unknown): value is TrailNodeDef['type'] =>
+  value === 'challenge' || value === 'quiz' || value === 'milestone' || value === 'reward';
+
+const isTriggerType = (value: unknown): value is TrailNodeDef['triggerType'] =>
+  value === 'generate_study' || value === 'generate_quiz' || value === 'quiz_score' || value === 'time_focused' || value === 'none';
 
 const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
   return blueprints.map((node, index) => {
@@ -128,22 +145,48 @@ const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
 
 export const defaultTrailNodes: TrailNodeDef[] = createTrailNodes(trailBlueprints);
 
-const normalizeStoredNodes = (storedNodes: TrailNodeDef[]) => defaultTrailNodes.map((defaultNode) => {
-  const storedNode = storedNodes.find((node) => Number(node.id) === defaultNode.id);
-  return storedNode
-    ? {
-        ...defaultNode,
-        ...storedNode,
-        id: defaultNode.id,
-        parents: defaultNode.parents,
-        objective: storedNode.objective?.trim() || defaultNode.objective,
-        title: storedNode.title?.trim() || defaultNode.title,
-      }
-    : defaultNode;
-});
+const defaultNodeMap = new Map(defaultTrailNodes.map((node) => [node.id, node]));
+
+const sanitizeTrailNode = (rawNode: Partial<TrailNodeDef>, index: number): TrailNodeDef => {
+  const fallbackPosition = MANUAL_POSITIONS[index] || [140 + (index % 4) * 180, 100 + Math.floor(index / 4) * 160];
+  const fallback = defaultNodeMap.get(Number(rawNode.id)) || createDraftTrailNode(index + 1, fallbackPosition[0], fallbackPosition[1], index > 0 ? index : undefined);
+  const safeId = Number(rawNode.id);
+  const safeReward = Number(rawNode.creditReward);
+  const safeTriggerRequirement = Number(rawNode.triggerRequirement);
+  const safeTime = Number(rawNode.timeRequiredMinutes);
+
+  return {
+    ...fallback,
+    ...rawNode,
+    id: Number.isFinite(safeId) && safeId > 0 ? safeId : fallback.id,
+    title: rawNode.title?.trim() || fallback.title,
+    type: isTrailType(rawNode.type) ? rawNode.type : fallback.type,
+    creditReward: Number.isFinite(safeReward) ? Math.max(0, safeReward) : fallback.creditReward,
+    iconName: rawNode.iconName && rawNode.iconName in availableIcons ? (rawNode.iconName as IconName) : fallback.iconName,
+    x: Number.isFinite(Number(rawNode.x)) ? Number(rawNode.x) : fallback.x,
+    y: Number.isFinite(Number(rawNode.y)) ? Number(rawNode.y) : fallback.y,
+    parents: normalizeIds(Array.isArray(rawNode.parents) ? rawNode.parents : fallback.parents),
+    objective: rawNode.objective?.trim() || fallback.objective,
+    triggerType: isTriggerType(rawNode.triggerType) ? rawNode.triggerType : fallback.triggerType,
+    triggerRequirement: Number.isFinite(safeTriggerRequirement) ? safeTriggerRequirement : fallback.triggerRequirement,
+    timeRequiredMinutes: Number.isFinite(safeTime) ? safeTime : fallback.timeRequiredMinutes,
+  };
+};
+
+const normalizeStoredNodes = (storedNodes: TrailNodeDef[]) => {
+  const sourceNodes = storedNodes.length > 0 ? storedNodes : defaultTrailNodes;
+  const uniqueNodes = new Map<number, TrailNodeDef>();
+
+  sourceNodes.forEach((node, index) => {
+    const sanitized = sanitizeTrailNode(node, index);
+    uniqueNodes.set(sanitized.id, sanitized);
+  });
+
+  return sortTrailNodes(Array.from(uniqueNodes.values()));
+};
 
 const persistTrailNodes = (nodes: TrailNodeDef[]) => {
-  const normalized = normalizeStoredNodes(nodes);
+  const normalized = normalizeStoredNodes(nodes.length > 0 ? nodes : defaultTrailNodes);
   localStorage.setItem(TRAIL_STORAGE_KEY, JSON.stringify({ version: TRAIL_VERSION, nodes: normalized }));
   localStorage.removeItem(LEGACY_TRAIL_STORAGE_KEY);
   return normalized;
@@ -154,7 +197,7 @@ const readStoredTrailNodes = () => {
     const raw = localStorage.getItem(TRAIL_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (!parsed || parsed.version !== TRAIL_VERSION || !Array.isArray(parsed.nodes) || parsed.nodes.length !== defaultTrailNodes.length) {
+    if (!parsed || parsed.version !== TRAIL_VERSION || !Array.isArray(parsed.nodes) || parsed.nodes.length === 0) {
       return null;
     }
     return normalizeStoredNodes(parsed.nodes);
@@ -189,7 +232,14 @@ export const loadUserCompletedAchievements = async (userId: string) => {
 
     const missingInCloud = localIds.filter((id) => !cloudIds.includes(id));
     if (missingInCloud.length > 0) {
-      await Promise.all(missingInCloud.map((achievementId) => (supabase.from as any)('user_achievements').insert({ user_id: userId, achievement_id: achievementId }).then(() => null).catch(() => null)));
+      await Promise.all(
+        missingInCloud.map((achievementId) =>
+          (supabase.from as any)('user_achievements')
+            .insert({ user_id: userId, achievement_id: achievementId })
+            .then(() => null)
+            .catch(() => null),
+        ),
+      );
     }
 
     return merged;
