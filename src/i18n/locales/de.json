@@ -539,13 +539,33 @@
     "label": "Credits"
   },
   "ranking": {
-    "title": "Achievement Ranking",
-    "description": "The top students on the platform with the most trail achievements.",
-    "loading": "Loading...",
-    "empty": "No one has scored in the Global Ranking yet! 🚀",
-    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
-    "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
+    "title": "Erfolge-Ranking",
+    "description": "Die besten Schüler der Plattform mit den meisten Erfolgen.",
+    "loading": "Laden...",
+    "empty": "Noch niemand hat im globalen Ranking gepunktet! 🚀",
+    "emptyHint": "Erstelle Zusammenfassungen, mache Quizze und komme voran!",
+    "achievements": "Erfolge",
+    "anonymousStudent": "Anonymer Schüler",
+    "myRank": "Mein Rang",
+    "rankMap": "Rang-Karte",
+    "globalTop": "Globale Top",
+    "nextRank": "Nächster Rang",
+    "achievementsLeft": "Erfolge verbleibend",
+    "maxRank": "Du hast den höchsten Rang erreicht!",
+    "noSurreal": "Noch niemand hat den höchsten Rang erreicht!",
+    "noSurrealHint": "Schließe alle Herausforderungen ab!",
+    "allPlayers": "Alle Spieler",
+    "youAreHere": "Du bist hier"
+  },
+  "ranks": {
+    "bronze": "Bronze",
+    "silver": "Silber",
+    "gold": "Gold",
+    "platinum": "Platin",
+    "diamond": "Diamant",
+    "elite": "Elite",
+    "legend": "Legende",
+    "surreal": "Surreal"
   },
   "trail": {
     "title": "Achievement Trail",

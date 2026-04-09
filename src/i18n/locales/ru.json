@@ -539,13 +539,33 @@
     "label": "Credits"
   },
   "ranking": {
-    "title": "Achievement Ranking",
-    "description": "The top students on the platform with the most trail achievements.",
-    "loading": "Loading...",
-    "empty": "No one has scored in the Global Ranking yet! 🚀",
-    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
-    "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
+    "title": "Рейтинг достижений",
+    "description": "Лучшие студенты платформы с наибольшим количеством достижений.",
+    "loading": "Загрузка...",
+    "empty": "Пока никто не набрал очков в глобальном рейтинге! 🚀",
+    "emptyHint": "Создавайте конспекты, проходите тесты и продвигайтесь!",
+    "achievements": "достижений",
+    "anonymousStudent": "Анонимный студент",
+    "myRank": "Мой ранг",
+    "rankMap": "Карта рангов",
+    "globalTop": "Мировой топ",
+    "nextRank": "Следующий ранг",
+    "achievementsLeft": "достижений осталось",
+    "maxRank": "Вы достигли максимального ранга!",
+    "noSurreal": "Пока никто не достиг максимального ранга!",
+    "noSurrealHint": "Пройдите все испытания!",
+    "allPlayers": "Все игроки",
+    "youAreHere": "Вы здесь"
+  },
+  "ranks": {
+    "bronze": "Бронза",
+    "silver": "Серебро",
+    "gold": "Золото",
+    "platinum": "Платина",
+    "diamond": "Алмаз",
+    "elite": "Элита",
+    "legend": "Легенда",
+    "surreal": "Сюрреал"
   },
   "trail": {
     "title": "Achievement Trail",
