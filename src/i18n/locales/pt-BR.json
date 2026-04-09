@@ -507,12 +507,6 @@
     "studyDone": "Pronto! 🎉",
     "exerciseDone": "Pronto! 🎉"
   },
-  "credits": {
-    "remaining": "{{count}} créditos restantes",
-    "noCredits": "Sem créditos",
-    "signupForMore": "Crie uma conta para ganhar mais créditos!",
-    "earnMore": "Complete desafios na trilha para ganhar mais créditos!"
-  },
   "settings": {
     "title": "Configurações",
     "error": "Erro",
