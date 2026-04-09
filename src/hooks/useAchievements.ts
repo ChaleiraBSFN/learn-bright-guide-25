@@ -274,12 +274,14 @@ export const useAchievementData = () => {
 
     loadNodes();
     window.addEventListener('achievements_updated', loadNodes);
+    window.addEventListener('trail_nodes_updated', loadNodes);
     window.addEventListener('storage', loadNodes);
     window.addEventListener('focus', loadNodes);
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
       window.removeEventListener('achievements_updated', loadNodes);
+      window.removeEventListener('trail_nodes_updated', loadNodes);
       window.removeEventListener('storage', loadNodes);
       window.removeEventListener('focus', loadNodes);
       document.removeEventListener('visibilitychange', handleVisibility);
@@ -289,7 +291,11 @@ export const useAchievementData = () => {
   const saveNodes = (newNodes: TrailNodeDef[]) => {
     const normalized = persistTrailNodes(newNodes);
     setNodes(normalized);
+    // Notify all instances (same tab + other tabs)
     window.dispatchEvent(new Event('achievements_updated'));
+    window.dispatchEvent(new Event('trail_nodes_updated'));
+    // Force storage event for other tabs
+    window.dispatchEvent(new StorageEvent('storage', { key: TRAIL_STORAGE_KEY }));
   };
 
   return { nodes, saveNodes };
