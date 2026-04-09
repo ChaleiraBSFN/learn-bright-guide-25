@@ -184,7 +184,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
                   return (
                     <g key={`${parent.id}-${node.id}`}>
-                      <path d={path} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={34} className="stroke-border/90" />
+                      <path d={path} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={34} stroke="hsl(220, 60%, 20%)" />
                       <path d={path} fill="none" strokeLinecap="round" strokeWidth={3} strokeDasharray="12,10" className="stroke-muted-foreground/20" />
                       {unlocked && (
                         <path
