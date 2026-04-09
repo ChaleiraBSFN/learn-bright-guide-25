@@ -265,8 +265,11 @@ export const AIInfoDialog = () => {
           )}
 
           {/* Footer */}
-          <p className="text-[10px] text-muted-foreground text-center pt-2 border-t border-border">
-            {t('aiInfo.footer')}
+          <p className="text-[10px] text-muted-foreground text-center pt-2 border-t border-border whitespace-pre-line">
+            {(() => {
+              const dbFooter = (aiConfig || []).filter(c => c.section === 'footer').map(c => (c.config_data as Record<string, any>).text).filter(Boolean);
+              return dbFooter.length > 0 ? dbFooter.join('\n') : t('aiInfo.footer');
+            })()}
           </p>
         </div>
       </DialogContent>
