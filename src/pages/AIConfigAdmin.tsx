@@ -13,7 +13,8 @@ import { toast } from '@/hooks/use-toast';
 import {
   ArrowLeft, Loader2, Cpu, Plus, Trash2, Save, Gauge, Sparkles, Eye,
   Zap, Brain, Image, BookOpen, PenTool, Languages, Shield, RefreshCw,
-  HardDrive, Globe, Activity, Server, Database, Clock, Wifi, Lock, GripVertical
+  HardDrive, Globe, Activity, Server, Database, Clock, Wifi, Lock, GripVertical,
+  FileText
 } from 'lucide-react';
 
 const ICON_OPTIONS: { value: string; label: string; icon: any }[] = [
@@ -66,6 +67,7 @@ const AIConfigAdmin = () => {
   const [metrics, setMetrics] = useState<ConfigItem[]>([]);
   const [models, setModels] = useState<ConfigItem[]>([]);
   const [capabilities, setCapabilities] = useState<ConfigItem[]>([]);
+  const [footerItems, setFooterItems] = useState<ConfigItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -88,6 +90,7 @@ const AIConfigAdmin = () => {
       setMetrics(data.filter(d => d.section === 'metric').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
       setModels(data.filter(d => d.section === 'model').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
       setCapabilities(data.filter(d => d.section === 'capability').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
+      setFooterItems(data.filter(d => d.section === 'footer').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
     }
     setLoading(false);
   }, []);
@@ -178,7 +181,7 @@ const AIConfigAdmin = () => {
         </div>
 
         <Tabs defaultValue="metrics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="metrics" className="flex items-center gap-2">
               <Gauge className="h-4 w-4" /> Métricas
             </TabsTrigger>
@@ -187,6 +190,9 @@ const AIConfigAdmin = () => {
             </TabsTrigger>
             <TabsTrigger value="capabilities" className="flex items-center gap-2">
               <Eye className="h-4 w-4" /> Capacidades
+            </TabsTrigger>
+            <TabsTrigger value="footer" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" /> Rodapé
             </TabsTrigger>
           </TabsList>
 
@@ -323,6 +329,44 @@ const AIConfigAdmin = () => {
               </Button>
               <Button onClick={() => saveSection('capability', capabilities)} disabled={saving}>
                 <Save className="h-4 w-4 mr-2" /> {saving ? 'Salvando...' : 'Salvar Capacidades'}
+              </Button>
+            </div>
+          </TabsContent>
+
+          {/* FOOTER TAB */}
+          <TabsContent value="footer" className="space-y-4">
+            <p className="text-sm text-muted-foreground">Configure o texto que aparece no rodapé do diálogo "Dados da IA" (versão, descrição, etc.).</p>
+            {footerItems.length === 0 && (
+              <Card>
+                <CardContent className="pt-4">
+                  <p className="text-sm text-muted-foreground text-center">Nenhum item de rodapé. Adicione um abaixo.</p>
+                </CardContent>
+              </Card>
+            )}
+            {footerItems.map((item, idx) => (
+              <Card key={item.id || idx}>
+                <CardContent className="pt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">Linha #{idx + 1}</span>
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => removeItem(footerItems, setFooterItems, idx)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <Textarea
+                    placeholder="Texto do rodapé (ex: 100% gratuito · v3.0 · Powered by Gemini)"
+                    value={item.config_data.text || ''}
+                    onChange={e => updateField(footerItems, setFooterItems, idx, 'text', e.target.value)}
+                    rows={2}
+                  />
+                </CardContent>
+              </Card>
+            ))}
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={() => setFooterItems([...footerItems, { section: 'footer', sort_order: footerItems.length, config_data: { text: '' }, isNew: true }])}>
+                <Plus className="h-4 w-4 mr-2" /> Adicionar Linha
+              </Button>
+              <Button onClick={() => saveSection('footer', footerItems)} disabled={saving}>
+                <Save className="h-4 w-4 mr-2" /> {saving ? 'Salvando...' : 'Salvar Rodapé'}
               </Button>
             </div>
           </TabsContent>
