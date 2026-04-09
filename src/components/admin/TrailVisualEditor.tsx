@@ -281,9 +281,14 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="challenge">Desafio</SelectItem>
-                        <SelectItem value="quiz">Quiz</SelectItem>
-                        <SelectItem value="milestone">Marco</SelectItem>
-                        <SelectItem value="reward">Recompensa</SelectItem>
+                        <SelectItem value="challenge">🎯 Desafio</SelectItem>
+                        <SelectItem value="quiz">📝 Quiz</SelectItem>
+                        <SelectItem value="milestone">🏆 Marco</SelectItem>
+                        <SelectItem value="reward">🎁 Recompensa</SelectItem>
+                        <SelectItem value="boss">🔥 Boss</SelectItem>
+                        <SelectItem value="secret">🔮 Secreto</SelectItem>
+                        <SelectItem value="event">⚡ Evento</SelectItem>
+                        <SelectItem value="legendary">👑 Lendário</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -292,9 +297,14 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
                     <Label>Ícone</Label>
                     <Select value={selectedNode.iconName} onValueChange={(value) => updateNode(selectedNode.id, { iconName: value as keyof typeof availableIcons })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {Object.keys(availableIcons).map((icon) => (
-                          <SelectItem key={icon} value={icon}>{icon}</SelectItem>
+                      <SelectContent className="max-h-[300px]">
+                        {Object.entries(availableIcons).map(([name, IconComp]) => (
+                          <SelectItem key={name} value={name}>
+                            <span className="flex items-center gap-2">
+                              <IconComp className="h-4 w-4" />
+                              {name}
+                            </span>
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
