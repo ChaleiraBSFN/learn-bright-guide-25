@@ -3,19 +3,30 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
 import { useToast } from '@/hooks/use-toast';
-import { BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin } from 'lucide-react';
+import {
+  BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin,
+  Rocket, Heart, Shield, Sword, Gem, Medal, Award, Flag, Mountain, Compass,
+  Lightbulb, Puzzle, Clock, Timer, Eye, Headphones, Mic, Pencil, Pen, PenTool,
+  GraduationCap, School, Library, FileText, BookMarked, Bookmark, Search,
+  MessageCircle, Users, UserCheck, Sparkles, Wand2, Palette, Music, Camera,
+  Globe, Map, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
+  TreePine, Leaf, Flower2, Apple, Coffee, Pizza, Candy, IceCream2,
+  Dumbbell, Bike, Gamepad2, Dice5, Joystick, CircleDot, Hexagon, Diamond,
+  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link, Anchor, Key, Lock,
+  Unlock, Bell, Megaphone, PartyPopper, Fingerprint, Cpu, Wifi, Battery, Plug
+} from 'lucide-react';
 
 export const availableIcons = {
-  BookOpen,
-  Zap,
-  Flame,
-  Trophy,
-  Brain,
-  Target,
-  Gift,
-  Crown,
-  Star,
-  MapPin,
+  BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin,
+  Rocket, Heart, Shield, Sword, Gem, Medal, Award, Flag, Mountain, Compass,
+  Lightbulb, Puzzle, Clock, Timer, Eye, Headphones, Mic, Pencil, Pen, PenTool,
+  GraduationCap, School, Library, FileText, BookMarked, Bookmark, Search,
+  MessageCircle, Users, UserCheck, Sparkles, Wand2, Palette, Music, Camera,
+  Globe, Map, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
+  TreePine, Leaf, Flower2, Apple, Coffee, Pizza, Candy, IceCream2,
+  Dumbbell, Bike, Gamepad2, Dice5, Joystick, CircleDot, Hexagon, Diamond,
+  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link, Anchor, Key, Lock,
+  Unlock, Bell, Megaphone, PartyPopper, Fingerprint, Cpu, Wifi, Battery, Plug,
 };
 
 export type IconName = keyof typeof availableIcons;
