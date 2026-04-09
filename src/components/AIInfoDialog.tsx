@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useEngineNotices } from '@/hooks/useEngineNotices';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Dialog,
   DialogContent,
@@ -13,11 +15,31 @@ import {
   Cpu, Sparkles, Zap, Brain, Image, BookOpen, PenTool,
   Activity, Shield, Server, Database, Globe, Clock,
   CheckCircle2, AlertTriangle, XCircle, Gauge, Wifi,
-  HardDrive, MemoryStick, RefreshCw, Lock, Eye, Languages
+  HardDrive, RefreshCw, Lock, Eye, Languages
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 type StatusType = 'active' | 'maintenance' | 'inactive';
+
+const ICON_MAP: Record<string, any> = {
+  zap: Zap, sparkles: Sparkles, brain: Brain, image: Image,
+  'book-open': BookOpen, 'pen-tool': PenTool, languages: Languages,
+  shield: Shield, 'refresh-cw': RefreshCw, 'hard-drive': HardDrive,
+  globe: Globe, activity: Activity, server: Server, database: Database,
+  clock: Clock, wifi: Wifi, lock: Lock, cpu: Cpu, gauge: Gauge, eye: Eye,
+};
+
+const COLOR_MAP: Record<string, { text: string; bg: string }> = {
+  amber: { text: 'text-amber-500', bg: 'bg-amber-500/10' },
+  emerald: { text: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+  purple: { text: 'text-purple-500', bg: 'bg-purple-500/10' },
+  blue: { text: 'text-blue-500', bg: 'bg-blue-500/10' },
+  red: { text: 'text-red-500', bg: 'bg-red-500/10' },
+  primary: { text: 'text-primary', bg: 'bg-primary/10' },
+  secondary: { text: 'text-secondary', bg: 'bg-secondary/10' },
+  accent: { text: 'text-accent', bg: 'bg-accent/10' },
+  muted: { text: 'text-muted-foreground', bg: 'bg-muted/10' },
+};
 
 const StatusBadge = ({ status, t }: { status: StatusType; t: (key: string) => string }) => {
   const config = {
@@ -37,6 +59,15 @@ const StatusBadge = ({ status, t }: { status: StatusType; t: (key: string) => st
 export const AIInfoDialog = () => {
   const { t } = useTranslation();
   const { data: engineNotices } = useEngineNotices();
+
+  const { data: aiConfig } = useQuery({
+    queryKey: ['ai_config'],
+    queryFn: async () => {
+      const { data } = await supabase.from('ai_config').select('*').order('sort_order');
+      return data || [];
+    },
+    refetchInterval: 30000,
+  });
 
   const engineKeyToI18n: Record<string, { name: string; icon: any; detail: string }> = {
     content_engine: { name: t('aiInfo.sysContentEngine'), icon: BookOpen, detail: t('aiInfo.sysContentDetail') },
@@ -62,67 +93,36 @@ export const AIInfoDialog = () => {
     };
   });
 
-  const metrics = [
+  // Read from DB or fallback
+  const dbMetrics = (aiConfig || []).filter(c => c.section === 'metric').map(c => {
+    const d = c.config_data as Record<string, any>;
+    return { label: d.label || '', value: d.value || '', icon: ICON_MAP[d.icon] || Clock, progress: d.progress || 0 };
+  });
+  const metrics = dbMetrics.length > 0 ? dbMetrics : [
     { label: t('aiInfo.metricLatency'), value: '~1.2s', icon: Clock, progress: 88 },
     { label: t('aiInfo.metricReliability'), value: '99.7%', icon: Activity, progress: 99 },
     { label: t('aiInfo.metricUptime'), value: '99.9%', icon: Server, progress: 99 },
     { label: t('aiInfo.metricThroughput'), value: '~45 req/s', icon: Gauge, progress: 75 },
   ];
 
-  const models = [
-    {
-      name: 'Gemini 2.5 Flash',
-      version: 'v2.5.0',
-      provider: 'Google DeepMind',
-      icon: Zap,
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-500/10',
-      usage: t('aiInfo.textGeneration'),
-      context: '1M tokens',
-      maxOutput: '16K tokens',
-      speed: t('aiInfo.fast'),
-      details: t('aiInfo.flashDetails'),
-    },
-    {
-      name: 'Gemini 2.5 Flash Lite',
-      version: 'v2.5.0-lite',
-      provider: 'Google DeepMind',
-      icon: Sparkles,
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-500/10',
-      usage: t('aiInfo.freeGeneration'),
-      context: '1M tokens',
-      maxOutput: '8K tokens',
-      speed: t('aiInfo.veryFast'),
-      details: t('aiInfo.flashLiteDetails'),
-    },
-    {
-      name: 'Gemini 3.1 Flash Image',
-      version: 'v3.1-preview',
-      provider: 'Google DeepMind',
-      icon: Image,
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      usage: t('aiInfo.imageGeneration'),
-      context: '1M tokens',
-      maxOutput: t('aiInfo.imagesAndText'),
-      speed: t('aiInfo.moderate'),
-      details: t('aiInfo.imageModelDetails'),
-    },
-    {
-      name: 'Gemini 2.5 Flash (Translate)',
-      version: 'v2.5.0',
-      provider: 'Google DeepMind',
-      icon: Languages,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/10',
-      usage: t('aiInfo.translationUsage'),
-      context: '1M tokens',
-      maxOutput: '16K tokens',
-      speed: t('aiInfo.fast'),
-      details: t('aiInfo.translationModelDetails'),
-    },
-  ];
+  const dbModels = (aiConfig || []).filter(c => c.section === 'model').map(c => {
+    const d = c.config_data as Record<string, any>;
+    const color = COLOR_MAP[d.color] || COLOR_MAP.amber;
+    return {
+      name: d.name || '', version: d.version || '', provider: d.provider || '',
+      icon: ICON_MAP[d.icon] || Zap, color: color.text, bgColor: color.bg,
+      usage: d.usage || '', context: d.context || '', maxOutput: d.maxOutput || '',
+      speed: d.speed || '', details: d.details || '',
+    };
+  });
+  const models = dbModels.length > 0 ? dbModels : [];
+
+  const dbCaps = (aiConfig || []).filter(c => c.section === 'capability').map(c => {
+    const d = c.config_data as Record<string, any>;
+    const color = COLOR_MAP[d.color] || COLOR_MAP.primary;
+    return { icon: ICON_MAP[d.icon] || Cpu, label: d.label || '', color: color.text };
+  });
+  const capabilities = dbCaps.length > 0 ? dbCaps : [];
 
   return (
     <Dialog>
@@ -211,62 +211,58 @@ export const AIInfoDialog = () => {
           </div>
 
           {/* AI Models */}
-          <div>
-            <h3 className="text-sm font-bold font-display text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Cpu className="h-4 w-4" />
-              {t('aiInfo.modelsTitle')}
-            </h3>
-            <div className="space-y-3">
-              {models.map((model) => (
-                <div key={model.name} className="rounded-xl border border-border p-3 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`p-1.5 rounded-md ${model.bgColor}`}>
-                        <model.icon className={`h-4 w-4 ${model.color}`} />
+          {models.length > 0 && (
+            <div>
+              <h3 className="text-sm font-bold font-display text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Cpu className="h-4 w-4" />
+                {t('aiInfo.modelsTitle')}
+              </h3>
+              <div className="space-y-3">
+                {models.map((model) => (
+                  <div key={model.name} className="rounded-xl border border-border p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`p-1.5 rounded-md ${model.bgColor}`}>
+                          <model.icon className={`h-4 w-4 ${model.color}`} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold font-display text-foreground">{model.name}</p>
+                          <p className="text-[10px] text-muted-foreground">{model.provider} · {model.version}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-bold font-display text-foreground">{model.name}</p>
-                        <p className="text-[10px] text-muted-foreground">{model.provider} · {model.version}</p>
-                      </div>
+                      <Badge variant="secondary" className="text-[10px]">
+                        {model.speed}
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className="text-[10px]">
-                      {model.speed}
-                    </Badge>
+                    <div className="text-xs text-muted-foreground space-y-0.5 pl-9">
+                      <p><span className="font-medium text-foreground">{t('aiInfo.usage')}:</span> {model.usage}</p>
+                      <p><span className="font-medium text-foreground">{t('aiInfo.context')}:</span> {model.context}</p>
+                      <p><span className="font-medium text-foreground">{t('aiInfo.maxOutput')}:</span> {model.maxOutput}</p>
+                      <p className="pt-0.5 italic">{model.details}</p>
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground space-y-0.5 pl-9">
-                    <p><span className="font-medium text-foreground">{t('aiInfo.usage')}:</span> {model.usage}</p>
-                    <p><span className="font-medium text-foreground">{t('aiInfo.context')}:</span> {model.context}</p>
-                    <p><span className="font-medium text-foreground">{t('aiInfo.maxOutput')}:</span> {model.maxOutput}</p>
-                    <p className="pt-0.5 italic">{model.details}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Capabilities */}
-          <div>
-            <h3 className="text-sm font-bold font-display text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Eye className="h-4 w-4" />
-              {t('aiInfo.capabilitiesTitle')}
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { icon: BookOpen, label: t('aiInfo.capStudyContent'), color: 'text-primary' },
-                { icon: PenTool, label: t('aiInfo.capExercises'), color: 'text-secondary' },
-                { icon: Brain, label: t('aiInfo.capCorrection'), color: 'text-accent' },
-                { icon: Image, label: t('aiInfo.capImages'), color: 'text-purple-500' },
-                { icon: Languages, label: t('aiInfo.capTranslation'), color: 'text-blue-500' },
-                { icon: RefreshCw, label: t('aiInfo.capFallback'), color: 'text-muted-foreground' },
-                { icon: Shield, label: t('aiInfo.capRateLimit'), color: 'text-muted-foreground' },
-              ].map((cap) => (
-                <div key={cap.label} className="flex items-center gap-2 rounded-lg border border-border p-2.5">
-                  <cap.icon className={`h-4 w-4 ${cap.color} shrink-0`} />
-                  <span className="text-xs font-medium text-foreground">{cap.label}</span>
-                </div>
-              ))}
+          {capabilities.length > 0 && (
+            <div>
+              <h3 className="text-sm font-bold font-display text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                {t('aiInfo.capabilitiesTitle')}
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                {capabilities.map((cap) => (
+                  <div key={cap.label} className="flex items-center gap-2 rounded-lg border border-border p-2.5">
+                    <cap.icon className={`h-4 w-4 ${cap.color} shrink-0`} />
+                    <span className="text-xs font-medium text-foreground">{cap.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Footer */}
           <p className="text-[10px] text-muted-foreground text-center pt-2 border-t border-border">

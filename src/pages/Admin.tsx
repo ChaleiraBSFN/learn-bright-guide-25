@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, ArrowLeft, BarChart3, Loader2, Map, Megaphone, MessageCircle, Settings2, Shield } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, BarChart3, Cpu, Loader2, Map, Megaphone, MessageCircle, Settings2, Shield } from 'lucide-react';
 import TrailVisualEditor from '@/components/admin/TrailVisualEditor';
 
 const Admin = () => {
@@ -106,6 +106,16 @@ const Admin = () => {
                     Editor da Trilha
                   </CardTitle>
                   <CardDescription>Edite a trilha direto no mapa visual, sem coordenadas manuais</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="cursor-pointer transition-colors hover:border-primary" onClick={() => navigate('/ai-config')}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Cpu className="h-5 w-5 text-amber-500" />
+                    Dados da IA
+                  </CardTitle>
+                  <CardDescription>Configure métricas, modelos e capacidades exibidas</CardDescription>
                 </CardHeader>
               </Card>
             </div>
