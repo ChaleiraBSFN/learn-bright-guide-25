@@ -178,32 +178,38 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                 </filter>
               </defs>
 
-              {trailNodes.map((node) =>
-                node.parents.map((parentId) => {
-                  const parent = trailNodes.find((item) => item.id === parentId);
-                  if (!parent) return null;
-                  const path = buildPath(parent, node);
-                  const unlocked = completedSet.has(parent.id);
+              {/* Layer 1: All road backgrounds in one group to avoid overlap artifacts */}
+              <g>
+                {trailNodes.flatMap((node) =>
+                  node.parents.map((parentId) => {
+                    const parent = trailNodes.find((item) => item.id === parentId);
+                    if (!parent) return null;
+                    return <path key={`road-${parent.id}-${node.id}`} d={buildPath(parent, node)} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={34} stroke="hsl(220, 60%, 20%)" />;
+                  }),
+                )}
+              </g>
 
-                  return (
-                    <g key={`${parent.id}-${node.id}`}>
-                      <path d={path} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={34} stroke="hsl(220, 60%, 20%)" />
-                      <path d={path} fill="none" strokeLinecap="round" strokeWidth={3} strokeDasharray="12,10" className="stroke-muted-foreground/20" />
-                      {unlocked && (
-                        <path
-                          d={path}
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={34}
-                          className="stroke-primary/20"
-                          filter="url(#trail-glow)"
-                        />
-                      )}
-                    </g>
-                  );
-                }),
-              )}
+              {/* Layer 2: Glow for unlocked segments */}
+              <g>
+                {trailNodes.flatMap((node) =>
+                  node.parents.map((parentId) => {
+                    const parent = trailNodes.find((item) => item.id === parentId);
+                    if (!parent || !completedSet.has(parent.id)) return null;
+                    return <path key={`glow-${parent.id}-${node.id}`} d={buildPath(parent, node)} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={36} stroke="hsl(var(--primary) / 0.15)" filter="url(#trail-glow)" />;
+                  }),
+                )}
+              </g>
+
+              {/* Layer 3: Dashed center line */}
+              <g>
+                {trailNodes.flatMap((node) =>
+                  node.parents.map((parentId) => {
+                    const parent = trailNodes.find((item) => item.id === parentId);
+                    if (!parent) return null;
+                    return <path key={`dash-${parent.id}-${node.id}`} d={buildPath(parent, node)} fill="none" strokeLinecap="round" strokeWidth={2} strokeDasharray="10,8" stroke="hsl(220, 50%, 30%)" />;
+                  }),
+                )}
+              </g>
             </svg>
 
             {trailNodes.map((node, index) => {
