@@ -558,7 +558,27 @@
     "empty": "No one has scored in the Global Ranking yet! 🚀",
     "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first to appear here!",
     "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
+    "anonymousStudent": "Anonymous Student",
+    "myRank": "My Rank",
+    "rankMap": "Rank Map",
+    "globalTop": "Global Top",
+    "nextRank": "Next rank",
+    "achievementsLeft": "achievements left",
+    "maxRank": "You reached the maximum rank!",
+    "noSurreal": "No one has reached the maximum rank yet!",
+    "noSurrealHint": "Complete all trail challenges to appear here!",
+    "allPlayers": "All players",
+    "youAreHere": "You are here"
+  },
+  "ranks": {
+    "bronze": "Bronze",
+    "silver": "Silver",
+    "gold": "Gold",
+    "platinum": "Platinum",
+    "diamond": "Diamond",
+    "elite": "Elite",
+    "legend": "Legend",
+    "surreal": "Surreal"
   },
   "trail": {
     "title": "Achievement Trail",

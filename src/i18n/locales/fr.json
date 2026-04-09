@@ -539,13 +539,33 @@
     "label": "Credits"
   },
   "ranking": {
-    "title": "Achievement Ranking",
-    "description": "The top students on the platform with the most trail achievements.",
-    "loading": "Loading...",
-    "empty": "No one has scored in the Global Ranking yet! 🚀",
-    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
-    "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
+    "title": "Classement des Réussites",
+    "description": "Les meilleurs étudiants de la plateforme avec le plus de réussites.",
+    "loading": "Chargement...",
+    "empty": "Personne n'a encore marqué dans le classement mondial ! 🚀",
+    "emptyHint": "Générez des résumés, faites des quiz et progressez pour apparaître ici !",
+    "achievements": "réussites",
+    "anonymousStudent": "Étudiant Anonyme",
+    "myRank": "Mon Rang",
+    "rankMap": "Carte des Rangs",
+    "globalTop": "Top Mondial",
+    "nextRank": "Prochain rang",
+    "achievementsLeft": "réussites restantes",
+    "maxRank": "Vous avez atteint le rang maximum !",
+    "noSurreal": "Personne n'a encore atteint le rang maximum !",
+    "noSurrealHint": "Complétez tous les défis pour apparaître ici !",
+    "allPlayers": "Tous les joueurs",
+    "youAreHere": "Vous êtes ici"
+  },
+  "ranks": {
+    "bronze": "Bronze",
+    "silver": "Argent",
+    "gold": "Or",
+    "platinum": "Platine",
+    "diamond": "Diamant",
+    "elite": "Élite",
+    "legend": "Légende",
+    "surreal": "Surréel"
   },
   "trail": {
     "title": "Achievement Trail",

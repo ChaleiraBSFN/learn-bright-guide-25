@@ -539,13 +539,33 @@
     "label": "Credits"
   },
   "ranking": {
-    "title": "Achievement Ranking",
-    "description": "The top students on the platform with the most trail achievements.",
-    "loading": "Loading...",
-    "empty": "No one has scored in the Global Ranking yet! 🚀",
-    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
-    "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
+    "title": "実績ランキング",
+    "description": "最も多くの実績を持つトッププレイヤー。",
+    "loading": "読み込み中...",
+    "empty": "まだ誰もグローバルランキングに入っていません！🚀",
+    "emptyHint": "要約を作成し、クイズに挑戦してここに表示されよう！",
+    "achievements": "実績",
+    "anonymousStudent": "匿名の学生",
+    "myRank": "マイランク",
+    "rankMap": "ランクマップ",
+    "globalTop": "グローバルトップ",
+    "nextRank": "次のランク",
+    "achievementsLeft": "残りの実績",
+    "maxRank": "最高ランクに到達しました！",
+    "noSurreal": "まだ誰も最高ランクに到達していません！",
+    "noSurrealHint": "すべてのチャレンジを完了してここに表示されよう！",
+    "allPlayers": "全プレイヤー",
+    "youAreHere": "現在地"
+  },
+  "ranks": {
+    "bronze": "ブロンズ",
+    "silver": "シルバー",
+    "gold": "ゴールド",
+    "platinum": "プラチナ",
+    "diamond": "ダイヤモンド",
+    "elite": "エリート",
+    "legend": "レジェンド",
+    "surreal": "スーリアル"
   },
   "trail": {
     "title": "Achievement Trail",

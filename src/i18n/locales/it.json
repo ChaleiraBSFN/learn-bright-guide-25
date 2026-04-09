@@ -539,13 +539,33 @@
     "label": "Credits"
   },
   "ranking": {
-    "title": "Achievement Ranking",
-    "description": "The top students on the platform with the most trail achievements.",
-    "loading": "Loading...",
-    "empty": "No one has scored in the Global Ranking yet! 🚀",
-    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
-    "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
+    "title": "Classifica Traguardi",
+    "description": "I migliori studenti della piattaforma con più traguardi.",
+    "loading": "Caricamento...",
+    "empty": "Nessuno ha ancora segnato nella classifica globale! 🚀",
+    "emptyHint": "Genera riassunti, fai quiz e avanza per apparire qui!",
+    "achievements": "traguardi",
+    "anonymousStudent": "Studente Anonimo",
+    "myRank": "Il mio Rango",
+    "rankMap": "Mappa Ranghi",
+    "globalTop": "Top Globale",
+    "nextRank": "Prossimo rango",
+    "achievementsLeft": "traguardi rimanenti",
+    "maxRank": "Hai raggiunto il rango massimo!",
+    "noSurreal": "Nessuno ha ancora raggiunto il rango massimo!",
+    "noSurrealHint": "Completa tutte le sfide per apparire qui!",
+    "allPlayers": "Tutti i giocatori",
+    "youAreHere": "Sei qui"
+  },
+  "ranks": {
+    "bronze": "Bronzo",
+    "silver": "Argento",
+    "gold": "Oro",
+    "platinum": "Platino",
+    "diamond": "Diamante",
+    "elite": "Elite",
+    "legend": "Leggenda",
+    "surreal": "Surreale"
   },
   "trail": {
     "title": "Achievement Trail",

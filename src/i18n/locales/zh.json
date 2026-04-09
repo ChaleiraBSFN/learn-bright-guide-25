@@ -539,13 +539,33 @@
     "label": "Credits"
   },
   "ranking": {
-    "title": "Achievement Ranking",
-    "description": "The top students on the platform with the most trail achievements.",
-    "loading": "Loading...",
-    "empty": "No one has scored in the Global Ranking yet! 🚀",
-    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
-    "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
+    "title": "成就排行榜",
+    "description": "平台上成就最多的顶级学生。",
+    "loading": "加载中...",
+    "empty": "还没有人在全球排行榜上得分！🚀",
+    "emptyHint": "生成摘要、参加测验并前进！",
+    "achievements": "成就",
+    "anonymousStudent": "匿名学生",
+    "myRank": "我的段位",
+    "rankMap": "段位地图",
+    "globalTop": "全球排名",
+    "nextRank": "下一段位",
+    "achievementsLeft": "成就剩余",
+    "maxRank": "你已达到最高段位！",
+    "noSurreal": "还没有人达到最高段位！",
+    "noSurrealHint": "完成所有挑战即可出现在这里！",
+    "allPlayers": "所有玩家",
+    "youAreHere": "你在这里"
+  },
+  "ranks": {
+    "bronze": "青铜",
+    "silver": "白银",
+    "gold": "黄金",
+    "platinum": "铂金",
+    "diamond": "钻石",
+    "elite": "精英",
+    "legend": "传奇",
+    "surreal": "超凡"
   },
   "trail": {
     "title": "Achievement Trail",

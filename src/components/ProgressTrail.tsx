@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Lock, Coins, Info, BookOpen, CheckCircle2 } from 'lucide-react';
+import { getRankForAchievements, getRankDisplayName } from '@/lib/ranks';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
 import { supabase } from '@/integrations/supabase/client';
@@ -314,6 +315,17 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                       <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : isLocked ? 'text-muted-foreground/60' : 'text-foreground/80'}`}>
                         {isCompleted ? `✓ ${t('trail.done', 'Feito')}` : `+${node.creditReward} ${t('credits.label', 'créditos')}`}
                       </span>
+                      {(() => {
+                        const nodeRank = getRankForAchievements(node.id);
+                        const prevRank = node.id > 1 ? getRankForAchievements(node.id - 1) : null;
+                        const isNewRank = !prevRank || nodeRank.key !== prevRank.key || nodeRank.subTier !== prevRank.subTier;
+                        if (!isNewRank) return null;
+                        return (
+                          <span className={`text-[9px] font-bold ${nodeRank.textColor} flex items-center gap-0.5`}>
+                            {nodeRank.emoji} {getRankDisplayName(nodeRank, t)}
+                          </span>
+                        );
+                      })()}
                     </div>
                   </motion.button>
                 </div>
