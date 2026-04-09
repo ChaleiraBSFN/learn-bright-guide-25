@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Lock, Coins, Info, BookOpen, CheckCircle2 } from 'lucide-react';
@@ -134,9 +134,12 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             </span>
             <Badge variant="outline" className="gap-1 text-xs font-bold">
               <Coins className="h-3.5 w-3.5 text-primary" />
-              {credits ?? '...'} Créditos
+              {credits ?? '...'} {t('credits.label', 'Créditos')}
             </Badge>
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('trail.description', 'Sua trilha de conquistas e progresso')}
+          </DialogDescription>
 
           <div className="mt-2 space-y-1">
             <div className="flex justify-between text-[11px] text-muted-foreground">

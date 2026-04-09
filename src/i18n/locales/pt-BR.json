@@ -507,12 +507,6 @@
     "studyDone": "Pronto! 🎉",
     "exerciseDone": "Pronto! 🎉"
   },
-  "credits": {
-    "remaining": "{{count}} créditos restantes",
-    "noCredits": "Sem créditos",
-    "signupForMore": "Crie uma conta para ganhar mais créditos!",
-    "earnMore": "Complete desafios na trilha para ganhar mais créditos!"
-  },
   "settings": {
     "title": "Configurações",
     "error": "Erro",
@@ -551,5 +545,25 @@
     "confirmYourEmail": "Digite seu email cadastrado",
     "emailVerifyNote": "Digite o mesmo email cadastrado para confirmar que é você.",
     "emailMismatch": "O email não corresponde ao email cadastrado."
+  },
+  "ranking": {
+    "title": "Ranking de Conquistas",
+    "description": "Os melhores estudantes da plataforma com mais conquistas na Trilha.",
+    "loading": "Carregando...",
+    "empty": "Ninguém pontuou no Ranking Global ainda! 🚀",
+    "emptyHint": "Gere resumos, faça quizzes e avance na Trilha de Progresso para ser o primeiro a aparecer aqui!",
+    "achievements": "conquistas",
+    "anonymousStudent": "Estudante Anônimo"
+  },
+  "trail": {
+    "title": "Trilha de Conquistas",
+    "description": "Sua trilha de conquistas e progresso"
+  },
+  "credits": {
+    "remaining": "{{count}} créditos restantes",
+    "noCredits": "Sem créditos",
+    "signupForMore": "Crie uma conta para ganhar mais créditos!",
+    "earnMore": "Complete desafios da trilha para ganhar mais créditos!",
+    "label": "Créditos"
   }
 }

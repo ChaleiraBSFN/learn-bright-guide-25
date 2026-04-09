@@ -85,7 +85,7 @@ export const FloatingActions = () => {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
-              Ranking Público
+              {t('ranking.title')}
             </TooltipContent>
           </Tooltip>
         )}
