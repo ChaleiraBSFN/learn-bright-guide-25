@@ -101,7 +101,7 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg max-h-[90vh] p-0 overflow-hidden flex flex-col bg-zinc-50 dark:bg-zinc-950">
+      <DialogContent className="max-w-lg h-[85vh] p-0 overflow-hidden flex flex-col bg-zinc-50 dark:bg-zinc-950">
         <DialogHeader className="p-5 pb-3 border-b border-border bg-card/95 backdrop-blur-md">
           <DialogTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5 text-yellow-500" />
@@ -120,7 +120,7 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
           </TabsList>
 
           {/* MY RANK TAB */}
-          <TabsContent value="myrank" className="flex-1 overflow-auto px-4 pb-4">
+          <TabsContent value="myrank" className="flex-1 overflow-y-auto px-4 pb-4" style={{ minHeight: 0 }}>
             {!user ? (
               <div className="text-center p-8 text-muted-foreground text-sm">
                 {t('trail.loginToSave', 'Faça login para ver seu rank!')}
@@ -165,8 +165,8 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
           </TabsContent>
 
           {/* RANK MAP TAB */}
-          <TabsContent value="map" className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full px-4 pb-4">
+          <TabsContent value="map" className="flex-1 overflow-y-auto px-4 pb-4" style={{ minHeight: 0 }}>
+            <div>
               <div className="space-y-2 pt-1">
                 {ALL_RANK_TIERS.map((tier, idx) => {
                   const isCurrent = tier === myRank;
@@ -204,12 +204,12 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
                   );
                 })}
               </div>
-            </ScrollArea>
+            </div>
           </TabsContent>
 
           {/* GLOBAL TOP TAB */}
-          <TabsContent value="global" className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full px-4 pb-4">
+          <TabsContent value="global" className="flex-1 overflow-y-auto px-4 pb-4" style={{ minHeight: 0 }}>
+            <div>
               {loading ? (
                 <div className="flex justify-center p-8 opacity-50 text-sm">{t('ranking.loading')}</div>
               ) : globalTop.length === 0 ? (
@@ -283,7 +283,7 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
                   </div>
                 </div>
               )}
-            </ScrollArea>
+            </div>
           </TabsContent>
         </Tabs>
       </DialogContent>
