@@ -549,6 +549,15 @@
   },
   "trail": {
     "title": "Achievement Trail",
-    "description": "Your achievements and progress trail"
+    "description": "Your achievements and progress trail",
+    "completed": "Terminé",
+    "locked": "Verrouillé",
+    "inProgress": "En cours",
+    "done": "Fait",
+    "reward": "Récompense",
+    "alreadyEarned": "Vous avez déjà gagné",
+    "defaultObjective": "Continuez à utiliser l'app pour débloquer ce succès.",
+    "createAccount": "Créez un compte",
+    "loginToSave": "Connectez-vous pour sauvegarder votre progression !"
   }
 }

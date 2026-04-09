@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "@/i18n";
 import { ListOrdered, Lightbulb, BookOpen, Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react";
@@ -33,6 +33,19 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
   const { t } = useTranslation();
   const [explanations, setExplanations] = useState<Record<number, string>>({});
   const [loadingExp, setLoadingExp] = useState<Record<number, boolean>>({});
+  const [currentLang, setCurrentLang] = useState(i18n.language);
+
+  // Clear cached explanations when language changes so they can be regenerated
+  useEffect(() => {
+    const handleLangChange = (lng: string) => {
+      if (lng !== currentLang) {
+        setExplanations({});
+        setCurrentLang(lng);
+      }
+    };
+    i18n.on('languageChanged', handleLangChange);
+    return () => { i18n.off('languageChanged', handleLangChange); };
+  }, [currentLang]);
 
   const getStepImage = (index: number) => stepImages?.find(img => img.label === `step-${index}`);
 

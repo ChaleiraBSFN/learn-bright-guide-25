@@ -557,7 +557,16 @@
   },
   "trail": {
     "title": "Trilha de Conquistas",
-    "description": "Sua trilha de conquistas e progresso"
+    "description": "Sua trilha de conquistas e progresso",
+    "completed": "Concluído",
+    "locked": "Bloqueado",
+    "inProgress": "Em andamento",
+    "done": "Feito",
+    "reward": "Recompensa",
+    "alreadyEarned": "Você já ganhou",
+    "defaultObjective": "Continue usando o app para desbloquear essa conquista.",
+    "createAccount": "Crie uma conta",
+    "loginToSave": "Faça login para salvar seu progresso!"
   },
   "credits": {
     "remaining": "{{count}} créditos restantes",

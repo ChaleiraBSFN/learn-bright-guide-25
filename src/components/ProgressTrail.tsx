@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
@@ -45,6 +46,52 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
   const { nodes: trailNodes } = useAchievementData();
 
   const [completedIds, setCompletedIds] = useState<number[]>([]);
+  const [translatedNodes, setTranslatedNodes] = useState<Record<string, Record<number, { title: string; objective: string }>>>({});
+  const [translatingLang, setTranslatingLang] = useState<string | null>(null);
+
+  const currentLang = i18n.language;
+
+  // Translate trail nodes when language is not pt-BR
+  const translateTrailNodes = useCallback(async (lang: string, nodes: TrailNodeDef[]) => {
+    if (lang === 'pt-BR' || lang === 'pt' || translatedNodes[lang]) return;
+    setTranslatingLang(lang);
+    try {
+      const toTranslate: Record<string, string> = {};
+      nodes.forEach(n => {
+        toTranslate[`title_${n.id}`] = n.title;
+        toTranslate[`obj_${n.id}`] = n.objective || '';
+      });
+      const { data, error } = await supabase.functions.invoke('translate-content', {
+        body: { content: toTranslate, targetLanguage: lang },
+      });
+      if (!error && data) {
+        const mapped: Record<number, { title: string; objective: string }> = {};
+        nodes.forEach(n => {
+          mapped[n.id] = {
+            title: data[`title_${n.id}`] || n.title,
+            objective: data[`obj_${n.id}`] || n.objective || '',
+          };
+        });
+        setTranslatedNodes(prev => ({ ...prev, [lang]: mapped }));
+      }
+    } catch (e) {
+      console.error('Trail translation error:', e);
+    }
+    setTranslatingLang(null);
+  }, [translatedNodes]);
+
+  useEffect(() => {
+    if (open && currentLang !== 'pt-BR' && currentLang !== 'pt' && trailNodes.length > 0) {
+      translateTrailNodes(currentLang, trailNodes);
+    }
+  }, [open, currentLang, trailNodes, translateTrailNodes]);
+
+  const getNodeText = useCallback((node: TrailNodeDef) => {
+    const lang = currentLang;
+    if (lang === 'pt-BR' || lang === 'pt') return { title: node.title, objective: node.objective || '' };
+    const t = translatedNodes[lang]?.[node.id];
+    return t || { title: node.title, objective: node.objective || '' };
+  }, [currentLang, translatedNodes]);
 
   const completedSet = useMemo(() => new Set(completedIds), [completedIds]);
   const completedCount = useMemo(() => trailNodes.filter((node) => completedSet.has(node.id)).length, [trailNodes, completedSet]);
@@ -115,18 +162,19 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
   const handleNodeClick = (node: TrailNodeDef, isCompleted: boolean, isLocked: boolean) => {
     if (!user) {
-      toast({ title: 'Crie uma conta', description: 'Faça login para salvar seu progresso!', variant: 'destructive' });
+      toast({ title: t('trail.createAccount', 'Crie uma conta'), description: t('trail.loginToSave', 'Faça login para salvar seu progresso!'), variant: 'destructive' });
       return;
     }
 
-    const statusText = isCompleted ? '✅ Concluído' : isLocked ? '🔒 Bloqueado' : '🔓 Em andamento';
-    const objective = node.objective || 'Continue usando o app para desbloquear essa conquista.';
+    const { title: nodeTitle, objective: nodeObjective } = getNodeText(node);
+    const statusText = isCompleted ? `✅ ${t('trail.completed', 'Concluído')}` : isLocked ? `🔒 ${t('trail.locked', 'Bloqueado')}` : `🔓 ${t('trail.inProgress', 'Em andamento')}`;
+    const objective = nodeObjective || t('trail.defaultObjective', 'Continue usando o app para desbloquear essa conquista.');
 
     toast({
-      title: `${node.title} — ${statusText}`,
+      title: `${nodeTitle} — ${statusText}`,
       description: isCompleted
-        ? `${objective}\n\n🎉 Você já ganhou +${node.creditReward} créditos!`
-        : `📋 ${objective}\n\n🎁 Recompensa: +${node.creditReward} créditos.`,
+        ? `${objective}\n\n🎉 ${t('trail.alreadyEarned', 'Você já ganhou')} +${node.creditReward} ${t('credits.label', 'créditos')}!`
+        : `📋 ${objective}\n\n🎁 ${t('trail.reward', 'Recompensa')}: +${node.creditReward} ${t('credits.label', 'créditos')}.`,
       duration: 7000,
     });
   };
@@ -172,7 +220,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
           {!user && (
             <div className="absolute left-1/2 top-3 z-20 w-[88%] max-w-sm -translate-x-1/2 rounded-lg border border-accent/30 bg-background/90 p-2.5 text-center text-xs text-foreground shadow-sm">
-              <Info className="mr-1 inline h-3.5 w-3.5 text-primary" /> Faça login para salvar progresso!
+              <Info className="mr-1 inline h-3.5 w-3.5 text-primary" /> {t('trail.loginToSave', 'Faça login para salvar progresso!')}
             </div>
           )}
 
@@ -261,10 +309,10 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
                     <div className="absolute left-1/2 top-full mt-2 flex w-32 -translate-x-1/2 flex-col items-center gap-1 text-center">
                       <span className="rounded-md bg-background/90 px-2 py-1 text-[10px] font-semibold leading-tight text-foreground shadow-sm ring-1 ring-border/60 backdrop-blur-sm">
-                        {node.title}
+                        {getNodeText(node).title}
                       </span>
                       <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : isLocked ? 'text-muted-foreground/60' : 'text-foreground/80'}`}>
-                        {isCompleted ? '✓ Feito' : `+${node.creditReward} créditos`}
+                        {isCompleted ? `✓ ${t('trail.done', 'Feito')}` : `+${node.creditReward} ${t('credits.label', 'créditos')}`}
                       </span>
                     </div>
                   </motion.button>

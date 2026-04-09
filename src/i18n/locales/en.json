@@ -562,6 +562,15 @@
   },
   "trail": {
     "title": "Achievement Trail",
-    "description": "Your achievements and progress trail"
+    "description": "Your achievements and progress trail",
+    "completed": "Completed",
+    "locked": "Locked",
+    "inProgress": "In progress",
+    "done": "Done",
+    "reward": "Reward",
+    "alreadyEarned": "You already earned",
+    "defaultObjective": "Keep using the app to unlock this achievement.",
+    "createAccount": "Create an account",
+    "loginToSave": "Log in to save your progress!"
   }
 }
