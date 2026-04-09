@@ -85,7 +85,7 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
 
   const addNodeAtPosition = (x: number, y: number) => {
     const nextId = Math.max(0, ...sortedNodes.map((node) => node.id)) + 1;
-    const parentId = sortedNodes.at(-1)?.id;
+    const parentId = sortedNodes[sortedNodes.length - 1]?.id;
     const newNode = createDraftTrailNode(nextId, Math.round(x), Math.round(y), parentId);
     const nextNodes = sortTrailNodes([...sortedNodes, newNode]);
 

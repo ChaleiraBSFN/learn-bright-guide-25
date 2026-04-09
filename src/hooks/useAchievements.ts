@@ -66,6 +66,9 @@ const isTrailType = (value: unknown): value is TrailNodeDef['type'] =>
 const isTriggerType = (value: unknown): value is TrailNodeDef['triggerType'] =>
   value === 'generate_study' || value === 'generate_quiz' || value === 'quiz_score' || value === 'time_focused' || value === 'none';
 
+const normalizeIds = (ids: unknown[]) => Array.from(new Set(ids.map((id) => Number(id)).filter((id) => Number.isFinite(id) && id > 0))).sort((a, b) => a - b);
+const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
+
 const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
   return blueprints.map((node, index) => {
     const pos = MANUAL_POSITIONS[index] || [120 + (index % 5) * 160, 80 + Math.floor(index / 5) * 140];
