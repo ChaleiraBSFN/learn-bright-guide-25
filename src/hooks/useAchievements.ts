@@ -252,8 +252,7 @@ export const loadUserCompletedAchievements = async (userId: string) => {
     if (missingInCloud.length > 0) {
       await Promise.all(
         missingInCloud.map((achievementId) =>
-          (supabase.from as any)('user_achievements')
-            .insert({ user_id: userId, achievement_id: achievementId })
+          supabase.rpc('grant_achievement', { _user_id: userId, _achievement_id: achievementId })
             .then(() => null)
             .catch(() => null),
         ),
@@ -341,7 +340,7 @@ export const useAchievements = () => {
       if (node.parents.length > 0 && !node.parents.every((parentId) => completedSet.has(parentId))) return false;
 
       try {
-        const { error } = await (supabase.from as any)('user_achievements').insert({ user_id: user.id, achievement_id: node.id });
+        const { error } = await supabase.rpc('grant_achievement', { _user_id: user.id, _achievement_id: node.id });
         if (error && error.code !== '23505') throw error;
         if (error?.code === '23505') return false;
 
