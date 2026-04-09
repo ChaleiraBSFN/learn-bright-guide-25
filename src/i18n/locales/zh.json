@@ -549,6 +549,15 @@
   },
   "trail": {
     "title": "Achievement Trail",
-    "description": "Your achievements and progress trail"
+    "description": "Your achievements and progress trail",
+    "completed": "已完成",
+    "locked": "已锁定",
+    "inProgress": "进行中",
+    "done": "完成",
+    "reward": "奖励",
+    "alreadyEarned": "你已获得",
+    "defaultObjective": "继续使用应用来解锁此成就。",
+    "createAccount": "创建账户",
+    "loginToSave": "登录以保存进度！"
   }
 }

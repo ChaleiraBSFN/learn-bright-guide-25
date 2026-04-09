@@ -549,6 +549,15 @@
   },
   "trail": {
     "title": "Achievement Trail",
-    "description": "Your achievements and progress trail"
+    "description": "Your achievements and progress trail",
+    "completed": "完了",
+    "locked": "ロック中",
+    "inProgress": "進行中",
+    "done": "完了",
+    "reward": "報酬",
+    "alreadyEarned": "既に獲得済み",
+    "defaultObjective": "アプリを使い続けてこの実績を解除しましょう。",
+    "createAccount": "アカウントを作成",
+    "loginToSave": "ログインして進捗を保存しましょう！"
   }
 }

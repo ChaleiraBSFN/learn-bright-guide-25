@@ -549,6 +549,15 @@
   },
   "trail": {
     "title": "Achievement Trail",
-    "description": "Your achievements and progress trail"
+    "description": "Your achievements and progress trail",
+    "completed": "Завершено",
+    "locked": "Заблокировано",
+    "inProgress": "В процессе",
+    "done": "Готово",
+    "reward": "Награда",
+    "alreadyEarned": "Вы уже заработали",
+    "defaultObjective": "Продолжайте использовать приложение, чтобы разблокировать это достижение.",
+    "createAccount": "Создайте аккаунт",
+    "loginToSave": "Войдите, чтобы сохранить прогресс!"
   }
 }
