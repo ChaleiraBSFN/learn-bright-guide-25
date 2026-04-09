@@ -13,7 +13,8 @@ import { toast } from '@/hooks/use-toast';
 import {
   ArrowLeft, Loader2, Cpu, Plus, Trash2, Save, Gauge, Sparkles, Eye,
   Zap, Brain, Image, BookOpen, PenTool, Languages, Shield, RefreshCw,
-  HardDrive, Globe, Activity, Server, Database, Clock, Wifi, Lock, GripVertical
+  HardDrive, Globe, Activity, Server, Database, Clock, Wifi, Lock, GripVertical,
+  FileText
 } from 'lucide-react';
 
 const ICON_OPTIONS: { value: string; label: string; icon: any }[] = [
@@ -66,6 +67,7 @@ const AIConfigAdmin = () => {
   const [metrics, setMetrics] = useState<ConfigItem[]>([]);
   const [models, setModels] = useState<ConfigItem[]>([]);
   const [capabilities, setCapabilities] = useState<ConfigItem[]>([]);
+  const [footerItems, setFooterItems] = useState<ConfigItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -88,6 +90,7 @@ const AIConfigAdmin = () => {
       setMetrics(data.filter(d => d.section === 'metric').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
       setModels(data.filter(d => d.section === 'model').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
       setCapabilities(data.filter(d => d.section === 'capability').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
+      setFooterItems(data.filter(d => d.section === 'footer').map(d => ({ ...d, config_data: d.config_data as Record<string, any> })));
     }
     setLoading(false);
   }, []);
