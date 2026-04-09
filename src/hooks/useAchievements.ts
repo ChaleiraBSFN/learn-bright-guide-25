@@ -3,19 +3,30 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
 import { useToast } from '@/hooks/use-toast';
-import { BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin } from 'lucide-react';
+import {
+  BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin,
+  Rocket, Heart, Shield, Sword, Gem, Medal, Award, Flag, Mountain, Compass,
+  Lightbulb, Puzzle, Clock, Timer, Eye, Headphones, Mic, Pencil, Pen, PenTool,
+  GraduationCap, School, Library, FileText, BookMarked, Bookmark, Search,
+  MessageCircle, Users, UserCheck, Sparkles, Wand2, Palette, Music, Camera,
+  Globe, Map as MapIcon, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
+  TreePine, Leaf, Flower2, Apple, Coffee, Pizza, Candy, IceCream2,
+  Dumbbell, Bike, Gamepad2, Dice5, Joystick, CircleDot, Hexagon, Diamond,
+  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link as LinkIcon, Anchor, Key, Lock,
+  Unlock, Bell, Megaphone, PartyPopper, Fingerprint, Cpu, Wifi, Battery, Plug
+} from 'lucide-react';
 
-export const availableIcons = {
-  BookOpen,
-  Zap,
-  Flame,
-  Trophy,
-  Brain,
-  Target,
-  Gift,
-  Crown,
-  Star,
-  MapPin,
+export const availableIcons: Record<string, any> = {
+  BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin,
+  Rocket, Heart, Shield, Sword, Gem, Medal, Award, Flag, Mountain, Compass,
+  Lightbulb, Puzzle, Clock, Timer, Eye, Headphones, Mic, Pencil, Pen, PenTool,
+  GraduationCap, School, Library, FileText, BookMarked, Bookmark, Search,
+  MessageCircle, Users, UserCheck, Sparkles, Wand2, Palette, Music, Camera,
+  Globe, Map: MapIcon, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
+  TreePine, Leaf, Flower2, Apple, Coffee, Pizza, Candy, IceCream2,
+  Dumbbell, Bike, Gamepad2, Dice5, Joystick, CircleDot, Hexagon, Diamond,
+  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link: LinkIcon, Anchor, Key, Lock,
+  Unlock, Bell, Megaphone, PartyPopper, Fingerprint, Cpu, Wifi, Battery, Plug,
 };
 
 export type IconName = keyof typeof availableIcons;
@@ -23,9 +34,9 @@ export type IconName = keyof typeof availableIcons;
 export interface TrailNodeDef {
   id: number;
   title: string;
-  type: 'challenge' | 'quiz' | 'milestone' | 'reward';
+  type: 'challenge' | 'quiz' | 'milestone' | 'reward' | 'boss' | 'secret' | 'event' | 'legendary';
   creditReward: number;
-  iconName: IconName;
+  iconName: string;
   x: number;
   y: number;
   parents: number[];
