@@ -220,7 +220,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
           {!user && (
             <div className="absolute left-1/2 top-3 z-20 w-[88%] max-w-sm -translate-x-1/2 rounded-lg border border-accent/30 bg-background/90 p-2.5 text-center text-xs text-foreground shadow-sm">
-              <Info className="mr-1 inline h-3.5 w-3.5 text-primary" /> Faça login para salvar progresso!
+              <Info className="mr-1 inline h-3.5 w-3.5 text-primary" /> {t('trail.loginToSave', 'Faça login para salvar progresso!')}
             </div>
           )}
 
