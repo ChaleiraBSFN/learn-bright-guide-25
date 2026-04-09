@@ -309,10 +309,10 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
                     <div className="absolute left-1/2 top-full mt-2 flex w-32 -translate-x-1/2 flex-col items-center gap-1 text-center">
                       <span className="rounded-md bg-background/90 px-2 py-1 text-[10px] font-semibold leading-tight text-foreground shadow-sm ring-1 ring-border/60 backdrop-blur-sm">
-                        {node.title}
+                        {getNodeText(node).title}
                       </span>
                       <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : isLocked ? 'text-muted-foreground/60' : 'text-foreground/80'}`}>
-                        {isCompleted ? '✓ Feito' : `+${node.creditReward} créditos`}
+                        {isCompleted ? `✓ ${t('trail.done', 'Feito')}` : `+${node.creditReward} ${t('credits.label', 'créditos')}`}
                       </span>
                     </div>
                   </motion.button>
