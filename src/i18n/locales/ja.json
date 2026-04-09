@@ -535,6 +535,20 @@
     "remaining": "{{count}} credits remaining",
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
-    "earnMore": "Complete trail challenges to earn more credits!"
+    "earnMore": "Complete trail challenges to earn more credits!",
+    "label": "Credits"
+  },
+  "ranking": {
+    "title": "Achievement Ranking",
+    "description": "The top students on the platform with the most trail achievements.",
+    "loading": "Loading...",
+    "empty": "No one has scored in the Global Ranking yet! 🚀",
+    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
+    "achievements": "achievements",
+    "anonymousStudent": "Anonymous Student"
+  },
+  "trail": {
+    "title": "Achievement Trail",
+    "description": "Your achievements and progress trail"
   }
 }
