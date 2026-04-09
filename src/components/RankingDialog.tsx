@@ -283,7 +283,7 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
                   </div>
                 </div>
               )}
-            </ScrollArea>
+            </div>
           </TabsContent>
         </Tabs>
       </DialogContent>
