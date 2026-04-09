@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Trophy, Medal, Star, Crown, ChevronRight } from 'lucide-react';
@@ -28,14 +28,12 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
     const loadRanking = async () => {
       setLoading(true);
       try {
-        // Get all achievements
         const { data: achievements, error } = await (supabase.from as any)('user_achievements')
           .select('user_id')
-          .limit(50000); // Increased limit to include more users in the ranking
+          .limit(50000);
           
         if (error) throw error;
         
-        // Group and count
         const counts: Record<string, { score: number }> = {};
         achievements?.forEach((ach: any) => {
           const uid = ach.user_id;
@@ -45,7 +43,6 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
           counts[uid].score += 1;
         });
 
-        // Find users to get names/emails
         const userIds = Object.keys(counts);
         let profiles: any[] = [];
 
@@ -60,22 +57,22 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
         const sorted = userIds
           .map((userId) => {
             const profile = profiles.find((p: any) => p.user_id === userId);
-            const name = profile?.display_name || profile?.email?.split('@')[0] || 'Estudante Anônimo';
+            const name = profile?.display_name || profile?.email?.split('@')[0] || t('ranking.anonymousStudent');
             return { userId, name, score: counts[userId].score };
           })
           .sort((a, b) => b.score - a.score)
-          .slice(0, 100); // Top 100
+          .slice(0, 100);
           
         setRanking(sorted);
       } catch (err) {
-        console.error("Falha ao carregar ranking do banco real", err);
+        console.error("Failed to load ranking", err);
         setRanking([]);
       }
       setLoading(false);
     };
     
     loadRanking();
-  }, [open]);
+  }, [open, t]);
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -84,22 +81,24 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
         <DialogHeader className="p-5 pb-4 border-b border-border bg-card/95 backdrop-blur-md">
           <DialogTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5 text-yellow-500" />
-            Ranking de Conquistas
+            {t('ranking.title')}
           </DialogTitle>
-          <p className="text-xs text-muted-foreground pt-1">Os melhores estudantes da plataforma com mais nós destravados na Trilha.</p>
+          <DialogDescription className="text-xs text-muted-foreground pt-1">
+            {t('ranking.description')}
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="flex-1 p-4">
           {loading ? (
-            <div className="flex justify-center p-8 opacity-50 text-sm">Carregando...</div>
+            <div className="flex justify-center p-8 opacity-50 text-sm">{t('ranking.loading')}</div>
           ) : ranking.length === 0 ? (
             <div className="text-center p-8 flex flex-col items-center justify-center gap-3">
               <Trophy className="h-10 w-10 text-muted-foreground/30 mb-2" />
               <p className="text-muted-foreground text-sm font-medium">
-                Ninguém pontuou no Ranking Global ainda! 🚀
+                {t('ranking.empty')}
               </p>
               <p className="text-xs text-muted-foreground/60 max-w-[250px]">
-                Gere resumos, faça quizzes e avance na Trilha de Progresso para ser o primeiro a aparecer aqui e garantir o primeiro lugar!
+                {t('ranking.emptyHint')}
               </p>
             </div>
           ) : (
@@ -135,7 +134,7 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
                         isTop3 ? 'border-primary/30 text-primary bg-primary/5' : 'border-border text-muted-foreground'
                       }`}>
                         <Star className="h-3 w-3" />
-                        {user.score} conquistas
+                        {user.score} {t('ranking.achievements')}
                       </Badge>
                     </div>
                   </div>
