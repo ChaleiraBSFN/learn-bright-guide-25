@@ -16,6 +16,10 @@ const typeGradient: Record<string, string> = {
   quiz: 'from-secondary to-accent',
   milestone: 'from-accent to-primary',
   reward: 'from-primary to-accent',
+  boss: 'from-destructive to-primary',
+  secret: 'from-muted to-accent',
+  event: 'from-secondary to-primary',
+  legendary: 'from-accent to-secondary',
 };
 
 interface ProgressTrailProps {

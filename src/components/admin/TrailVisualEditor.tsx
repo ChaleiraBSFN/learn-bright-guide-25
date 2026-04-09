@@ -10,11 +10,15 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { availableIcons, createDraftTrailNode, sortTrailNodes, TrailNodeDef, useAchievementData } from '@/hooks/useAchievements';
 
-const typeGradient: Record<TrailNodeDef['type'], string> = {
+const typeGradient: Record<string, string> = {
   challenge: 'from-primary to-secondary',
   quiz: 'from-secondary to-accent',
   milestone: 'from-accent to-primary',
   reward: 'from-primary to-accent',
+  boss: 'from-destructive to-primary',
+  secret: 'from-muted to-accent',
+  event: 'from-secondary to-primary',
+  legendary: 'from-accent to-secondary',
 };
 
 type DragState = {
