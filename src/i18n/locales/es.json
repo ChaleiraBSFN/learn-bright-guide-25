@@ -561,12 +561,6 @@
     "legend": "Leyenda",
     "surreal": "Surreal"
   },
-    "loading": "Loading...",
-    "empty": "No one has scored in the Global Ranking yet! 🚀",
-    "emptyHint": "Generate summaries, take quizzes and advance in the Progress Trail to be the first!",
-    "achievements": "achievements",
-    "anonymousStudent": "Anonymous Student"
-  },
   "trail": {
     "title": "Achievement Trail",
     "description": "Your achievements and progress trail",
