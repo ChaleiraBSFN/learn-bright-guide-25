@@ -136,7 +136,14 @@ export const createDraftTrailNode = (id: number, x: number, y: number, parentId?
 });
 
 const isTrailType = (value: unknown): value is TrailNodeDef['type'] =>
-  value === 'challenge' || value === 'quiz' || value === 'milestone' || value === 'reward';
+  value === 'challenge' ||
+  value === 'quiz' ||
+  value === 'milestone' ||
+  value === 'reward' ||
+  value === 'boss' ||
+  value === 'secret' ||
+  value === 'event' ||
+  value === 'legendary';
 
 const isTriggerType = (value: unknown): value is TrailNodeDef['triggerType'] =>
   value === 'generate_study' || value === 'generate_quiz' || value === 'quiz_score' || value === 'time_focused' || value === 'none';
