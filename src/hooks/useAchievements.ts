@@ -9,23 +9,23 @@ import {
   Lightbulb, Puzzle, Clock, Timer, Eye, Headphones, Mic, Pencil, Pen, PenTool,
   GraduationCap, School, Library, FileText, BookMarked, Bookmark, Search,
   MessageCircle, Users, UserCheck, Sparkles, Wand2, Palette, Music, Camera,
-  Globe, Map, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
+  Globe, Map as MapIcon, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
   TreePine, Leaf, Flower2, Apple, Coffee, Pizza, Candy, IceCream2,
   Dumbbell, Bike, Gamepad2, Dice5, Joystick, CircleDot, Hexagon, Diamond,
-  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link, Anchor, Key, Lock,
+  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link as LinkIcon, Anchor, Key, Lock,
   Unlock, Bell, Megaphone, PartyPopper, Fingerprint, Cpu, Wifi, Battery, Plug
 } from 'lucide-react';
 
-export const availableIcons = {
+export const availableIcons: Record<string, any> = {
   BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin,
   Rocket, Heart, Shield, Sword, Gem, Medal, Award, Flag, Mountain, Compass,
   Lightbulb, Puzzle, Clock, Timer, Eye, Headphones, Mic, Pencil, Pen, PenTool,
   GraduationCap, School, Library, FileText, BookMarked, Bookmark, Search,
   MessageCircle, Users, UserCheck, Sparkles, Wand2, Palette, Music, Camera,
-  Globe, Map, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
+  Globe, Map: MapIcon, Navigation, Sunrise, Moon, Sun, CloudLightning, Snowflake,
   TreePine, Leaf, Flower2, Apple, Coffee, Pizza, Candy, IceCream2,
   Dumbbell, Bike, Gamepad2, Dice5, Joystick, CircleDot, Hexagon, Diamond,
-  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link, Anchor, Key, Lock,
+  BadgeCheck, BadgeAlert, Infinity, Hash, AtSign, Link: LinkIcon, Anchor, Key, Lock,
   Unlock, Bell, Megaphone, PartyPopper, Fingerprint, Cpu, Wifi, Battery, Plug,
 };
 
