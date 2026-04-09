@@ -10,15 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Megaphone, Loader2, Plus, Trash2, Send } from 'lucide-react';
+import { ArrowLeft, Megaphone, Loader2, Trash2, Send } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface UpdateNotice {
   id: string;
   title: string;
   message: string;
-  type: 'feature' | 'improvement' | 'bugfix' | 'announcement';
+  type: string;
   active: boolean;
   created_at: string;
+  created_by: string | null;
 }
 
 const typeColors: Record<string, string> = {
@@ -40,13 +42,11 @@ const UpdateNoticesAdmin = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdmin();
   const { toast } = useToast();
-  
-  const [notices, setNotices] = useState<UpdateNotice[]>([]);
-  const [loading, setLoading] = useState(true);
+  const qc = useQueryClient();
+
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [type, setType] = useState<string>('announcement');
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
@@ -56,49 +56,89 @@ const UpdateNoticesAdmin = () => {
     if (!adminLoading && !isAdmin && user) navigate('/');
   }, [isAdmin, adminLoading, user, navigate]);
 
-  // Load notices from localStorage (simple approach - can migrate to DB later)
-  useEffect(() => {
-    const stored = localStorage.getItem('lb_update_notices');
-    if (stored) {
-      setNotices(JSON.parse(stored));
-    }
-    setLoading(false);
-  }, []);
+  const { data: notices = [], isLoading } = useQuery({
+    queryKey: ['update-notices-admin'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('update_notices')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data as UpdateNotice[];
+    },
+  });
 
-  const saveNotices = (updated: UpdateNotice[]) => {
-    setNotices(updated);
-    localStorage.setItem('lb_update_notices', JSON.stringify(updated));
-  };
+  const addMutation = useMutation({
+    mutationFn: async (notice: { title: string; message: string; type: string }) => {
+      const { error } = await supabase.from('update_notices').insert({
+        title: notice.title,
+        message: notice.message,
+        type: notice.type,
+        created_by: user?.id,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['update-notices-admin'] });
+      qc.invalidateQueries({ queryKey: ['update-notices-active'] });
+    },
+  });
 
-  const handleAdd = () => {
+  const toggleMutation = useMutation({
+    mutationFn: async ({ id, active }: { id: string; active: boolean }) => {
+      const { error } = await supabase.from('update_notices').update({ active }).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['update-notices-admin'] });
+      qc.invalidateQueries({ queryKey: ['update-notices-active'] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('update_notices').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['update-notices-admin'] });
+      qc.invalidateQueries({ queryKey: ['update-notices-active'] });
+    },
+  });
+
+  const handleAdd = async () => {
     if (!title.trim() || !message.trim()) {
       toast({ title: 'Erro', description: 'Preencha título e mensagem.', variant: 'destructive' });
       return;
     }
-    const newNotice: UpdateNotice = {
-      id: crypto.randomUUID(),
-      title: title.trim(),
-      message: message.trim(),
-      type: type as any,
-      active: true,
-      created_at: new Date().toISOString(),
-    };
-    saveNotices([newNotice, ...notices]);
-    setTitle('');
-    setMessage('');
-    toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
+    try {
+      await addMutation.mutateAsync({ title: title.trim(), message: message.trim(), type });
+      setTitle('');
+      setMessage('');
+      toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
+    } catch {
+      toast({ title: 'Erro', description: 'Falha ao criar aviso.', variant: 'destructive' });
+    }
   };
 
-  const handleToggle = (id: string) => {
-    saveNotices(notices.map(n => n.id === id ? { ...n, active: !n.active } : n));
+  const handleToggle = async (id: string, currentActive: boolean) => {
+    try {
+      await toggleMutation.mutateAsync({ id, active: !currentActive });
+    } catch {
+      toast({ title: 'Erro', description: 'Falha ao atualizar.', variant: 'destructive' });
+    }
   };
 
-  const handleDelete = (id: string) => {
-    saveNotices(notices.filter(n => n.id !== id));
-    toast({ title: 'Aviso removido!' });
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteMutation.mutateAsync(id);
+      toast({ title: 'Aviso removido!' });
+    } catch {
+      toast({ title: 'Erro', description: 'Falha ao remover.', variant: 'destructive' });
+    }
   };
 
-  if (authLoading || adminLoading || loading) {
+  if (authLoading || adminLoading || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -121,7 +161,6 @@ const UpdateNoticesAdmin = () => {
           </div>
         </div>
 
-        {/* Create Notice */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-lg">Criar Novo Aviso</CardTitle>
@@ -151,13 +190,13 @@ const UpdateNoticesAdmin = () => {
                 ))}
               </div>
             </div>
-            <Button onClick={handleAdd} className="gap-2">
-              <Send className="h-4 w-4" /> Publicar Aviso
+            <Button onClick={handleAdd} disabled={addMutation.isPending} className="gap-2">
+              {addMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              Publicar Aviso
             </Button>
           </CardContent>
         </Card>
 
-        {/* Existing Notices */}
         <div className="space-y-3">
           {notices.length === 0 && (
             <p className="text-center text-muted-foreground py-8">Nenhum aviso publicado ainda.</p>
@@ -169,7 +208,7 @@ const UpdateNoticesAdmin = () => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Badge variant="outline" className={`text-[10px] ${typeColors[notice.type]}`}>
-                        {typeLabels[notice.type]}
+                        {typeLabels[notice.type] || notice.type}
                       </Badge>
                       {!notice.active && <Badge variant="outline" className="text-[10px]">Inativo</Badge>}
                     </div>
@@ -180,10 +219,22 @@ const UpdateNoticesAdmin = () => {
                     </p>
                   </div>
                   <div className="flex gap-1 shrink-0">
-                    <Button size="sm" variant={notice.active ? 'outline' : 'default'} className="text-xs h-7" onClick={() => handleToggle(notice.id)}>
+                    <Button
+                      size="sm"
+                      variant={notice.active ? 'outline' : 'default'}
+                      className="text-xs h-7"
+                      onClick={() => handleToggle(notice.id, notice.active)}
+                      disabled={toggleMutation.isPending}
+                    >
                       {notice.active ? 'Desativar' : 'Ativar'}
                     </Button>
-                    <Button size="sm" variant="ghost" className="h-7 text-destructive" onClick={() => handleDelete(notice.id)}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 text-destructive"
+                      onClick={() => handleDelete(notice.id)}
+                      disabled={deleteMutation.isPending}
+                    >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
