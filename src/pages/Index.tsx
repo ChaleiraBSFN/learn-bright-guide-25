@@ -423,11 +423,11 @@ const Index = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src={learnBuddyLogo} alt="Learn Buddy" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
-              <div>
+              <div className="hidden sm:block">
                 <h1 className="font-display text-xl font-bold text-foreground">Learn Buddy</h1>
                 <p className="text-xs text-muted-foreground">{t('header.subtitle')}</p>
               </div>
