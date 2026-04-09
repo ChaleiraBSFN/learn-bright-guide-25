@@ -162,18 +162,19 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
   const handleNodeClick = (node: TrailNodeDef, isCompleted: boolean, isLocked: boolean) => {
     if (!user) {
-      toast({ title: 'Crie uma conta', description: 'Faça login para salvar seu progresso!', variant: 'destructive' });
+      toast({ title: t('trail.createAccount', 'Crie uma conta'), description: t('trail.loginToSave', 'Faça login para salvar seu progresso!'), variant: 'destructive' });
       return;
     }
 
-    const statusText = isCompleted ? '✅ Concluído' : isLocked ? '🔒 Bloqueado' : '🔓 Em andamento';
-    const objective = node.objective || 'Continue usando o app para desbloquear essa conquista.';
+    const { title: nodeTitle, objective: nodeObjective } = getNodeText(node);
+    const statusText = isCompleted ? `✅ ${t('trail.completed', 'Concluído')}` : isLocked ? `🔒 ${t('trail.locked', 'Bloqueado')}` : `🔓 ${t('trail.inProgress', 'Em andamento')}`;
+    const objective = nodeObjective || t('trail.defaultObjective', 'Continue usando o app para desbloquear essa conquista.');
 
     toast({
-      title: `${node.title} — ${statusText}`,
+      title: `${nodeTitle} — ${statusText}`,
       description: isCompleted
-        ? `${objective}\n\n🎉 Você já ganhou +${node.creditReward} créditos!`
-        : `📋 ${objective}\n\n🎁 Recompensa: +${node.creditReward} créditos.`,
+        ? `${objective}\n\n🎉 ${t('trail.alreadyEarned', 'Você já ganhou')} +${node.creditReward} ${t('credits.label', 'créditos')}!`
+        : `📋 ${objective}\n\n🎁 ${t('trail.reward', 'Recompensa')}: +${node.creditReward} ${t('credits.label', 'créditos')}.`,
       duration: 7000,
     });
   };
