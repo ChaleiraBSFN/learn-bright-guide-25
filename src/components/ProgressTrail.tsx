@@ -70,6 +70,10 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
       if (document.visibilityState === 'visible') loadProgress();
     };
 
+    const handleTrailNodesUpdated = () => {
+      loadProgress();
+    };
+
     if (open) loadProgress();
 
     const interval = window.setInterval(() => {
@@ -90,6 +94,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
     window.addEventListener('achievement_unlocked', loadProgress);
     window.addEventListener('achievements_updated', loadProgress);
+    window.addEventListener('trail_nodes_updated', handleTrailNodesUpdated);
     window.addEventListener('storage', loadProgress);
     window.addEventListener('focus', loadProgress);
     window.addEventListener('online', loadProgress);
@@ -99,6 +104,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
       window.clearInterval(interval);
       window.removeEventListener('achievement_unlocked', loadProgress);
       window.removeEventListener('achievements_updated', loadProgress);
+      window.removeEventListener('trail_nodes_updated', handleTrailNodesUpdated);
       window.removeEventListener('storage', loadProgress);
       window.removeEventListener('focus', loadProgress);
       window.removeEventListener('online', loadProgress);
