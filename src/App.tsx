@@ -17,6 +17,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import UpdateNoticesAdmin from "./pages/UpdateNoticesAdmin";
 import PlatformControl from "./pages/PlatformControl";
+import AIConfigAdmin from "./pages/AIConfigAdmin";
 import NotFound from "./pages/NotFound";
 import { useTimeTracker } from "@/hooks/useAchievements";
 
@@ -43,6 +44,7 @@ const AppContent = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-notices" element={<UpdateNoticesAdmin />} />
           <Route path="/platform-control" element={<PlatformControl />} />
+          <Route path="/ai-config" element={<AIConfigAdmin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
