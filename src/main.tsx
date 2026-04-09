@@ -31,7 +31,8 @@ if (isInIframe || isPreviewHost) {
 
   const forceUpdate = () => updateSW(true);
 
-  setInterval(forceUpdate, 15 * 1000);
+  // Poll every 5 seconds for updates
+  setInterval(forceUpdate, 5 * 1000);
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") forceUpdate();
