@@ -132,6 +132,10 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
               <BookOpen className="h-5 w-5 text-primary" />
               {t('trail.title', 'Trilha de Conquistas')}
             </span>
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('trail.description', 'Sua trilha de conquistas e progresso')}
+          </DialogDescription>
             <Badge variant="outline" className="gap-1 text-xs font-bold">
               <Coins className="h-3.5 w-3.5 text-primary" />
               {credits ?? '...'} Créditos
