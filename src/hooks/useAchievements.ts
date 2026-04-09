@@ -6,7 +6,16 @@ import { useToast } from '@/hooks/use-toast';
 import { BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin } from 'lucide-react';
 
 export const availableIcons = {
-  BookOpen, Zap, Flame, Trophy, Brain, Target, Gift, Crown, Star, MapPin,
+  BookOpen,
+  Zap,
+  Flame,
+  Trophy,
+  Brain,
+  Target,
+  Gift,
+  Crown,
+  Star,
+  MapPin,
 };
 
 export type IconName = keyof typeof availableIcons;
@@ -44,6 +53,61 @@ const MANUAL_POSITIONS: [number, number][] = [
   [190, 1460], [350, 1420], [520, 1470], [690, 1430], [840, 1490], [720, 1570], [520, 1610],
 ];
 
+const trailBlueprints: TrailBlueprint[] = [
+  { title: 'Primeiro Resumo', type: 'challenge', creditReward: 1, iconName: 'BookOpen', objective: 'Gere seu primeiro conteúdo de estudo para iniciar a trilha.', triggerType: 'generate_study', triggerRequirement: 1 },
+  { title: 'Primeiros Exercícios', type: 'quiz', creditReward: 1, iconName: 'Zap', objective: 'Gere sua primeira lista de exercícios para testar o aprendizado.', triggerType: 'generate_quiz', triggerRequirement: 1 },
+  { title: 'Foco Inicial', type: 'challenge', creditReward: 2, iconName: 'Flame', objective: 'Permaneça 5 minutos estudando com atenção para liberar o próximo passo.', triggerType: 'time_focused', timeRequiredMinutes: 5, triggerRequirement: 5 },
+  { title: 'Revisão de Partida', type: 'challenge', creditReward: 2, iconName: 'Target', objective: 'Gere 2 materiais de estudo para consolidar sua base.', triggerType: 'generate_study', triggerRequirement: 2 },
+  { title: 'Treino Duplo', type: 'quiz', creditReward: 2, iconName: 'Brain', objective: 'Crie 2 conjuntos de exercícios para começar a praticar com constância.', triggerType: 'generate_quiz', triggerRequirement: 2 },
+  { title: 'Ritmo Constante', type: 'challenge', creditReward: 2, iconName: 'Flame', objective: 'Acumule 10 minutos totais de estudo focado.', triggerType: 'time_focused', timeRequiredMinutes: 10, triggerRequirement: 10 },
+  { title: 'Selo Iniciante', type: 'reward', creditReward: 4, iconName: 'Gift', objective: 'Complete a sequência inicial da trilha para resgatar seu primeiro selo.', triggerType: 'none' },
+  { title: 'Explorador de Temas', type: 'challenge', creditReward: 2, iconName: 'MapPin', objective: 'Gere 3 estudos para explorar novos assuntos na plataforma.', triggerType: 'generate_study', triggerRequirement: 3 },
+  { title: 'Prática Frequente', type: 'quiz', creditReward: 2, iconName: 'Zap', objective: 'Gere 3 listas de exercícios para manter a prática ativa.', triggerType: 'generate_quiz', triggerRequirement: 3 },
+  { title: 'Foco de 15 Minutos', type: 'challenge', creditReward: 2, iconName: 'Flame', objective: 'Chegue a 15 minutos acumulados de estudo focado.', triggerType: 'time_focused', timeRequiredMinutes: 15, triggerRequirement: 15 },
+  { title: 'Resumo Consistente', type: 'challenge', creditReward: 3, iconName: 'BookOpen', objective: 'Gere 4 conteúdos de estudo completos para avançar.', triggerType: 'generate_study', triggerRequirement: 4 },
+  { title: 'Desafio Resolvido', type: 'quiz', creditReward: 3, iconName: 'Brain', objective: 'Crie 4 listas de exercícios e mostre evolução na prática.', triggerType: 'generate_quiz', triggerRequirement: 4 },
+  { title: 'Foco de 20 Minutos', type: 'challenge', creditReward: 3, iconName: 'Flame', objective: 'Acumule 20 minutos estudando sem perder o ritmo.', triggerType: 'time_focused', timeRequiredMinutes: 20, triggerRequirement: 20 },
+  { title: 'Selo Aprendiz', type: 'milestone', creditReward: 5, iconName: 'Trophy', objective: 'Feche o primeiro ciclo da trilha para ganhar o selo de aprendiz.', triggerType: 'none' },
+  { title: 'Plano em Ação', type: 'challenge', creditReward: 3, iconName: 'Target', objective: 'Gere 5 estudos para mostrar consistência no planejamento.', triggerType: 'generate_study', triggerRequirement: 5 },
+  { title: 'Quinteto de Exercícios', type: 'quiz', creditReward: 3, iconName: 'Zap', objective: 'Gere 5 listas de exercícios e fortaleça sua rotina.', triggerType: 'generate_quiz', triggerRequirement: 5 },
+  { title: 'Meia Hora de Foco', type: 'challenge', creditReward: 4, iconName: 'Flame', objective: 'Acumule 30 minutos totais de estudo concentrado.', triggerType: 'time_focused', timeRequiredMinutes: 30, triggerRequirement: 30 },
+  { title: 'Estudo Estruturado', type: 'challenge', creditReward: 4, iconName: 'BookOpen', objective: 'Gere 6 materiais para construir uma base de revisão sólida.', triggerType: 'generate_study', triggerRequirement: 6 },
+  { title: 'Prática Inteligente', type: 'quiz', creditReward: 4, iconName: 'Brain', objective: 'Crie 6 listas de exercícios e mantenha o treino em alta.', triggerType: 'generate_quiz', triggerRequirement: 6 },
+  { title: 'Foco de 45 Minutos', type: 'challenge', creditReward: 4, iconName: 'Flame', objective: 'Chegue a 45 minutos acumulados de dedicação na plataforma.', triggerType: 'time_focused', timeRequiredMinutes: 45, triggerRequirement: 45 },
+  { title: 'Selo Persistente', type: 'reward', creditReward: 6, iconName: 'Gift', objective: 'Complete este bloco da trilha para provar sua persistência.', triggerType: 'none' },
+  { title: 'Biblioteca Pessoal', type: 'challenge', creditReward: 4, iconName: 'BookOpen', objective: 'Gere 7 estudos e comece a montar sua própria biblioteca.', triggerType: 'generate_study', triggerRequirement: 7 },
+  { title: 'Teste em Série', type: 'quiz', creditReward: 4, iconName: 'Zap', objective: 'Crie 7 listas de exercícios para ampliar sua prática contínua.', triggerType: 'generate_quiz', triggerRequirement: 7 },
+  { title: 'Uma Hora de Foco', type: 'challenge', creditReward: 5, iconName: 'Flame', objective: 'Acumule 60 minutos de estudo focado para destravar a próxima etapa.', triggerType: 'time_focused', timeRequiredMinutes: 60, triggerRequirement: 60 },
+  { title: 'Estudo Profundo', type: 'challenge', creditReward: 5, iconName: 'Target', objective: 'Gere 8 conteúdos de estudo com profundidade e clareza.', triggerType: 'generate_study', triggerRequirement: 8 },
+  { title: 'Resolução Ágil', type: 'quiz', creditReward: 5, iconName: 'Brain', objective: 'Crie 8 listas de exercícios e mantenha respostas rápidas.', triggerType: 'generate_quiz', triggerRequirement: 8 },
+  { title: 'Foco de 75 Minutos', type: 'challenge', creditReward: 5, iconName: 'Flame', objective: 'Chegue a 75 minutos acumulados de estudo ativo.', triggerType: 'time_focused', timeRequiredMinutes: 75, triggerRequirement: 75 },
+  { title: 'Selo Avançado', type: 'milestone', creditReward: 7, iconName: 'Trophy', objective: 'Conclua a sequência intermediária para receber o selo avançado.', triggerType: 'none' },
+  { title: 'Mapa Mental Vivo', type: 'challenge', creditReward: 5, iconName: 'MapPin', objective: 'Gere 9 materiais de estudo e amplie seu repertório mental.', triggerType: 'generate_study', triggerRequirement: 9 },
+  { title: 'Desempenho Estável', type: 'quiz', creditReward: 5, iconName: 'Zap', objective: 'Crie 9 conjuntos de exercícios e mantenha um ritmo estável.', triggerType: 'generate_quiz', triggerRequirement: 9 },
+  { title: 'Foco de 90 Minutos', type: 'challenge', creditReward: 6, iconName: 'Flame', objective: 'Acumule 90 minutos totais estudando com consistência.', triggerType: 'time_focused', timeRequiredMinutes: 90, triggerRequirement: 90 },
+  { title: 'Fonte Confiável', type: 'challenge', creditReward: 6, iconName: 'BookOpen', objective: 'Gere 10 estudos e fortaleça sua base de consulta.', triggerType: 'generate_study', triggerRequirement: 10 },
+  { title: 'Exercícios Sem Pausa', type: 'quiz', creditReward: 6, iconName: 'Brain', objective: 'Crie 10 listas de exercícios para manter sua evolução constante.', triggerType: 'generate_quiz', triggerRequirement: 10 },
+  { title: 'Duas Horas de Foco', type: 'challenge', creditReward: 6, iconName: 'Flame', objective: 'Chegue a 120 minutos acumulados de estudo concentrado.', triggerType: 'time_focused', timeRequiredMinutes: 120, triggerRequirement: 120 },
+  { title: 'Selo Especialista', type: 'reward', creditReward: 8, iconName: 'Gift', objective: 'Finalize este conjunto para receber o selo de especialista.', triggerType: 'none' },
+  { title: 'Mestre dos Resumos', type: 'challenge', creditReward: 7, iconName: 'BookOpen', objective: 'Gere 12 conteúdos de estudo e prove domínio na revisão.', triggerType: 'generate_study', triggerRequirement: 12 },
+  { title: 'Mestre dos Exercícios', type: 'quiz', creditReward: 7, iconName: 'Zap', objective: 'Crie 12 listas de exercícios e eleve o nível da prática.', triggerType: 'generate_quiz', triggerRequirement: 12 },
+  { title: 'Foco de 150 Minutos', type: 'challenge', creditReward: 7, iconName: 'Flame', objective: 'Acumule 150 minutos estudando para manter a chama acesa.', triggerType: 'time_focused', timeRequiredMinutes: 150, triggerRequirement: 150 },
+  { title: 'Explicação Clara', type: 'challenge', creditReward: 7, iconName: 'Target', objective: 'Gere 14 estudos bem explicados para avançar com segurança.', triggerType: 'generate_study', triggerRequirement: 14 },
+  { title: 'Correção Completa', type: 'quiz', creditReward: 7, iconName: 'Brain', objective: 'Crie 14 listas de exercícios e mantenha a prática completa.', triggerType: 'generate_quiz', triggerRequirement: 14 },
+  { title: 'Foco de 180 Minutos', type: 'challenge', creditReward: 8, iconName: 'Flame', objective: 'Chegue a 180 minutos acumulados de estudo real.', triggerType: 'time_focused', timeRequiredMinutes: 180, triggerRequirement: 180 },
+  { title: 'Selo Mestre', type: 'milestone', creditReward: 10, iconName: 'Crown', objective: 'Conclua esta etapa para conquistar o selo de mestre.', triggerType: 'none' },
+  { title: 'Maratona de Estudos', type: 'challenge', creditReward: 8, iconName: 'BookOpen', objective: 'Gere 16 conteúdos de estudo e consolide uma maratona de aprendizado.', triggerType: 'generate_study', triggerRequirement: 16 },
+  { title: 'Coleção de Exercícios', type: 'quiz', creditReward: 8, iconName: 'Zap', objective: 'Crie 16 listas de exercícios e monte uma grande coleção de prática.', triggerType: 'generate_quiz', triggerRequirement: 16 },
+  { title: 'Foco de 240 Minutos', type: 'challenge', creditReward: 9, iconName: 'Flame', objective: 'Acumule 240 minutos totais e mantenha uma rotina de alto nível.', triggerType: 'time_focused', timeRequiredMinutes: 240, triggerRequirement: 240 },
+  { title: 'Domínio do Conteúdo', type: 'challenge', creditReward: 9, iconName: 'Star', objective: 'Gere 18 materiais de estudo e domine a construção de conteúdo.', triggerType: 'generate_study', triggerRequirement: 18 },
+  { title: 'Precisão Total', type: 'quiz', creditReward: 9, iconName: 'Brain', objective: 'Crie 18 listas de exercícios para alcançar precisão máxima na prática.', triggerType: 'generate_quiz', triggerRequirement: 18 },
+  { title: 'Foco Supremo', type: 'challenge', creditReward: 10, iconName: 'Flame', objective: 'Acumule 300 minutos de estudo focado e prove resistência total.', triggerType: 'time_focused', timeRequiredMinutes: 300, triggerRequirement: 300 },
+  { title: 'Lenda Learn Buddy', type: 'reward', creditReward: 20, iconName: 'Crown', objective: 'Complete todos os desafios da trilha para se tornar uma verdadeira lenda.', triggerType: 'none' },
+];
+
+const normalizeIds = (ids: unknown[]) => Array.from(new Set(ids.map((id) => Number(id)).filter((id) => Number.isFinite(id) && id > 0))).sort((a, b) => a - b);
+const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
+
 export const sortTrailNodes = (nodes: TrailNodeDef[]) => [...nodes].sort((a, b) => a.id - b.id);
 
 export const createDraftTrailNode = (id: number, x: number, y: number, parentId?: number): TrailNodeDef => ({
@@ -65,9 +129,6 @@ const isTrailType = (value: unknown): value is TrailNodeDef['type'] =>
 
 const isTriggerType = (value: unknown): value is TrailNodeDef['triggerType'] =>
   value === 'generate_study' || value === 'generate_quiz' || value === 'quiz_score' || value === 'time_focused' || value === 'none';
-
-const normalizeIds = (ids: unknown[]) => Array.from(new Set(ids.map((id) => Number(id)).filter((id) => Number.isFinite(id) && id > 0))).sort((a, b) => a - b);
-const getAchievementStorageKey = (userId: string) => `achievements_v2_${userId}`;
 
 const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
   return blueprints.map((node, index) => {
@@ -101,7 +162,7 @@ const sanitizeTrailNode = (rawNode: Partial<TrailNodeDef>, index: number): Trail
     title: rawNode.title?.trim() || fallback.title,
     type: isTrailType(rawNode.type) ? rawNode.type : fallback.type,
     creditReward: Number.isFinite(safeReward) ? Math.max(0, safeReward) : fallback.creditReward,
-    iconName: rawNode.iconName && rawNode.iconName in availableIcons ? rawNode.iconName : fallback.iconName,
+    iconName: rawNode.iconName && rawNode.iconName in availableIcons ? (rawNode.iconName as IconName) : fallback.iconName,
     x: Number.isFinite(Number(rawNode.x)) ? Number(rawNode.x) : fallback.x,
     y: Number.isFinite(Number(rawNode.y)) ? Number(rawNode.y) : fallback.y,
     parents: normalizeIds(Array.isArray(rawNode.parents) ? rawNode.parents : fallback.parents),
@@ -171,7 +232,14 @@ export const loadUserCompletedAchievements = async (userId: string) => {
 
     const missingInCloud = localIds.filter((id) => !cloudIds.includes(id));
     if (missingInCloud.length > 0) {
-      await Promise.all(missingInCloud.map((achievementId) => (supabase.from as any)('user_achievements').insert({ user_id: userId, achievement_id: achievementId }).then(() => null).catch(() => null)));
+      await Promise.all(
+        missingInCloud.map((achievementId) =>
+          (supabase.from as any)('user_achievements')
+            .insert({ user_id: userId, achievement_id: achievementId })
+            .then(() => null)
+            .catch(() => null),
+        ),
+      );
     }
 
     return merged;

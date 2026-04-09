@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import { ArrowLeft, MousePointerClick, Move, Plus, Save, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { availableIcons, createDraftTrailNode, IconName, sortTrailNodes, TrailNodeDef, useAchievementData } from '@/hooks/useAchievements';
+import { availableIcons, createDraftTrailNode, sortTrailNodes, TrailNodeDef, useAchievementData } from '@/hooks/useAchievements';
 
 const typeGradient: Record<TrailNodeDef['type'], string> = {
   challenge: 'from-primary to-secondary',
@@ -94,7 +94,7 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
     setIsPlacingNode(false);
   };
 
-  const handleCanvasClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleCanvasClick = (event: ReactMouseEvent<HTMLDivElement>) => {
     if (!isPlacingNode || !canvasRef.current || !scrollRef.current) return;
     const point = getCanvasPoint(event.clientX, event.clientY, canvasRef.current, scrollRef.current);
     addNodeAtPosition(point.x, point.y);
@@ -196,7 +196,7 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
                 </svg>
 
                 {sortedNodes.map((node) => {
-                  const Icon = availableIcons[node.iconName as IconName] || availableIcons.Star;
+                  const Icon = availableIcons[node.iconName] || availableIcons.Star;
                   const isSelected = node.id === selectedId;
 
                   return (
@@ -273,7 +273,7 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
                   <div className="space-y-2">
                     <Label>Tipo visual</Label>
-                    <Select value={selectedNode.type} onValueChange={(value: TrailNodeDef['type']) => updateNode(selectedNode.id, { type: value })}>
+                    <Select value={selectedNode.type} onValueChange={(value) => updateNode(selectedNode.id, { type: value as TrailNodeDef['type'] })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="challenge">Desafio</SelectItem>
@@ -286,7 +286,7 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
 
                   <div className="space-y-2">
                     <Label>Ícone</Label>
-                    <Select value={selectedNode.iconName} onValueChange={(value: IconName) => updateNode(selectedNode.id, { iconName: value })}>
+                    <Select value={selectedNode.iconName} onValueChange={(value) => updateNode(selectedNode.id, { iconName: value as keyof typeof availableIcons })}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         {Object.keys(availableIcons).map((icon) => (
@@ -331,7 +331,7 @@ const TrailVisualEditor = ({ onBack }: TrailVisualEditorProps) => {
                   <Label>Como desbloqueia?</Label>
                   <Select
                     value={selectedNode.triggerType || 'none'}
-                    onValueChange={(value: TrailNodeDef['triggerType']) => updateNode(selectedNode.id, { triggerType: value })}
+                    onValueChange={(value) => updateNode(selectedNode.id, { triggerType: value as TrailNodeDef['triggerType'] })}
                   >
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
