@@ -251,11 +251,11 @@ export const loadUserCompletedAchievements = async (userId: string) => {
     const missingInCloud = localIds.filter((id) => !cloudIds.includes(id));
     if (missingInCloud.length > 0) {
       await Promise.all(
-        missingInCloud.map((achievementId) =>
-          supabase.rpc('grant_achievement', { _user_id: userId, _achievement_id: achievementId })
-            .then(() => null)
-            .catch(() => null),
-        ),
+        missingInCloud.map(async (achievementId) => {
+          try {
+            await supabase.rpc('grant_achievement', { _user_id: userId, _achievement_id: achievementId });
+          } catch { /* ignore */ }
+        }),
       );
     }
 
