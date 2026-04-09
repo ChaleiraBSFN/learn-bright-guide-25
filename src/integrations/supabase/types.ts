@@ -664,6 +664,10 @@ export type Database = {
           user_id: string
         }[]
       }
+      grant_achievement: {
+        Args: { _achievement_id: number; _user_id: string }
+        Returns: undefined
+      }
       has_feature_access: {
         Args: { _feature_type: string; _study_topic: string; _user_id: string }
         Returns: boolean
