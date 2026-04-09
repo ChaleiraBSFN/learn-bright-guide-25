@@ -14,14 +14,14 @@ export interface RankTier {
 }
 
 const RANK_DEFINITIONS: { key: string; name: string; color: string; textColor: string; bgColor: string; borderColor: string; emoji: string; thresholds: [number, number, number] }[] = [
-  { key: 'bronze', name: 'ranks.bronze', color: 'from-orange-700 to-orange-500', textColor: 'text-orange-500 font-bold drop-shadow-[0_0_6px_rgba(249,115,22,0.6)]', bgColor: 'bg-orange-500/15', borderColor: 'border-orange-500/40', emoji: '🥉', thresholds: [0, 3, 6] },
-  { key: 'silver', name: 'ranks.silver', color: 'from-zinc-400 to-zinc-300', textColor: 'text-slate-300 font-bold drop-shadow-[0_0_6px_rgba(203,213,225,0.6)]', bgColor: 'bg-zinc-400/15', borderColor: 'border-zinc-400/40', emoji: '🥈', thresholds: [9, 12, 15] },
-  { key: 'gold', name: 'ranks.gold', color: 'from-yellow-500 to-amber-400', textColor: 'text-yellow-400 font-bold drop-shadow-[0_0_6px_rgba(250,204,21,0.6)]', bgColor: 'bg-yellow-500/15', borderColor: 'border-yellow-500/40', emoji: '🏆', thresholds: [18, 21, 24] },
-  { key: 'platinum', name: 'ranks.platinum', color: 'from-cyan-400 to-teal-300', textColor: 'text-cyan-400 font-bold drop-shadow-[0_0_6px_rgba(34,211,238,0.6)]', bgColor: 'bg-cyan-400/15', borderColor: 'border-cyan-400/40', emoji: '💎', thresholds: [27, 30, 33] },
-  { key: 'diamond', name: 'ranks.diamond', color: 'from-blue-400 to-indigo-400', textColor: 'text-blue-400 font-bold drop-shadow-[0_0_6px_rgba(96,165,250,0.6)]', bgColor: 'bg-blue-400/15', borderColor: 'border-blue-400/40', emoji: '💠', thresholds: [36, 39, 42] },
-  { key: 'elite', name: 'ranks.elite', color: 'from-emerald-400 to-green-500', textColor: 'text-emerald-400 font-bold drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]', bgColor: 'bg-emerald-400/15', borderColor: 'border-emerald-400/40', emoji: '⚡', thresholds: [44, -1, -1] },
-  { key: 'legend', name: 'ranks.legend', color: 'from-red-500 to-orange-500', textColor: 'text-red-500 font-bold drop-shadow-[0_0_8px_rgba(239,68,68,0.7)]', bgColor: 'bg-red-500/15', borderColor: 'border-red-500/40', emoji: '🔥', thresholds: [46, -1, -1] },
-  { key: 'surreal', name: 'ranks.surreal', color: 'from-purple-500 to-pink-500', textColor: 'text-purple-400 font-bold drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]', bgColor: 'bg-purple-400/15', borderColor: 'border-purple-400/40', emoji: '👑', thresholds: [49, -1, -1] },
+  { key: 'bronze', name: 'ranks.bronze', color: 'from-orange-700 to-orange-500', textColor: 'text-orange-400 font-extrabold drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]', bgColor: 'bg-orange-500/15', borderColor: 'border-orange-500/40', emoji: '🥉', thresholds: [0, 3, 6] },
+  { key: 'silver', name: 'ranks.silver', color: 'from-zinc-400 to-zinc-300', textColor: 'text-blue-200 font-extrabold drop-shadow-[0_0_12px_rgba(186,230,253,0.9)]', bgColor: 'bg-sky-400/15', borderColor: 'border-sky-300/40', emoji: '🥈', thresholds: [9, 12, 15] },
+  { key: 'gold', name: 'ranks.gold', color: 'from-yellow-500 to-amber-400', textColor: 'text-yellow-300 font-extrabold drop-shadow-[0_0_12px_rgba(253,224,71,0.9)]', bgColor: 'bg-yellow-500/15', borderColor: 'border-yellow-500/40', emoji: '🏆', thresholds: [18, 21, 24] },
+  { key: 'platinum', name: 'ranks.platinum', color: 'from-cyan-400 to-teal-300', textColor: 'text-cyan-300 font-extrabold drop-shadow-[0_0_12px_rgba(34,211,238,0.9)]', bgColor: 'bg-cyan-400/15', borderColor: 'border-cyan-400/40', emoji: '💎', thresholds: [27, 30, 33] },
+  { key: 'diamond', name: 'ranks.diamond', color: 'from-blue-400 to-indigo-400', textColor: 'text-blue-300 font-extrabold drop-shadow-[0_0_12px_rgba(96,165,250,0.9)]', bgColor: 'bg-blue-400/15', borderColor: 'border-blue-400/40', emoji: '💠', thresholds: [36, 39, 42] },
+  { key: 'elite', name: 'ranks.elite', color: 'from-emerald-400 to-green-500', textColor: 'text-emerald-300 font-extrabold drop-shadow-[0_0_12px_rgba(52,211,153,0.9)]', bgColor: 'bg-emerald-400/15', borderColor: 'border-emerald-400/40', emoji: '⚡', thresholds: [44, -1, -1] },
+  { key: 'legend', name: 'ranks.legend', color: 'from-red-500 to-orange-500', textColor: 'text-red-400 font-extrabold drop-shadow-[0_0_14px_rgba(239,68,68,0.9)]', bgColor: 'bg-red-500/15', borderColor: 'border-red-500/40', emoji: '🔥', thresholds: [46, -1, -1] },
+  { key: 'surreal', name: 'ranks.surreal', color: 'from-purple-500 to-pink-500', textColor: 'text-purple-300 font-extrabold drop-shadow-[0_0_16px_rgba(192,132,252,1)]', bgColor: 'bg-purple-400/15', borderColor: 'border-purple-400/40', emoji: '👑', thresholds: [49, -1, -1] },
 ];
 
 // Build all rank tiers in order
