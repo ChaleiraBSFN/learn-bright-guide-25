@@ -21,6 +21,12 @@ if (isInIframe || isPreviewHost) {
 } else {
   const updateSW = registerSW({
     onNeedRefresh() {
+      // Force reload on any device including mobile PWA
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        });
+      }
       window.location.reload();
     },
     onOfflineReady() {
@@ -35,7 +41,13 @@ if (isInIframe || isPreviewHost) {
   setInterval(forceUpdate, 5 * 1000);
 
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") forceUpdate();
+    if (document.visibilityState === "visible") {
+      forceUpdate();
+      // Also check for new SW on mobile resume
+      navigator.serviceWorker?.getRegistration().then(reg => {
+        reg?.update().catch(() => {});
+      });
+    }
   });
 
   window.addEventListener("focus", forceUpdate);
