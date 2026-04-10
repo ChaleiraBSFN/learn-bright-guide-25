@@ -80,6 +80,18 @@ export interface StudyContent {
       imagemBase64?: string;
     }>;
   };
+  analiseImagem?: {
+    titulo: string;
+    descricao: string;
+    exerciciosIdentificados?: Array<{
+      numero: number;
+      enunciado: string;
+      resolucao: string;
+      explicacao: string;
+    }>;
+    conceitosExtraidos?: string[];
+    observacoes?: string;
+  };
 }
 
 export interface StudyFormData {
