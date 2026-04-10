@@ -269,7 +269,29 @@ export const useAchievementData = () => {
   const [nodes, setNodes] = useState<TrailNodeDef[]>(defaultTrailNodes);
 
   useEffect(() => {
-    const loadNodes = () => {
+    const loadNodes = async () => {
+      // Try loading from DB first (ai_config table), then fallback to localStorage
+      try {
+        const { data, error } = await supabase
+          .from('ai_config')
+          .select('config_data')
+          .eq('section', 'trail_nodes')
+          .maybeSingle();
+
+        if (!error && data && data.config_data) {
+          const dbNodes = (data.config_data as any).nodes;
+          if (Array.isArray(dbNodes) && dbNodes.length > 0) {
+            const normalized = normalizeStoredNodes(dbNodes);
+            setNodes(normalized);
+            // Also update localStorage for offline access
+            persistTrailNodes(normalized);
+            return;
+          }
+        }
+      } catch {
+        // Fallback to localStorage if DB fails
+      }
+
       const stored = readStoredTrailNodes();
       setNodes(stored ?? persistTrailNodes(defaultTrailNodes));
     };
@@ -285,7 +307,11 @@ export const useAchievementData = () => {
     window.addEventListener('focus', loadNodes);
     document.addEventListener('visibilitychange', handleVisibility);
 
+    // Refresh from DB every 30s
+    const interval = setInterval(loadNodes, 30000);
+
     return () => {
+      clearInterval(interval);
       window.removeEventListener('achievements_updated', loadNodes);
       window.removeEventListener('trail_nodes_updated', loadNodes);
       window.removeEventListener('storage', loadNodes);
@@ -294,13 +320,35 @@ export const useAchievementData = () => {
     };
   }, []);
 
-  const saveNodes = (newNodes: TrailNodeDef[]) => {
+  const saveNodes = async (newNodes: TrailNodeDef[]) => {
     const normalized = persistTrailNodes(newNodes);
     setNodes(normalized);
-    // Notify all instances (same tab + other tabs)
+
+    // Save to DB (ai_config table) so all users/devices get the same trail
+    try {
+      const { data: existing } = await supabase
+        .from('ai_config')
+        .select('id')
+        .eq('section', 'trail_nodes')
+        .maybeSingle();
+
+      if (existing) {
+        await supabase
+          .from('ai_config')
+          .update({ config_data: { version: TRAIL_VERSION, nodes: normalized } as any, updated_at: new Date().toISOString() })
+          .eq('section', 'trail_nodes');
+      } else {
+        await supabase
+          .from('ai_config')
+          .insert({ section: 'trail_nodes', config_data: { version: TRAIL_VERSION, nodes: normalized } as any });
+      }
+    } catch (e) {
+      console.error('Failed to save trail to DB:', e);
+    }
+
+    // Notify all instances
     window.dispatchEvent(new Event('achievements_updated'));
     window.dispatchEvent(new Event('trail_nodes_updated'));
-    // Force storage event for other tabs
     window.dispatchEvent(new StorageEvent('storage', { key: TRAIL_STORAGE_KEY }));
   };
 

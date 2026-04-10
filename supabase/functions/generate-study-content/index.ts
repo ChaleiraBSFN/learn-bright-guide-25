@@ -300,8 +300,19 @@ serve(async (req) => {
     }
 
     const { tema, nivel, prazo, duvidas, idioma, imagemBase64 } = validationResult.data;
-    const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium) +
-                   (imagemBase64 ? "\n\nA uma imagem fornecida na requisição. Use-a como contexto primário para gerar o plano de estudos detalhado e exercícios, extraia textos, equações, ou explique diagramas visuais caso presentes. Seu texto ainda deve seguir estritamente o formato JSON." : "");
+    const imageAnalysisInstruction = imagemBase64
+      ? `\n\nIMPORTANT: An image was provided. Analyze the image carefully. If it contains exercises or questions, SOLVE each one step by step. Include in the JSON an additional field "analiseImagem" with this structure:
+"analiseImagem": {
+  "titulo": "Análise da Imagem",
+  "descricao": "Brief description of what the image contains",
+  "exerciciosIdentificados": [{"numero": 1, "enunciado": "original question from image", "resolucao": "step by step solution", "explicacao": "why this is the answer"}],
+  "conceitosExtraidos": ["concept1", "concept2"],
+  "observacoes": "any additional notes about the image content"
+}
+If the image contains exercises, the "exerciciosIdentificados" array MUST have the solved exercises. If no exercises, omit that field but still include "conceitosExtraidos" with concepts visible in the image. Your text must still follow the JSON format strictly.`
+      : "";
+
+    const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium) + imageAnalysisInstruction;
     const { temperature } = getSubjectStyle(tema);
     
     const maxDays = Math.min(prazo, 30);

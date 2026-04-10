@@ -10,6 +10,7 @@ import { StudyPlanSection } from "./sections/StudyPlanSection";
 import { SourcesSection } from "./sections/SourcesSection";
 import { VideosSection } from "./sections/VideosSection";
 import { ImagesSection } from "./sections/ImagesSection";
+import { ImageAnalysisSection } from "./sections/ImageAnalysisSection";
 
 interface AIImage {
   tipo: "ai";
@@ -70,6 +71,7 @@ export function StudyResult({ content, tema, aiImages, webImages, imagesLoading,
       </div>
 
       <div className="space-y-4 md:space-y-6">
+        {content.analiseImagem && <ImageAnalysisSection data={content.analiseImagem} />}
         {content.objetivo && <ObjectiveSection data={content.objetivo} />}
         
         {content.resumo && (
