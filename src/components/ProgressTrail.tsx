@@ -297,7 +297,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                             : `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_22px_hsl(var(--primary)/0.34)]`
                       }`}
                     >
-                      {isLocked ? <Lock className="h-5 w-5" /> : <Icon className="h-5 w-5 text-primary-foreground" />}
+                      {isLocked && !isCompleted ? <Lock className="h-5 w-5" /> : <Icon className="h-5 w-5 text-primary-foreground" />}
 
                       {isCompleted && (
                         <span className="absolute -right-1 -top-1 rounded-full border-2 border-background bg-primary p-0.5 shadow-sm">
