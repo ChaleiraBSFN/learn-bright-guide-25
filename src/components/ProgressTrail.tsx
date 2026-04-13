@@ -312,8 +312,8 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                       <span className="rounded-md bg-background/90 px-2 py-1 text-[10px] font-semibold leading-tight text-foreground shadow-sm ring-1 ring-border/60 backdrop-blur-sm">
                         {getNodeText(node).title}
                       </span>
-                      <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : isLocked ? 'text-muted-foreground/60' : 'text-foreground/80'}`}>
-                        {isCompleted ? `✓ ${t('trail.done', 'Feito')}` : `+${node.creditReward} ${t('credits.label', 'créditos')}`}
+                      <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : isLocked ? 'text-muted-foreground/60' : 'text-accent-foreground'}`}>
+                        {isCompleted ? `✓ ${t('trail.done', 'Feito')}` : isLocked ? `🔒 ${t('trail.locked', 'Bloqueado')}` : `⏳ ${t('trail.inProgress', 'Em andamento')}`}
                       </span>
                       {(() => {
                         const nodeRank = getRankForAchievements(node.id);
