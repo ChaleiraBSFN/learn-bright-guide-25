@@ -290,10 +290,10 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                   >
                     <div
                       className={`relative flex h-14 w-14 items-center justify-center rounded-full border-[3px] shadow-lg transition-all duration-300 ${
-                        isLocked
-                          ? 'border-border bg-muted text-muted-foreground/60'
-                          : isCompleted
-                            ? `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_18px_hsl(var(--primary)/0.28)]`
+                        isCompleted
+                          ? `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_18px_hsl(var(--primary)/0.28)]`
+                          : isLocked
+                            ? 'border-border bg-muted text-muted-foreground/60'
                             : `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_22px_hsl(var(--primary)/0.34)]`
                       }`}
                     >
