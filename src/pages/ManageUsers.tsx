@@ -46,10 +46,26 @@ const ManageUsers = () => {
     if (!isAdmin) return;
     if (showLoader) setLoading(true);
     try {
-      const [profilesRes, subsRes, historyRes, creditsRes, achievementsRes, visitsRes] = await Promise.all([
+      const now = new Date();
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+
+      const [
+        profilesRes, subsRes,
+        totalStudiesRes, totalExercisesRes,
+        studies7Res, exercises7Res,
+        studies30Res, exercises30Res,
+        creditsRes, achievementsRes, visitsRes,
+      ] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('subscriptions').select('id, status, expires_at'),
-        supabase.from('user_history').select('type, created_at'),
+        supabase.from('user_history').select('id', { count: 'exact', head: true }).eq('type', 'study'),
+        supabase.from('user_history').select('id', { count: 'exact', head: true }).eq('type', 'exercise'),
+        supabase.from('user_history').select('id', { count: 'exact', head: true }).eq('type', 'study').gte('created_at', sevenDaysAgo),
+        supabase.from('user_history').select('id', { count: 'exact', head: true }).eq('type', 'exercise').gte('created_at', sevenDaysAgo),
+        supabase.from('user_history').select('id', { count: 'exact', head: true }).eq('type', 'study').gte('created_at', thirtyDaysAgo),
+        supabase.from('user_history').select('id', { count: 'exact', head: true }).eq('type', 'exercise').gte('created_at', thirtyDaysAgo),
         supabase.from('user_credits').select('total_earned'),
         supabase.from('user_achievements').select('id', { count: 'exact', head: true }),
         supabase.rpc('get_site_analytics'),
@@ -60,30 +76,22 @@ const ManageUsers = () => {
         s => s.status === 'active' && s.expires_at && new Date(s.expires_at) > new Date()
       ).length;
 
-      const history = historyRes.data || [];
-      const now = new Date();
-      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-      const totalStudies = history.filter(h => h.type === 'study').length;
-      const totalExercises = history.filter(h => h.type === 'exercise').length;
-      const studiesLast7Days = history.filter(h => h.type === 'study' && new Date(h.created_at) >= sevenDaysAgo).length;
-      const exercisesLast7Days = history.filter(h => h.type === 'exercise' && new Date(h.created_at) >= sevenDaysAgo).length;
-      const studiesLast30Days = history.filter(h => h.type === 'study' && new Date(h.created_at) >= thirtyDaysAgo).length;
-      const exercisesLast30Days = history.filter(h => h.type === 'exercise' && new Date(h.created_at) >= thirtyDaysAgo).length;
-
       const totalCreditsUsed = (creditsRes.data || []).reduce((sum, c) => sum + (c.total_earned || 0), 0);
       const totalAchievements = achievementsRes.count || 0;
 
       const visits = visitsRes.data || [];
       const activeToday = new Set(
-        visits.filter((v: any) => new Date(v.started_at) >= todayStart).map((v: any) => v.user_id || v.session_id)
+        visits.filter((v: any) => new Date(v.started_at) >= new Date(todayStart)).map((v: any) => v.user_id || v.session_id)
       ).size;
 
       setAnalytics({
-        totalUsers, premiumUsers, totalStudies, totalExercises,
-        studiesLast7Days, exercisesLast7Days, studiesLast30Days, exercisesLast30Days,
+        totalUsers, premiumUsers,
+        totalStudies: totalStudiesRes.count || 0,
+        totalExercises: totalExercisesRes.count || 0,
+        studiesLast7Days: studies7Res.count || 0,
+        exercisesLast7Days: exercises7Res.count || 0,
+        studiesLast30Days: studies30Res.count || 0,
+        exercisesLast30Days: exercises30Res.count || 0,
         totalCreditsUsed, totalAchievements, activeToday,
       });
       setLastUpdate(new Date());
