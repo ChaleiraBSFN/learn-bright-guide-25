@@ -305,10 +305,22 @@ export const useAchievementData = () => {
     window.addEventListener('trail_nodes_updated', loadNodes);
     window.addEventListener('storage', loadNodes);
     window.addEventListener('focus', loadNodes);
+    window.addEventListener('online', loadNodes);
+    window.addEventListener('pageshow', loadNodes);
     document.addEventListener('visibilitychange', handleVisibility);
 
-    // Refresh from DB every 30s
-    const interval = setInterval(loadNodes, 30000);
+    // Realtime: listen for trail node updates from admin (syncs across all devices, including mobile)
+    const channel = supabase
+      .channel('ai_config_trail_nodes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'ai_config', filter: 'section=eq.trail_nodes' },
+        () => loadNodes(),
+      )
+      .subscribe();
+
+    // Refresh from DB every 15s as a fallback
+    const interval = setInterval(loadNodes, 15000);
 
     return () => {
       clearInterval(interval);
@@ -316,7 +328,10 @@ export const useAchievementData = () => {
       window.removeEventListener('trail_nodes_updated', loadNodes);
       window.removeEventListener('storage', loadNodes);
       window.removeEventListener('focus', loadNodes);
+      window.removeEventListener('online', loadNodes);
+      window.removeEventListener('pageshow', loadNodes);
       document.removeEventListener('visibilitychange', handleVisibility);
+      supabase.removeChannel(channel);
     };
   }, []);
 
