@@ -81,7 +81,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="prazo" className="flex items-center gap-2 text-base font-medium">
+          <Label htmlFor="prazo" className="flex items-center gap-2 text-base font-medium whitespace-pre-wrap">
             <Calendar className="h-4 w-4 text-accent" />
             {t('form.deadline')}
           </Label>
