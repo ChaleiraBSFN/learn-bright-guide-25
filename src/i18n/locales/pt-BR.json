@@ -56,7 +56,7 @@
     "levelFundamental2": "Ensino Médio",
     "levelMedio": "Graduação",
     "levelSuperior": "Pós-Graduação",
-    "deadline": "Prazo em Dias",
+    "deadline": "Dias(Geração do Roteiro de Estudos)",
     "doubts": "Dúvidas Específicas",
     "doubtsOptional": "(opcional)",
     "doubtsPlaceholder": "Descreva aqui suas dúvidas ou pontos que gostaria de aprofundar...",
