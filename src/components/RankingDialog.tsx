@@ -30,61 +30,92 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
   const [ranking, setRanking] = useState<RankingUser[]>([]);
   const [myAchievements, setMyAchievements] = useState(0);
 
+  const loadMyProgress = async () => {
+    if (!user) {
+      setMyAchievements(0);
+      return;
+    }
+    try {
+      const ids = await loadUserCompletedAchievements(user.id);
+      setMyAchievements(ids.length);
+    } catch { /* ignore */ }
+  };
+
+  const loadRanking = async (showLoader = true) => {
+    if (showLoader) setLoading(true);
+    try {
+      const { data: achievements, error } = await (supabase.from as any)('user_achievements')
+        .select('user_id')
+        .limit(50000);
+
+      if (error) throw error;
+
+      const counts: Record<string, number> = {};
+      achievements?.forEach((ach: any) => {
+        counts[ach.user_id] = (counts[ach.user_id] || 0) + 1;
+      });
+
+      const userIds = Object.keys(counts);
+      let profiles: any[] = [];
+
+      if (userIds.length > 0) {
+        const { data: profs } = await (supabase.from as any)('profiles')
+          .select('user_id, display_name, email')
+          .in('user_id', userIds);
+        if (profs) profiles = profs;
+      }
+
+      const sorted = userIds
+        .map((userId) => {
+          const profile = profiles.find((p: any) => p.user_id === userId);
+          const name = profile?.display_name || profile?.email?.split('@')[0] || t('ranking.anonymousStudent');
+          const score = counts[userId];
+          return { userId, name, score, rank: getRankForAchievements(score) };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 100);
+
+      setRanking(sorted);
+    } catch (err) {
+      console.error("Failed to load ranking", err);
+      setRanking([]);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (!open) return;
 
-    const loadMyProgress = async () => {
-      if (!user) return;
-      try {
-        const ids = await loadUserCompletedAchievements(user.id);
-        setMyAchievements(ids.length);
-      } catch { /* ignore */ }
-    };
-
-    const loadRanking = async () => {
-      setLoading(true);
-      try {
-        const { data: achievements, error } = await (supabase.from as any)('user_achievements')
-          .select('user_id')
-          .limit(50000);
-
-        if (error) throw error;
-
-        const counts: Record<string, number> = {};
-        achievements?.forEach((ach: any) => {
-          counts[ach.user_id] = (counts[ach.user_id] || 0) + 1;
-        });
-
-        const userIds = Object.keys(counts);
-        let profiles: any[] = [];
-
-        if (userIds.length > 0) {
-          const { data: profs } = await (supabase.from as any)('profiles')
-            .select('user_id, display_name, email')
-            .in('user_id', userIds);
-          if (profs) profiles = profs;
-        }
-
-        const sorted = userIds
-          .map((userId) => {
-            const profile = profiles.find((p: any) => p.user_id === userId);
-            const name = profile?.display_name || profile?.email?.split('@')[0] || t('ranking.anonymousStudent');
-            const score = counts[userId];
-            return { userId, name, score, rank: getRankForAchievements(score) };
-          })
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 100);
-
-        setRanking(sorted);
-      } catch (err) {
-        console.error("Failed to load ranking", err);
-        setRanking([]);
-      }
-      setLoading(false);
+    const refreshRanking = () => {
+      loadMyProgress();
+      loadRanking(false);
     };
 
     loadMyProgress();
     loadRanking();
+
+    const interval = window.setInterval(refreshRanking, 10000);
+    const channel = supabase
+      .channel('ranking-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_achievements' }, refreshRanking)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, refreshRanking)
+      .subscribe();
+
+    window.addEventListener('achievement_unlocked', refreshRanking);
+    window.addEventListener('achievements_updated', refreshRanking);
+    window.addEventListener('pageshow', refreshRanking);
+    window.addEventListener('focus', refreshRanking);
+    window.addEventListener('online', refreshRanking);
+
+    return () => {
+      window.clearInterval(interval);
+      supabase.removeChannel(channel);
+      window.removeEventListener('achievement_unlocked', refreshRanking);
+      window.removeEventListener('achievements_updated', refreshRanking);
+      window.removeEventListener('pageshow', refreshRanking);
+      window.removeEventListener('focus', refreshRanking);
+      window.removeEventListener('online', refreshRanking);
+    };
   }, [open, t, user]);
 
   const myRank = useMemo(() => getRankForAchievements(myAchievements), [myAchievements]);
