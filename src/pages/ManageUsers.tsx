@@ -107,30 +107,51 @@ const ManageUsers = () => {
     fetchAnalytics(true);
   }, [fetchAnalytics]);
 
-  // Auto-refresh every 30s
+  // Auto-refresh every 10s as fallback for mobile/background tabs
   useEffect(() => {
     if (!isLive || !isAdmin) return;
-    const interval = setInterval(() => fetchAnalytics(false), 30000);
+    const interval = setInterval(() => fetchAnalytics(false), 10000);
     return () => clearInterval(interval);
   }, [isLive, isAdmin, fetchAnalytics]);
 
-  // Realtime: refresh when new history or achievements are inserted
+  // Realtime: refresh when analytics sources change
   useEffect(() => {
     if (!isAdmin) return;
+    let refreshTimeout: number | undefined;
+    const scheduleRefresh = () => {
+      window.clearTimeout(refreshTimeout);
+      refreshTimeout = window.setTimeout(() => fetchAnalytics(false), 250);
+    };
+
     const channel = supabase
       .channel('analytics-realtime')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_history' }, () => fetchAnalytics(false))
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_achievements' }, () => fetchAnalytics(false))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => fetchAnalytics(false))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'site_visits' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_history' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_achievements' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'subscriptions' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_credits' }, scheduleRefresh)
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      window.clearTimeout(refreshTimeout);
+      supabase.removeChannel(channel);
+    };
   }, [isAdmin, fetchAnalytics]);
 
-  // Refresh on visibility
+  // Refresh on app resume / reconnection, especially on mobile
   useEffect(() => {
     const handler = () => { if (document.visibilityState === 'visible') fetchAnalytics(false); };
+    const refresh = () => fetchAnalytics(false);
     document.addEventListener('visibilitychange', handler);
-    return () => document.removeEventListener('visibilitychange', handler);
+    window.addEventListener('pageshow', refresh);
+    window.addEventListener('focus', refresh);
+    window.addEventListener('online', refresh);
+    return () => {
+      document.removeEventListener('visibilitychange', handler);
+      window.removeEventListener('pageshow', refresh);
+      window.removeEventListener('focus', refresh);
+      window.removeEventListener('online', refresh);
+    };
   }, [fetchAnalytics]);
 
   if (authLoading || adminLoading) {
