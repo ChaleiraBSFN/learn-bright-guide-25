@@ -35,8 +35,8 @@ function fixMathNotation(text: string): string {
   let out = text;
   out = out.replace(/\$\$([\s\S]+?)\$\$/g, '$1');
   out = out.replace(/\$([^\$\n]+?)\$/g, '$1');
-  out = out.replace(/\\\(([\s\S]+?)\\\)/g, '$1');
-  out = out.replace(/\\\[([\s\S]+?)\\\]/g, '$1');
+  out = out.replace(/\\\(([\s\S]+?)\\\)/g, '($1)');
+  out = out.replace(/\\\[([\s\S]+?)\\\]/g, '($1)');
   out = out.replace(/\\cdot/g, '·').replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\pm/g, '±');
   out = out.replace(/\\sqrt\{([^{}]+)\}/g, '√($1)');
   out = out.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '($1)/($2)');
