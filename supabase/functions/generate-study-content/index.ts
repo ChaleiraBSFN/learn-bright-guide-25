@@ -232,7 +232,7 @@ Return this JSON structure:
 {
   "objetivo": {"titulo": "string", "conteudo": "2 sentences"},
   "resumo": {"titulo": "string", "conteudo": "4-5 sentences covering key points"},
-  "demonstracoes": {"titulo": "string", "passos": [{"numero": 1, "titulo": "string", "conceito": "2 sentences", "exemplo": "string"}]},
+  "demonstracoes": {"titulo": "string", "passos": [{"numero": 1, "titulo": "string", "conceito": "DEEP explanation: minimum 7 lines / 7-9 full sentences. Define key terms, explain the underlying principle/rule/formula with reasoning, mention historical or contextual background when useful, why it matters, and how it connects to the bigger picture. Substantial paragraph, not a summary.", "exemplo": "string"}]},
   "exercicios": {"titulo": "string", "lista": [{"nivel": "string", "pergunta": "string", "resposta": "string", "explicacao": "1 sentence"}]},
   "errosComuns": {"titulo": "string", "lista": [{"erro": "string", "comoEvitar": "string"}]},
   "mapaVisual": {"titulo": "string", "temaCentral": "string", "ramos": [{"nome": "string", "icone": "emoji", "cor": "string", "subitens": ["string"]}]},
@@ -246,7 +246,7 @@ Rules:
 - ${isPremium ? "5 steps, 6 exercises, 4 errors, 6 branches" : "3 steps, 3 exercises, 2 errors, 4 branches"}
 - ${dailyPlanInstruction}
 - Each day's tasks MUST include at least 1 exercise/question to practice
-- Be CONCISE. Short sentences. No filler text.
+- Be CONCISE in most fields, BUT the "conceito" field MUST be deep and detailed: at least 7 lines / 7-9 sentences each. Never short.
 - Respond ONLY in ${lang}, even if the topic is in another language.
 - CRITICAL EXCEPTION: If the user is asking to learn words/vocabulary/phrases in a FOREIGN language (e.g., "aprender palavras em russo", "learn Japanese words"), then:
   * Write ALL explanations, concepts, titles, and descriptions in ${lang}
