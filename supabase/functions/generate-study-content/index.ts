@@ -8,7 +8,7 @@ const corsHeaders = {
 };
 
 const requestSchema = z.object({
-  tema: z.string().min(3).max(200),
+  tema: z.string().min(1).max(200),
   nivel: z.string().min(1).max(50),
   prazo: z.number().int().min(1).max(365),
   duvidas: z.string().max(1000).optional().nullable(),
