@@ -93,32 +93,11 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
 }
 
 async function callGeminiRace(prompt: string, apiKey: string): Promise<string | null> {
-  // Race: o mais rápido (lite) primeiro, e flash como backup paralelo
-  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash"];
+  // Alvo: até ~3s. Modelo único mais rápido com timeout curto.
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 45000);
-
+  const timeoutId = setTimeout(() => controller.abort(), 3500);
   try {
-    const promises = models.map(m => tryModel(m, prompt, apiKey, controller.signal));
-    // Promise.any resolves on first fulfilled with truthy value
-    const result = await new Promise<string | null>((resolve) => {
-      let pending = promises.length;
-      promises.forEach(p => {
-        p.then(r => {
-          if (r) {
-            controller.abort(); // cancel the others
-            resolve(r);
-          } else {
-            pending--;
-            if (pending === 0) resolve(null);
-          }
-        }).catch(() => {
-          pending--;
-          if (pending === 0) resolve(null);
-        });
-      });
-    });
-    return result;
+    return await tryModel("gemini-2.5-flash-lite", prompt, apiKey, controller.signal);
   } finally {
     clearTimeout(timeoutId);
   }
