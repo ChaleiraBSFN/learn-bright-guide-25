@@ -88,6 +88,8 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
             data={content.demonstracoes}
             stepImages={stepImages}
             imagesLoading={imagesLoading}
+            tema={tema}
+            nivel={nivel}
           />
         )}
 

@@ -27,9 +27,11 @@ interface StepsSectionProps {
   stepsImage?: AIImage;
   stepImages?: AIImage[];
   imagesLoading?: boolean;
+  tema?: string;
+  nivel?: string;
 }
 
-export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: StepsSectionProps) {
+export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema, nivel }: StepsSectionProps) {
   const { t } = useTranslation();
   const [explanations, setExplanations] = useState<Record<number, string>>({});
   const [loadingExp, setLoadingExp] = useState<Record<number, boolean>>({});
@@ -56,7 +58,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading }: St
     try {
       const lang = i18n.language || 'pt-BR';
       const { data: result, error } = await supabase.functions.invoke('explain-example', {
-        body: { exemplo, contexto: data.titulo || "", idioma: lang },
+        body: { exemplo, contexto: data.titulo || "", idioma: lang, tema, nivel },
       });
 
       if (error) throw new Error(error.message || "Erro ao gerar explicação.");
