@@ -17,55 +17,69 @@ const requestSchema = z.object({
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').trim();
 
-async function callGeminiDirect(prompt: string, apiKey: string): Promise<string | null> {
-  const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
-  for (const model of models) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try {
-        console.log(`[Gemini] Trying ${model} (attempt ${attempt + 1})...`);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000);
-        
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ role: "user", parts: [{ text: prompt }] }],
-              generationConfig: { temperature: 0.6, maxOutputTokens: 2400 },
-            }),
-            signal: controller.signal,
-          }
-        );
-        clearTimeout(timeoutId);
-        
-        if (response.ok) {
-          const data = await response.json();
-          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            console.log(`[Gemini] Success with ${model}`);
-            return text;
-          } else {
-             console.log(`[Gemini] ${model} empty response. Details:`, data);
-          }
-        } else {
-           const errorBody = await response.text();
-           console.log(`[Gemini] ${model} HTTP ${response.status}:`, errorBody);
-        }
-        
-        if (response.status === 429) { console.log(`[Gemini] ${model} rate limited, next...`); break; }
-        if (response.status >= 500) { console.log(`[Gemini] ${model} server error, retrying...`); continue; }
-        break;
-      } catch (e: any) {
-        console.error(`[Gemini] ${model}:`, e.message);
-        if (e.name === 'AbortError' && attempt === 0) continue;
-        break;
+async function tryModel(model: string, prompt: string, apiKey: string, signal: AbortSignal): Promise<string | null> {
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.6, maxOutputTokens: 3000 },
+        }),
+        signal,
       }
+    );
+    if (!response.ok) {
+      console.log(`[Gemini] ${model} HTTP ${response.status}`);
+      return null;
     }
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (text) {
+      console.log(`[Gemini] ${model} responded first`);
+      return text;
+    }
+    return null;
+  } catch (e: any) {
+    if (e.name !== 'AbortError') console.error(`[Gemini] ${model}:`, e.message);
+    return null;
   }
-  return null;
 }
+
+async function callGeminiRace(prompt: string, apiKey: string): Promise<string | null> {
+  // Race several fast models in parallel — first non-null wins
+  const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"];
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 45000);
+
+  try {
+    const promises = models.map(m => tryModel(m, prompt, apiKey, controller.signal));
+    // Promise.any resolves on first fulfilled with truthy value
+    const result = await new Promise<string | null>((resolve) => {
+      let pending = promises.length;
+      promises.forEach(p => {
+        p.then(r => {
+          if (r) {
+            controller.abort(); // cancel the others
+            resolve(r);
+          } else {
+            pending--;
+            if (pending === 0) resolve(null);
+          }
+        }).catch(() => {
+          pending--;
+          if (pending === 0) resolve(null);
+        });
+      });
+    });
+    return result;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -134,37 +148,42 @@ TEMA GERAL: ${sanitize(tema || "")}
 EXEMPLO PRÁTICO A EXPLICAR:
 ${sanitize(exemplo)}
 
-ESTRUTURA OBRIGATÓRIA da sua resposta (use estes títulos em negrito com **):
+ESTRUTURA OBRIGATÓRIA da sua resposta (use estes títulos em negrito com **). Cada seção deve ser SUBSTANCIAL — parágrafos densos, não frases soltas:
 
 **🎯 O que está acontecendo aqui**
-Explique em 2-3 frases o que o exemplo está mostrando, qual conceito central ele ilustra e por que ele é importante.
+Em 3-4 frases ricas: o que o exemplo mostra, qual conceito central ilustra, qual problema ele resolve no mundo real, e por que vale a pena entender isso.
 
-**🧠 Conceito por trás (a teoria)**
-Aprofunde a fundamentação teórica: defina os termos, explique a regra/fórmula/princípio que governa o exemplo. Mostre de onde vem, qual a lógica. Se houver fórmula, EXPLIQUE cada símbolo. Se for um conceito de humanas, contextualize historicamente.
+**🧠 Conceito por trás (a teoria completa)**
+APROFUNDE MUITO. Defina TODOS os termos técnicos com precisão. Apresente a regra/lei/fórmula/princípio que governa o exemplo, explicando sua origem e fundamentação. Se houver fórmula, explique cada símbolo, sua unidade, e o significado físico/conceitual. Mencione condições de validade, hipóteses assumidas e limites de aplicação. Cite o(s) cientista(s)/pensador(es) ou escola que desenvolveu o conceito, com data aproximada e contexto histórico breve. Se for área de humanas, traga o debate teórico, autores divergentes e as principais correntes. Vá fundo: 2-3 parágrafos densos no mínimo.
 
-**🔍 Passo a passo detalhado**
-Quebre o exemplo em etapas numeradas. Para CADA etapa, explique:
-- O QUE está sendo feito
-- POR QUE está sendo feito (a razão lógica)
-- COMO chegamos a esse resultado
-Não pule etapas — assuma que o aluno não sabe nada além do básico.
+**🔍 Passo a passo MICRO-detalhado**
+Quebre o exemplo em etapas numeradas pequenas. Para CADA etapa explique:
+- O QUE está sendo feito (a ação)
+- POR QUE está sendo feito (a justificativa lógica/matemática/conceitual)
+- COMO chegamos ao resultado (mostre a operação, a transformação, o raciocínio)
+- Que princípio teórico da seção anterior está sendo aplicado ali
+NÃO pule passos triviais — assuma que o aluno está vendo isso pela primeira vez. Se houver cálculo, mostre a aritmética intermediária. Se for argumento, mostre a inferência.
 
-**💡 Intuição e analogia**
-Dê uma analogia clara do dia a dia que faça o conceito "clicar". Ajude o aluno a VISUALIZAR o que está acontecendo.
+**💡 Intuição profunda e analogia**
+Construa uma analogia rica e fiel do dia a dia que faça o conceito "clicar". Depois explique POR QUE a analogia funciona (em que aspectos ela é correta) e ONDE ela falha (limites). Acrescente uma segunda forma de visualizar (geométrica, gráfica, narrativa).
+
+**🧩 Variações e casos extremos**
+Mostre o que aconteceria se mudássemos um parâmetro do exemplo: e se o valor fosse zero? negativo? muito grande? E se uma hipótese falhasse? Isso fixa o entendimento real.
 
 **⚠️ Armadilhas e erros comuns**
-Liste 2-3 erros que estudantes costumam cometer com esse tipo de exemplo, e como evitá-los.
+Liste 3-4 erros frequentes que estudantes cometem com esse tipo de exemplo, com explicação clara de POR QUE são erros e como evitá-los. Inclua confusões conceituais clássicas.
 
-**🔗 Conexões e aprofundamento**
-Mostre como esse conceito se conecta com outros tópicos da matéria (e de outras disciplinas, se possível). Se for nível médio/superior, mencione como costuma cair em vestibular/ENEM ou em provas. Sugira 1-2 fontes confiáveis e gratuitas onde o aluno pode se aprofundar AINDA mais (ex.: Khan Academy, Brasil Escola, Mundo Educação, SciELO, Wikipedia, Stoodi, canais do YouTube como Me Salva!, Curso em Vídeo, Física Total, etc. — escolha as mais adequadas ao tema e ao nível).
+**🔗 Conexões, aplicações e aprofundamento**
+Mostre como esse conceito se conecta com OUTROS tópicos da mesma matéria, com OUTRAS disciplinas (interdisciplinaridade real), e com aplicações práticas (tecnologia, ciência, vida cotidiana, mercado de trabalho). Se for nível médio/superior, explique COMO esse conteúdo cai em ENEM/vestibular/concursos — cite tipos de questão e pegadinhas comuns. Por fim, sugira 2-3 fontes GRATUITAS e confiáveis, escolhidas conforme o tema (ex.: Khan Academy, Brasil Escola, Mundo Educação, Stoodi, SciELO, Wikipedia em português, OpenStax, MIT OpenCourseWare, canais como Me Salva!, Curso em Vídeo, Física Total, Equaciona, Débora Aladim, Professor Ferretto), com indicação do que buscar em cada uma.
 
 REGRAS CRÍTICAS:
 - Responda INTEIRAMENTE no idioma: ${langName}.
 - Use Markdown: **negrito** para destaques, listas com - quando útil, quebras de linha entre seções.
 - NÃO use blocos de código (\`\`\`) nem código de programação a menos que o tema seja explicitamente programação.
-- Seja GENEROSO em profundidade — o aluno PEDIU explicação aprofundada. Não economize.
-- Mas seja CLARO — profundidade sem clareza não ensina nada.
-- Use exemplos numéricos, dados concretos, ou casos reais sempre que possível.
+- Seja MUITO GENEROSO em profundidade — o aluno PEDIU explicação MUITO mais aprofundada. NÃO ECONOMIZE em conteúdo. Cada seção deve ter substância real.
+- Mas seja CLARO — profundidade sem clareza não ensina nada. Use frases bem construídas, não enrole.
+- Use números concretos, datas, nomes, exemplos reais sempre que possível.
+- Mire em uma resposta longa e densa (use o espaço disponível).
 
 Comece sua resposta DIRETAMENTE com a primeira seção (não escreva introduções como "Claro!" ou "Vamos lá").`;
 
@@ -172,7 +191,7 @@ Comece sua resposta DIRETAMENTE com a primeira seção (não escreva introduçõ
     let content: string | null = null;
 
     if (geminiKey) {
-      content = await callGeminiDirect(prompt, geminiKey);
+      content = await callGeminiRace(prompt, geminiKey);
     }
 
     if (!content) {
