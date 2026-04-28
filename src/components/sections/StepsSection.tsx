@@ -147,28 +147,37 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
                       </span>
                     </div>
                     {!explanations[passo.numero] && (
-                      <div className="flex items-center gap-1.5">
-                        {/* Flechinhas animadas apontando para o botão */}
+                      <div className="flex items-center gap-2">
+                        {/* Flechinhas grandes e bem visíveis apontando para o botão */}
+                        <span
+                          className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wide text-amber-600 dark:text-amber-400"
+                          style={{ animation: 'arrow-point 1.1s ease-in-out infinite' }}
+                        >
+                          Clique aqui
+                        </span>
                         <ArrowRight
-                          className="hidden sm:block h-4 w-4 text-accent-foreground/70 animate-arrow-point"
+                          className="h-5 w-5 text-amber-500 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]"
+                          style={{ animation: 'arrow-point 1.1s ease-in-out infinite' }}
+                          strokeWidth={3}
                           aria-hidden="true"
                         />
                         <ArrowRight
-                          className="h-4 w-4 text-accent-foreground animate-arrow-point"
-                          style={{ animationDelay: '0.15s' }}
+                          className="h-5 w-5 -ml-2 text-amber-600 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]"
+                          style={{ animation: 'arrow-point 1.1s ease-in-out infinite', animationDelay: '0.18s' }}
+                          strokeWidth={3}
                           aria-hidden="true"
                         />
                         <Button
                           variant="secondary"
                           size="sm"
-                          className="h-8 text-xs px-3 font-semibold bg-accent/40 text-accent-foreground hover:bg-accent/50 border border-accent/40 shadow-sm transition-all"
+                          className="h-9 text-xs px-3.5 font-bold bg-amber-400/90 text-amber-950 hover:bg-amber-400 border-2 border-amber-500 shadow-[0_0_0_4px_rgba(251,191,36,0.25)] transition-all"
                           onClick={() => handleVerMais(passo.numero, passo.exemplo)}
                           disabled={loadingExp[passo.numero]}
                         >
                           {loadingExp[passo.numero] ? (
                             <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
                           ) : (
-                            <Sparkles className="h-3 w-3 mr-1.5 opacity-70" />
+                            <Sparkles className="h-3.5 w-3.5 mr-1.5" />
                           )}
                           {t('sections.seeMore', 'Ver mais')}
                         </Button>
