@@ -17,6 +17,50 @@ const requestSchema = z.object({
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').trim();
 
+// === Sanitização matemática: corrige notações erradas vindas da IA ===
+// ^2, ^3 → ², ³ ; remove $...$ do LaTeX; normaliza \(...\) e \[...\]
+const SUPERSCRIPT_MAP: Record<string, string> = {
+  '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+  '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+  '+': '⁺', '-': '⁻', '=': '⁼', '(': '⁽', ')': '⁾', 'n': 'ⁿ', 'i': 'ⁱ',
+};
+const SUBSCRIPT_MAP: Record<string, string> = {
+  '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+  '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
+};
+function toSuperscript(s: string): string {
+  return s.split('').map(c => SUPERSCRIPT_MAP[c] ?? c).join('');
+}
+function toSubscript(s: string): string {
+  return s.split('').map(c => SUBSCRIPT_MAP[c] ?? c).join('');
+}
+function fixMathNotation(text: string): string {
+  if (!text) return text;
+  let out = text;
+  // Remove blocos LaTeX: $$...$$ e $...$ (mantém o conteúdo)
+  out = out.replace(/\$\$([\s\S]+?)\$\$/g, '$1');
+  out = out.replace(/\$([^\$\n]+?)\$/g, '$1');
+  // \(...\) e \[...\] → mantém conteúdo
+  out = out.replace(/\\\(([\s\S]+?)\\\)/g, '$1');
+  out = out.replace(/\\\[([\s\S]+?)\\\]/g, '$1');
+  // \cdot \times \div \pm
+  out = out.replace(/\\cdot/g, '·').replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\pm/g, '±');
+  // \sqrt{x} → √(x)
+  out = out.replace(/\\sqrt\{([^{}]+)\}/g, '√($1)');
+  // \frac{a}{b} → (a)/(b)
+  out = out.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '($1)/($2)');
+  // x^{abc} ou x^{2}
+  out = out.replace(/\^\{([^{}]+)\}/g, (_m, g1) => toSuperscript(g1));
+  // x^2, x^23, x^-1, x^(2)
+  out = out.replace(/\^\(([^()]+)\)/g, (_m, g1) => toSuperscript(g1));
+  out = out.replace(/\^([0-9+\-n]+)/g, (_m, g1) => toSuperscript(g1));
+  // Subscritos x_{12}, x_2
+  out = out.replace(/_\{([0-9]+)\}/g, (_m, g1) => toSubscript(g1));
+  out = out.replace(/_([0-9])/g, (_m, g1) => toSubscript(g1));
+  // Restos: remover backslashes órfãos antes de letras (\alpha continua, mas $ já foi removido)
+  return out;
+}
+
 async function tryModel(model: string, prompt: string, apiKey: string, signal: AbortSignal): Promise<string | null> {
   try {
     const response = await fetch(
@@ -26,7 +70,7 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.6, maxOutputTokens: 1800 },
+          generationConfig: { temperature: 0.4, maxOutputTokens: 1100 },
         }),
         signal,
       }
