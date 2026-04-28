@@ -14,7 +14,7 @@ interface SourcesSectionProps {
   };
 }
 
-const buildSearchUrl = (q: string) => `https://duckduckgo.com/?q=${encodeURIComponent(q)}`;
+const buildSearchUrl = (q: string) => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
 
 const normalizeText = (value: string) =>
   value
