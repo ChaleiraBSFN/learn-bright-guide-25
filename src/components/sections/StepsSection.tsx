@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "@/i18n";
-import { ListOrdered, Lightbulb, BookOpen, Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { ListOrdered, Lightbulb, BookOpen, Sparkles, Loader2, ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -147,20 +147,32 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
                       </span>
                     </div>
                     {!explanations[passo.numero] && (
-                      <Button 
-                        variant="secondary" 
-                        size="sm" 
-                        className="h-8 text-xs px-3 font-semibold bg-accent/40 text-accent-foreground hover:bg-accent/50 border border-accent/40 shadow-sm transition-all"
-                        onClick={() => handleVerMais(passo.numero, passo.exemplo)}
-                        disabled={loadingExp[passo.numero]}
-                      >
-                        {loadingExp[passo.numero] ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
-                        ) : (
-                          <Sparkles className="h-3 w-3 mr-1.5 opacity-70" />
-                        )}
-                        {t('sections.seeMore', 'Ver mais')}
-                      </Button>
+                      <div className="flex items-center gap-1.5">
+                        {/* Flechinhas animadas apontando para o botão */}
+                        <ArrowRight
+                          className="hidden sm:block h-4 w-4 text-accent-foreground/70 animate-arrow-point"
+                          aria-hidden="true"
+                        />
+                        <ArrowRight
+                          className="h-4 w-4 text-accent-foreground animate-arrow-point"
+                          style={{ animationDelay: '0.15s' }}
+                          aria-hidden="true"
+                        />
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="h-8 text-xs px-3 font-semibold bg-accent/40 text-accent-foreground hover:bg-accent/50 border border-accent/40 shadow-sm transition-all"
+                          onClick={() => handleVerMais(passo.numero, passo.exemplo)}
+                          disabled={loadingExp[passo.numero]}
+                        >
+                          {loadingExp[passo.numero] ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
+                          ) : (
+                            <Sparkles className="h-3 w-3 mr-1.5 opacity-70" />
+                          )}
+                          {t('sections.seeMore', 'Ver mais')}
+                        </Button>
+                      </div>
                     )}
                   </div>
                   <div className="pl-0 md:pl-7">
