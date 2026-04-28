@@ -11,6 +11,8 @@ const requestSchema = z.object({
   exemplo: z.string().min(1).max(5000),
   contexto: z.string().nullable().optional().transform(v => v || ""),
   idioma: z.string().nullable().optional().transform(v => v || "pt-BR"),
+  tema: z.string().nullable().optional().transform(v => v || ""),
+  nivel: z.string().nullable().optional().transform(v => v || ""),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').trim();
@@ -31,7 +33,7 @@ async function callGeminiDirect(prompt: string, apiKey: string): Promise<string 
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               contents: [{ role: "user", parts: [{ text: prompt }] }],
-              generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
+              generationConfig: { temperature: 0.6, maxOutputTokens: 2400 },
             }),
             signal: controller.signal,
           }
@@ -76,7 +78,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { exemplo, contexto, idioma } = validationResult.data;
+    const { exemplo, contexto, idioma, tema, nivel } = validationResult.data;
     
     const langMap: Record<string, string> = {
       'pt-BR': 'português brasileiro', 'en': 'English', 'es': 'español',
@@ -84,8 +86,87 @@ serve(async (req) => {
       'zh': '中文', 'ja': '日本語', 'ru': 'русский',
     };
     const langName = langMap[idioma || 'pt-BR'] || 'português brasileiro';
-    
-    const prompt = `Gere um parágrafo de exatamente 5 linhas (cerca de 4 a 5 frases) explicando o seguinte exemplo prático de forma clara, didática e aprofundada. Não passe de 5 linhas de texto. IMPORTANTE: Responda INTEIRAMENTE no idioma: ${langName}. \n\nContexto do assunto: ${sanitize(contexto || "")}\n\nExemplo Prático: ${sanitize(exemplo)}\n\nSua explicação (em ${langName}):`;
+
+    // Adaptação por nível de ensino — com foco especial em Ensino Médio
+    const nivelNorm = (nivel || "").toLowerCase();
+    let nivelInstrucao = "";
+    if (nivelNorm.includes("fundamental") && (nivelNorm.includes("1") || nivelNorm.includes("inicial") || nivelNorm.includes("anos iniciais"))) {
+      nivelInstrucao = `NÍVEL: Ensino Fundamental I (crianças 6-10 anos).
+- Use linguagem MUITO simples, frases curtas, vocabulário cotidiano.
+- Use analogias com brinquedos, animais, comida, escola.
+- Evite jargões. Se usar uma palavra técnica, explique com "isso é como quando...".
+- Tom: amigável, encorajador, divertido.`;
+    } else if (nivelNorm.includes("fundamental")) {
+      nivelInstrucao = `NÍVEL: Ensino Fundamental II (11-14 anos).
+- Linguagem clara e acessível, mas pode introduzir termos técnicos com definição.
+- Use comparações com situações do dia a dia do adolescente (jogos, redes sociais, esportes).
+- Mostre o "porquê" das coisas, conecte com curiosidades.`;
+    } else if (nivelNorm.includes("superior") || nivelNorm.includes("graduacao") || nivelNorm.includes("graduação") || nivelNorm.includes("universit")) {
+      nivelInstrucao = `NÍVEL: Ensino Superior / Graduação.
+- Use rigor técnico e vocabulário acadêmico apropriado.
+- Aprofunde em fundamentação teórica, demonstre formalmente quando aplicável.
+- Cite autores, escolas de pensamento, equações, modelos formais.
+- Discuta nuances, exceções e debates atuais da área.`;
+    } else if (nivelNorm.includes("pos") || nivelNorm.includes("pós") || nivelNorm.includes("mestrado") || nivelNorm.includes("doutorado")) {
+      nivelInstrucao = `NÍVEL: Pós-graduação.
+- Profundidade máxima: pressupostos, derivações, controvérsias, fronteira da pesquisa.
+- Cite literatura clássica e recente, mencione metodologias e limitações.`;
+    } else {
+      // Padrão e foco principal: ENSINO MÉDIO
+      nivelInstrucao = `NÍVEL: Ensino Médio (15-18 anos) — FOCO PRINCIPAL.
+- Profundidade ALTA, mas com linguagem clara e organizada.
+- Explique TODO conceito técnico ao introduzi-lo (definição + intuição + exemplo).
+- Conecte com vestibular/ENEM quando relevante: cite como o tema costuma ser cobrado.
+- Use analogias inteligentes (não infantis) e mostre as relações com outras disciplinas (interdisciplinaridade).
+- Apresente o raciocínio passo a passo, mostrando POR QUE cada etapa funciona, não só O QUE fazer.
+- Inclua: contexto histórico breve quando útil, fórmula/regra geral, exemplo aplicado, armadilhas comuns, e dica de memorização.`;
+    }
+
+    const prompt = `Você é um(a) professor(a) especialista em ${tema || contexto || "o tema em questão"}, com domínio profundo do conteúdo e experiência didática comprovada.
+
+Sua tarefa: produzir uma EXPLICAÇÃO APROFUNDADA E COMPLETA do exemplo prático abaixo, indo MUITO além da superfície. O aluno quer realmente ENTENDER, não só decorar.
+
+${nivelInstrucao}
+
+CONTEXTO DO ASSUNTO: ${sanitize(contexto || "")}
+TEMA GERAL: ${sanitize(tema || "")}
+
+EXEMPLO PRÁTICO A EXPLICAR:
+${sanitize(exemplo)}
+
+ESTRUTURA OBRIGATÓRIA da sua resposta (use estes títulos em negrito com **):
+
+**🎯 O que está acontecendo aqui**
+Explique em 2-3 frases o que o exemplo está mostrando, qual conceito central ele ilustra e por que ele é importante.
+
+**🧠 Conceito por trás (a teoria)**
+Aprofunde a fundamentação teórica: defina os termos, explique a regra/fórmula/princípio que governa o exemplo. Mostre de onde vem, qual a lógica. Se houver fórmula, EXPLIQUE cada símbolo. Se for um conceito de humanas, contextualize historicamente.
+
+**🔍 Passo a passo detalhado**
+Quebre o exemplo em etapas numeradas. Para CADA etapa, explique:
+- O QUE está sendo feito
+- POR QUE está sendo feito (a razão lógica)
+- COMO chegamos a esse resultado
+Não pule etapas — assuma que o aluno não sabe nada além do básico.
+
+**💡 Intuição e analogia**
+Dê uma analogia clara do dia a dia que faça o conceito "clicar". Ajude o aluno a VISUALIZAR o que está acontecendo.
+
+**⚠️ Armadilhas e erros comuns**
+Liste 2-3 erros que estudantes costumam cometer com esse tipo de exemplo, e como evitá-los.
+
+**🔗 Conexões e aprofundamento**
+Mostre como esse conceito se conecta com outros tópicos da matéria (e de outras disciplinas, se possível). Se for nível médio/superior, mencione como costuma cair em vestibular/ENEM ou em provas. Sugira 1-2 fontes confiáveis e gratuitas onde o aluno pode se aprofundar AINDA mais (ex.: Khan Academy, Brasil Escola, Mundo Educação, SciELO, Wikipedia, Stoodi, canais do YouTube como Me Salva!, Curso em Vídeo, Física Total, etc. — escolha as mais adequadas ao tema e ao nível).
+
+REGRAS CRÍTICAS:
+- Responda INTEIRAMENTE no idioma: ${langName}.
+- Use Markdown: **negrito** para destaques, listas com - quando útil, quebras de linha entre seções.
+- NÃO use blocos de código (\`\`\`) nem código de programação a menos que o tema seja explicitamente programação.
+- Seja GENEROSO em profundidade — o aluno PEDIU explicação aprofundada. Não economize.
+- Mas seja CLARO — profundidade sem clareza não ensina nada.
+- Use exemplos numéricos, dados concretos, ou casos reais sempre que possível.
+
+Comece sua resposta DIRETAMENTE com a primeira seção (não escreva introduções como "Claro!" ou "Vamos lá").`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
