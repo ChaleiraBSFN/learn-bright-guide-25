@@ -30,14 +30,17 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
     { value: "superior", label: t('form.levelSuperior') },
   ];
 
+  const hasImage = !!imagemBase64;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tema || !nivel || !prazo) return;
-    
+    // Quando há imagem, basta a imagem — IA detecta tema/nível
+    if (!hasImage && (!tema || !nivel || !prazo)) return;
+
     onSubmit({
-      tema,
-      nivel,
-      prazo: parseInt(prazo),
+      tema: tema || (hasImage ? "Análise da imagem enviada" : ""),
+      nivel: nivel || (hasImage ? "auto" : ""),
+      prazo: prazo ? parseInt(prazo) : (hasImage ? 1 : 0),
       duvidas,
       imagemBase64,
     });
