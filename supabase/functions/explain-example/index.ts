@@ -26,7 +26,7 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.6, maxOutputTokens: 3000 },
+          generationConfig: { temperature: 0.6, maxOutputTokens: 1800 },
         }),
         signal,
       }
@@ -49,8 +49,8 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
 }
 
 async function callGeminiRace(prompt: string, apiKey: string): Promise<string | null> {
-  // Race several fast models in parallel — first non-null wins
-  const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"];
+  // Race: o mais rápido (lite) primeiro, e flash como backup paralelo
+  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash"];
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 45000);
 
