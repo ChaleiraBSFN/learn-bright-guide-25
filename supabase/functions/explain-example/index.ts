@@ -41,8 +41,8 @@ function fixMathNotation(text: string): string {
   out = out.replace(/\$\$([\s\S]+?)\$\$/g, '$1');
   out = out.replace(/\$([^\$\n]+?)\$/g, '$1');
   // \(...\) e \[...\] → mantém conteúdo
-  out = out.replace(/\\\(([\s\S]+?)\\\)/g, '$1');
-  out = out.replace(/\\\[([\s\S]+?)\\\]/g, '$1');
+  out = out.replace(/\\\(([\s\S]+?)\\\)/g, '($1)');
+  out = out.replace(/\\\[([\s\S]+?)\\\]/g, '($1)');
   // \cdot \times \div \pm
   out = out.replace(/\\cdot/g, '·').replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\pm/g, '±');
   // \sqrt{x} → √(x)
