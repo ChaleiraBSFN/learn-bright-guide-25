@@ -191,8 +191,6 @@ REGRAS DE NOTAÇÃO MATEMÁTICA (OBRIGATÓRIO):
 
 OUTRAS REGRAS: idioma ${langName}; sem blocos \`\`\`; frases claras e diretas. Comece direto pela primeira seção.`;
 
-REGRAS: idioma ${langName}; sem blocos \`\`\`; profundidade alta mas frases claras; números/datas/nomes concretos. Comece direto pela primeira seção.`;
-
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
 
@@ -204,7 +202,8 @@ REGRAS: idioma ${langName}; sem blocos \`\`\`; profundidade alta mas frases clar
       return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    return new Response(JSON.stringify({ explicacao: content.trim() }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    const cleaned = fixMathNotation(content.trim());
+    return new Response(JSON.stringify({ explicacao: cleaned }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Error:", error);
     return new Response(JSON.stringify({ error: "Erro ao gerar explicação." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
