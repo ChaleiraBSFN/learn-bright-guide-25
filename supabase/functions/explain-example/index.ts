@@ -159,7 +159,7 @@ serve(async (req) => {
 - Inclua: contexto histórico breve quando útil, fórmula/regra geral, exemplo aplicado, armadilhas comuns, e dica de memorização.`;
     }
 
-    const prompt = `Você é professor(a) especialista em ${tema || contexto || "o tema"}. Explique APROFUNDADAMENTE o exemplo abaixo.
+    const prompt = `Você é professor(a) especialista em ${tema || contexto || "o tema"}. Explique o exemplo de forma clara e útil.
 
 ${nivelInstrucao}
 
@@ -167,28 +167,29 @@ CONTEXTO: ${sanitize(contexto || "")}
 TEMA: ${sanitize(tema || "")}
 EXEMPLO: ${sanitize(exemplo)}
 
-Responda em ${langName} usando EXATAMENTE estas 7 seções com Markdown (** para títulos), cada uma densa e substancial:
+Responda em ${langName} usando EXATAMENTE estas 4 seções com Markdown (** para títulos), curtas e objetivas:
 
 **🎯 O que está acontecendo**
-3-4 frases ricas: o que mostra, conceito central, problema que resolve, por que importa.
+2-3 frases: o que mostra e o conceito central.
 
-**🧠 Teoria por trás**
-Defina termos técnicos. Apresente regra/lei/fórmula com origem e fundamentação. Se houver fórmula, explique cada símbolo e unidade. Mencione condições de validade. Cite cientista/pensador com data/contexto histórico breve. Mínimo 2 parágrafos densos.
+**🧠 Ideia principal**
+Defina o termo-chave, a fórmula/regra (se houver) e por que funciona. 3-4 frases.
 
 **🔍 Passo a passo**
-Etapas numeradas. Para cada uma: O QUE + POR QUE + COMO + qual princípio aplica. Mostre cálculos intermediários ou inferências.
+3-5 etapas curtas e numeradas, com cálculos quando houver.
 
-**💡 Intuição e analogia**
-Analogia rica do dia a dia. Explique por que funciona e onde falha. Adicione uma segunda forma de visualizar.
+**⚠️ Dica final**
+1 armadilha comum + 1 conexão (ENEM/dia a dia).
 
-**🧩 Variações e casos extremos**
-E se o valor fosse zero, negativo, muito grande? E se uma hipótese falhasse?
+REGRAS DE NOTAÇÃO MATEMÁTICA (OBRIGATÓRIO):
+- NUNCA use LaTeX. NUNCA escreva "$", "$$", "\\(", "\\)", "\\[", "\\]".
+- Para potências use Unicode direto: x², x³, x⁴, x⁵, xⁿ (NUNCA "x^2", "x**2", "x^{2}").
+- Para subscritos use Unicode: x₁, x₂, H₂O.
+- Raiz quadrada: √(x). Fração: (a)/(b) ou a/b. Multiplicação: × ou ·. Divisão: ÷.
+- Use parênteses normais ( e ), nunca "$" como delimitador.
+- Símbolos: π, θ, α, β, Δ, ≤, ≥, ≠, ≈, ∞.
 
-**⚠️ Armadilhas comuns**
-3-4 erros frequentes com explicação do PORQUÊ são erros e como evitar.
-
-**🔗 Conexões e fontes**
-Conexões com outros tópicos e disciplinas. Aplicações práticas. Como cai em ENEM/vestibular (se aplicável). 2-3 fontes GRATUITAS confiáveis (Khan Academy, Brasil Escola, Mundo Educação, Stoodi, SciELO, Wikipedia, Me Salva!, Curso em Vídeo, Física Total, Equaciona, Professor Ferretto etc.) com o que buscar em cada.
+OUTRAS REGRAS: idioma ${langName}; sem blocos \`\`\`; frases claras e diretas. Comece direto pela primeira seção.`;
 
 REGRAS: idioma ${langName}; sem blocos \`\`\`; profundidade alta mas frases claras; números/datas/nomes concretos. Comece direto pela primeira seção.`;
 
