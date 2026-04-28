@@ -12,9 +12,12 @@ interface SourcesSectionProps {
       descricao: string;
     }>;
   };
+  tema?: string;
 }
 
-const buildSearchUrl = (q: string) => `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+// Google Search com locale BR e personalização desativada (reduz bloqueios/captcha)
+const buildSearchUrl = (q: string) =>
+  `https://www.google.com/search?q=${encodeURIComponent(q)}&hl=pt-BR&gl=BR&pws=0`;
 
 const normalizeText = (value: string) =>
   value
@@ -22,35 +25,64 @@ const normalizeText = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 
+// Mapeamento amplo de sites educacionais conhecidos -> URL de busca interna
+const KNOWN_SITES: Array<{ match: string[]; build: (q: string) => string }> = [
+  { match: ["brasil escola"], build: (q) => `https://brasilescola.uol.com.br/pesquisa?q=${encodeURIComponent(q)}` },
+  { match: ["mundo educacao"], build: (q) => `https://mundoeducacao.uol.com.br/pesquisa?q=${encodeURIComponent(q)}` },
+  { match: ["toda materia", "todamateria"], build: (q) => `https://www.todamateria.com.br/?s=${encodeURIComponent(q)}` },
+  { match: ["khan academy"], build: (q) => `https://pt.khanacademy.org/search?page_search_query=${encodeURIComponent(q)}` },
+  { match: ["wikipedia"], build: (q) => `https://pt.wikipedia.org/w/index.php?search=${encodeURIComponent(q)}` },
+  { match: ["youtube"], build: (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}` },
+  { match: ["coursera"], build: (q) => `https://www.coursera.org/search?query=${encodeURIComponent(q)}` },
+  { match: ["edx"], build: (q) => `https://www.edx.org/search?q=${encodeURIComponent(q)}` },
+  { match: ["infoescola"], build: (q) => `https://www.infoescola.com/?s=${encodeURIComponent(q)}` },
+  { match: ["sobiologia"], build: (q) => `https://www.sobiologia.com.br/?s=${encodeURIComponent(q)}` },
+  { match: ["stoodi"], build: (q) => `https://www.stoodi.com.br/busca/?q=${encodeURIComponent(q)}` },
+  { match: ["descomplica"], build: (q) => `https://descomplica.com.br/busca/?q=${encodeURIComponent(q)}` },
+  { match: ["me salva", "mesalva"], build: (q) => `https://www.mesalva.com/busca?q=${encodeURIComponent(q)}` },
+  { match: ["responde ai", "respondeai"], build: (q) => `https://www.respondeai.com.br/busca?termo=${encodeURIComponent(q)}` },
+  { match: ["bbc"], build: (q) => `https://www.bbc.com/portuguese/search?q=${encodeURIComponent(q)}` },
+  { match: ["nat geo", "national geographic"], build: (q) => `https://www.nationalgeographicbrasil.com/search?q=${encodeURIComponent(q)}` },
+  { match: ["uol"], build: (q) => `https://busca.uol.com.br/?q=${encodeURIComponent(q)}` },
+  { match: ["g1", "globo"], build: (q) => `https://g1.globo.com/busca/?q=${encodeURIComponent(q)}` },
+  { match: ["scielo"], build: (q) => `https://search.scielo.org/?q=${encodeURIComponent(q)}&lang=pt` },
+  { match: ["google scholar", "scholar"], build: (q) => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}&hl=pt-BR` },
+  { match: ["mit"], build: (q) => `https://ocw.mit.edu/search/?q=${encodeURIComponent(q)}` },
+  { match: ["ted"], build: (q) => `https://www.ted.com/search?q=${encodeURIComponent(q)}` },
+];
+
 const getKnownSiteSearchUrl = (siteName: string, query: string): string | null => {
   const name = normalizeText(siteName);
-  const encoded = encodeURIComponent(query);
-
-  if (name.includes("brasil escola")) return `https://brasilescola.uol.com.br/pesquisa?q=${encoded}`;
-  if (name.includes("khan academy")) return `https://pt.khanacademy.org/search?page_search_query=${encoded}`;
-  if (name.includes("toda materia") || name.includes("todamateria")) return `https://www.todamateria.com.br/?s=${encoded}`;
-  if (name.includes("mundo educacao")) return `https://mundoeducacao.uol.com.br/pesquisa?q=${encoded}`;
-  if (name.includes("wikipedia")) return `https://pt.wikipedia.org/w/index.php?search=${encoded}`;
-  if (name.includes("youtube")) return `https://www.youtube.com/results?search_query=${encoded}`;
-  if (name.includes("coursera")) return `https://www.coursera.org/search?query=${encoded}`;
-  if (name.includes("edx")) return `https://www.edx.org/search?q=${encoded}`;
-
+  for (const entry of KNOWN_SITES) {
+    if (entry.match.some((m) => name.includes(m))) return entry.build(query);
+  }
   return null;
 };
 
-const getResourceUrl = (site: { url?: string; termoBusca?: string; nome: string }): string => {
+const enrichQuery = (base: string, tema?: string) => {
+  if (!tema) return base;
+  const b = normalizeText(base);
+  const t = normalizeText(tema);
+  return b.includes(t) ? base : `${tema} ${base}`;
+};
+
+const getResourceUrl = (
+  site: { url?: string; termoBusca?: string; nome: string },
+  tema?: string,
+): string => {
   const url = site.url?.trim();
-  // Only use direct URL if it looks like a real, complete URL (has a domain with TLD)
   if (url && /^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i.test(url)) {
     return url;
   }
-  const topic = site.termoBusca?.trim() || site.nome;
-  const knownSiteUrl = getKnownSiteSearchUrl(site.nome, topic);
+  const baseTerm = site.termoBusca?.trim() || site.nome;
+  const query = enrichQuery(baseTerm, tema);
+  const knownSiteUrl = getKnownSiteSearchUrl(site.nome, query);
   if (knownSiteUrl) return knownSiteUrl;
-  return buildSearchUrl(`${topic} ${site.nome}`);
+  // Fallback: Google com restrição de site quando dá pra inferir o domínio do nome
+  return buildSearchUrl(`${query} ${site.nome}`);
 };
 
-export function SourcesSection({ data }: SourcesSectionProps) {
+export function SourcesSection({ data, tema }: SourcesSectionProps) {
   const { t } = useTranslation();
 
   return (
@@ -71,7 +103,8 @@ export function SourcesSection({ data }: SourcesSectionProps) {
             </h4>
             <div className="flex flex-wrap gap-2">
               {data.consultas.map((consulta, index) => {
-                const url = buildSearchUrl(consulta);
+                const enriched = enrichQuery(consulta, tema);
+                const url = buildSearchUrl(enriched);
                 return (
                   <a
                     key={index}
@@ -79,6 +112,7 @@ export function SourcesSection({ data }: SourcesSectionProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"
+                    title={`Pesquisar no Google: ${enriched}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-sm text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
                     <Search className="h-3 w-3" />
@@ -96,7 +130,7 @@ export function SourcesSection({ data }: SourcesSectionProps) {
             </h4>
             <div className="grid gap-3 sm:grid-cols-2">
               {data.sites.map((site, index) => {
-                const url = getResourceUrl(site);
+                const url = getResourceUrl(site, tema);
                 return (
                   <a
                     key={index}
@@ -104,6 +138,7 @@ export function SourcesSection({ data }: SourcesSectionProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"
+                    title={url}
                     className="text-left flex items-start gap-3 p-3 rounded-xl border border-border bg-background/50 hover:bg-muted transition-colors group"
                   >
                     <Globe className="h-5 w-5 text-section-sources shrink-0 mt-0.5" />
