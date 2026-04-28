@@ -8,7 +8,7 @@ const corsHeaders = {
 };
 
 const requestSchema = z.object({
-  tema: z.string().min(3).max(200),
+  tema: z.string().min(1).max(200),
   nivel: z.string().min(1).max(50),
   prazo: z.number().int().min(1).max(365),
   duvidas: z.string().max(1000).optional().nullable(),
@@ -301,7 +301,7 @@ serve(async (req) => {
 
     const { tema, nivel, prazo, duvidas, idioma, imagemBase64 } = validationResult.data;
     const imageAnalysisInstruction = imagemBase64
-      ? `\n\nIMPORTANT: An image was provided. Analyze the image carefully. If it contains exercises or questions, SOLVE each one step by step. Include in the JSON an additional field "analiseImagem" with this structure:
+      ? `\n\nIMPORTANT: An image was provided. ${tema === 'Análise da imagem enviada' || nivel === 'auto' ? 'The user did NOT provide a topic, level or deadline — INFER the topic and appropriate education level FROM the image content itself, then build the entire study material around what you see in the image.' : ''} Analyze the image carefully. If it contains exercises or questions, SOLVE each one step by step. Include in the JSON an additional field "analiseImagem" with this structure:
 "analiseImagem": {
   "titulo": "Análise da Imagem",
   "descricao": "Brief description of what the image contains",
