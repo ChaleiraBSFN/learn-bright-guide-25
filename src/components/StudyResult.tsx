@@ -116,7 +116,7 @@ export function StudyResult({ content, tema, aiImages, webImages, imagesLoading,
             isGeneratingExercise={isGeneratingExercise}
           />
         )}
-        {content.fontes && <SourcesSection data={content.fontes} />}
+        {content.fontes && <SourcesSection data={content.fontes} tema={tema} />}
       </div>
     </div>
   );
