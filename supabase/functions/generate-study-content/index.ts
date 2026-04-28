@@ -376,6 +376,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
       return new Response(JSON.stringify({ error: "Erro ao processar resposta." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    studyContent = deepFixMath(studyContent);
     return new Response(JSON.stringify(studyContent), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Error:", error);
