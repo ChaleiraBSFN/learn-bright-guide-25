@@ -22,15 +22,6 @@ const normalizeText = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 
-const openExternalLink = (event: React.MouseEvent<HTMLAnchorElement>, url: string) => {
-  event.preventDefault();
-  event.stopPropagation();
-  const popup = window.open(url, "_blank", "noopener,noreferrer");
-  if (!popup) {
-    window.location.assign(url);
-  }
-};
-
 const getKnownSiteSearchUrl = (siteName: string, query: string): string | null => {
   const name = normalizeText(siteName);
   const encoded = encodeURIComponent(query);
@@ -85,9 +76,9 @@ export function SourcesSection({ data }: SourcesSectionProps) {
                   <a
                     key={index}
                     href={url}
-                    onClick={(event) => openExternalLink(event, url)}
                     target="_blank"
                     rel="noopener noreferrer"
+                    referrerPolicy="no-referrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-sm text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
                     <Search className="h-3 w-3" />
@@ -110,9 +101,9 @@ export function SourcesSection({ data }: SourcesSectionProps) {
                   <a
                     key={index}
                     href={url}
-                    onClick={(event) => openExternalLink(event, url)}
                     target="_blank"
                     rel="noopener noreferrer"
+                    referrerPolicy="no-referrer"
                     className="text-left flex items-start gap-3 p-3 rounded-xl border border-border bg-background/50 hover:bg-muted transition-colors group"
                   >
                     <Globe className="h-5 w-5 text-section-sources shrink-0 mt-0.5" />
