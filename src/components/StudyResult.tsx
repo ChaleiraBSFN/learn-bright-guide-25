@@ -29,6 +29,7 @@ interface WebImage {
 interface StudyResultProps {
   content: StudyContent;
   tema: string;
+  nivel?: string;
   aiImages?: AIImage[];
   webImages?: WebImage[];
   imagesLoading?: boolean;
@@ -36,7 +37,7 @@ interface StudyResultProps {
   isGeneratingExercise?: boolean;
 }
 
-export function StudyResult({ content, tema, aiImages, webImages, imagesLoading, onGenerateExercise, isGeneratingExercise }: StudyResultProps) {
+export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesLoading, onGenerateExercise, isGeneratingExercise }: StudyResultProps) {
   const { t } = useTranslation();
 
   if (!content || !content.objetivo || !content.resumo) {
@@ -87,6 +88,8 @@ export function StudyResult({ content, tema, aiImages, webImages, imagesLoading,
             data={content.demonstracoes}
             stepImages={stepImages}
             imagesLoading={imagesLoading}
+            tema={tema}
+            nivel={nivel}
           />
         )}
 

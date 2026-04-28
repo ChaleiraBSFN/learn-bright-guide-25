@@ -85,6 +85,7 @@ const Index = () => {
   const [isFinishingStudy, setIsFinishingStudy] = useState(false);
   const [studyContent, setStudyContent] = useState<StudyContent | null>(null);
   const [currentTema, setCurrentTema] = useState("");
+  const [currentNivel, setCurrentNivel] = useState("");
   
   const [isExerciseLoading, setIsExerciseLoading] = useState(false);
   const [isFinishingExercise, setIsFinishingExercise] = useState(false);
@@ -245,6 +246,7 @@ const Index = () => {
     }
     setIsLoading(true);
     setCurrentTema(data.tema);
+    setCurrentNivel(data.nivel || "");
     setStudyContent(null);
     setAiImages([]);
     setWebImages([]);
@@ -581,6 +583,7 @@ const Index = () => {
               <StudyResult
                 content={studyContent}
                 tema={currentTema}
+                nivel={currentNivel}
                 aiImages={aiImages}
                 webImages={webImages}
                 imagesLoading={imagesLoading}
