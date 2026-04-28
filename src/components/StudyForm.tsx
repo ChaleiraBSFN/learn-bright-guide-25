@@ -48,17 +48,23 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {hasImage && (
+        <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-3 text-sm text-foreground">
+          ✨ Imagem detectada — você pode enviar apenas a imagem. Tema, nível e prazo viraram opcionais; a IA analisará automaticamente.
+        </div>
+      )}
+
       <div className="space-y-2">
         <Label htmlFor="tema" className="flex items-center gap-2 text-base font-medium">
           <BookOpen className="h-4 w-4 text-primary" />
-          {t('form.topic')}
+          {t('form.topic')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
         </Label>
         <Input
           id="tema"
-          placeholder={t('form.topicPlaceholder')}
+          placeholder={hasImage ? "Opcional — deixe em branco para análise automática" : t('form.topicPlaceholder')}
           value={tema}
           onChange={(e) => setTema(e.target.value)}
-          required
+          required={!hasImage}
           className="bg-card"
         />
       </div>
@@ -67,11 +73,11 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         <div className="space-y-2">
           <Label htmlFor="nivel" className="flex items-center gap-2 text-base font-medium">
             <GraduationCap className="h-4 w-4 text-secondary" />
-            {t('form.level')}
+            {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
           </Label>
-          <Select value={nivel} onValueChange={setNivel} required>
+          <Select value={nivel} onValueChange={setNivel} required={!hasImage}>
             <SelectTrigger id="nivel" className="bg-card h-12">
-              <SelectValue placeholder={t('form.selectLevel')} />
+              <SelectValue placeholder={hasImage ? "Opcional" : t('form.selectLevel')} />
             </SelectTrigger>
             <SelectContent className="bg-popover z-50">
               {niveis.map((n) => (
@@ -86,17 +92,17 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         <div className="space-y-2">
           <Label htmlFor="prazo" className="flex items-center gap-2 text-base font-medium whitespace-pre-wrap">
             <Calendar className="h-4 w-4 text-accent" />
-            {t('form.deadline')}
+            {t('form.deadline')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
           </Label>
           <Input
             id="prazo"
             type="number"
             min="1"
             max="90"
-            placeholder="Ex.: 7"
+            placeholder={hasImage ? "Opcional" : "Ex.: 7"}
             value={prazo}
             onChange={(e) => setPrazo(e.target.value)}
-            required
+            required={!hasImage}
             className="bg-card"
           />
         </div>
@@ -123,7 +129,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || !tema || !nivel || !prazo}
+        disabled={isLoading || (!hasImage && (!tema || !nivel || !prazo))}
       >
         {isLoading ? (
           <>
