@@ -18,9 +18,15 @@ const buildSearchUrl = (q: string) => `https://www.google.com/search?q=${encodeU
 
 const getResourceUrl = (site: { url?: string; termoBusca?: string; nome: string }): string => {
   const url = site.url?.trim();
-  if (url && /^https?:\/\//i.test(url)) return url;
-  if (site.termoBusca) return buildSearchUrl(`${site.termoBusca} site:${site.nome.toLowerCase().replace(/\s/g, '')}`);
-  return buildSearchUrl(site.nome);
+  // Only use direct URL if it looks like a real, complete URL (has a domain with TLD)
+  if (url && /^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i.test(url)) {
+    return url;
+  }
+  // Otherwise, search Google for "termo nome-do-site" so the user finds the right page
+  const query = site.termoBusca
+    ? `${site.termoBusca} ${site.nome}`
+    : site.nome;
+  return buildSearchUrl(query);
 };
 
 export function SourcesSection({ data }: SourcesSectionProps) {
