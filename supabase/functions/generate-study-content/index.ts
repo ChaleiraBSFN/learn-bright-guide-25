@@ -292,6 +292,7 @@ Rules:
   * Write ALL explanations, concepts, titles, and descriptions in ${lang}
   * BUT keep the foreign language words, examples, and vocabulary items in their ORIGINAL foreign language script (e.g., Russian in Cyrillic, Japanese in Kanji/Hiragana, Chinese in Hanzi, etc.)
   * The "exemplo" and "pergunta"/"resposta" fields should contain the foreign language words being studied
+- MATH NOTATION (MANDATORY): NEVER use LaTeX. NEVER use "$", "$$", "\\(", "\\)", "\\[", "\\]". For powers use Unicode superscripts directly: x², x³, x⁴, xⁿ (NEVER "x^2" nor "x**2"). For subscripts use x₁, x₂, H₂O. Square root: √(x). Fractions: (a)/(b). Multiplication: × or ·. Division: ÷. Use normal parentheses ( and ), NEVER "$" as a delimiter. Symbols: π θ α β Δ ≤ ≥ ≠ ≈ ∞.
 - ONLY output JSON, no extra text.`;
 }
 
