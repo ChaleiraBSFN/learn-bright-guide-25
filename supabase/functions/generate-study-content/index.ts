@@ -18,6 +18,46 @@ const requestSchema = z.object({
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').replace(/```/g, '').trim();
 
+// === Sanitização matemática: corrige notações erradas vindas da IA ===
+const SUPERSCRIPT_MAP: Record<string, string> = {
+  '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+  '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+  '+': '⁺', '-': '⁻', '=': '⁼', '(': '⁽', ')': '⁾', 'n': 'ⁿ', 'i': 'ⁱ',
+};
+const SUBSCRIPT_MAP: Record<string, string> = {
+  '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+  '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
+};
+const toSuperscript = (s: string) => s.split('').map(c => SUPERSCRIPT_MAP[c] ?? c).join('');
+const toSubscript = (s: string) => s.split('').map(c => SUBSCRIPT_MAP[c] ?? c).join('');
+function fixMathNotation(text: string): string {
+  if (!text || typeof text !== 'string') return text;
+  let out = text;
+  out = out.replace(/\$\$([\s\S]+?)\$\$/g, '$1');
+  out = out.replace(/\$([^\$\n]+?)\$/g, '$1');
+  out = out.replace(/\\\(([\s\S]+?)\\\)/g, '$1');
+  out = out.replace(/\\\[([\s\S]+?)\\\]/g, '$1');
+  out = out.replace(/\\cdot/g, '·').replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\pm/g, '±');
+  out = out.replace(/\\sqrt\{([^{}]+)\}/g, '√($1)');
+  out = out.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '($1)/($2)');
+  out = out.replace(/\^\{([^{}]+)\}/g, (_m, g1) => toSuperscript(g1));
+  out = out.replace(/\^\(([^()]+)\)/g, (_m, g1) => toSuperscript(g1));
+  out = out.replace(/\^([0-9+\-n]+)/g, (_m, g1) => toSuperscript(g1));
+  out = out.replace(/_\{([0-9]+)\}/g, (_m, g1) => toSubscript(g1));
+  out = out.replace(/_([0-9])/g, (_m, g1) => toSubscript(g1));
+  return out;
+}
+function deepFixMath(value: any): any {
+  if (typeof value === 'string') return fixMathNotation(value);
+  if (Array.isArray(value)) return value.map(deepFixMath);
+  if (value && typeof value === 'object') {
+    const out: any = {};
+    for (const k of Object.keys(value)) out[k] = deepFixMath(value[k]);
+    return out;
+  }
+  return value;
+}
+
 const toAnonUuid = async (input: string): Promise<string> => {
   const encoder = new TextEncoder();
   const digest = await crypto.subtle.digest("SHA-256", encoder.encode(input));
