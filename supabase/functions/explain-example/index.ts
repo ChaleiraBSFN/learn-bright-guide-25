@@ -136,56 +136,38 @@ serve(async (req) => {
 - Inclua: contexto histórico breve quando útil, fórmula/regra geral, exemplo aplicado, armadilhas comuns, e dica de memorização.`;
     }
 
-    const prompt = `Você é um(a) professor(a) especialista em ${tema || contexto || "o tema em questão"}, com domínio profundo do conteúdo e experiência didática comprovada.
-
-Sua tarefa: produzir uma EXPLICAÇÃO APROFUNDADA E COMPLETA do exemplo prático abaixo, indo MUITO além da superfície. O aluno quer realmente ENTENDER, não só decorar.
+    const prompt = `Você é professor(a) especialista em ${tema || contexto || "o tema"}. Explique APROFUNDADAMENTE o exemplo abaixo.
 
 ${nivelInstrucao}
 
-CONTEXTO DO ASSUNTO: ${sanitize(contexto || "")}
-TEMA GERAL: ${sanitize(tema || "")}
+CONTEXTO: ${sanitize(contexto || "")}
+TEMA: ${sanitize(tema || "")}
+EXEMPLO: ${sanitize(exemplo)}
 
-EXEMPLO PRÁTICO A EXPLICAR:
-${sanitize(exemplo)}
+Responda em ${langName} usando EXATAMENTE estas 7 seções com Markdown (** para títulos), cada uma densa e substancial:
 
-ESTRUTURA OBRIGATÓRIA da sua resposta (use estes títulos em negrito com **). Cada seção deve ser SUBSTANCIAL — parágrafos densos, não frases soltas:
+**🎯 O que está acontecendo**
+3-4 frases ricas: o que mostra, conceito central, problema que resolve, por que importa.
 
-**🎯 O que está acontecendo aqui**
-Em 3-4 frases ricas: o que o exemplo mostra, qual conceito central ilustra, qual problema ele resolve no mundo real, e por que vale a pena entender isso.
+**🧠 Teoria por trás**
+Defina termos técnicos. Apresente regra/lei/fórmula com origem e fundamentação. Se houver fórmula, explique cada símbolo e unidade. Mencione condições de validade. Cite cientista/pensador com data/contexto histórico breve. Mínimo 2 parágrafos densos.
 
-**🧠 Conceito por trás (a teoria completa)**
-APROFUNDE MUITO. Defina TODOS os termos técnicos com precisão. Apresente a regra/lei/fórmula/princípio que governa o exemplo, explicando sua origem e fundamentação. Se houver fórmula, explique cada símbolo, sua unidade, e o significado físico/conceitual. Mencione condições de validade, hipóteses assumidas e limites de aplicação. Cite o(s) cientista(s)/pensador(es) ou escola que desenvolveu o conceito, com data aproximada e contexto histórico breve. Se for área de humanas, traga o debate teórico, autores divergentes e as principais correntes. Vá fundo: 2-3 parágrafos densos no mínimo.
+**🔍 Passo a passo**
+Etapas numeradas. Para cada uma: O QUE + POR QUE + COMO + qual princípio aplica. Mostre cálculos intermediários ou inferências.
 
-**🔍 Passo a passo MICRO-detalhado**
-Quebre o exemplo em etapas numeradas pequenas. Para CADA etapa explique:
-- O QUE está sendo feito (a ação)
-- POR QUE está sendo feito (a justificativa lógica/matemática/conceitual)
-- COMO chegamos ao resultado (mostre a operação, a transformação, o raciocínio)
-- Que princípio teórico da seção anterior está sendo aplicado ali
-NÃO pule passos triviais — assuma que o aluno está vendo isso pela primeira vez. Se houver cálculo, mostre a aritmética intermediária. Se for argumento, mostre a inferência.
-
-**💡 Intuição profunda e analogia**
-Construa uma analogia rica e fiel do dia a dia que faça o conceito "clicar". Depois explique POR QUE a analogia funciona (em que aspectos ela é correta) e ONDE ela falha (limites). Acrescente uma segunda forma de visualizar (geométrica, gráfica, narrativa).
+**💡 Intuição e analogia**
+Analogia rica do dia a dia. Explique por que funciona e onde falha. Adicione uma segunda forma de visualizar.
 
 **🧩 Variações e casos extremos**
-Mostre o que aconteceria se mudássemos um parâmetro do exemplo: e se o valor fosse zero? negativo? muito grande? E se uma hipótese falhasse? Isso fixa o entendimento real.
+E se o valor fosse zero, negativo, muito grande? E se uma hipótese falhasse?
 
-**⚠️ Armadilhas e erros comuns**
-Liste 3-4 erros frequentes que estudantes cometem com esse tipo de exemplo, com explicação clara de POR QUE são erros e como evitá-los. Inclua confusões conceituais clássicas.
+**⚠️ Armadilhas comuns**
+3-4 erros frequentes com explicação do PORQUÊ são erros e como evitar.
 
-**🔗 Conexões, aplicações e aprofundamento**
-Mostre como esse conceito se conecta com OUTROS tópicos da mesma matéria, com OUTRAS disciplinas (interdisciplinaridade real), e com aplicações práticas (tecnologia, ciência, vida cotidiana, mercado de trabalho). Se for nível médio/superior, explique COMO esse conteúdo cai em ENEM/vestibular/concursos — cite tipos de questão e pegadinhas comuns. Por fim, sugira 2-3 fontes GRATUITAS e confiáveis, escolhidas conforme o tema (ex.: Khan Academy, Brasil Escola, Mundo Educação, Stoodi, SciELO, Wikipedia em português, OpenStax, MIT OpenCourseWare, canais como Me Salva!, Curso em Vídeo, Física Total, Equaciona, Débora Aladim, Professor Ferretto), com indicação do que buscar em cada uma.
+**🔗 Conexões e fontes**
+Conexões com outros tópicos e disciplinas. Aplicações práticas. Como cai em ENEM/vestibular (se aplicável). 2-3 fontes GRATUITAS confiáveis (Khan Academy, Brasil Escola, Mundo Educação, Stoodi, SciELO, Wikipedia, Me Salva!, Curso em Vídeo, Física Total, Equaciona, Professor Ferretto etc.) com o que buscar em cada.
 
-REGRAS CRÍTICAS:
-- Responda INTEIRAMENTE no idioma: ${langName}.
-- Use Markdown: **negrito** para destaques, listas com - quando útil, quebras de linha entre seções.
-- NÃO use blocos de código (\`\`\`) nem código de programação a menos que o tema seja explicitamente programação.
-- Seja MUITO GENEROSO em profundidade — o aluno PEDIU explicação MUITO mais aprofundada. NÃO ECONOMIZE em conteúdo. Cada seção deve ter substância real.
-- Mas seja CLARO — profundidade sem clareza não ensina nada. Use frases bem construídas, não enrole.
-- Use números concretos, datas, nomes, exemplos reais sempre que possível.
-- Mire em uma resposta longa e densa (use o espaço disponível).
-
-Comece sua resposta DIRETAMENTE com a primeira seção (não escreva introduções como "Claro!" ou "Vamos lá").`;
+REGRAS: idioma ${langName}; sem blocos \`\`\`; profundidade alta mas frases claras; números/datas/nomes concretos. Comece direto pela primeira seção.`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
