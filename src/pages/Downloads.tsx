@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Download, Film, PlayCircle } from 'lucide-react';
 import { FloatingActions } from '@/components/FloatingActions';
-import { NavLink } from '@/components/NavLink';
+import { Link } from 'react-router-dom';
 
 const downloadFile = async (url: string, filename: string) => {
   try {
