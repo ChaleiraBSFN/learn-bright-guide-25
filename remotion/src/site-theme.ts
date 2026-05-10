@@ -20,6 +20,6 @@ export const SITE = {
   sectionErrors: "#ef4444",
   shadow: "rgba(15, 23, 42, 0.08)",
   shadowLg: "rgba(15, 23, 42, 0.15)",
-  fontDisplay: "Nunito, sans-serif",
-  fontBody: "Inter, sans-serif",
+  fontDisplay: "Nunito, 'NotoColorEmoji', sans-serif",
+  fontBody: "Inter, 'NotoColorEmoji', sans-serif",
 };
