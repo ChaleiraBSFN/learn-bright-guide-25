@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, spring, interpolate, useVideoConfig } from "remotion";
-import { COLORS } from "../MainVideo";
+import { SITE } from "../site-theme";
 import { Cursor } from "../components/Cursor";
 
 const ALTERNATIVES = [
@@ -14,107 +14,120 @@ export const DemoScene4Exercise: React.FC = () => {
   const { fps } = useVideoConfig();
   const titleS = spring({ frame, fps, config: { damping: 18 } });
 
-  // Tab switch — Exercises tab highlighted from start
-  const tabHighlight = spring({ frame: frame - 4, fps, config: { damping: 15 } });
-
-  // Cursor: tab → option B → submit button (none, auto submit)
   const cursorPath = [
-    { x: 250, y: 70, frame: 0 },     // exercises tab
-    { x: 250, y: 70, frame: 20 },
-    { x: 1000, y: 460, frame: 90 },  // option B
-    { x: 1000, y: 460, frame: 160 },
+    { x: 320, y: 60, frame: 0 },     // exercises tab
+    { x: 320, y: 60, frame: 18 },
+    { x: 1100, y: 320, frame: 80 },  // option B
+    { x: 1100, y: 320, frame: 160 },
   ];
 
-  // Selection at frame 90, feedback at 110
-  const selected = frame >= 90;
-  const showFeedback = frame >= 115;
-  const feedbackS = spring({ frame: frame - 115, fps, config: { damping: 12 } });
+  const selected = frame >= 80;
+  const showFeedback = frame >= 105;
+  const feedbackS = spring({ frame: frame - 105, fps, config: { damping: 12 } });
 
   return (
     <AbsoluteFill style={{ padding: 30 }}>
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 18 }}>
         {[
-          { name: "📖 Estudo", active: false },
-          { name: "✏️ Exercícios", active: true },
-          { name: "🗓️ Plano", active: false },
+          { name: "📖 Estudo", active: false, color: SITE.primary },
+          { name: "🧠 Mapa Mental", active: false, color: SITE.secondary },
+          { name: "✏️ Exercícios", active: true, color: SITE.accent },
+          { name: "📅 Plano", active: false, color: SITE.primary },
         ].map((t, i) => (
           <div key={i} style={{
-            padding: "12px 24px",
-            background: t.active ? `${COLORS.teal}33` : `${COLORS.white}08`,
-            border: `2px solid ${t.active ? COLORS.teal : COLORS.white + "11"}`,
-            borderRadius: 12,
-            color: COLORS.white, fontWeight: 800, fontSize: 18,
-            transform: t.active ? `scale(${interpolate(tabHighlight, [0, 1], [0.95, 1])})` : "none",
-            boxShadow: t.active ? `0 0 20px ${COLORS.teal}44` : "none",
+            padding: "10px 18px",
+            background: t.active ? t.color : SITE.card,
+            border: `1px solid ${t.active ? t.color : SITE.border}`,
+            borderRadius: 10,
+            color: t.active ? "#fff" : SITE.text, fontWeight: 800, fontSize: 14,
+            boxShadow: t.active ? `0 4px 12px ${t.color}44` : "none",
           }}>{t.name}</div>
         ))}
       </div>
 
+      {/* Question card */}
       <div style={{
-        fontSize: 28, fontWeight: 900, color: COLORS.white, marginBottom: 8,
+        background: SITE.card,
+        border: `1px solid ${SITE.border}`,
+        borderTop: `4px solid ${SITE.accent}`,
+        borderRadius: 14,
+        padding: 28,
         opacity: titleS,
+        boxShadow: `0 8px 24px ${SITE.shadow}`,
       }}>
-        Pergunta 1 <span style={{ color: COLORS.amber }}>de 5</span>
-      </div>
-      <div style={{
-        fontSize: 26, fontWeight: 700, color: COLORS.white, marginBottom: 30, lineHeight: 1.4,
-        opacity: titleS,
-      }}>
-        Qual é o principal processo realizado durante a fotossíntese?
-      </div>
-
-      {/* Alternatives */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        {ALTERNATIVES.map((alt, i) => {
-          const isCorrect = alt.id === "B";
-          const isSelected = selected && isCorrect;
-          const showCorrect = showFeedback && isCorrect;
-          return (
-            <div key={alt.id} style={{
-              padding: "18px 24px",
-              background: showCorrect
-                ? `${COLORS.teal}33`
-                : isSelected ? `${COLORS.amber}22` : `${COLORS.white}08`,
-              border: `2px solid ${showCorrect ? COLORS.teal : isSelected ? COLORS.amber : COLORS.white + "15"}`,
-              borderRadius: 14,
-              display: "flex", alignItems: "center", gap: 20,
-              transform: showCorrect ? `scale(${interpolate(feedbackS, [0, 1], [1, 1.02])})` : "none",
-              boxShadow: showCorrect ? `0 0 30px ${COLORS.teal}55` : "none",
-            }}>
-              <div style={{
-                width: 44, height: 44, borderRadius: "50%",
-                background: showCorrect ? COLORS.teal : `${COLORS.white}15`,
-                color: COLORS.white, display: "flex", alignItems: "center", justifyContent: "center",
-                fontWeight: 900, fontSize: 20,
-              }}>{showCorrect ? "✓" : alt.id}</div>
-              <div style={{ color: COLORS.white, fontSize: 20, fontWeight: 600, flex: 1 }}>{alt.text}</div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Feedback */}
-      {showFeedback && (
-        <div style={{
-          marginTop: 24,
-          padding: "18px 24px",
-          background: `${COLORS.teal}22`,
-          border: `2px solid ${COLORS.teal}`,
-          borderRadius: 14,
-          opacity: feedbackS,
-          transform: `translateY(${interpolate(feedbackS, [0, 1], [20, 0])}px)`,
-        }}>
-          <div style={{ fontSize: 22, fontWeight: 900, color: COLORS.teal, marginBottom: 6 }}>
-            ✅ Correto! +10 XP · Trilha avançou
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+          <div style={{ padding: "6px 14px", background: `${SITE.accent}22`, color: SITE.accent, borderRadius: 999, fontSize: 13, fontWeight: 900 }}>
+            QUESTÃO 1 DE 5
           </div>
-          <div style={{ fontSize: 17, fontWeight: 600, color: `${COLORS.white}dd` }}>
-            A fotossíntese converte energia luminosa em química, formando glicose a partir de CO₂ e H₂O.
+          <div style={{ padding: "6px 12px", background: `${SITE.primary}15`, color: SITE.primary, borderRadius: 999, fontSize: 12, fontWeight: 800 }}>
+            🎯 Múltipla escolha
           </div>
         </div>
-      )}
 
-      <Cursor path={cursorPath} clickFrames={[8, 92]} />
+        <div style={{ fontSize: 24, fontWeight: 800, color: SITE.text, marginBottom: 22, lineHeight: 1.4, fontFamily: "Nunito" }}>
+          Qual é o principal processo realizado durante a fotossíntese?
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {ALTERNATIVES.map((alt) => {
+            const isCorrect = alt.id === "B";
+            const isSelected = selected && isCorrect;
+            const showCorrect = showFeedback && isCorrect;
+            return (
+              <div key={alt.id} style={{
+                padding: "14px 18px",
+                background: showCorrect
+                  ? `${SITE.secondary}15`
+                  : isSelected ? `${SITE.accent}15` : SITE.card,
+                border: `2px solid ${showCorrect ? SITE.secondary : isSelected ? SITE.accent : SITE.border}`,
+                borderRadius: 12,
+                display: "flex", alignItems: "center", gap: 16,
+                transform: showCorrect ? `scale(${interpolate(feedbackS, [0, 1], [1, 1.01])})` : "none",
+                boxShadow: showCorrect ? `0 0 20px ${SITE.secondary}33` : "none",
+              }}>
+                <div style={{
+                  width: 38, height: 38, borderRadius: "50%",
+                  background: showCorrect ? SITE.secondary : "#f1f5f9",
+                  color: showCorrect ? "#fff" : SITE.text,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontWeight: 900, fontSize: 16,
+                }}>{showCorrect ? "✓" : alt.id}</div>
+                <div style={{ color: SITE.text, fontSize: 17, fontWeight: 600, flex: 1 }}>{alt.text}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {showFeedback && (
+          <div style={{
+            marginTop: 18,
+            padding: "16px 20px",
+            background: `${SITE.secondary}10`,
+            border: `2px solid ${SITE.secondary}`,
+            borderRadius: 12,
+            opacity: feedbackS,
+            transform: `translateY(${interpolate(feedbackS, [0, 1], [15, 0])}px)`,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+              <div style={{ fontSize: 18, fontWeight: 900, color: SITE.secondary, fontFamily: "Nunito" }}>
+                ✓ Resposta correta!
+              </div>
+              <div style={{ padding: "3px 10px", background: SITE.accent, color: "#fff", borderRadius: 999, fontSize: 12, fontWeight: 900 }}>
+                +10 XP
+              </div>
+              <div style={{ padding: "3px 10px", background: SITE.primary, color: "#fff", borderRadius: 999, fontSize: 12, fontWeight: 900 }}>
+                ⭐ Trilha avançou
+              </div>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 500, color: SITE.text }}>
+              A fotossíntese converte energia luminosa em química, formando glicose a partir de CO₂ e H₂O. Os produtos são glicose (C₆H₁₂O₆) e oxigênio (O₂).
+            </div>
+          </div>
+        )}
+      </div>
+
+      <Cursor path={cursorPath} clickFrames={[6, 82]} />
     </AbsoluteFill>
   );
 };

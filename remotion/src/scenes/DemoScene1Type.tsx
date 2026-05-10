@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
-import { COLORS } from "../MainVideo";
+import { SITE } from "../site-theme";
 import { Cursor } from "../components/Cursor";
 
 const TYPED = "Fotossíntese";
@@ -8,90 +8,136 @@ export const DemoScene1Type: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Typing starts at frame 30, finishes at 90 (60 frames for 12 chars = 5f/char)
-  const typedCount = Math.floor(interpolate(frame, [30, 90], [0, TYPED.length], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
+  const heroS = spring({ frame, fps, config: { damping: 18 } });
+  const typedCount = Math.floor(interpolate(frame, [40, 95], [0, TYPED.length], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));
   const text = TYPED.slice(0, typedCount);
 
-  // Button press at 130
-  const buttonPress = spring({ frame: frame - 130, fps, config: { damping: 8, stiffness: 300 }, durationInFrames: 14 });
-  const buttonScale = 1 - buttonPress * 0.06;
+  // Level select highlight after typing
+  const nivelSelected = frame >= 110;
+  const prazoFilled = frame >= 130;
+  // Button press at frame 150
+  const buttonPress = spring({ frame: frame - 150, fps, config: { damping: 8, stiffness: 300 }, durationInFrames: 14 });
+  const buttonScale = 1 - buttonPress * 0.05;
 
-  // Cursor path: center → input (855, 360) → button (855, 530)
+  // Cursor path: top-right → input → nivel → prazo → button
   const cursorPath = [
-    { x: 1400, y: 700, frame: 0 },
-    { x: 855, y: 360, frame: 25 },
-    { x: 855, y: 360, frame: 90 },
-    { x: 855, y: 530, frame: 125 },
-    { x: 855, y: 530, frame: 170 },
+    { x: 1500, y: 700, frame: 0 },
+    { x: 800, y: 245, frame: 35 },     // input
+    { x: 800, y: 245, frame: 100 },
+    { x: 460, y: 360, frame: 115 },    // nivel select
+    { x: 1100, y: 360, frame: 135 },   // prazo
+    { x: 800, y: 580, frame: 150 },    // button
+    { x: 800, y: 580, frame: 170 },
   ];
 
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ padding: "30px 60px" }}>
       {/* Hero title */}
-      <div style={{ position: "absolute", top: 80, left: 0, right: 0, textAlign: "center" }}>
-        <div style={{ fontSize: 56, fontWeight: 900, color: COLORS.white }}>
-          O que você quer <span style={{ color: COLORS.amber }}>aprender hoje?</span>
-        </div>
-        <div style={{ fontSize: 22, fontWeight: 600, color: `${COLORS.white}99`, marginTop: 12 }}>
-          Digite qualquer tema. A IA cria estudo, exercícios e plano em segundos.
-        </div>
-      </div>
-
-      {/* Input field */}
-      <div style={{
-        position: "absolute", top: 320, left: 350, right: 350,
-        height: 90,
-        background: `${COLORS.white}0d`,
-        border: `2px solid ${typedCount > 0 ? COLORS.teal : COLORS.white}33`,
-        borderRadius: 18,
-        display: "flex", alignItems: "center", padding: "0 28px",
-        fontSize: 36, fontWeight: 700, color: COLORS.white,
-        boxShadow: typedCount > 0 ? `0 0 0 4px ${COLORS.teal}22` : "none",
-      }}>
-        <span>{text}</span>
-        {frame >= 30 && frame < 90 && (
-          <span style={{ width: 3, height: 40, background: COLORS.amber, marginLeft: 4, opacity: Math.floor(frame / 8) % 2 }} />
-        )}
-        {typedCount === 0 && frame < 30 && (
-          <span style={{ color: `${COLORS.white}44`, fontWeight: 600 }}>Ex: Fotossíntese, Equações de 2º grau...</span>
-        )}
-      </div>
-
-      {/* Generate button */}
-      <div style={{
-        position: "absolute", top: 470, left: 0, right: 0,
-        display: "flex", justifyContent: "center",
-      }}>
+      <div style={{ textAlign: "center", marginBottom: 18, opacity: heroS, transform: `translateY(${interpolate(heroS, [0, 1], [-15, 0])}px)` }}>
         <div style={{
-          padding: "22px 56px",
-          background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.blue})`,
-          borderRadius: 16,
-          fontSize: 32, fontWeight: 900, color: COLORS.white,
-          boxShadow: `0 12px 40px ${COLORS.teal}66`,
-          transform: `scale(${buttonScale})`,
-          letterSpacing: 1,
+          display: "inline-block",
+          padding: "6px 14px", background: `${SITE.primary}15`, color: SITE.primary,
+          borderRadius: 999, fontSize: 13, fontWeight: 800, marginBottom: 10,
         }}>
-          ✨ GERAR ESTUDO
+          ✦ Aprendizado Inteligente
+        </div>
+        <div style={{ fontFamily: "Nunito", fontSize: 44, fontWeight: 900, color: SITE.text, lineHeight: 1.05 }}>
+          Aprenda qualquer assunto de forma <span style={{ background: `linear-gradient(90deg, ${SITE.primary}, ${SITE.secondary}, ${SITE.accent})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>clara e visual</span>
         </div>
       </div>
 
-      {/* Subject pills */}
+      {/* Form card */}
       <div style={{
-        position: "absolute", bottom: 90, left: 0, right: 0,
-        display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap",
+        background: SITE.card,
+        border: `1px solid ${SITE.border}`,
+        borderRadius: 16,
+        padding: 32,
+        boxShadow: `0 4px 20px ${SITE.shadow}`,
+        flex: 1,
       }}>
-        {["📚 Biologia", "🧮 Matemática", "🌍 História", "⚗️ Química", "📖 Literatura"].map((s, i) => (
-          <div key={i} style={{
-            padding: "12px 24px",
-            background: `${COLORS.white}0d`,
-            border: `1px solid ${COLORS.white}22`,
-            borderRadius: 999,
-            color: `${COLORS.white}cc`, fontWeight: 700, fontSize: 18,
-          }}>{s}</div>
-        ))}
+        {/* Tema */}
+        <div style={{ marginBottom: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, fontSize: 16, fontWeight: 700, color: SITE.text }}>
+            <span style={{ color: SITE.primary }}>📖</span> Tema de Estudo
+          </div>
+          <div style={{
+            height: 56,
+            background: SITE.card,
+            border: `2px solid ${typedCount > 0 ? SITE.primary : SITE.border}`,
+            borderRadius: 10,
+            display: "flex", alignItems: "center", padding: "0 18px",
+            fontSize: 22, fontWeight: 600, color: SITE.text,
+            boxShadow: typedCount > 0 ? `0 0 0 4px ${SITE.primary}22` : "none",
+          }}>
+            {text || <span style={{ color: "#9ca3af", fontWeight: 500 }}>Ex.: Revolução Francesa, Equações de 2º grau, Fotossíntese...</span>}
+            {frame >= 40 && frame < 95 && <span style={{ width: 2, height: 28, background: SITE.primary, marginLeft: 4, opacity: Math.floor(frame / 8) % 2 }} />}
+          </div>
+        </div>
+
+        {/* Nivel + Prazo */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 18 }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, fontSize: 16, fontWeight: 700, color: SITE.text }}>
+              <span style={{ color: SITE.secondary }}>🎓</span> Nível de Ensino
+            </div>
+            <div style={{
+              height: 50, background: SITE.card,
+              border: `2px solid ${nivelSelected ? SITE.secondary : SITE.border}`,
+              borderRadius: 10,
+              display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px",
+              fontSize: 16, fontWeight: 600, color: nivelSelected ? SITE.text : "#9ca3af",
+            }}>
+              <span>{nivelSelected ? "Ensino Médio" : "Selecione o nível"}</span>
+              <span style={{ color: "#9ca3af" }}>▾</span>
+            </div>
+          </div>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, fontSize: 16, fontWeight: 700, color: SITE.text }}>
+              <span style={{ color: SITE.accent }}>📅</span> Dias (Roteiro de Estudos)
+            </div>
+            <div style={{
+              height: 50, background: SITE.card,
+              border: `2px solid ${prazoFilled ? SITE.accent : SITE.border}`,
+              borderRadius: 10,
+              display: "flex", alignItems: "center", padding: "0 16px",
+              fontSize: 16, fontWeight: 600, color: prazoFilled ? SITE.text : "#9ca3af",
+            }}>
+              {prazoFilled ? "7" : "Ex.: 7"}
+            </div>
+          </div>
+        </div>
+
+        {/* Dúvidas */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, fontSize: 16, fontWeight: 700, color: SITE.text }}>
+            <span style={{ color: SITE.muted }}>❓</span> Dúvidas Específicas
+          </div>
+          <div style={{
+            height: 70, background: SITE.card,
+            border: `2px solid ${SITE.border}`,
+            borderRadius: 10,
+            padding: "12px 16px",
+            fontSize: 15, fontWeight: 500, color: "#9ca3af",
+          }}>
+            Descreva aqui suas dúvidas ou pontos que gostaria de aprofundar...
+          </div>
+        </div>
+
+        {/* Generate button */}
+        <div style={{
+          height: 60,
+          background: `linear-gradient(135deg, ${SITE.primary}, ${SITE.primaryLight})`,
+          borderRadius: 12,
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
+          color: "#fff", fontSize: 22, fontWeight: 800, fontFamily: "Nunito",
+          boxShadow: `0 8px 24px ${SITE.primary}55`,
+          transform: `scale(${buttonScale})`,
+        }}>
+          ✦ Gerar Material de Estudo
+        </div>
       </div>
 
-      <Cursor path={cursorPath} clickFrames={[130]} />
+      <Cursor path={cursorPath} clickFrames={[115, 135, 150]} />
     </AbsoluteFill>
   );
 };

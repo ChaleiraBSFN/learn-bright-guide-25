@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, interpolate, useVideoConfig } from "remotion";
-import { COLORS } from "../MainVideo";
+import { SITE } from "../site-theme";
 
 export const DemoScene2Loading: React.FC = () => {
   const frame = useCurrentFrame();
@@ -17,28 +17,28 @@ export const DemoScene2Loading: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: fade }}>
-      <div style={{ position: "relative", width: 200, height: 200 }}>
-        <svg width="200" height="200" style={{ transform: `rotate(${rot}deg)` }}>
-          <circle cx="100" cy="100" r="80" fill="none" stroke={`${COLORS.white}15`} strokeWidth="10" />
-          <circle cx="100" cy="100" r="80" fill="none" stroke={COLORS.amber} strokeWidth="10"
-            strokeDasharray={`${(progress / 100) * 502} 502`} strokeLinecap="round"
-            transform="rotate(-90 100 100)" />
+      <div style={{ position: "relative", width: 180, height: 180 }}>
+        <svg width="180" height="180" style={{ transform: `rotate(${rot}deg)` }}>
+          <circle cx="90" cy="90" r="74" fill="none" stroke={SITE.border} strokeWidth="10" />
+          <circle cx="90" cy="90" r="74" fill="none" stroke={SITE.primary} strokeWidth="10"
+            strokeDasharray={`${(progress / 100) * 465} 465`} strokeLinecap="round"
+            transform="rotate(-90 90 90)" />
         </svg>
         <div style={{
           position: "absolute", inset: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 48, fontWeight: 900, color: COLORS.white,
+          fontFamily: "Nunito", fontSize: 42, fontWeight: 900, color: SITE.text,
         }}>{Math.floor(progress)}%</div>
       </div>
-      <div style={{ marginTop: 50, fontSize: 36, fontWeight: 900, color: COLORS.white }}>
+      <div style={{ marginTop: 36, fontFamily: "Nunito", fontSize: 32, fontWeight: 900, color: SITE.text }}>
         Gerando seu estudo...
       </div>
-      <div style={{ marginTop: 40, display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
+      <div style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
         {steps.map((s, i) => {
           const done = frame >= s.at;
           return (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 22, fontWeight: 700, color: done ? COLORS.teal : `${COLORS.white}44` }}>
-              <span style={{ fontSize: 24 }}>{done ? "✓" : "○"}</span>
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 18, fontWeight: 700, color: done ? SITE.secondary : "#cbd5e1" }}>
+              <span style={{ width: 24, height: 24, borderRadius: "50%", background: done ? SITE.secondary : "#e2e8f0", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900 }}>{done ? "✓" : "○"}</span>
               <span>{s.label}</span>
             </div>
           );
