@@ -1,22 +1,19 @@
 import { registerRoot, staticFile } from "remotion";
 import { RemotionRoot } from "./Root";
 
-// Register Noto Color Emoji so emoji glyphs render in the headless Chromium
+// Register Noto Color Emoji as a global fallback so emoji glyphs render
+// in the headless Chromium (no system emoji font in the sandbox).
 const style = document.createElement("style");
 style.innerHTML = `
 @font-face {
   font-family: 'NotoColorEmoji';
   src: url('${staticFile("fonts/NotoColorEmoji.ttf")}') format('truetype');
   font-display: block;
+  unicode-range: U+1F300-1FAFF, U+2600-27BF, U+1F000-1F2FF, U+2700-27BF, U+2B00-2BFF, U+2300-23FF, U+2190-21FF;
 }
-* {
-  font-family: Nunito, Inter, sans-serif, 'NotoColorEmoji' !important;
+html, body, * {
+  font-family: inherit, 'NotoColorEmoji';
 }
-`;
-// Override !important: append a more specific rule for body
-const style2 = document.createElement("style");
-style2.innerHTML = `
-html, body { font-family: Inter, sans-serif, 'NotoColorEmoji'; }
 `;
 document.head.appendChild(style);
 
