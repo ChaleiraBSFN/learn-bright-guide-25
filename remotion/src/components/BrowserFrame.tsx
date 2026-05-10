@@ -1,42 +1,66 @@
-import { COLORS } from "../MainVideo";
+import { SITE } from "../site-theme";
 import { Img, staticFile } from "remotion";
 
 export const BrowserFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div style={{
       width: 1700, height: 940,
-      background: COLORS.bg,
-      borderRadius: 24,
+      background: SITE.card,
+      borderRadius: 18,
       overflow: "hidden",
-      boxShadow: `0 40px 100px ${COLORS.bgDeep}, 0 0 0 2px ${COLORS.white}11`,
+      boxShadow: `0 40px 100px ${SITE.shadowLg}, 0 0 0 1px ${SITE.border}`,
       display: "flex", flexDirection: "column",
     }}>
-      {/* Title bar */}
+      {/* Browser chrome */}
       <div style={{
-        height: 56,
-        background: `linear-gradient(180deg, ${COLORS.blue}66, ${COLORS.bg})`,
-        borderBottom: `1px solid ${COLORS.white}15`,
-        display: "flex", alignItems: "center", padding: "0 20px", gap: 16,
+        height: 48,
+        background: "#e8eaed",
+        borderBottom: `1px solid #d2d4d8`,
+        display: "flex", alignItems: "center", padding: "0 18px", gap: 16,
       }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <div style={{ width: 14, height: 14, borderRadius: 7, background: "#ff5f57" }} />
-          <div style={{ width: 14, height: 14, borderRadius: 7, background: "#febc2e" }} />
-          <div style={{ width: 14, height: 14, borderRadius: 7, background: "#28c840" }} />
+          <div style={{ width: 13, height: 13, borderRadius: 7, background: "#ff5f57" }} />
+          <div style={{ width: 13, height: 13, borderRadius: 7, background: "#febc2e" }} />
+          <div style={{ width: 13, height: 13, borderRadius: 7, background: "#28c840" }} />
         </div>
         <div style={{
           flex: 1, maxWidth: 600, margin: "0 auto",
-          background: `${COLORS.white}10`, borderRadius: 8,
-          padding: "8px 16px", color: `${COLORS.white}99`, fontSize: 16, fontWeight: 600,
-          textAlign: "center",
+          background: "#ffffff", borderRadius: 8,
+          padding: "7px 14px", color: "#5f6368", fontSize: 14, fontWeight: 500,
+          textAlign: "center", border: "1px solid #dadce0",
         }}>
           🔒 studdybuddy.com.br
         </div>
+        <div style={{ width: 80 }} />
+      </div>
+
+      {/* Site header */}
+      <div style={{
+        background: SITE.bg,
+        padding: "16px 36px",
+        borderBottom: `1px solid ${SITE.border}`,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <Img src={staticFile("images/logo.jpeg")} style={{ width: 44, height: 44, borderRadius: 10 }} />
+          <div>
+            <div style={{ fontFamily: "Nunito", fontWeight: 900, fontSize: 22, color: SITE.text, lineHeight: 1.1 }}>Learn Buddy</div>
+            <div style={{ fontSize: 13, color: SITE.muted, fontWeight: 600 }}>Seu assistente de aprendizado</div>
+          </div>
+        </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Img src={staticFile("images/logo.jpeg")} style={{ width: 32, height: 32, borderRadius: 6 }} />
-          <span style={{ color: COLORS.white, fontWeight: 800, fontSize: 18 }}>Learn Buddy</span>
+          <div style={{ padding: "8px 16px", background: "#fff", border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text, display: "flex", gap: 6, alignItems: "center" }}>
+            <span style={{ width: 18, height: 12, background: "linear-gradient(0deg, #009c3b 33%, #ffdf00 33% 66%, #002776 66%)", borderRadius: 2 }} />
+            BR
+          </div>
+          <div style={{ padding: "8px 16px", background: "#fff", border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text }}>
+            ❓ Ajuda
+          </div>
+          <div style={{ width: 38, height: 38, borderRadius: "50%", background: SITE.primary, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14 }}>MA</div>
         </div>
       </div>
-      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+
+      <div style={{ flex: 1, position: "relative", overflow: "hidden", background: SITE.bg }}>
         {children}
       </div>
     </div>
