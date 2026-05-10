@@ -13,7 +13,7 @@ export const DemoVideo: React.FC = () => {
   const intro = spring({ frame, fps, config: { damping: 20, stiffness: 100 } });
 
   return (
-    <AbsoluteFill style={{ fontFamily: "Nunito, sans-serif", background: SITE.bg }}>
+    <AbsoluteFill style={{ fontFamily: "Nunito, 'NotoColorEmoji', sans-serif", background: SITE.bg }}>
       {/* subtle pattern bg */}
       <AbsoluteFill style={{
         background: `radial-gradient(ellipse at top, ${SITE.primary}10, transparent 60%), radial-gradient(ellipse at bottom right, ${SITE.secondary}0a, transparent 60%)`,
