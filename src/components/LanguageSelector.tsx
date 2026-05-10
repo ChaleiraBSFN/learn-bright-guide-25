@@ -29,10 +29,16 @@ const languages: LanguageOption[] = [
   { code: 'ru', name: 'Русский', Flag: RU },
 ];
 
+function resolveLanguage(code: string): LanguageOption {
+  // i18next normalizes 'pt-BR' to 'pt' internally
+  const normalized = code === 'pt' ? 'pt-BR' : code;
+  return languages.find((lang) => lang.code === normalized) || languages[0];
+}
+
 export function LanguageSelector() {
   const { i18n } = useTranslation();
 
-  const currentLanguage = languages.find((lang) => lang.code === i18n.language) || languages[0];
+  const currentLanguage = resolveLanguage(i18n.language);
   const CurrentFlag = currentLanguage.Flag;
 
   const handleLanguageChange = (langCode: string) => {
@@ -56,7 +62,7 @@ export function LanguageSelector() {
             <DropdownMenuItem
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
-              className={`cursor-pointer ${lang.code === i18n.language ? 'bg-accent' : ''}`}
+              className={`cursor-pointer ${resolveLanguage(i18n.language).code === lang.code ? 'bg-accent' : ''}`}
             >
               <Flag className="mr-2 h-4 w-6 rounded-[2px] object-cover" aria-hidden="true" />
               {lang.name}
