@@ -46,6 +46,7 @@ const AppContent = () => {
           <Route path="/update-notices" element={<UpdateNoticesAdmin />} />
           <Route path="/platform-control" element={<PlatformControl />} />
           <Route path="/ai-config" element={<AIConfigAdmin />} />
+          <Route path="/downloads" element={<Downloads />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
