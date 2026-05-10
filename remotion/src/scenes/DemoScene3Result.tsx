@@ -1,117 +1,152 @@
 import { AbsoluteFill, useCurrentFrame, spring, interpolate, useVideoConfig } from "remotion";
 import { SITE } from "../site-theme";
 
-const SectionCard: React.FC<{ delay: number; x: number; y: number; w: number; h: number; accent: string; icon: string; title: string; subtitle?: string; body: React.ReactNode }> = ({ delay, x, y, w, h, accent, icon, title, subtitle, body }) => {
+// Faithful reproduction of StudyResult: vertical stack of section-cards
+// with colored left strip (1.5 width) — see src/components/sections/*.tsx
+
+const SectionCard: React.FC<{
+  delay: number;
+  accent: string;
+  number: string;
+  icon: string;
+  title: string;
+  children: React.ReactNode;
+}> = ({ delay, accent, number, icon, title, children }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - delay, fps, config: { damping: 14, stiffness: 130 } });
+  const s = spring({ frame: frame - delay, fps, config: { damping: 16, stiffness: 110 } });
   return (
     <div style={{
-      position: "absolute", left: x, top: y, width: w, height: h,
-      background: SITE.card,
-      border: `1px solid ${SITE.border}`,
-      borderTop: `4px solid ${accent}`,
-      borderRadius: 14, padding: 22,
-      transform: `translateY(${interpolate(s, [0, 1], [50, 0])}px) scale(${s})`,
-      opacity: s,
-      boxShadow: `0 8px 24px ${SITE.shadow}`,
+      position: "relative", overflow: "hidden",
+      background: SITE.card, border: `1px solid ${SITE.border}`,
+      borderRadius: 16, padding: 22,
+      opacity: s, transform: `translateY(${interpolate(s, [0, 1], [24, 0])}px)`,
+      boxShadow: `0 1px 2px ${SITE.shadow}`,
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+      {/* Left colored strip (w-1.5 rounded-l-2xl bg-section-X) */}
+      <div style={{
+        position: "absolute", left: 0, top: 0, height: "100%", width: 6,
+        borderTopLeftRadius: 16, borderBottomLeftRadius: 16,
+        background: accent,
+      }} />
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 14, paddingLeft: 6 }}>
         <div style={{
-          width: 38, height: 38, borderRadius: 10,
-          background: `${accent}20`, color: accent,
+          width: 44, height: 44, borderRadius: 12,
+          background: `${accent}1a`, color: accent,
           display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22,
+          flexShrink: 0,
         }}>{icon}</div>
-        <div>
-          <div style={{ fontFamily: "Nunito", fontSize: 19, fontWeight: 900, color: SITE.text }}>{title}</div>
-          {subtitle && <div style={{ fontSize: 12, color: SITE.muted, fontWeight: 600 }}>{subtitle}</div>}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontFamily: SITE.fontDisplay, fontSize: 20, fontWeight: 800, color: SITE.text, marginBottom: 8 }}>
+            {number}. {title}
+          </div>
+          <div style={{ fontFamily: SITE.fontBody, color: "rgba(12,20,38,0.9)", fontSize: 15, lineHeight: 1.55 }}>
+            {children}
+          </div>
         </div>
       </div>
-      <div style={{ color: SITE.text, fontSize: 15, fontWeight: 500, lineHeight: 1.5 }}>{body}</div>
     </div>
   );
 };
 
 export const DemoScene3Result: React.FC = () => {
   const frame = useCurrentFrame();
-  const titleS = spring({ frame, fps: 30, config: { damping: 18 } });
+  const headerS = spring({ frame, fps: 30, config: { damping: 18 } });
+
+  // Simulate vertical scroll after frame 95
+  const scrollY = interpolate(frame, [95, 155], [0, -340], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <AbsoluteFill style={{ padding: 30 }}>
-      <div style={{
-        display: "flex", alignItems: "center", gap: 14, marginBottom: 18,
-        opacity: titleS, transform: `translateY(${interpolate(titleS, [0, 1], [-15, 0])}px)`,
-      }}>
-        <div style={{ fontFamily: "Nunito", fontSize: 32, fontWeight: 900, color: SITE.text }}>
-          🌱 Fotossíntese
-        </div>
-        <div style={{ padding: "5px 12px", background: `${SITE.secondary}22`, color: SITE.secondary, borderRadius: 999, fontSize: 13, fontWeight: 800 }}>
-          ✓ Estudo gerado em 4.2s
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
-        {[
-          { name: "📖 Estudo", active: true, color: SITE.primary },
-          { name: "🧠 Mapa Mental", active: false, color: SITE.secondary },
-          { name: "✏️ Exercícios", active: false, color: SITE.accent },
-          { name: "📅 Plano", active: false, color: SITE.primary },
-        ].map((t, i) => (
-          <div key={i} style={{
-            padding: "10px 18px",
-            background: t.active ? t.color : SITE.card,
-            border: `1px solid ${t.active ? t.color : SITE.border}`,
-            borderRadius: 10,
-            color: t.active ? "#fff" : SITE.text, fontWeight: 800, fontSize: 14,
-            boxShadow: t.active ? `0 4px 12px ${t.color}44` : "none",
-          }}>{t.name}</div>
-        ))}
-      </div>
-
-      <SectionCard
-        delay={6} x={20} y={170} w={780} h={310} accent={SITE.primary}
-        icon="📖" title="Conceito" subtitle="Definição completa"
-        body={<>Processo bioquímico em que plantas, algas e algumas bactérias <b>convertem energia luminosa em energia química</b>, sintetizando glicose a partir de CO₂ e H₂O e liberando O₂. Ocorre nos cloroplastos em duas fases: clara (fotofase) e escura (Ciclo de Calvin).</>}
-      />
-
-      <SectionCard
-        delay={18} x={820} y={170} w={780} h={310} accent={SITE.accent}
-        icon="💡" title="Exemplo Prático" subtitle="Aplicação no dia a dia"
-        body={<>Uma folha de manjericão na janela: a luz solar excita a clorofila → quebra a água (H₂O) → libera O₂ → produz ATP e NADPH → o ciclo de Calvin transforma CO₂ em glicose (C₆H₁₂O₆), que vira o "alimento" da planta.</>}
-      />
-
-      <SectionCard
-        delay={30} x={20} y={500} w={780} h={290} accent={SITE.secondary}
-        icon="🧠" title="Mapa Mental" subtitle="Conceitos relacionados"
-        body={
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
-            {["Clorofila", "Cloroplastos", "Fase clara", "Ciclo de Calvin", "ATP", "NADPH", "Glicose", "O₂", "CO₂"].map((t, i) => (
-              <div key={i} style={{ padding: "8px 14px", background: `${SITE.secondary}15`, border: `1px solid ${SITE.secondary}55`, borderRadius: 999, fontSize: 13, fontWeight: 700, color: SITE.secondary }}>{t}</div>
-            ))}
+    <AbsoluteFill style={{ background: SITE.bg, overflow: "hidden" }}>
+      <div style={{ padding: "32px 80px", transform: `translateY(${scrollY}px)` }}>
+        {/* Header — matches StudyResult title block */}
+        <div style={{ textAlign: "center", marginBottom: 28, opacity: headerS, transform: `translateY(${interpolate(headerS, [0, 1], [-12, 0])}px)` }}>
+          <div style={{ fontFamily: SITE.fontDisplay, fontSize: 36, fontWeight: 800, color: SITE.text }}>
+            Material de Estudo
           </div>
-        }
-      />
+          <div style={{ fontSize: 18, color: SITE.muted, marginTop: 6, fontFamily: SITE.fontBody }}>
+            Tema: <span style={{ color: SITE.primary, fontWeight: 700 }}>Fotossíntese</span>
+          </div>
+        </div>
 
-      <SectionCard
-        delay={42} x={820} y={500} w={780} h={290} accent={SITE.primary}
-        icon="📅" title="Plano de Estudo" subtitle="7 dias"
-        body={
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 2 }}>
-            {[
-              { d: "Dia 1", t: "Estrutura do cloroplasto" },
-              { d: "Dia 2", t: "Fase clara: fotólise da água" },
-              { d: "Dia 3", t: "Ciclo de Calvin (fase escura)" },
-              { d: "Dia 4", t: "Fatores limitantes + exercícios" },
-            ].map((p, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: SITE.bg, borderRadius: 8 }}>
-                <div style={{ width: 56, fontSize: 12, fontWeight: 900, color: SITE.accent }}>{p.d}</div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: SITE.text }}>{p.t}</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 1100, margin: "0 auto" }}>
+          <SectionCard delay={6} accent={SITE.sectionObjective} number="1" icon="🎯" title="Objetivo">
+            Compreender o processo da fotossíntese, identificando suas fases (clara e escura), seus reagentes, produtos e a importância biológica para a vida na Terra.
+          </SectionCard>
+
+          <SectionCard delay={20} accent={SITE.sectionSummary} number="2" icon="📚" title="Resumo">
+            <div style={{ display: "flex", gap: 18 }}>
+              <div style={{ flex: 1 }}>
+                A fotossíntese é o processo bioquímico em que plantas, algas e algumas bactérias <b>convertem energia luminosa em energia química</b>, sintetizando glicose a partir de CO₂ e H₂O e liberando O₂. Ocorre nos cloroplastos e divide-se em fase clara (fotofase) e fase escura (Ciclo de Calvin).
               </div>
-            ))}
-          </div>
-        }
-      />
+              <div style={{
+                width: 180, height: 110, borderRadius: 12,
+                background: `linear-gradient(135deg, ${SITE.sectionSummary}33, ${SITE.sectionSummary}11)`,
+                border: `1px solid ${SITE.sectionSummary}55`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 56, flexShrink: 0,
+              }}>🌿</div>
+            </div>
+          </SectionCard>
+
+          <SectionCard delay={36} accent={SITE.sectionSteps} number="3" icon="📋" title="Demonstrações">
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[
+                { n: 1, t: "Absorção da luz pela clorofila", d: "Os fótons excitam elétrons da clorofila nos tilacoides." },
+                { n: 2, t: "Fotólise da água (H₂O → 2H⁺ + ½O₂ + 2e⁻)", d: "Libera O₂ e fornece elétrons para o ETC." },
+                { n: 3, t: "Ciclo de Calvin: fixação do CO₂", d: "Usa ATP e NADPH para formar glicose (C₆H₁₂O₆)." },
+              ].map((p) => (
+                <div key={p.n} style={{
+                  display: "flex", gap: 12, padding: "10px 12px",
+                  background: `${SITE.sectionSteps}08`, borderRadius: 10,
+                  border: `1px solid ${SITE.sectionSteps}22`,
+                }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%",
+                    background: SITE.sectionSteps, color: "#fff",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontWeight: 800, fontSize: 13, flexShrink: 0,
+                  }}>{p.n}</div>
+                  <div>
+                    <div style={{ fontWeight: 700, color: SITE.text, fontSize: 15 }}>{p.t}</div>
+                    <div style={{ fontSize: 13, color: SITE.muted, marginTop: 2 }}>{p.d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+
+          <SectionCard delay={52} accent={SITE.sectionMindmap} number="4" icon="🧠" title="Mapa Visual">
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {["Clorofila", "Cloroplastos", "Fase clara", "Ciclo de Calvin", "ATP", "NADPH", "Glicose", "O₂", "CO₂"].map((tag, i) => (
+                <div key={i} style={{
+                  padding: "6px 14px", borderRadius: 999,
+                  background: `${SITE.sectionMindmap}15`,
+                  border: `1px solid ${SITE.sectionMindmap}55`,
+                  color: SITE.sectionMindmap, fontSize: 13, fontWeight: 700, fontFamily: SITE.fontBody,
+                }}>{tag}</div>
+              ))}
+            </div>
+          </SectionCard>
+
+          <SectionCard delay={70} accent={SITE.sectionPlan} number="5" icon="📅" title="Plano de Estudo (7 dias)">
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {[
+                { d: "Dia 1", t: "Estrutura do cloroplasto" },
+                { d: "Dia 2", t: "Fase clara: fotólise da água" },
+                { d: "Dia 3", t: "Cadeia transportadora de elétrons" },
+                { d: "Dia 4", t: "Ciclo de Calvin (fase escura)" },
+                { d: "Dia 5", t: "Fatores limitantes da fotossíntese" },
+              ].map((p, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: SITE.bg, borderRadius: 8 }}>
+                  <div style={{ width: 50, fontSize: 12, fontWeight: 800, color: SITE.sectionPlan }}>{p.d}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: SITE.text }}>{p.t}</div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        </div>
+      </div>
     </AbsoluteFill>
   );
 };
