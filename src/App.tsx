@@ -18,6 +18,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import UpdateNoticesAdmin from "./pages/UpdateNoticesAdmin";
 import PlatformControl from "./pages/PlatformControl";
 import AIConfigAdmin from "./pages/AIConfigAdmin";
+import Downloads from "./pages/Downloads";
 import NotFound from "./pages/NotFound";
 import { useTimeTracker } from "@/hooks/useAchievements";
 
