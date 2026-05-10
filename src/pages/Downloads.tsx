@@ -48,9 +48,9 @@ export default function Downloads() {
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold">Downloads</h1>
-          <NavLink to="/" variant="outline" size="sm">
+          <Link to="/" className="text-sm underline underline-offset-4 text-muted-foreground hover:text-foreground">
             Voltar
-          </NavLink>
+          </Link>
         </div>
 
         <div className="space-y-4">
