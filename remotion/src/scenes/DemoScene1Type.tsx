@@ -21,15 +21,17 @@ export const DemoScene1Type: React.FC = () => {
   const buttonPress = spring({ frame: frame - 158, fps, config: { damping: 8, stiffness: 300 }, durationInFrames: 14 });
   const buttonScale = 1 - buttonPress * 0.06;
 
-  // Cursor path
+  // Cursor path — coords measured against actual layout (scene area 1700×~816, padding 26px 110px)
+  // Hero ~122, Features end ~206, Tabs end ~272, Form card padding starts y=300
+  // Tema input center ≈ y 349 | Nivel select ≈ y 436 | Prazo input ≈ y 434 | Generate button ≈ y 607
   const cursorPath = [
-    { x: 1500, y: 700, frame: 0 },
-    { x: 850, y: 555, frame: 50 },     // input "Tema"
-    { x: 850, y: 555, frame: 110 },
-    { x: 460, y: 670, frame: 125 },    // nivel select
-    { x: 1100, y: 670, frame: 145 },   // prazo
-    { x: 850, y: 855, frame: 158 },    // generate button
-    { x: 850, y: 855, frame: 175 },
+    { x: 1450, y: 720, frame: 0 },
+    { x: 750, y: 349, frame: 50 },     // Tema input
+    { x: 750, y: 349, frame: 110 },
+    { x: 380, y: 436, frame: 122 },    // Nivel select
+    { x: 1080, y: 434, frame: 142 },   // Prazo input
+    { x: 740, y: 607, frame: 158 },    // Generate button
+    { x: 740, y: 607, frame: 175 },
   ];
 
   return (

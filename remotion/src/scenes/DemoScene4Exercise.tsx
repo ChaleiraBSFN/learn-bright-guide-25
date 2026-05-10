@@ -15,13 +15,14 @@ export const DemoScene4Exercise: React.FC = () => {
   const headerS = spring({ frame, fps, config: { damping: 18 } });
   const cardS = spring({ frame: frame - 8, fps, config: { damping: 16 } });
 
-  // Cursor: option B at frame 70, then "Verificar" at frame 110
+  // Cursor path — measured against actual layout (header ends y≈105, card content starts y=133)
+  // Alternatives: A center ≈ 265, B ≈ 322, C ≈ 393, D ≈ 465 | Verify button ≈ y 539
   const cursorPath = [
-    { x: 1500, y: 800, frame: 0 },
-    { x: 920, y: 530, frame: 60 },
-    { x: 920, y: 530, frame: 100 },
-    { x: 920, y: 720, frame: 115 },
-    { x: 920, y: 720, frame: 160 },
+    { x: 1500, y: 760, frame: 0 },
+    { x: 720, y: 322, frame: 60 },   // Alternative B (correct)
+    { x: 720, y: 322, frame: 100 },
+    { x: 365, y: 539, frame: 115 },  // Verify button
+    { x: 365, y: 539, frame: 160 },
   ];
 
   const selected = frame >= 70;
