@@ -50,7 +50,11 @@ export const BrowserFrame: React.FC<{ children: React.ReactNode }> = ({ children
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ padding: "8px 16px", background: "#fff", border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text, display: "flex", gap: 6, alignItems: "center" }}>
-            <span style={{ width: 18, height: 12, background: "linear-gradient(0deg, #009c3b 33%, #ffdf00 33% 66%, #002776 66%)", borderRadius: 2 }} />
+            <svg viewBox="0 0 30 20" style={{ width: 22, height: 14, borderRadius: 2 }} aria-hidden="true">
+              <rect width="30" height="20" fill="#009c3b" />
+              <path d="M15 2 L28 10 L15 18 L2 10 Z" fill="#ffdf00" />
+              <circle cx="15" cy="10" r="5.5" fill="#002776" />
+            </svg>
             BR
           </div>
           <div style={{ padding: "8px 16px", background: "#fff", border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text }}>
