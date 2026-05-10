@@ -296,22 +296,27 @@ const Index = () => {
       await useCredit();
       saveToHistory("study", data.tema, data.nivel, content, { prazo: data.prazo });
 
+      // Start image generation IN PARALLEL with the finishing animation,
+      // so images are ready (or close to it) when overlay disappears — works on mobile too.
+      const passos = content.demonstracoes?.passos?.map((p: any) => ({
+        titulo: p.titulo,
+        conceito: p.conceito,
+      }));
+      const imagesPromise = fetchImages(data.tema, data.nivel, passos);
+
       toast({
         title: t('generate.success'),
         description: t('generate.successDesc'),
       });
       // Trigger achievement
       checkAndUnlock('generate_study');
-      
-      // Trigger finishing animation while content is already rendered behind
+
+      // Wait for either images to finish or the minimum animation time, whichever is longer
       setIsFinishingStudy(true);
-      await new Promise(resolve => setTimeout(resolve, 2200));
-      
-      const passos = content.demonstracoes?.passos?.map((p: any) => ({
-        titulo: p.titulo,
-        conceito: p.conceito,
-      }));
-      fetchImages(data.tema, data.nivel, passos);
+      await Promise.all([
+        imagesPromise,
+        new Promise(resolve => setTimeout(resolve, 2200)),
+      ]);
     } catch (error) {
       console.error("Error generating study content:", error);
       const message = error instanceof Error
