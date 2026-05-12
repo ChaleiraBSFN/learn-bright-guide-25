@@ -216,7 +216,15 @@ const ManageUsers = () => {
           ) : analytics ? (
             <>
               {/* Top Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                <div className="card-elevated p-5 text-center ring-2 ring-green-500/40">
+                  <div className="relative inline-block">
+                    <Wifi className="h-5 w-5 text-green-600 mx-auto mb-1" />
+                    <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  </div>
+                  <span className="text-2xl font-bold text-green-600">{analytics.onlineNow}</span>
+                  <p className="text-[11px] text-muted-foreground mt-1">Online agora</p>
+                </div>
                 <div className="card-elevated p-5 text-center">
                   <Users className="h-5 w-5 text-primary mx-auto mb-1" />
                   <span className="text-2xl font-bold text-foreground">{analytics.totalUsers}</span>
