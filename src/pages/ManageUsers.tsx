@@ -57,7 +57,7 @@ const ManageUsers = () => {
         totalStudiesRes, totalExercisesRes,
         studies7Res, exercises7Res,
         studies30Res, exercises30Res,
-        creditsRes, achievementsRes, visitsRes,
+        creditsRes, achievementsRes, visitsRes, onlineRes,
       ] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('subscriptions').select('id, status, expires_at'),
@@ -70,6 +70,7 @@ const ManageUsers = () => {
         supabase.from('user_credits').select('total_earned'),
         supabase.from('user_achievements').select('id', { count: 'exact', head: true }),
         supabase.rpc('get_site_analytics'),
+        supabase.rpc('get_online_now', { _window_seconds: 120 }),
       ]);
 
       const totalUsers = profilesRes.count || 0;
@@ -85,6 +86,8 @@ const ManageUsers = () => {
         visits.filter((v: any) => new Date(v.started_at) >= new Date(todayStart)).map((v: any) => v.user_id || v.session_id)
       ).size;
 
+      const onlineNow = (onlineRes.data as any)?.[0]?.online_count || 0;
+
       setAnalytics({
         totalUsers, premiumUsers,
         totalStudies: totalStudiesRes.count || 0,
@@ -93,7 +96,7 @@ const ManageUsers = () => {
         exercisesLast7Days: exercises7Res.count || 0,
         studiesLast30Days: studies30Res.count || 0,
         exercisesLast30Days: exercises30Res.count || 0,
-        totalCreditsUsed, totalAchievements, activeToday,
+        totalCreditsUsed, totalAchievements, activeToday, onlineNow,
       });
       setLastUpdate(new Date());
     } catch (error) {
