@@ -121,16 +121,14 @@ serve(async (req) => {
     ];
 
     if (Array.isArray(passos) && passos.length > 0) {
-      const maxSteps = Math.min(passos.length, 5);
-      for (let i = 0; i < maxSteps; i++) {
-        const step = passos[i];
-        const titulo = typeof step === "string" ? step : step?.titulo || step?.conceito || `Step ${i + 1}`;
-        const sanitizedStep = String(titulo).replace(/[<>]/g, "").trim().slice(0, 100);
-        prompts.push({
-          label: `step-${i}`,
-          prompt: `A simple educational illustration of "${sanitizedStep}" (related to "${sanitizedTema}") for ${audience}.`,
-        });
-      }
+      // Limit to 1 step illustration to keep it fast (4 images total).
+      const step = passos[0];
+      const titulo = typeof step === "string" ? step : step?.titulo || step?.conceito || `Step 1`;
+      const sanitizedStep = String(titulo).replace(/[<>]/g, "").trim().slice(0, 100);
+      prompts.push({
+        label: `step-0`,
+        prompt: `A simple educational illustration of "${sanitizedStep}" (related to "${sanitizedTema}") for ${audience}.`,
+      });
     }
 
     console.log(`Generating ${prompts.length} SVGs in parallel for: ${sanitizedTema}`);
