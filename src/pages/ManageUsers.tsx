@@ -114,7 +114,7 @@ const ManageUsers = () => {
   // Auto-refresh every 10s as fallback for mobile/background tabs
   useEffect(() => {
     if (!isLive || !isAdmin) return;
-    const interval = setInterval(() => fetchAnalytics(false), 10000);
+    const interval = setInterval(() => fetchAnalytics(false), 5000);
     return () => clearInterval(interval);
   }, [isLive, isAdmin, fetchAnalytics]);
 
