@@ -22,6 +22,7 @@ interface AnalyticsData {
   totalCreditsUsed: number;
   totalAchievements: number;
   activeToday: number;
+  onlineNow: number;
 }
 
 const ManageUsers = () => {
