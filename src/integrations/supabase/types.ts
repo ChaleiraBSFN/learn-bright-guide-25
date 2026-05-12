@@ -41,6 +41,36 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_response_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          endpoint: string
+          expires_at: string
+          hits: number
+          id: string
+          response: Json
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          endpoint: string
+          expires_at?: string
+          hits?: number
+          id?: string
+          response: Json
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          endpoint?: string
+          expires_at?: string
+          hits?: number
+          id?: string
+          response?: Json
+        }
+        Relationships: []
+      }
       engine_notices: {
         Row: {
           created_at: string
@@ -608,6 +638,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      cleanup_expired_ai_cache: { Args: never; Returns: undefined }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       create_pending_subscription: {
         Args: never
