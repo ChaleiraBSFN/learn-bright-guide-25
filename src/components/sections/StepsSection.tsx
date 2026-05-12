@@ -5,6 +5,7 @@ import { ListOrdered, Lightbulb, BookOpen, Sparkles, Loader2, ChevronDown, Chevr
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { triggerRateLimit } from "@/components/RateLimitBar";
 
 interface AIImage {
   tipo: "ai";
