@@ -368,10 +368,10 @@ export function GeneratingOverlay({ type, isFinishing }: GeneratingOverlayProps)
               </div>
 
               {/* Helpful explainer message */}
-              <p className="mt-3 max-w-xs text-center text-[11px] leading-snug text-muted-foreground/80">
+              <p className="mt-3 max-w-xs text-center text-[11px] leading-snug text-foreground font-medium">
                 {t(
                   'generating.complexityHint',
-                  'Pode demorar alguns segundos devido à geração de conteúdos complexos, imagens, diagramas e detalhes personalizados.'
+                  'Pode demorar alguns segundos devido à geração de conteúdos complexos, imagens, diagramas e detalhes personalizados. Às vezes as imagens podem não ser geradas caso o limite de requisições seja excedido.'
                 )}
               </p>
             </motion.div>
