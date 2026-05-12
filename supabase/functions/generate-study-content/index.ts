@@ -415,9 +415,9 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     const { temperature } = getSubjectStyle(tema);
     
     const maxDays = Math.min(prazo, 30);
-    const baseTokens = isPremium ? 5000 : 3000;
-    const dayTokens = maxDays * 150;
-    const maxTokens = Math.min(baseTokens + dayTokens, 10000);
+    const baseTokens = isPremium ? 8000 : 5000;
+    const dayTokens = maxDays * 250;
+    const maxTokens = Math.min(baseTokens + dayTokens, 16000);
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
