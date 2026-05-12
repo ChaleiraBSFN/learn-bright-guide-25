@@ -5,52 +5,75 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-async function generateImageGemini(prompt: string, apiKey: string, modelIndex = 0): Promise<string | null> {
-  const models = ["gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-1.5-flash"];
-  // Use text-to-image via Imagen through Gemini, or use generateContent with image response
-  const imageModels = ["gemini-3.1-flash-image-preview", "gemini-3-pro-image-preview"];
-  
-  // Try image models first, starting from the assigned index to distribute load
-  for (let i = 0; i < imageModels.length; i++) {
-    const model = imageModels[(modelIndex + i) % imageModels.length];
+// Generate an SVG illustration via Lovable AI Gateway (no Gemini direct rate limits).
+async function generateSvg(prompt: string, apiKey: string): Promise<string | null> {
+  const models = ["google/gemini-2.5-flash-lite", "google/gemini-2.5-flash", "google/gemini-3-flash-preview"];
+
+  for (const model of models) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 9000);
+      const timeout = setTimeout(() => controller.abort(), 15000);
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: { responseModalities: ["TEXT", "IMAGE"] },
-          }),
-          signal: controller.signal,
-        }
-      );
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            {
+              role: "system",
+              content: "You output ONLY a single self-contained inline SVG. No markdown, no code fences, no explanations.",
+            },
+            {
+              role: "user",
+              content: `Create an inline SVG illustrating: ${prompt}
+Requirements:
+- Root: <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+- Vibrant flat-design colors, clean shapes, icons, arrows, helpful <text> labels
+- Light background <rect>
+- No external images, no scripts
+Output ONLY the <svg>...</svg> markup.`,
+            },
+          ],
+          temperature: 0.7,
+        }),
+        signal: controller.signal,
+      });
 
       clearTimeout(timeout);
 
       if (response.status === 429) {
-        console.log(`[Image] ${model} rate limited`);
+        console.log(`[SVG] ${model} rate limited`);
         continue;
       }
-      if (!response.ok) continue;
+      if (response.status === 402) {
+        console.log(`[SVG] ${model} payment required`);
+        continue;
+      }
+      if (!response.ok) {
+        console.log(`[SVG] ${model} status ${response.status}`);
+        continue;
+      }
 
       const data = await response.json();
-      const parts = data.candidates?.[0]?.content?.parts;
-      if (parts) {
-        for (const part of parts) {
-          if (part.inlineData) {
-            const mimeType = part.inlineData.mimeType || "image/png";
-            return `data:${mimeType};base64,${part.inlineData.data}`;
-          }
-        }
+      const text: string | undefined = data.choices?.[0]?.message?.content;
+      if (!text) continue;
+
+      const match = text.match(/<svg[\s\S]*?<\/svg>/i);
+      if (!match) {
+        console.log(`[SVG] ${model} returned no svg tag`);
+        continue;
       }
+      const svg = match[0];
+
+      const base64 = btoa(unescape(encodeURIComponent(svg)));
+      return `data:image/svg+xml;base64,${base64}`;
     } catch (e: any) {
-      if (e.name === "AbortError") console.log(`[Image] ${model} timed out`);
-      else console.error(`[Image] ${model}:`, e.message);
+      if (e.name === "AbortError") console.log(`[SVG] ${model} timed out`);
+      else console.error(`[SVG] ${model}:`, e.message);
     }
   }
   return null;
@@ -71,8 +94,8 @@ serve(async (req) => {
       );
     }
 
-    const GEMINI_KEY = Deno.env.get("GOOGLE_GEMINI_API_KEY");
-    if (!GEMINI_KEY) throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+    const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const sanitizedTema = tema.replace(/[<>]/g, "").replace(/```/g, "").trim().slice(0, 200);
     const sanitizedNivel = (nivel || "medio").replace(/[<>]/g, "").trim().slice(0, 50);
@@ -84,13 +107,11 @@ serve(async (req) => {
       superior: "graduate students",
     };
     const audience = nivelLabel[sanitizedNivel] || "students";
-    const shortPrompt = (desc: string) => `${desc} about "${sanitizedTema}" for ${audience}. White background, flat design, vibrant colors, no text.`;
 
-    // 3 base images + up to 5 step images = 6-8 total
     const prompts: { label: string; prompt: string }[] = [
-      { label: "summary", prompt: shortPrompt("Clean colorful educational infographic with icons and arrows") },
-      { label: "mindmap-center", prompt: shortPrompt("Mind map with central topic and 4-5 colorful branches with icons") },
-      { label: "diagram", prompt: shortPrompt("Educational diagram showing relationships between key concepts with boxes and arrows") },
+      { label: "summary", prompt: `A clean colorful educational infographic about "${sanitizedTema}" for ${audience}, with icons and arrows.` },
+      { label: "mindmap-center", prompt: `A mind map about "${sanitizedTema}" for ${audience}: central topic with 4-5 colorful branches and small icons.` },
+      { label: "diagram", prompt: `An educational diagram about "${sanitizedTema}" for ${audience}: boxes connected by arrows, key concepts labeled.` },
     ];
 
     if (Array.isArray(passos) && passos.length > 0) {
@@ -101,16 +122,15 @@ serve(async (req) => {
         const sanitizedStep = String(titulo).replace(/[<>]/g, "").trim().slice(0, 100);
         prompts.push({
           label: `step-${i}`,
-          prompt: shortPrompt(`Simple illustration of "${sanitizedStep}"`)
+          prompt: `A simple educational illustration of "${sanitizedStep}" (related to "${sanitizedTema}") for ${audience}.`,
         });
       }
     }
 
-    console.log(`Generating ${prompts.length} images in parallel for: ${sanitizedTema}`);
+    console.log(`Generating ${prompts.length} SVGs in parallel for: ${sanitizedTema}`);
 
-    // Fire ALL requests in parallel - distribute across models to reduce rate limiting
     const results = await Promise.allSettled(
-      prompts.map((p, i) => generateImageGemini(p.prompt, GEMINI_KEY, i % 2))
+      prompts.map((p) => generateSvg(p.prompt, LOVABLE_KEY))
     );
 
     const descMap: Record<string, string> = {
@@ -137,7 +157,7 @@ serve(async (req) => {
       })
       .filter(Boolean);
 
-    console.log(`Generated ${aiImages.length} AI images`);
+    console.log(`Generated ${aiImages.length}/${prompts.length} SVG images`);
 
     return new Response(
       JSON.stringify({ aiImages, webImages: [], tema: sanitizedTema }),
