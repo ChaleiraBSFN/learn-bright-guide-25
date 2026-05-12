@@ -28,6 +28,7 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   useTimeTracker();
+  useVisitHeartbeat();
 
   return (
     <>
