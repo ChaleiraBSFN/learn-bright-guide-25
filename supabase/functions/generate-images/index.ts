@@ -94,8 +94,8 @@ serve(async (req) => {
       );
     }
 
-    const GEMINI_KEY = Deno.env.get("GOOGLE_GEMINI_API_KEY");
-    if (!GEMINI_KEY) throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+    const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const sanitizedTema = tema.replace(/[<>]/g, "").replace(/```/g, "").trim().slice(0, 200);
     const sanitizedNivel = (nivel || "medio").replace(/[<>]/g, "").trim().slice(0, 50);
