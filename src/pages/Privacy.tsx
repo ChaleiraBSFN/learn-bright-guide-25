@@ -19,7 +19,7 @@ export default function Privacy() {
           <section className="border-2 border-foreground rounded-xl p-6 bg-card">
             <h2 className="text-xl font-bold text-primary mb-3">1. Quem Somos</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Learn Buddy ("nós", "nosso" ou "o aplicativo") é uma plataforma educacional gratuita desenvolvida por Marcelo Soares de Macedo. Nosso objetivo é ajudar estudantes a aprender qualquer tema com o auxílio de inteligência artificial. Nossa sede virtual opera através do domínio <strong>studdybuddy.com.br</strong>.
+              Learn Buddy ("nós", "nosso" ou "o aplicativo") é uma plataforma educacional gratuita desenvolvida pela Equipe de Desenvolvimento da Learn Buddy (EDLB). Nosso objetivo é ajudar estudantes a aprender qualquer tema com o auxílio de inteligência artificial. Nossa sede virtual opera através do domínio <strong>studdybuddy.com.br</strong>.
             </p>
           </section>
 
@@ -146,9 +146,9 @@ export default function Privacy() {
               Se você tiver dúvidas, preocupações ou solicitações relacionadas à privacidade, entre em contato:
             </p>
             <div className="mt-3 space-y-1 text-muted-foreground">
-              <p><strong>Responsável:</strong> Marcelo Soares de Macedo</p>
+              <p><strong>Responsável:</strong> Equipe de Desenvolvimento da Learn Buddy (EDLB)</p>
               <p><strong>Website:</strong> studdybuddy.com.br</p>
-              <p><strong>E-mail:</strong> suporte@studdybuddy.com.br</p>
+              <p><strong>E-mail:</strong> studdybuddy@gmail.com</p>
             </div>
           </section>
         </div>
