@@ -32,6 +32,7 @@ const AppContent = () => {
     <>
       <Toaster />
       <Sonner />
+      <RateLimitBar />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
