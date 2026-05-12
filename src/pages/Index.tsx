@@ -282,7 +282,11 @@ const Index = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: "Erro desconhecido" }));
-        if (response.status === 429) throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        if (response.status === 429) {
+          const retryAfter = Number(response.headers.get("retry-after")) || 60;
+          triggerRateLimit(retryAfter);
+          throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        }
         if (response.status === 402) throw new Error("Créditos insuficientes.");
         throw new Error(errorData.error || "Erro ao gerar conteúdo");
       }
