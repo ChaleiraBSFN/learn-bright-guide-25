@@ -641,6 +641,13 @@ export type Database = {
           type: string
         }[]
       }
+      get_online_now: {
+        Args: { _window_seconds?: number }
+        Returns: {
+          online_count: number
+          registered_count: number
+        }[]
+      }
       get_pending_feature_purchases: {
         Args: never
         Returns: {

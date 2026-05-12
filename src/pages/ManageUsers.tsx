@@ -22,6 +22,7 @@ interface AnalyticsData {
   totalCreditsUsed: number;
   totalAchievements: number;
   activeToday: number;
+  onlineNow: number;
 }
 
 const ManageUsers = () => {
@@ -56,7 +57,7 @@ const ManageUsers = () => {
         totalStudiesRes, totalExercisesRes,
         studies7Res, exercises7Res,
         studies30Res, exercises30Res,
-        creditsRes, achievementsRes, visitsRes,
+        creditsRes, achievementsRes, visitsRes, onlineRes,
       ] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('subscriptions').select('id, status, expires_at'),
@@ -69,6 +70,7 @@ const ManageUsers = () => {
         supabase.from('user_credits').select('total_earned'),
         supabase.from('user_achievements').select('id', { count: 'exact', head: true }),
         supabase.rpc('get_site_analytics'),
+        supabase.rpc('get_online_now', { _window_seconds: 120 }),
       ]);
 
       const totalUsers = profilesRes.count || 0;
@@ -84,6 +86,8 @@ const ManageUsers = () => {
         visits.filter((v: any) => new Date(v.started_at) >= new Date(todayStart)).map((v: any) => v.user_id || v.session_id)
       ).size;
 
+      const onlineNow = (onlineRes.data as any)?.[0]?.online_count || 0;
+
       setAnalytics({
         totalUsers, premiumUsers,
         totalStudies: totalStudiesRes.count || 0,
@@ -92,7 +96,7 @@ const ManageUsers = () => {
         exercisesLast7Days: exercises7Res.count || 0,
         studiesLast30Days: studies30Res.count || 0,
         exercisesLast30Days: exercises30Res.count || 0,
-        totalCreditsUsed, totalAchievements, activeToday,
+        totalCreditsUsed, totalAchievements, activeToday, onlineNow,
       });
       setLastUpdate(new Date());
     } catch (error) {
@@ -110,7 +114,7 @@ const ManageUsers = () => {
   // Auto-refresh every 10s as fallback for mobile/background tabs
   useEffect(() => {
     if (!isLive || !isAdmin) return;
-    const interval = setInterval(() => fetchAnalytics(false), 10000);
+    const interval = setInterval(() => fetchAnalytics(false), 5000);
     return () => clearInterval(interval);
   }, [isLive, isAdmin, fetchAnalytics]);
 
@@ -212,7 +216,15 @@ const ManageUsers = () => {
           ) : analytics ? (
             <>
               {/* Top Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                <div className="card-elevated p-5 text-center ring-2 ring-green-500/40">
+                  <div className="relative inline-block">
+                    <Wifi className="h-5 w-5 text-green-600 mx-auto mb-1" />
+                    <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  </div>
+                  <span className="text-2xl font-bold text-green-600">{analytics.onlineNow}</span>
+                  <p className="text-[11px] text-muted-foreground mt-1">Online agora</p>
+                </div>
                 <div className="card-elevated p-5 text-center">
                   <Users className="h-5 w-5 text-primary mx-auto mb-1" />
                   <span className="text-2xl font-bold text-foreground">{analytics.totalUsers}</span>
