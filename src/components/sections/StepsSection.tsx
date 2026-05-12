@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { triggerRateLimit } from "@/components/RateLimitBar";
+import { FormattedExplanation } from "@/components/FormattedExplanation";
 
 interface AIImage {
   tipo: "ai";
@@ -204,8 +205,8 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
                       ))}
                     </ul>
                     {explanations[passo.numero] && (
-                      <div className="mt-4 p-4 md:p-5 bg-background shadow-sm rounded-xl border border-accent/30 text-sm md:text-base text-foreground/90 leading-relaxed whitespace-pre-wrap animate-in fade-in zoom-in-95 duration-300">
-                        {explanations[passo.numero]}
+                      <div className="mt-4 p-4 md:p-5 bg-background shadow-sm rounded-xl border border-accent/30 animate-in fade-in zoom-in-95 duration-300">
+                        <FormattedExplanation text={explanations[passo.numero]} />
                       </div>
                     )}
                   </div>
