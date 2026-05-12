@@ -30,11 +30,11 @@ Output ONLY the <svg>...</svg> markup.`,
   });
 
   for (const model of models) {
-    // Up to 2 attempts per model with small jittered backoff for 429
-    for (let attempt = 0; attempt < 2; attempt++) {
+    // 1 attempt per model — fail fast and try next model
+    for (let attempt = 0; attempt < 1; attempt++) {
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 15000);
+        const timeout = setTimeout(() => controller.abort(), 10000);
 
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
