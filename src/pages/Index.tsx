@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
 import { StudyResult } from "@/components/StudyResult";
@@ -726,8 +727,11 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t border-border bg-muted/30 py-6 mt-12">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground space-y-2">
           <p>{t('footer.developed')}</p>
+          <Link to="/privacy" className="text-primary hover:underline font-medium">
+            Política de Privacidade
+          </Link>
         </div>
       </footer>
     </div>
