@@ -19,6 +19,7 @@ import UpdateNoticesAdmin from "./pages/UpdateNoticesAdmin";
 import PlatformControl from "./pages/PlatformControl";
 import AIConfigAdmin from "./pages/AIConfigAdmin";
 import Downloads from "./pages/Downloads";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import { useTimeTracker } from "@/hooks/useAchievements";
 
