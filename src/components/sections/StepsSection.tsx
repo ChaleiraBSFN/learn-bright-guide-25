@@ -62,8 +62,17 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
         body: { exemplo, contexto: data.titulo || "", idioma: lang, tema, nivel },
       });
 
+      // Detect 429 from invoke errors (FunctionsHttpError exposes context.response)
+      const status = (error as any)?.context?.response?.status;
+      if (status === 429) {
+        triggerRateLimit(60);
+        throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+      }
       if (error) throw new Error(error.message || "Erro ao gerar explicação.");
-      if (result?.error) throw new Error(result.error);
+      if (result?.error) {
+        if (/limite|rate/i.test(result.error)) triggerRateLimit(60);
+        throw new Error(result.error);
+      }
       if (!result?.explicacao) throw new Error("Resposta vazia da IA.");
 
       setExplanations(prev => ({ ...prev, [passoNumero]: result.explicacao }));
