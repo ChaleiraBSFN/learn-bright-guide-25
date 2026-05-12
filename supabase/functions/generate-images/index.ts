@@ -5,44 +5,52 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// Generate an SVG illustration via Gemini text model (no image-API rate limits).
+// Generate an SVG illustration via Lovable AI Gateway (no Gemini direct rate limits).
 async function generateSvg(prompt: string, apiKey: string): Promise<string | null> {
-  const models = ["gemini-2.0-flash", "gemini-2.0-flash-exp", "gemini-1.5-flash"];
+  const models = ["google/gemini-2.5-flash-lite", "google/gemini-2.5-flash", "google/gemini-3-flash-preview"];
 
   for (const model of models) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 12000);
+      const timeout = setTimeout(() => controller.abort(), 15000);
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            {
+              role: "system",
+              content: "You output ONLY a single self-contained inline SVG. No markdown, no code fences, no explanations.",
+            },
+            {
               role: "user",
-              parts: [{
-                text: `Generate ONLY a valid, self-contained inline SVG (no markdown, no explanation, no code fences) illustrating: ${prompt}
+              content: `Create an inline SVG illustrating: ${prompt}
 Requirements:
-- Root element <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-- Vibrant flat-design colors, clean shapes, icons, arrows where useful
-- Use <text> elements with readable labels when helpful
-- White or very light background <rect>
+- Root: <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+- Vibrant flat-design colors, clean shapes, icons, arrows, helpful <text> labels
+- Light background <rect>
 - No external images, no scripts
-- Output ONLY the <svg>...</svg> markup. Nothing else.`
-              }]
-            }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
-          }),
-          signal: controller.signal,
-        }
-      );
+Output ONLY the <svg>...</svg> markup.`,
+            },
+          ],
+          temperature: 0.7,
+        }),
+        signal: controller.signal,
+      });
 
       clearTimeout(timeout);
 
       if (response.status === 429) {
         console.log(`[SVG] ${model} rate limited`);
+        continue;
+      }
+      if (response.status === 402) {
+        console.log(`[SVG] ${model} payment required`);
         continue;
       }
       if (!response.ok) {
@@ -51,15 +59,16 @@ Requirements:
       }
 
       const data = await response.json();
-      const text: string | undefined = data.candidates?.[0]?.content?.parts?.map((p: any) => p.text).filter(Boolean).join("\n");
+      const text: string | undefined = data.choices?.[0]?.message?.content;
       if (!text) continue;
 
-      // Extract <svg>...</svg>
       const match = text.match(/<svg[\s\S]*?<\/svg>/i);
-      if (!match) continue;
+      if (!match) {
+        console.log(`[SVG] ${model} returned no svg tag`);
+        continue;
+      }
       const svg = match[0];
 
-      // Encode as data URL (base64 to safely handle special chars)
       const base64 = btoa(unescape(encodeURIComponent(svg)));
       return `data:image/svg+xml;base64,${base64}`;
     } catch (e: any) {
