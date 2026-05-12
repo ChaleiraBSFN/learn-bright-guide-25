@@ -134,8 +134,13 @@ serve(async (req) => {
 
     console.log(`Generating ${prompts.length} SVGs in parallel for: ${sanitizedTema}`);
 
+    // Stagger requests by 250ms to spread per-second quota
     const results = await Promise.allSettled(
-      prompts.map((p) => generateSvg(p.prompt, GEMINI_KEY))
+      prompts.map((p, i) =>
+        new Promise<string | null>((resolve) =>
+          setTimeout(() => resolve(generateSvg(p.prompt, GEMINI_KEY) as any), i * 250)
+        ).then((v) => v)
+      )
     );
 
     const descMap: Record<string, string> = {
