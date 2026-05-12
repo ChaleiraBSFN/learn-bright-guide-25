@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
+import { triggerRateLimit } from "@/components/RateLimitBar";
 import { StudyResult } from "@/components/StudyResult";
 import { ExerciseForm } from "@/components/ExerciseForm";
 import { ExerciseResult } from "@/components/ExerciseResult";
@@ -281,7 +282,11 @@ const Index = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: "Erro desconhecido" }));
-        if (response.status === 429) throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        if (response.status === 429) {
+          const retryAfter = Number(response.headers.get("retry-after")) || 60;
+          triggerRateLimit(retryAfter);
+          throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        }
         if (response.status === 402) throw new Error("Créditos insuficientes.");
         throw new Error(errorData.error || "Erro ao gerar conteúdo");
       }
@@ -372,7 +377,11 @@ const Index = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: "Erro desconhecido" }));
-        if (response.status === 429) throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        if (response.status === 429) {
+          const retryAfter = Number(response.headers.get("retry-after")) || 60;
+          triggerRateLimit(retryAfter);
+          throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        }
         if (response.status === 402) throw new Error("Créditos insuficientes.");
         throw new Error(errorData.error || "Erro ao gerar exercícios");
       }
