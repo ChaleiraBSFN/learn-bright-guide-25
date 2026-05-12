@@ -23,6 +23,7 @@ import Downloads from "./pages/Downloads";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import { useTimeTracker } from "@/hooks/useAchievements";
+import { useVisitHeartbeat } from "@/hooks/useVisitHeartbeat";
 
 const queryClient = new QueryClient();
 
