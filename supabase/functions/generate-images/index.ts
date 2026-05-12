@@ -30,11 +30,11 @@ Output ONLY the <svg>...</svg> markup.`,
   });
 
   for (const model of models) {
-    // 1 attempt per model — fail fast and try next model
-    for (let attempt = 0; attempt < 1; attempt++) {
+    // Up to 2 attempts per model with backoff on 429 (rate limit)
+    for (let attempt = 0; attempt < 2; attempt++) {
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000);
+        const timeout = setTimeout(() => controller.abort(), 11000);
 
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -49,7 +49,8 @@ Output ONLY the <svg>...</svg> markup.`,
 
         if (response.status === 429) {
           console.log(`[SVG] ${model} rate limited (attempt ${attempt + 1})`);
-          await new Promise((r) => setTimeout(r, 400 + Math.random() * 600));
+          // Backoff 1.5–3s before next attempt to clear per-second quota
+          await new Promise((r) => setTimeout(r, 1500 + Math.random() * 1500));
           continue;
         }
         if (!response.ok) {
@@ -133,8 +134,13 @@ serve(async (req) => {
 
     console.log(`Generating ${prompts.length} SVGs in parallel for: ${sanitizedTema}`);
 
+    // Stagger requests by 250ms to spread per-second quota
     const results = await Promise.allSettled(
-      prompts.map((p) => generateSvg(p.prompt, GEMINI_KEY))
+      prompts.map((p, i) =>
+        new Promise<string | null>((resolve) =>
+          setTimeout(() => resolve(generateSvg(p.prompt, GEMINI_KEY) as any), i * 250)
+        ).then((v) => v)
+      )
     );
 
     const descMap: Record<string, string> = {

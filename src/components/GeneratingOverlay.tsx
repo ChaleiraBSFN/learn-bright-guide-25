@@ -366,6 +366,14 @@ export function GeneratingOverlay({ type, isFinishing }: GeneratingOverlayProps)
                   </motion.p>
                 ))}
               </div>
+
+              {/* Helpful explainer message */}
+              <p className="mt-3 max-w-xs text-center text-[11px] leading-snug text-muted-foreground/80">
+                {t(
+                  'generating.complexityHint',
+                  'Pode demorar alguns segundos devido à geração de conteúdos complexos, imagens, diagramas e detalhes personalizados.'
+                )}
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
