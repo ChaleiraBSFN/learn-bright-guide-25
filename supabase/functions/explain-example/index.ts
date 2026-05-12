@@ -61,7 +61,7 @@ function fixMathNotation(text: string): string {
   return out;
 }
 
-async function tryModel(model: string, prompt: string, apiKey: string, signal: AbortSignal): Promise<string | null> {
+async function tryModel(model: string, prompt: string, apiKey: string, signal: AbortSignal): Promise<{ text: string | null; status: number }> {
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -77,30 +77,38 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
     );
     if (!response.ok) {
       console.log(`[Gemini] ${model} HTTP ${response.status}`);
-      return null;
+      return { text: null, status: response.status };
     }
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (text) {
-      console.log(`[Gemini] ${model} responded first`);
-      return text;
+      console.log(`[Gemini] ${model} responded`);
+      return { text, status: 200 };
     }
-    return null;
+    return { text: null, status: 502 };
   } catch (e: any) {
     if (e.name !== 'AbortError') console.error(`[Gemini] ${model}:`, e.message);
-    return null;
+    return { text: null, status: 0 };
   }
 }
 
-async function callGeminiRace(prompt: string, apiKey: string): Promise<string | null> {
-  // Alvo: até ~3s. Modelo único mais rápido com timeout curto.
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3500);
-  try {
-    return await tryModel("gemini-2.5-flash-lite", prompt, apiKey, controller.signal);
-  } finally {
-    clearTimeout(timeoutId);
+async function callGeminiCascade(prompt: string, apiKey: string): Promise<{ text: string | null; lastStatus: number }> {
+  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash"];
+  let lastStatus = 0;
+  for (const model of models) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    try {
+      const { text, status } = await tryModel(model, prompt, apiKey, controller.signal);
+      if (text) return { text, lastStatus: 200 };
+      lastStatus = status;
+      // Only keep going on 429/5xx; for other errors break early
+      if (status !== 429 && status < 500) break;
+    } finally {
+      clearTimeout(timeoutId);
+    }
   }
+  return { text: null, lastStatus };
 }
 
 
@@ -193,13 +201,20 @@ OUTRAS REGRAS: idioma ${langName}; sem blocos \`\`\`; frases claras e diretas. C
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
+    let lastStatus = 0;
 
     if (geminiKey) {
-      content = await callGeminiRace(prompt, geminiKey);
+      const result = await callGeminiCascade(prompt, geminiKey);
+      content = result.text;
+      lastStatus = result.lastStatus;
     }
 
     if (!content) {
-      return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const isRate = lastStatus === 429;
+      return new Response(
+        JSON.stringify({ error: isRate ? "Limite de requisições excedido. Aguarde alguns instantes." : "Serviço indisponível." }),
+        { status: isRate ? 429 : 503, headers: { ...corsHeaders, "Content-Type": "application/json", ...(isRate ? { "Retry-After": "60" } : {}) } }
+      );
     }
 
     const cleaned = fixMathNotation(content.trim());
