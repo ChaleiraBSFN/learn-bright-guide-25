@@ -93,7 +93,7 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
 }
 
 async function callGeminiCascade(prompt: string, apiKey: string): Promise<{ text: string | null; lastStatus: number }> {
-  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash"];
+  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-1.5-pro"];
   let lastStatus = 0;
   for (const model of models) {
     const controller = new AbortController();

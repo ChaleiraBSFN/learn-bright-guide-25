@@ -31,7 +31,7 @@ const languageMap: Record<string, string> = {
 };
 
 async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: number, imagemBase64?: string | null): Promise<string | null> {
-  const models = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-1.5-pro"];
   for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
