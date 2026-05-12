@@ -19,6 +19,7 @@ import UpdateNoticesAdmin from "./pages/UpdateNoticesAdmin";
 import PlatformControl from "./pages/PlatformControl";
 import AIConfigAdmin from "./pages/AIConfigAdmin";
 import Downloads from "./pages/Downloads";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import { useTimeTracker } from "@/hooks/useAchievements";
 
@@ -47,6 +48,7 @@ const AppContent = () => {
           <Route path="/platform-control" element={<PlatformControl />} />
           <Route path="/ai-config" element={<AIConfigAdmin />} />
           <Route path="/downloads" element={<Downloads />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
