@@ -201,13 +201,20 @@ OUTRAS REGRAS: idioma ${langName}; sem blocos \`\`\`; frases claras e diretas. C
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
+    let lastStatus = 0;
 
     if (geminiKey) {
-      content = await callGeminiRace(prompt, geminiKey);
+      const result = await callGeminiCascade(prompt, geminiKey);
+      content = result.text;
+      lastStatus = result.lastStatus;
     }
 
     if (!content) {
-      return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const isRate = lastStatus === 429;
+      return new Response(
+        JSON.stringify({ error: isRate ? "Limite de requisições excedido. Aguarde alguns instantes." : "Serviço indisponível." }),
+        { status: isRate ? 429 : 503, headers: { ...corsHeaders, "Content-Type": "application/json", ...(isRate ? { "Retry-After": "60" } : {}) } }
+      );
     }
 
     const cleaned = fixMathNotation(content.trim());
