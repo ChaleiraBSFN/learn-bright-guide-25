@@ -312,12 +312,12 @@ const Index = () => {
       // Trigger achievement
       checkAndUnlock('generate_study');
 
-      // Wait for either images to finish or the minimum animation time, whichever is longer
+      // Keep the "generating" animation running while images load,
+      // so the user never sees an empty/blank result behind the overlay.
+      await imagesPromise;
+      // Then play the celebration "finishing" animation briefly.
       setIsFinishingStudy(true);
-      await Promise.all([
-        imagesPromise,
-        new Promise(resolve => setTimeout(resolve, 2200)),
-      ]);
+      await new Promise(resolve => setTimeout(resolve, 1800));
     } catch (error) {
       console.error("Error generating study content:", error);
       const message = error instanceof Error
