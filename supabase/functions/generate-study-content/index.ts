@@ -213,10 +213,11 @@ async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: numbe
           }
         );
         clearTimeout(timeoutId);
+        lastStatus = response.status;
         if (response.ok) {
           const data = await response.json();
           const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) { console.log(`[Gemini] Success with ${model}`); return text; }
+          if (text) { console.log(`[Gemini] Success with ${model}`); return { text, lastStatus: 200 }; }
         }
         if (response.status === 429) { console.log(`[Gemini] ${model} rate limited, next...`); break; }
         if (response.status >= 500) { console.log(`[Gemini] ${model} server error, retrying...`); continue; }
@@ -229,7 +230,7 @@ async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: numbe
       }
     }
   }
-  return null;
+  return { text: null, lastStatus };
 }
 
 function parseAIJson(content: string): any {
