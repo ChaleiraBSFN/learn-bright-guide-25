@@ -175,19 +175,36 @@ CONTEXTO: ${sanitize(contexto || "")}
 TEMA: ${sanitize(tema || "")}
 EXEMPLO: ${sanitize(exemplo)}
 
-Responda em ${langName} usando EXATAMENTE estas 4 seções com Markdown (** para títulos), curtas e objetivas:
+Responda em ${langName} usando EXATAMENTE estas 5 seções com Markdown leve. CADA seção tem um TÍTULO em negrito (**) seguido de BULLETS curtos (cada um começando com "- "). NUNCA escreva parágrafos longos — sempre quebre em bullets de no máximo 2 linhas cada.
 
 **🎯 O que está acontecendo**
-2-3 frases: o que mostra e o conceito central.
+- 1 bullet com a ideia geral em 1 frase.
+- 1 bullet apontando o conceito central.
 
-**🧠 Ideia principal**
-Defina o termo-chave, a fórmula/regra (se houver) e por que funciona. 3-4 frases.
+**🧠 Conceito-chave**
+- Definição do termo principal em 1 frase.
+- A fórmula ou regra (se houver), isolada em sua própria linha.
+- Por que ela funciona (1 frase).
 
 **🔍 Passo a passo**
-3-5 etapas curtas e numeradas, com cálculos quando houver.
+- Etapa 1: ação + cálculo curto.
+- Etapa 2: ação + cálculo curto.
+- Etapa 3: ação + cálculo curto.
+- (acrescente até 5 etapas se necessário, sempre 1 linha cada)
+
+**💡 Exemplo numérico rápido**
+- Substituição dos valores em 1 linha.
+- Resultado final destacado em 1 linha.
 
 **⚠️ Dica final**
-1 armadilha comum + 1 conexão (ENEM/dia a dia).
+- 1 armadilha comum em 1 frase.
+- 1 conexão prática (ENEM/dia a dia) em 1 frase.
+
+REGRAS DE FORMATAÇÃO (OBRIGATÓRIO):
+- SEMPRE use "- " no início de cada bullet (jamais frases sem bullet dentro de uma seção).
+- NUNCA use parágrafos corridos — tudo em bullets curtos.
+- Deixe UMA linha em branco entre o título da seção e o primeiro bullet, e entre seções.
+- Mantenha cada bullet com no máximo 2 linhas / ~20 palavras.
 
 REGRAS DE NOTAÇÃO MATEMÁTICA (OBRIGATÓRIO):
 - NUNCA use LaTeX. NUNCA escreva "$", "$$", "\\(", "\\)", "\\[", "\\]".
@@ -197,7 +214,7 @@ REGRAS DE NOTAÇÃO MATEMÁTICA (OBRIGATÓRIO):
 - Use parênteses normais ( e ), nunca "$" como delimitador.
 - Símbolos: π, θ, α, β, Δ, ≤, ≥, ≠, ≈, ∞.
 
-OUTRAS REGRAS: idioma ${langName}; sem blocos \`\`\`; frases claras e diretas. Comece direto pela primeira seção.`;
+OUTRAS REGRAS: idioma ${langName}; sem blocos \`\`\`; comece direto pela primeira seção.`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
