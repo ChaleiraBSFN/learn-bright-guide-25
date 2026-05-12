@@ -433,10 +433,41 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
+    let lastStatus = 0;
 
-    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, maxTokens, temperature, imagemBase64);
+    // === CACHE LOOKUP (24h) — só quando não houve imagem ===
+    let cacheKey: string | null = null;
+    if (!imagemBase64) {
+      const keyInput = JSON.stringify({ tema, nivel, prazo, duvidas, idioma, isPremium });
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(keyInput));
+      cacheKey = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
+
+      const { data: cached } = await serviceClient
+        .from('ai_response_cache')
+        .select('response')
+        .eq('cache_key', cacheKey)
+        .gt('expires_at', new Date().toISOString())
+        .maybeSingle();
+
+      if (cached?.response) {
+        console.log('[Cache] HIT', cacheKey.slice(0, 12));
+        // increment hits (fire-and-forget)
+        serviceClient.rpc('cleanup_expired_ai_cache').catch(() => {});
+        return new Response(JSON.stringify(cached.response), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      console.log('[Cache] MISS', cacheKey.slice(0, 12));
+    }
+
+    if (geminiKey) {
+      const result = await callGeminiDirect(prompt, geminiKey, maxTokens, temperature, imagemBase64);
+      content = result.text;
+      lastStatus = result.lastStatus;
+    }
 
     if (!content) {
+      if (lastStatus === 429) {
+        return new Response(JSON.stringify({ error: "Limite de requisições atingido. Tente novamente em alguns instantes." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } });
+      }
       return new Response(JSON.stringify({ error: "Serviço indisponível. Tente novamente." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
@@ -447,6 +478,21 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     }
 
     studyContent = deepFixMath(studyContent);
+
+    // === CACHE SAVE (24h) ===
+    if (cacheKey) {
+      serviceClient
+        .from('ai_response_cache')
+        .upsert({
+          cache_key: cacheKey,
+          endpoint: 'generate-study-content',
+          response: studyContent,
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        }, { onConflict: 'cache_key' })
+        .then(() => console.log('[Cache] SAVED', cacheKey!.slice(0, 12)))
+        .catch((e: any) => console.error('[Cache] save failed:', e?.message));
+    }
+
     return new Response(JSON.stringify(studyContent), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Error:", error);
