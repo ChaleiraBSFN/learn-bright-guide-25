@@ -48,6 +48,7 @@ const AppContent = () => {
           <Route path="/platform-control" element={<PlatformControl />} />
           <Route path="/ai-config" element={<AIConfigAdmin />} />
           <Route path="/downloads" element={<Downloads />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
