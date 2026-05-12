@@ -227,9 +227,67 @@ function parseAIJson(content: string): any {
   else if (cleaned.startsWith("```")) cleaned = cleaned.slice(3);
   if (cleaned.endsWith("```")) cleaned = cleaned.slice(0, -3);
   cleaned = cleaned.trim();
-  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-  if (jsonMatch) cleaned = jsonMatch[0];
-  return JSON.parse(cleaned);
+
+  const start = cleaned.indexOf("{");
+  if (start === -1) throw new Error("No JSON object found");
+  cleaned = cleaned.slice(start);
+
+  // Try direct parse first
+  try { return JSON.parse(cleaned); } catch (_) { /* fall through to repair */ }
+
+  // Depth-tracking repair: walk chars, track stack, handle truncation
+  const stack: string[] = []; // '{', '[', '"'
+  let escape = false;
+  let lastSafe = -1; // index after last completed value at depth>=1
+  for (let i = 0; i < cleaned.length; i++) {
+    const ch = cleaned[i];
+    const top = stack[stack.length - 1];
+    if (top === '"') {
+      if (escape) { escape = false; continue; }
+      if (ch === "\\") { escape = true; continue; }
+      if (ch === '"') { stack.pop(); lastSafe = i + 1; }
+      continue;
+    }
+    if (ch === '"') { stack.push('"'); continue; }
+    if (ch === "{") { stack.push("{"); continue; }
+    if (ch === "[") { stack.push("["); continue; }
+    if (ch === "}" || ch === "]") { stack.pop(); lastSafe = i + 1; continue; }
+    if (ch === "," || ch === ":") continue;
+    if (/\s/.test(ch)) continue;
+    // primitive (number/bool/null) — include in safe boundary
+    lastSafe = i + 1;
+  }
+
+  // Truncate to last safe boundary, drop trailing comma
+  let repaired = lastSafe > 0 ? cleaned.slice(0, lastSafe) : cleaned;
+  repaired = repaired.replace(/,\s*$/, "");
+
+  // If we were inside a string when it cut off, close it
+  // (rebuild stack from repaired text)
+  const stack2: string[] = [];
+  let esc2 = false;
+  for (let i = 0; i < repaired.length; i++) {
+    const ch = repaired[i];
+    const top = stack2[stack2.length - 1];
+    if (top === '"') {
+      if (esc2) { esc2 = false; continue; }
+      if (ch === "\\") { esc2 = true; continue; }
+      if (ch === '"') stack2.pop();
+      continue;
+    }
+    if (ch === '"') stack2.push('"');
+    else if (ch === "{") stack2.push("{");
+    else if (ch === "[") stack2.push("[");
+    else if (ch === "}" || ch === "]") stack2.pop();
+  }
+  while (stack2.length) {
+    const top = stack2.pop();
+    if (top === '"') repaired += '"';
+    else if (top === "{") { repaired = repaired.replace(/,\s*$/, "") + "}"; }
+    else if (top === "[") { repaired = repaired.replace(/,\s*$/, "") + "]"; }
+  }
+
+  return JSON.parse(repaired);
 }
 
 // === SUBSCRIPTION CHECK ===
