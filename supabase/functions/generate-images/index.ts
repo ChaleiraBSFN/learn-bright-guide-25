@@ -7,13 +7,10 @@ const corsHeaders = {
 
 // Generate an SVG illustration via Google Gemini text models (direct API).
 async function generateSvg(prompt: string, apiKey: string): Promise<string | null> {
-  // Multiple model fallbacks. Order: cheapest/fastest first, then heavier ones.
+  // Two fastest Gemini text models — speed > variety.
   const models = [
     "gemini-2.5-flash-lite",
-    "gemini-2.5-flash",
     "gemini-2.0-flash",
-    "gemini-flash-latest",
-    "gemini-1.5-flash-latest",
   ];
 
   const body = JSON.stringify({
