@@ -139,7 +139,7 @@ serve(async (req) => {
     console.log(`Generating ${prompts.length} SVGs in parallel for: ${sanitizedTema}`);
 
     const results = await Promise.allSettled(
-      prompts.map((p) => generateSvg(p.prompt, LOVABLE_KEY))
+      prompts.map((p) => generateSvg(p.prompt, GEMINI_KEY))
     );
 
     const descMap: Record<string, string> = {
