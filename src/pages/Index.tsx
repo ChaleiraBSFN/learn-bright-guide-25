@@ -511,28 +511,8 @@ const Index = () => {
                 </p>
               </div>
 
-              {/* Features */}
-              <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
-                {[
-                  { icon: BookOpen, color: "text-primary", title: t('features.summaries'), desc: t('features.summariesDetailed') },
-                  { icon: Brain, color: "text-secondary", title: t('features.mindMaps'), desc: t('features.mindMapsComplete') },
-                  { icon: Dumbbell, color: "text-accent", title: t('features.exercises'), desc: t('features.exercisesPremium') },
-                ].map((feat, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 + i * 0.1, duration: 0.3 }}
-                    className="flex items-center gap-3 p-3 md:p-4 rounded-xl bg-card border border-border"
-                  >
-                    <feat.icon className={`h-6 w-6 md:h-8 md:w-8 ${feat.color} shrink-0`} />
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-foreground text-sm md:text-base">{feat.title}</h3>
-                      <p className="text-xs md:text-sm text-muted-foreground truncate">{feat.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              {/* Feature Banner Carousel */}
+              <FeatureCarousel />
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
