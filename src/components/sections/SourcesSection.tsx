@@ -96,8 +96,9 @@ const getResourceUrl = (
   tema?: string,
 ): string => {
   const url = site.url?.trim();
-  if (url && /^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i.test(url)) {
-    return url;
+  if (url) {
+    const withProtocol = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+    if (/^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i.test(withProtocol)) return withProtocol;
   }
   const baseTerm = site.termoBusca?.trim() || site.nome;
   const query = enrichQuery(baseTerm, tema);
@@ -106,6 +107,12 @@ const getResourceUrl = (
   const trustedDomain = getTrustedDomain(site.nome);
   if (trustedDomain) return buildSearchUrl(`site:${trustedDomain} ${query}`);
   return buildSearchUrl(`${query} ${site.nome}`);
+};
+
+const handleOpen = (event: React.MouseEvent<HTMLAnchorElement>, url: string) => {
+  event.preventDefault();
+  event.stopPropagation();
+  openExternalUrl(url);
 };
 
 export function SourcesSection({ data, tema }: SourcesSectionProps) {
@@ -136,8 +143,9 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
                     key={index}
                     href={url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener"
                     referrerPolicy="no-referrer"
+                    onClick={(event) => handleOpen(event, url)}
                     title={`Pesquisar no Google: ${enriched}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-sm text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
@@ -162,8 +170,9 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
                     key={index}
                     href={url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener"
                     referrerPolicy="no-referrer"
+                    onClick={(event) => handleOpen(event, url)}
                     title={url}
                     className="text-left flex items-start gap-3 p-3 rounded-xl border border-border bg-background/50 hover:bg-muted transition-colors group"
                   >
