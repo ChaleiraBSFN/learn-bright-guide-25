@@ -452,7 +452,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
       if (cached?.response) {
         console.log('[Cache] HIT', cacheKey.slice(0, 12));
         // increment hits (fire-and-forget)
-        serviceClient.rpc('cleanup_expired_ai_cache').catch(() => {});
+        serviceClient.rpc('cleanup_expired_ai_cache').then(() => {}, () => {});
         return new Response(JSON.stringify(cached.response), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
       console.log('[Cache] MISS', cacheKey.slice(0, 12));
