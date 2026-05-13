@@ -76,6 +76,86 @@ export function FeatureCarousel() {
         "Problemas de Matemática com passo a passo da resolução comentado.",
       ],
     },
+    {
+      id: "llm",
+      icon: Cpu,
+      color: "text-primary",
+      bgGradient: "from-primary/10 via-primary/5 to-transparent",
+      borderColor: "border-primary/30",
+      title: "Modelos de IA de ponta",
+      description: "Use os melhores LLMs do mercado: Gemini, GPT e mais — escolhidos automaticamente para cada tarefa.",
+      detail:
+        "O Learn Buddy roteia cada tipo de pedido (resumo, mapa mental, exercício, correção) para o LLM mais adequado, garantindo qualidade alta e velocidade. Você não precisa configurar nada — sempre roda no melhor modelo disponível.",
+      examples: [
+        "Gemini 2.5 Pro para conteúdo extenso com raciocínio profundo.",
+        "Gemini 2.5 Flash para geração rápida de resumos e exercícios.",
+        "GPT-5 para correção dissertativa precisa e feedback detalhado.",
+      ],
+    },
+    {
+      id: "trail",
+      icon: Map,
+      color: "text-secondary",
+      bgGradient: "from-secondary/10 via-secondary/5 to-transparent",
+      borderColor: "border-secondary/30",
+      title: "Trilha de progresso",
+      description: "49 desafios em uma trilha gamificada estilo curva-S para medir sua evolução nos estudos.",
+      detail:
+        "Avance pela trilha completando desafios de estudo, exercícios e missões diárias. Cada conquista desbloqueia créditos extras, badges e libera novos níveis — tornando o aprendizado viciante e visível.",
+      examples: [
+        "Complete 5 resumos seguidos para desbloquear o nível Aprendiz.",
+        "Acerte 10 exercícios em sequência para ganhar créditos bônus.",
+        "Estude todos os dias da semana e suba de nível na trilha.",
+      ],
+    },
+    {
+      id: "ranking",
+      icon: Trophy,
+      color: "text-accent",
+      bgGradient: "from-accent/10 via-accent/5 to-transparent",
+      borderColor: "border-accent/30",
+      title: "Ranking competitivo",
+      description: "8 níveis de ranking — de Bronze a Lenda — para medir você contra outros estudantes.",
+      detail:
+        "Compita de verdade: a cada estudo, exercício e missão concluída você ganha pontos e sobe de divisão. Veja sua posição global, desafie amigos e prove que está estudando mais que ninguém.",
+      examples: [
+        "Suba de Bronze para Prata acumulando 500 pontos de estudo.",
+        "Entre no top 10 da semana e ganhe destaque com badge dourado.",
+        "Compare seu progresso com colegas dentro de grupos de estudo.",
+      ],
+    },
+    {
+      id: "groups",
+      icon: Users,
+      color: "text-primary",
+      bgGradient: "from-primary/10 via-primary/5 to-transparent",
+      borderColor: "border-primary/30",
+      title: "Grupos de estudo",
+      description: "Crie ou entre em grupos para estudar junto, conversar em tempo real e compartilhar materiais.",
+      detail:
+        "Forme um grupo com seus amigos da escola, faculdade ou cursinho. Tenha um chat em tempo real, compartilhe resumos gerados, troque dúvidas e estude em conjunto — totalmente grátis.",
+      examples: [
+        "Grupo da turma do 3º ano para revisar para o ENEM juntos.",
+        "Chat em tempo real para tirar dúvidas com colegas durante o estudo.",
+        "Compartilhe resumos e mapas mentais gerados pela IA com o grupo.",
+      ],
+    },
+    {
+      id: "credits",
+      icon: Coins,
+      color: "text-secondary",
+      bgGradient: "from-secondary/10 via-secondary/5 to-transparent",
+      borderColor: "border-secondary/30",
+      title: "Sistema de créditos",
+      description: "Comece com créditos diários grátis e ganhe mais completando desafios da trilha.",
+      detail:
+        "Cada usuário recebe créditos para gerar materiais (10 sem conta, 15 logado). Termine desafios da trilha de progresso para ganhar créditos extras — sem precisar pagar nada, nunca.",
+      examples: [
+        "15 créditos por dia só por estar logado na sua conta.",
+        "Créditos bônus ao completar marcos da trilha de progresso.",
+        "Ganhe créditos extras subindo de nível no ranking.",
+      ],
+    },
   ];
 
   // Triple for seamless loop
@@ -84,13 +164,10 @@ export function FeatureCarousel() {
   return (
     <>
       <div
-        className="relative w-full overflow-hidden"
+        className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        {/* Fade edges */}
-        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-background to-transparent" />
-        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-background to-transparent" />
 
         <motion.div
           className="flex gap-3 py-2"
