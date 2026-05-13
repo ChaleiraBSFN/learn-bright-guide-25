@@ -119,6 +119,12 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         </div>
       </div>
 
+      {hasImage && (
+        <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-3 text-xs text-foreground">
+          ✨ Imagem detectada — a IA vai <strong>resolver os exercícios da imagem</strong> com respostas, passo a passo, cálculos e explicações completas.
+        </div>
+      )}
+
       <ImageUpload onImageChange={setImagemBase64} disabled={isLoading} />
 
       <Button
@@ -126,7 +132,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || !tema || !nivel}
+        disabled={isLoading || (!hasImage && (!tema || !nivel))}
       >
         {isLoading ? (
           <>
