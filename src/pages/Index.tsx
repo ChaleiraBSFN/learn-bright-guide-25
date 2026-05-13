@@ -557,18 +557,22 @@ const Index = () => {
                       </div>
                     ) : activeTab === "exercises" ? (
                       <div className="card-elevated p-6 md:p-8">
-                        <ExerciseForm onSubmit={handleExerciseSubmit} isLoading={isExerciseLoading} />
+                        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+                          <ExerciseForm onSubmit={handleExerciseSubmit} isLoading={isExerciseLoading} />
+                        </Suspense>
                       </div>
                     ) : (
-                      <HistoryTab
-                        onViewStudy={(content, topic) => {
-                          setStudyContent(content);
-                          setCurrentTema(topic);
-                        }}
-                        onViewExercise={(content) => {
-                          setExerciseContent(content);
-                        }}
-                      />
+                      <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+                        <HistoryTab
+                          onViewStudy={(content, topic) => {
+                            setStudyContent(content);
+                            setCurrentTema(topic);
+                          }}
+                          onViewExercise={(content) => {
+                            setExerciseContent(content);
+                          }}
+                        />
+                      </Suspense>
                     )}
                   </motion.div>
                 </AnimatePresence>
@@ -583,23 +587,25 @@ const Index = () => {
               exit="exit"
               className="mx-auto max-w-4xl relative"
             >
-              <StudyResult
-                content={studyContent}
-                tema={currentTema}
-                nivel={currentNivel}
-                aiImages={aiImages}
-                webImages={webImages}
-                imagesLoading={imagesLoading}
-                onGenerateExercise={(taskDescription) => {
-                  handleExerciseSubmit({
-                    tema: taskDescription,
-                    nivel: "medio",
-                    quantidade: 5,
-                    dificuldade: "variado",
-                  });
-                }}
-                isGeneratingExercise={isExerciseLoading}
-              />
+              <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
+                <StudyResult
+                  content={studyContent}
+                  tema={currentTema}
+                  nivel={currentNivel}
+                  aiImages={aiImages}
+                  webImages={webImages}
+                  imagesLoading={imagesLoading}
+                  onGenerateExercise={(taskDescription) => {
+                    handleExerciseSubmit({
+                      tema: taskDescription,
+                      nivel: "medio",
+                      quantidade: 5,
+                      dificuldade: "variado",
+                    });
+                  }}
+                  isGeneratingExercise={isExerciseLoading}
+                />
+              </Suspense>
             </motion.div>
           ) : exerciseContent ? (
             <motion.div
@@ -610,12 +616,14 @@ const Index = () => {
               exit="exit"
               className="mx-auto max-w-4xl relative"
             >
-              <ExerciseResult
-                content={exerciseContent}
-                aiImages={aiImages}
-                webImages={webImages}
-                imagesLoading={imagesLoading}
-              />
+              <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
+                <ExerciseResult
+                  content={exerciseContent}
+                  aiImages={aiImages}
+                  webImages={webImages}
+                  imagesLoading={imagesLoading}
+                />
+              </Suspense>
             </motion.div>
           ) : null}
         </AnimatePresence>
