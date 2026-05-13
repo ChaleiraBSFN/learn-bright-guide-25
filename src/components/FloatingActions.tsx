@@ -101,9 +101,9 @@ export const FloatingActions = () => {
                 variant="outline"
                 size="icon"
                 onClick={() => navigate('/install')}
-                className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-secondary/30 hover:bg-secondary hover:text-secondary-foreground transition-all shadow-[0_4px_14px_-3px_hsl(var(--secondary)/0.4),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--secondary)/0.15)]"
+                className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-secondary/40 hover:bg-secondary hover:text-secondary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--secondary)/0.6),0_4px_14px_-3px_hsl(var(--secondary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--secondary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--secondary)/0.85),0_6px_20px_-4px_hsl(var(--secondary)/0.7)]"
               >
-                <Download className="h-5 w-5" />
+                <Download className="h-5 w-5 text-secondary group-hover:text-secondary-foreground" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
