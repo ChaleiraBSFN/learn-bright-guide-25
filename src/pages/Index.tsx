@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
 import { triggerRateLimit } from "@/components/RateLimitBar";
 import { StudyResult } from "@/components/StudyResult";
+import { FeatureCarousel } from "@/components/FeatureCarousel";
 import { ExerciseForm } from "@/components/ExerciseForm";
 import { ExerciseResult } from "@/components/ExerciseResult";
 import { HistoryTab } from "@/components/HistoryTab";
