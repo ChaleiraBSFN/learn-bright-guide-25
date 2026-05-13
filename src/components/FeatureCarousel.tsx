@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, useMotionValue } from "framer-motion";
 import { BookOpen, Brain, Dumbbell, ChevronRight, Sparkles, CheckCircle2, Cpu, Map, Trophy, Users, Coins } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,6 +26,10 @@ export function FeatureCarousel() {
   const { t } = useTranslation();
   const [paused, setPaused] = useState(false);
   const [active, setActive] = useState<Feature | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
+  const lastTimeRef = useRef<number | null>(null);
+  const x = useMotionValue(0);
 
   const features: Feature[] = [
     {
@@ -161,6 +165,41 @@ export function FeatureCarousel() {
   // Triple for seamless loop
   const items = [...features, ...features, ...features];
 
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const normalSpeed = 120; // px per second
+    const slowSpeed = normalSpeed * 0.35;
+
+    let raf: number;
+    const step = (timestamp: number) => {
+      if (lastTimeRef.current == null) {
+        lastTimeRef.current = timestamp;
+      }
+      const delta = (timestamp - lastTimeRef.current) / 1000;
+      lastTimeRef.current = timestamp;
+
+      const speed = paused ? slowSpeed : normalSpeed;
+      progressRef.current -= delta * speed;
+
+      const totalWidth = track.scrollWidth / 3; // we tripled the items
+      if (totalWidth > 0) {
+        // Wrap modulo totalWidth
+        progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
+        x.set(-progressRef.current);
+      }
+
+      raf = requestAnimationFrame(step);
+    };
+
+    raf = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(raf);
+      lastTimeRef.current = null;
+    };
+  }, [paused, x]);
+
   return (
     <>
       <div
@@ -173,17 +212,9 @@ export function FeatureCarousel() {
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-3 bg-gradient-to-l from-background to-transparent" />
 
         <motion.div
+          ref={trackRef}
           className="flex gap-3 py-2"
-          animate={paused ? undefined : { x: ["0%", "-33.333%"] }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 50,
-              ease: "linear",
-            },
-          }}
-          style={{ width: "fit-content" }}
+          style={{ x, width: "fit-content" }}
         >
           {items.map((feat, i) => (
             <FeatureCard
