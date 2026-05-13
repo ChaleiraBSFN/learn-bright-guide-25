@@ -51,12 +51,37 @@ const KNOWN_SITES: Array<{ match: string[]; build: (q: string) => string }> = [
   { match: ["ted"], build: (q) => `https://www.ted.com/search?q=${encodeURIComponent(q)}` },
 ];
 
+const TRUSTED_DOMAINS: Array<{ name: string; domain: string; match: string[] }> = [
+  { name: "Brasil Escola", domain: "brasilescola.uol.com.br", match: ["brasil escola"] },
+  { name: "Toda Matéria", domain: "todamateria.com.br", match: ["toda materia", "todamateria"] },
+  { name: "Khan Academy", domain: "pt.khanacademy.org", match: ["khan academy"] },
+  { name: "Mundo Educação", domain: "mundoeducacao.uol.com.br", match: ["mundo educacao"] },
+  { name: "InfoEscola", domain: "infoescola.com", match: ["infoescola"] },
+  { name: "Wikipédia", domain: "pt.wikipedia.org", match: ["wikipedia", "wikipédia"] },
+  { name: "SciELO", domain: "scielo.org", match: ["scielo"] },
+];
+
+const openExternalUrl = (url: string) => {
+  const opened = window.open(url, "_blank");
+  if (opened) {
+    opened.opener = null;
+    opened.focus();
+    return;
+  }
+  window.location.assign(url);
+};
+
 const getKnownSiteSearchUrl = (siteName: string, query: string): string | null => {
   const name = normalizeText(siteName);
   for (const entry of KNOWN_SITES) {
     if (entry.match.some((m) => name.includes(m))) return entry.build(query);
   }
   return null;
+};
+
+const getTrustedDomain = (siteName: string): string | null => {
+  const name = normalizeText(siteName);
+  return TRUSTED_DOMAINS.find((entry) => entry.match.some((m) => name.includes(m)))?.domain ?? null;
 };
 
 const enrichQuery = (base: string, tema?: string) => {
@@ -78,7 +103,8 @@ const getResourceUrl = (
   const query = enrichQuery(baseTerm, tema);
   const knownSiteUrl = getKnownSiteSearchUrl(site.nome, query);
   if (knownSiteUrl) return knownSiteUrl;
-  // Fallback: Google com restrição de site quando dá pra inferir o domínio do nome
+  const trustedDomain = getTrustedDomain(site.nome);
+  if (trustedDomain) return buildSearchUrl(`site:${trustedDomain} ${query}`);
   return buildSearchUrl(`${query} ${site.nome}`);
 };
 
