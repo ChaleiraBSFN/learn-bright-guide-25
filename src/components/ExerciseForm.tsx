@@ -54,14 +54,14 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
       <div className="space-y-2">
         <Label htmlFor="exercise-tema" className="flex items-center gap-2 text-base font-medium">
           <Dumbbell className="h-4 w-4 text-primary" />
-          {t('exercises.topic')}
+          {t('exercises.topic')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
         </Label>
         <Input
           id="exercise-tema"
-          placeholder={t('exercises.topicPlaceholder')}
+          placeholder={hasImage ? "Opcional — a IA vai resolver os exercícios da imagem" : t('exercises.topicPlaceholder')}
           value={tema}
           onChange={(e) => setTema(e.target.value)}
-          required
+          required={!hasImage}
           className="bg-card"
         />
       </div>
