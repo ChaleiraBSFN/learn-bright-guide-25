@@ -97,7 +97,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
             value={quantidade}
             onChange={(e) => setQuantidade(e.target.value)}
             required
-            className="bg-card"
+            className="bg-card h-12"
           />
         </div>
 
