@@ -18,6 +18,7 @@ const Settings = () => {
   const { profile, updateProfile } = useProfile();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   const [displayName, setDisplayName] = useState(profile?.display_name || '');
   const [newEmail, setNewEmail] = useState('');
