@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { SEO } from '@/components/SEO';
 import {
   ArrowLeft, Shield, Loader2, CheckCircle2, AlertTriangle, XCircle,
   BookOpen, PenTool, Brain, Image, Languages, Lock, Database, Wifi,
@@ -172,6 +173,7 @@ const EngineNoticesAdmin = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Aviso de Motores — Learn Buddy" description="Gerencie o status dos motores de IA da plataforma Learn Buddy." path="/engine-notices" />
       <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
         <div className="flex items-center gap-3 mb-6">
           <Button variant="ghost" size="icon" className="shrink-0" onClick={() => navigate('/admin')}>

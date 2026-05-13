@@ -5,6 +5,7 @@ import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle, ArrowLeft, BarChart3, Cpu, Loader2, Map, Megaphone, MessageCircle, Settings2, Shield } from 'lucide-react';
+import { SEO } from '@/components/SEO';
 import TrailVisualEditor from '@/components/admin/TrailVisualEditor';
 
 const Admin = () => {
@@ -33,6 +34,7 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Painel Administrativo — Learn Buddy" description="Painel de administração da plataforma Learn Buddy." path="/admin" />
       <div className="container max-w-6xl py-8">
         {viewEditor ? (
           <TrailVisualEditor onBack={() => setViewEditor(false)} />
