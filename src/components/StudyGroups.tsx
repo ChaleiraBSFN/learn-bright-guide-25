@@ -351,7 +351,7 @@ export const StudyGroups = () => {
       <Button
         variant="outline"
         size="icon"
-        className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/30 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_4px_14px_-3px_hsl(var(--accent)/0.4),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.15)]"
+        className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]"
         onClick={() => {
           toast({
             title: t('groups.loginRequired'),
@@ -376,7 +376,7 @@ export const StudyGroups = () => {
     />
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/30 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_4px_14px_-3px_hsl(var(--accent)/0.4),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.15)]">
+        <Button variant="outline" size="icon" className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]">
           <Users className="h-5 w-5" />
         </Button>
       </SheetTrigger>
