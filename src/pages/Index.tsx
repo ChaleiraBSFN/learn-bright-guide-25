@@ -472,7 +472,9 @@ const Index = () => {
               </AnimatePresence>
               <CreditsDisplay />
               <LanguageSelector />
-              <SupportChat />
+              <Suspense fallback={null}>
+                <SupportChat />
+              </Suspense>
               <UserMenu />
             </div>
           </div>
@@ -480,7 +482,9 @@ const Index = () => {
       </header>
 
       {/* Floating Actions - Study Groups & Install */}
-      <FloatingActions />
+      <Suspense fallback={null}>
+        <FloatingActions />
+      </Suspense>
 
       <main className="container mx-auto px-4 py-8 md:py-12">
         <AnimatePresence mode="wait">
