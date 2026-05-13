@@ -49,7 +49,7 @@ export const BrowserFrame: React.FC<{ children: React.ReactNode }> = ({ children
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ padding: "8px 16px", background: "#fff", border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text, display: "flex", gap: 6, alignItems: "center" }}>
+          <div style={{ padding: "8px 16px", background: SITE.card, border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text, display: "flex", gap: 6, alignItems: "center" }}>
             <svg viewBox="0 0 30 20" style={{ width: 22, height: 14, borderRadius: 2 }} aria-hidden="true">
               <rect width="30" height="20" fill="#009c3b" />
               <path d="M15 2 L28 10 L15 18 L2 10 Z" fill="#ffdf00" />
@@ -57,7 +57,7 @@ export const BrowserFrame: React.FC<{ children: React.ReactNode }> = ({ children
             </svg>
             BR
           </div>
-          <div style={{ padding: "8px 16px", background: "#fff", border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text }}>
+          <div style={{ padding: "8px 16px", background: SITE.card, border: `1px solid ${SITE.border}`, borderRadius: 8, fontSize: 14, fontWeight: 700, color: SITE.text }}>
             ❓ Ajuda
           </div>
           <div style={{ width: 38, height: 38, borderRadius: "50%", background: SITE.primary, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14 }}>MA</div>
