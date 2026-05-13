@@ -1,35 +1,36 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { lazy, Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
 import { triggerRateLimit } from "@/components/RateLimitBar";
-import { StudyResult } from "@/components/StudyResult";
 import { FeatureCarousel } from "@/components/FeatureCarousel";
-import { ExerciseForm } from "@/components/ExerciseForm";
-import { ExerciseResult } from "@/components/ExerciseResult";
-import { HistoryTab } from "@/components/HistoryTab";
 import { StudyContent, StudyFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
 import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages } from "lucide-react";
-import { GeneratingOverlay } from "@/components/GeneratingOverlay";
 import learnBuddyLogo from "@/assets/learn-buddy-logo.jpeg";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { UserMenu } from "@/components/UserMenu";
 import { SEO } from "@/components/SEO";
-import { SupportChat } from "@/components/SupportChat";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
 import { UpdateNoticeBanner } from "@/components/UpdateNoticeBanner";
-import { FloatingActions } from "@/components/FloatingActions";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useAchievements } from '@/hooks/useAchievements';
+
+const ExerciseForm = lazy(() => import("@/components/ExerciseForm").then((module) => ({ default: module.ExerciseForm })));
+const ExerciseResult = lazy(() => import("@/components/ExerciseResult").then((module) => ({ default: module.ExerciseResult })));
+const FloatingActions = lazy(() => import("@/components/FloatingActions").then((module) => ({ default: module.FloatingActions })));
+const GeneratingOverlay = lazy(() => import("@/components/GeneratingOverlay").then((module) => ({ default: module.GeneratingOverlay })));
+const HistoryTab = lazy(() => import("@/components/HistoryTab").then((module) => ({ default: module.HistoryTab })));
+const StudyResult = lazy(() => import("@/components/StudyResult").then((module) => ({ default: module.StudyResult })));
+const SupportChat = lazy(() => import("@/components/SupportChat").then((module) => ({ default: module.SupportChat })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
@@ -447,7 +448,7 @@ const Index = () => {
         <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src={learnBuddyLogo} alt="Learn Buddy" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
+              <img src={learnBuddyLogo} alt="Learn Buddy" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
               <div className="hidden sm:block">
                 <h1 className="font-display text-xl font-bold text-foreground">Learn Buddy</h1>
                 <p className="text-xs text-muted-foreground">{t('header.subtitle')}</p>
@@ -471,7 +472,9 @@ const Index = () => {
               </AnimatePresence>
               <CreditsDisplay />
               <LanguageSelector />
-              <SupportChat />
+              <Suspense fallback={null}>
+                <SupportChat />
+              </Suspense>
               <UserMenu />
             </div>
           </div>
@@ -479,7 +482,9 @@ const Index = () => {
       </header>
 
       {/* Floating Actions - Study Groups & Install */}
-      <FloatingActions />
+      <Suspense fallback={null}>
+        <FloatingActions />
+      </Suspense>
 
       <main className="container mx-auto px-4 py-8 md:py-12">
         <AnimatePresence mode="wait">
@@ -552,18 +557,22 @@ const Index = () => {
                       </div>
                     ) : activeTab === "exercises" ? (
                       <div className="card-elevated p-6 md:p-8">
-                        <ExerciseForm onSubmit={handleExerciseSubmit} isLoading={isExerciseLoading} />
+                        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+                          <ExerciseForm onSubmit={handleExerciseSubmit} isLoading={isExerciseLoading} />
+                        </Suspense>
                       </div>
                     ) : (
-                      <HistoryTab
-                        onViewStudy={(content, topic) => {
-                          setStudyContent(content);
-                          setCurrentTema(topic);
-                        }}
-                        onViewExercise={(content) => {
-                          setExerciseContent(content);
-                        }}
-                      />
+                      <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+                        <HistoryTab
+                          onViewStudy={(content, topic) => {
+                            setStudyContent(content);
+                            setCurrentTema(topic);
+                          }}
+                          onViewExercise={(content) => {
+                            setExerciseContent(content);
+                          }}
+                        />
+                      </Suspense>
                     )}
                   </motion.div>
                 </AnimatePresence>
@@ -578,23 +587,25 @@ const Index = () => {
               exit="exit"
               className="mx-auto max-w-4xl relative"
             >
-              <StudyResult
-                content={studyContent}
-                tema={currentTema}
-                nivel={currentNivel}
-                aiImages={aiImages}
-                webImages={webImages}
-                imagesLoading={imagesLoading}
-                onGenerateExercise={(taskDescription) => {
-                  handleExerciseSubmit({
-                    tema: taskDescription,
-                    nivel: "medio",
-                    quantidade: 5,
-                    dificuldade: "variado",
-                  });
-                }}
-                isGeneratingExercise={isExerciseLoading}
-              />
+              <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
+                <StudyResult
+                  content={studyContent}
+                  tema={currentTema}
+                  nivel={currentNivel}
+                  aiImages={aiImages}
+                  webImages={webImages}
+                  imagesLoading={imagesLoading}
+                  onGenerateExercise={(taskDescription) => {
+                    handleExerciseSubmit({
+                      tema: taskDescription,
+                      nivel: "medio",
+                      quantidade: 5,
+                      dificuldade: "variado",
+                    });
+                  }}
+                  isGeneratingExercise={isExerciseLoading}
+                />
+              </Suspense>
             </motion.div>
           ) : exerciseContent ? (
             <motion.div
@@ -605,12 +616,14 @@ const Index = () => {
               exit="exit"
               className="mx-auto max-w-4xl relative"
             >
-              <ExerciseResult
-                content={exerciseContent}
-                aiImages={aiImages}
-                webImages={webImages}
-                imagesLoading={imagesLoading}
-              />
+              <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
+                <ExerciseResult
+                  content={exerciseContent}
+                  aiImages={aiImages}
+                  webImages={webImages}
+                  imagesLoading={imagesLoading}
+                />
+              </Suspense>
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -618,10 +631,18 @@ const Index = () => {
 
       {/* Fullscreen generating overlays */}
       <AnimatePresence>
-        {isLoading && <GeneratingOverlay type="study" isFinishing={isFinishingStudy} />}
+        {isLoading && (
+          <Suspense fallback={null}>
+            <GeneratingOverlay type="study" isFinishing={isFinishingStudy} />
+          </Suspense>
+        )}
       </AnimatePresence>
       <AnimatePresence>
-        {isExerciseLoading && <GeneratingOverlay type="exercise" isFinishing={isFinishingExercise} />}
+        {isExerciseLoading && (
+          <Suspense fallback={null}>
+            <GeneratingOverlay type="exercise" isFinishing={isFinishingExercise} />
+          </Suspense>
+        )}
       </AnimatePresence>
 
       {/* Fixed fullscreen translating overlay */}
