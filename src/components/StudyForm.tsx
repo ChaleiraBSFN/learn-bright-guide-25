@@ -71,7 +71,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
 
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="nivel" className="flex items-center gap-2 text-base font-medium">
+          <Label htmlFor="nivel" className="flex items-center gap-2 text-base font-medium min-h-[1.75rem]">
             <GraduationCap className="h-4 w-4 text-secondary" />
             {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
           </Label>
