@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, ExternalLink, Globe } from "lucide-react";
 
@@ -109,7 +110,7 @@ const getResourceUrl = (
   return buildSearchUrl(`${query} ${site.nome}`);
 };
 
-const handleOpen = (event: React.MouseEvent<HTMLAnchorElement>, url: string) => {
+const handleOpen = (event: MouseEvent<HTMLAnchorElement>, url: string) => {
   event.preventDefault();
   event.stopPropagation();
   openExternalUrl(url);
