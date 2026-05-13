@@ -224,6 +224,7 @@ const Auth = () => {
         size="icon"
         className="absolute top-4 left-4"
         onClick={() => navigate('/')}
+        aria-label={t('auth.backToHome')}
       >
         <ArrowLeft className="h-5 w-5" />
       </Button>
@@ -239,7 +240,7 @@ const Auth = () => {
               className="h-14 w-14 rounded-xl object-cover"
             />
           </div>
-          <h1 className="font-display text-3xl font-bold text-foreground">{t('header.title')}</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground">Learn Buddy — {isLogin ? t('auth.login') : t('auth.signup')}</h1>
           <p className="text-muted-foreground mt-2">
             {isLogin ? t('auth.loginToAccount') : t('auth.createAccount')}
           </p>
@@ -383,6 +384,7 @@ const Auth = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   tabIndex={-1}
+                  aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -411,6 +413,7 @@ const Auth = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     tabIndex={-1}
+                    aria-label={showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>

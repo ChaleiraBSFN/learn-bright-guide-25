@@ -80,6 +80,7 @@ export const FloatingActions = () => {
                 variant="outline"
                 size="icon"
                 onClick={() => setShowTrail(true)}
+                aria-label={t('trail.title', 'Trilha de Progresso')}
                 className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-primary/40 hover:bg-primary hover:text-primary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--primary)/0.6),0_4px_14px_-3px_hsl(var(--primary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--primary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--primary)/0.85),0_6px_20px_-4px_hsl(var(--primary)/0.7)]"
               >
                 <Map className="h-5 w-5 text-primary group-hover:text-primary-foreground" />
@@ -98,6 +99,7 @@ export const FloatingActions = () => {
                 variant="outline"
                 size="icon"
                 onClick={() => setShowRanking(true)}
+                aria-label={t('ranking.title')}
                 className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-yellow-500/40 hover:bg-yellow-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(45_100%_50%/0.6),0_4px_14px_-3px_hsl(45_100%_50%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(45_100%_50%/0.85),0_6px_20px_-4px_hsl(45_100%_50%/0.7)]"
               >
                 <Trophy className="h-5 w-5 text-yellow-500 group-hover:text-white" />
@@ -120,6 +122,7 @@ export const FloatingActions = () => {
                 variant="outline"
                 size="icon"
                 onClick={() => navigate('/install')}
+                aria-label={t('install.downloadApp')}
                 className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-secondary/40 hover:bg-secondary hover:text-secondary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--secondary)/0.6),0_4px_14px_-3px_hsl(var(--secondary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--secondary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--secondary)/0.85),0_6px_20px_-4px_hsl(var(--secondary)/0.7)]"
               >
                 <Download className="h-5 w-5 text-secondary group-hover:text-secondary-foreground" />

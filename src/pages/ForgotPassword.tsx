@@ -45,7 +45,7 @@ const ForgotPassword = () => {
   if (sent) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Button variant="ghost" size="icon" className="absolute top-4 left-4" onClick={() => navigate('/auth')}>
+        <Button variant="ghost" size="icon" className="absolute top-4 left-4" onClick={() => navigate('/auth')} aria-label={t('auth.backToLogin')}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="absolute top-4 right-4"><LanguageSelector /></div>
@@ -73,7 +73,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Button variant="ghost" size="icon" className="absolute top-4 left-4" onClick={() => navigate('/auth')}>
+      <Button variant="ghost" size="icon" className="absolute top-4 left-4" onClick={() => navigate('/auth')} aria-label={t('auth.backToLogin')}>
         <ArrowLeft className="h-5 w-5" />
       </Button>
       <div className="absolute top-4 right-4"><LanguageSelector /></div>
@@ -82,7 +82,7 @@ const ForgotPassword = () => {
           <div className="flex justify-center mb-4">
             <img src={learnBuddyLogo} alt="Learn Buddy" className="h-14 w-14 rounded-xl object-cover" loading="eager" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-foreground">{t('auth.forgotPassword')}</h1>
+          <h1 className="font-display text-2xl font-bold text-foreground">Learn Buddy — {t('auth.forgotPassword')}</h1>
           <p className="text-muted-foreground mt-2">{t('auth.forgotPasswordDesc')}</p>
         </div>
 
