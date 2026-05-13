@@ -35,12 +35,14 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
     { value: "avancado", label: t('exercises.difficultyAdvanced') },
   ];
 
+  const hasImage = !!imagemBase64;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tema || !nivel) return;
+    if (!hasImage && (!tema || !nivel)) return;
     onSubmit({
-      tema,
-      nivel,
+      tema: tema || (hasImage ? "Análise da imagem enviada" : ""),
+      nivel: nivel || (hasImage ? "auto" : ""),
       quantidade: parseInt(quantidade),
       dificuldade,
       imagemBase64,
@@ -52,14 +54,14 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
       <div className="space-y-2">
         <Label htmlFor="exercise-tema" className="flex items-center gap-2 text-base font-medium">
           <Dumbbell className="h-4 w-4 text-primary" />
-          {t('exercises.topic')}
+          {t('exercises.topic')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
         </Label>
         <Input
           id="exercise-tema"
-          placeholder={t('exercises.topicPlaceholder')}
+          placeholder={hasImage ? "Opcional — a IA vai resolver os exercícios da imagem" : t('exercises.topicPlaceholder')}
           value={tema}
           onChange={(e) => setTema(e.target.value)}
-          required
+          required={!hasImage}
           className="bg-card"
         />
       </div>
@@ -68,11 +70,11 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         <div className="space-y-2">
           <Label htmlFor="exercise-nivel" className="flex items-center gap-2 text-base font-medium">
             <GraduationCap className="h-4 w-4 text-secondary" />
-            {t('form.level')}
+            {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
           </Label>
-          <Select value={nivel} onValueChange={setNivel} required>
+          <Select value={nivel} onValueChange={setNivel} required={!hasImage}>
             <SelectTrigger id="exercise-nivel" className="bg-card h-12">
-              <SelectValue placeholder={t('form.selectLevel')} />
+              <SelectValue placeholder={hasImage ? "Opcional" : t('form.selectLevel')} />
             </SelectTrigger>
             <SelectContent className="bg-popover z-50">
               {niveis.map((n) => (
@@ -95,7 +97,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
             value={quantidade}
             onChange={(e) => setQuantidade(e.target.value)}
             required
-            className="bg-card"
+            className="bg-card h-12"
           />
         </div>
 
@@ -117,6 +119,12 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         </div>
       </div>
 
+      {hasImage && (
+        <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-3 text-xs text-foreground">
+          ✨ Imagem detectada — a IA vai <strong>resolver os exercícios da imagem</strong> com respostas, passo a passo, cálculos e explicações completas.
+        </div>
+      )}
+
       <ImageUpload onImageChange={setImagemBase64} disabled={isLoading} />
 
       <Button
@@ -124,7 +132,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || !tema || !nivel}
+        disabled={isLoading || (!hasImage && (!tema || !nivel))}
       >
         {isLoading ? (
           <>

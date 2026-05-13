@@ -537,18 +537,18 @@ const Index = () => {
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="w-full grid h-auto gap-3 bg-transparent p-0" style={{ gridTemplateColumns: `repeat(${[settings.studyGenEnabled, settings.exercisesEnabled, true].filter(Boolean).length}, minmax(0, 1fr))` }}>
                   {settings.studyGenEnabled && (
-                    <TabsTrigger value="study" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                    <TabsTrigger value="study" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                       <BookOpen className="h-4 w-4" />
                       <span className="hidden sm:inline">{t('tabs.study')}</span>
                     </TabsTrigger>
                   )}
                   {settings.exercisesEnabled && (
-                    <TabsTrigger value="exercises" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                    <TabsTrigger value="exercises" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                       <PenTool className="h-4 w-4" />
                       <span className="hidden sm:inline">{t('tabs.exercises')}</span>
                     </TabsTrigger>
                   )}
-                  <TabsTrigger value="history" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-foreground bg-card text-muted-foreground font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                  <TabsTrigger value="history" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <History className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.history')}</span>
                   </TabsTrigger>
