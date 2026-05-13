@@ -447,7 +447,7 @@ const Index = () => {
         <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src={learnBuddyLogo} alt="Learn Buddy" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
+              <img src={learnBuddyLogo} alt="Learn Buddy" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
               <div className="hidden sm:block">
                 <h1 className="font-display text-xl font-bold text-foreground">Learn Buddy</h1>
                 <p className="text-xs text-muted-foreground">{t('header.subtitle')}</p>
