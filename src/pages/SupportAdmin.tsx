@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { SEO } from '@/components/SEO';
 import { ArrowLeft, Send, Loader2, MessageCircle } from 'lucide-react';
 
 interface SupportUser {
@@ -175,6 +176,7 @@ const SupportAdmin = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Suporte — Learn Buddy" description="Painel de suporte administrativo do Learn Buddy. Responda mensagens dos usuários." path="/support-admin" />
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">

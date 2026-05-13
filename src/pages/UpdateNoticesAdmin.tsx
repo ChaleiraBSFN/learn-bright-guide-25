@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { SEO } from '@/components/SEO';
 import { ArrowLeft, Megaphone, Loader2, Trash2, Send } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -150,6 +151,7 @@ const UpdateNoticesAdmin = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Avisos de Atualizações — Learn Buddy" description="Gerencie os avisos de atualizações da plataforma Learn Buddy." path="/update-notices" />
       <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
         <div className="flex items-center gap-3 mb-6">
           <Button variant="ghost" size="icon" onClick={() => navigate('/admin')}>

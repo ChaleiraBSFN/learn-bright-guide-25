@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
+import { SEO } from '@/components/SEO';
 import {
   ArrowLeft, Loader2, Cpu, Plus, Trash2, Save, Gauge, Sparkles, Eye,
   Zap, Brain, Image, BookOpen, PenTool, Languages, Shield, RefreshCw,
@@ -169,6 +170,7 @@ const AIConfigAdmin = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Dados da IA — Learn Buddy" description="Configure modelos, métricas e capacidades da IA no Learn Buddy." path="/ai-config" />
       <div className="container max-w-4xl py-8">
         <div className="mb-8 flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate('/admin')}>

@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Mail, Lock, User, Loader2, Eye, EyeOff, Sun, Moon, Palette } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
+import { SEO } from '@/components/SEO';
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -78,6 +79,7 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Configurações — Learn Buddy" description="Personalize sua conta, tema, nome e e-mail no Learn Buddy." path="/settings" />
       <div className="max-w-2xl mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => navigate('/')} className="mb-6 gap-2">
           <ArrowLeft className="h-4 w-4" />

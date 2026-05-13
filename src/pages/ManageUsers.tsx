@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Loader2, Users, Crown, BarChart3, Clock, BookOpen, PenTool, TrendingUp, RefreshCw, Wifi } from 'lucide-react';
+import { SEO } from '@/components/SEO';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
 
@@ -172,6 +173,7 @@ const ManageUsers = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Analytics — Learn Buddy" description="Estatísticas de uso da plataforma Learn Buddy em tempo real." path="/manage-users" />
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
