@@ -25,7 +25,20 @@ export default defineConfig(({ mode }) => ({
         skipWaiting: true,
         clientsClaim: true,
         cleanupOutdatedCaches: true,
+        // Don't precache index.html - always fetch fresh from network
+        navigateFallback: null,
         runtimeCaching: [
+          {
+            // HTML / navigation requests: always try network first so users
+            // get the newest version on every visit (fall back to cache only when offline)
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "html-pages",
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
             handler: "NetworkFirst",
