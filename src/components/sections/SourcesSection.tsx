@@ -1,4 +1,3 @@
-import type { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, ExternalLink, Globe } from "lucide-react";
 
@@ -34,16 +33,6 @@ const TRUSTED_DOMAINS: Array<{ name: string; domain: string; match: string[]; de
   { name: "InfoEscola", domain: "infoescola.com", match: ["infoescola"], descricao: "Artigos educacionais objetivos para pesquisa complementar." },
 ];
 
-const openExternalUrl = (url: string) => {
-  const opened = window.open(url, "_blank");
-  if (opened) {
-    opened.opener = null;
-    opened.focus();
-    return;
-  }
-  window.location.assign(url);
-};
-
 const getTrustedDomain = (siteName: string): string | null => {
   const name = normalizeText(siteName);
   return TRUSTED_DOMAINS.find((entry) => entry.match.some((m) => name.includes(m)))?.domain ?? null;
@@ -60,7 +49,9 @@ const getSearchSuggestions = (consultas: string[], tema?: string) => {
   const base = tema?.trim() || consultas[0]?.trim() || "tema de estudo";
   const popular = [base, `${base} resumo`, `${base} explicação fácil`, `${base} exercícios`, `${base} mapa mental`];
   const merged = [...popular, ...consultas].filter((item) => item.trim().length > 2);
-  return merged.filter((item, index, array) => array.findIndex((other) => normalizeText(other) === normalizeText(item)) === index).slice(0, 6);
+  return merged
+    .filter((item, index, array) => array.findIndex((other) => normalizeText(other) === normalizeText(item)) === index)
+    .slice(0, 6);
 };
 
 const getResourceUrl = (
@@ -77,12 +68,6 @@ const getResourceUrl = (
   const trustedDomain = getTrustedDomain(site.nome);
   if (trustedDomain) return buildSearchUrl(`site:${trustedDomain} ${query}`);
   return buildSearchUrl(`${query} ${site.nome}`);
-};
-
-const handleOpen = (event: MouseEvent<HTMLAnchorElement>, url: string) => {
-  event.preventDefault();
-  event.stopPropagation();
-  openExternalUrl(url);
 };
 
 export function SourcesSection({ data, tema }: SourcesSectionProps) {
@@ -121,7 +106,6 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
                     target="_blank"
                     rel="noopener"
                     referrerPolicy="no-referrer"
-                    onClick={(event) => handleOpen(event, url)}
                     title={`Pesquisar no Google: ${enriched}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-sm text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
@@ -148,7 +132,7 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
                     target="_blank"
                     rel="noopener"
                     referrerPolicy="no-referrer"
-                    onClick={(event) => handleOpen(event, url)}
+                    
                     title={url}
                     className="text-left flex items-start gap-3 p-3 rounded-xl border border-border bg-background/50 hover:bg-muted transition-colors group"
                   >
