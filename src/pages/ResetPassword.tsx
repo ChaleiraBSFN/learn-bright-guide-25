@@ -158,7 +158,7 @@ const ResetPassword = () => {
           <div className="flex justify-center mb-4">
             <img src={learnBuddyLogo} alt="Learn Buddy" className="h-14 w-14 rounded-xl object-cover" loading="eager" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-foreground">Learn Buddy</h1>
+          <h1 className="font-display text-2xl font-bold text-foreground">Learn Buddy — {t('settings.newPassword')}</h1>
           <p className="text-muted-foreground mt-1">{t('settings.newPasswordDesc')}</p>
         </div>
 
@@ -198,7 +198,7 @@ const ResetPassword = () => {
                     placeholder="••••••"
                     minLength={6}
                   />
-                  <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full" onClick={() => setShowPassword(!showPassword)}>
+                  <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}>
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -214,7 +214,7 @@ const ResetPassword = () => {
                     placeholder="••••••"
                     minLength={6}
                   />
-                  <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full" onClick={() => setShowConfirm(!showConfirm)}>
+                  <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full" onClick={() => setShowConfirm(!showConfirm)} aria-label={showConfirm ? t('auth.hidePassword') : t('auth.showPassword')}>
                     {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
