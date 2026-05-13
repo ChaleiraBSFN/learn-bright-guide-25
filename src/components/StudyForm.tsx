@@ -103,7 +103,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
             value={prazo}
             onChange={(e) => setPrazo(e.target.value)}
             required={!hasImage}
-            className="bg-card"
+            className="bg-card h-12"
           />
         </div>
       </div>
