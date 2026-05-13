@@ -631,10 +631,18 @@ const Index = () => {
 
       {/* Fullscreen generating overlays */}
       <AnimatePresence>
-        {isLoading && <GeneratingOverlay type="study" isFinishing={isFinishingStudy} />}
+        {isLoading && (
+          <Suspense fallback={null}>
+            <GeneratingOverlay type="study" isFinishing={isFinishingStudy} />
+          </Suspense>
+        )}
       </AnimatePresence>
       <AnimatePresence>
-        {isExerciseLoading && <GeneratingOverlay type="exercise" isFinishing={isFinishingExercise} />}
+        {isExerciseLoading && (
+          <Suspense fallback={null}>
+            <GeneratingOverlay type="exercise" isFinishing={isFinishingExercise} />
+          </Suspense>
+        )}
       </AnimatePresence>
 
       {/* Fixed fullscreen translating overlay */}
