@@ -81,8 +81,9 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
     }
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const finishReason = data.candidates?.[0]?.finishReason;
     if (text) {
-      console.log(`[Gemini] ${model} responded`);
+      console.log(`[Gemini] ${model} responded (finish=${finishReason}, len=${text.length})`);
       return { text, status: 200 };
     }
     return { text: null, status: 502 };
