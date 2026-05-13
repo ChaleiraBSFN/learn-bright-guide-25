@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { UserMenu } from "@/components/UserMenu";
+import { SEO } from "@/components/SEO";
 import { SupportChat } from "@/components/SupportChat";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
@@ -440,6 +441,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
+      <SEO title="Learn Buddy – Estude com IA grátis" description="Plataforma 100% gratuita para estudar com IA: resumos, exercícios corrigidos, mapas mentais e plano de estudos personalizado." path="/" />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">

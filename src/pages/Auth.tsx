@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { supabase } from '@/integrations/supabase/client';
 import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
+import { SEO } from '@/components/SEO';
 
 const countries = [
   { code: 'BR', name: 'Brasil' },
@@ -217,6 +218,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <SEO title="Entrar ou criar conta — Learn Buddy" description="Acesse sua conta gratuita do Learn Buddy ou cadastre-se para estudar com IA." path="/auth" />
       <Button
         variant="ghost"
         size="icon"

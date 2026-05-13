@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Download, Smartphone, CheckCircle, Monitor, Apple, Chrome } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { SEO } from '@/components/SEO';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -60,6 +61,7 @@ const Install = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <SEO title="Instalar Learn Buddy — App grátis" description="Instale o Learn Buddy como aplicativo no seu celular ou desktop e estude com IA offline." path="/install" />
       <Card className="max-w-lg w-full">
         <CardHeader className="text-center">
           <Smartphone className="h-16 w-16 text-primary mx-auto mb-4" />
