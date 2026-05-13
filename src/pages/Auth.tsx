@@ -224,6 +224,7 @@ const Auth = () => {
         size="icon"
         className="absolute top-4 left-4"
         onClick={() => navigate('/')}
+        aria-label={t('auth.backToHome')}
       >
         <ArrowLeft className="h-5 w-5" />
       </Button>
