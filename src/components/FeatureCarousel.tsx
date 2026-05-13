@@ -165,6 +165,41 @@ export function FeatureCarousel() {
   // Triple for seamless loop
   const items = [...features, ...features, ...features];
 
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const normalSpeed = 120; // px per second
+    const slowSpeed = normalSpeed * 0.35;
+
+    let raf: number;
+    const step = (timestamp: number) => {
+      if (lastTimeRef.current == null) {
+        lastTimeRef.current = timestamp;
+      }
+      const delta = (timestamp - lastTimeRef.current) / 1000;
+      lastTimeRef.current = timestamp;
+
+      const speed = paused ? slowSpeed : normalSpeed;
+      progressRef.current -= delta * speed;
+
+      const totalWidth = track.scrollWidth / 3; // we tripled the items
+      if (totalWidth > 0) {
+        // Wrap modulo totalWidth
+        progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
+        x.set(-progressRef.current);
+      }
+
+      raf = requestAnimationFrame(step);
+    };
+
+    raf = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(raf);
+      lastTimeRef.current = null;
+    };
+  }, [paused, x]);
+
   return (
     <>
       <div
