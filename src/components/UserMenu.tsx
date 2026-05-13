@@ -118,6 +118,10 @@ export const UserMenu = () => {
             <Settings className="h-4 w-4 mr-2" />
             {t('settings.title')}
           </DropdownMenuItem>
+          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); toggleTheme(); }}>
+            {theme === 'dark' ? <Sun className="h-4 w-4 mr-2 text-accent" /> : <Moon className="h-4 w-4 mr-2 text-primary" />}
+            {theme === 'dark' ? t('settings.themeLight', 'Tema claro') : t('settings.themeDark', 'Tema escuro')}
+          </DropdownMenuItem>
           <AIInfoDialog />
           {isAdmin && (
             <>
