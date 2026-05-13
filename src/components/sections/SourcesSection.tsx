@@ -56,6 +56,13 @@ const enrichQuery = (base: string, tema?: string) => {
   return b.includes(t) ? base : `${tema} ${base}`;
 };
 
+const getSearchSuggestions = (consultas: string[], tema?: string) => {
+  const base = tema?.trim() || consultas[0]?.trim() || "tema de estudo";
+  const popular = [base, `${base} resumo`, `${base} explicação fácil`, `${base} exercícios`, `${base} mapa mental`];
+  const merged = [...popular, ...consultas].filter((item) => item.trim().length > 2);
+  return merged.filter((item, index, array) => array.findIndex((other) => normalizeText(other) === normalizeText(item)) === index).slice(0, 6);
+};
+
 const getResourceUrl = (
   site: { url?: string; termoBusca?: string; nome: string },
   tema?: string,
@@ -80,6 +87,12 @@ const handleOpen = (event: MouseEvent<HTMLAnchorElement>, url: string) => {
 
 export function SourcesSection({ data, tema }: SourcesSectionProps) {
   const { t } = useTranslation();
+  const searchSuggestions = getSearchSuggestions(data.consultas || [], tema);
+  const recommendedSites = TRUSTED_DOMAINS.map((source) => ({
+    nome: source.name,
+    termoBusca: tema || data.sites?.[0]?.termoBusca || data.sites?.[0]?.nome || source.name,
+    descricao: source.descricao,
+  }));
 
   return (
     <section className="section-card bg-card border border-border fade-in" style={{ animationDelay: "0.8s" }}>
@@ -98,7 +111,7 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
               {t("sections.searchSuggestions")}
             </h4>
             <div className="flex flex-wrap gap-2">
-              {data.consultas.map((consulta, index) => {
+              {searchSuggestions.map((consulta, index) => {
                 const enriched = enrichQuery(consulta, tema);
                 const url = buildSearchUrl(enriched);
                 return (
@@ -126,7 +139,7 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
               {t("sections.recommendedSources")}
             </h4>
             <div className="grid gap-3 sm:grid-cols-2">
-              {data.sites.map((site, index) => {
+              {recommendedSites.map((site, index) => {
                 const url = getResourceUrl(site, tema);
                 return (
                   <a
