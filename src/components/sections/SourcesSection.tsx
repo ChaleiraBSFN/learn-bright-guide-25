@@ -26,40 +26,12 @@ const normalizeText = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 
-// Mapeamento amplo de sites educacionais conhecidos -> URL de busca interna
-const KNOWN_SITES: Array<{ match: string[]; build: (q: string) => string }> = [
-  { match: ["brasil escola"], build: (q) => `https://brasilescola.uol.com.br/pesquisa?q=${encodeURIComponent(q)}` },
-  { match: ["mundo educacao"], build: (q) => `https://mundoeducacao.uol.com.br/pesquisa?q=${encodeURIComponent(q)}` },
-  { match: ["toda materia", "todamateria"], build: (q) => `https://www.todamateria.com.br/?s=${encodeURIComponent(q)}` },
-  { match: ["khan academy"], build: (q) => `https://pt.khanacademy.org/search?page_search_query=${encodeURIComponent(q)}` },
-  { match: ["wikipedia"], build: (q) => `https://pt.wikipedia.org/w/index.php?search=${encodeURIComponent(q)}` },
-  { match: ["youtube"], build: (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}` },
-  { match: ["coursera"], build: (q) => `https://www.coursera.org/search?query=${encodeURIComponent(q)}` },
-  { match: ["edx"], build: (q) => `https://www.edx.org/search?q=${encodeURIComponent(q)}` },
-  { match: ["infoescola"], build: (q) => `https://www.infoescola.com/?s=${encodeURIComponent(q)}` },
-  { match: ["sobiologia"], build: (q) => `https://www.sobiologia.com.br/?s=${encodeURIComponent(q)}` },
-  { match: ["stoodi"], build: (q) => `https://www.stoodi.com.br/busca/?q=${encodeURIComponent(q)}` },
-  { match: ["descomplica"], build: (q) => `https://descomplica.com.br/busca/?q=${encodeURIComponent(q)}` },
-  { match: ["me salva", "mesalva"], build: (q) => `https://www.mesalva.com/busca?q=${encodeURIComponent(q)}` },
-  { match: ["responde ai", "respondeai"], build: (q) => `https://www.respondeai.com.br/busca?termo=${encodeURIComponent(q)}` },
-  { match: ["bbc"], build: (q) => `https://www.bbc.com/portuguese/search?q=${encodeURIComponent(q)}` },
-  { match: ["nat geo", "national geographic"], build: (q) => `https://www.nationalgeographicbrasil.com/search?q=${encodeURIComponent(q)}` },
-  { match: ["uol"], build: (q) => `https://busca.uol.com.br/?q=${encodeURIComponent(q)}` },
-  { match: ["g1", "globo"], build: (q) => `https://g1.globo.com/busca/?q=${encodeURIComponent(q)}` },
-  { match: ["scielo"], build: (q) => `https://search.scielo.org/?q=${encodeURIComponent(q)}&lang=pt` },
-  { match: ["google scholar", "scholar"], build: (q) => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}&hl=pt-BR` },
-  { match: ["mit"], build: (q) => `https://ocw.mit.edu/search/?q=${encodeURIComponent(q)}` },
-  { match: ["ted"], build: (q) => `https://www.ted.com/search?q=${encodeURIComponent(q)}` },
-];
-
-const TRUSTED_DOMAINS: Array<{ name: string; domain: string; match: string[] }> = [
-  { name: "Brasil Escola", domain: "brasilescola.uol.com.br", match: ["brasil escola"] },
-  { name: "Toda Matéria", domain: "todamateria.com.br", match: ["toda materia", "todamateria"] },
-  { name: "Khan Academy", domain: "pt.khanacademy.org", match: ["khan academy"] },
-  { name: "Mundo Educação", domain: "mundoeducacao.uol.com.br", match: ["mundo educacao"] },
-  { name: "InfoEscola", domain: "infoescola.com", match: ["infoescola"] },
-  { name: "Wikipédia", domain: "pt.wikipedia.org", match: ["wikipedia", "wikipédia"] },
-  { name: "SciELO", domain: "scielo.org", match: ["scielo"] },
+const TRUSTED_DOMAINS: Array<{ name: string; domain: string; match: string[]; descricao: string }> = [
+  { name: "Khan Academy", domain: "pt.khanacademy.org", match: ["khan academy"], descricao: "Aulas gratuitas e exercícios guiados para aprender passo a passo." },
+  { name: "Brasil Escola", domain: "brasilescola.uol.com.br", match: ["brasil escola"], descricao: "Explicações escolares populares, diretas e em português." },
+  { name: "Toda Matéria", domain: "todamateria.com.br", match: ["toda materia", "todamateria"], descricao: "Resumos simples, exemplos e revisões rápidas para estudantes." },
+  { name: "Mundo Educação", domain: "mundoeducacao.uol.com.br", match: ["mundo educacao"], descricao: "Conteúdo didático confiável para reforçar o tema estudado." },
+  { name: "InfoEscola", domain: "infoescola.com", match: ["infoescola"], descricao: "Artigos educacionais objetivos para pesquisa complementar." },
 ];
 
 const openExternalUrl = (url: string) => {
