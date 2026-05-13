@@ -70,11 +70,11 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         <div className="space-y-2">
           <Label htmlFor="exercise-nivel" className="flex items-center gap-2 text-base font-medium">
             <GraduationCap className="h-4 w-4 text-secondary" />
-            {t('form.level')}
+            {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
           </Label>
-          <Select value={nivel} onValueChange={setNivel} required>
+          <Select value={nivel} onValueChange={setNivel} required={!hasImage}>
             <SelectTrigger id="exercise-nivel" className="bg-card h-12">
-              <SelectValue placeholder={t('form.selectLevel')} />
+              <SelectValue placeholder={hasImage ? "Opcional" : t('form.selectLevel')} />
             </SelectTrigger>
             <SelectContent className="bg-popover z-50">
               {niveis.map((n) => (
