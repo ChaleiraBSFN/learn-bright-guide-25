@@ -22,13 +22,13 @@ interface MindMapSectionProps {
   imagesLoading?: boolean;
 }
 
-const colorClasses: Record<string, { bg: string; text: string; border: string; line: string }> = {
-  blue: { bg: "bg-blue-100", text: "text-blue-700", border: "border-blue-300", line: "stroke-blue-400" },
-  green: { bg: "bg-emerald-100", text: "text-emerald-700", border: "border-emerald-300", line: "stroke-emerald-400" },
-  amber: { bg: "bg-amber-100", text: "text-amber-700", border: "border-amber-300", line: "stroke-amber-400" },
-  purple: { bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-300", line: "stroke-purple-400" },
-  rose: { bg: "bg-rose-100", text: "text-rose-700", border: "border-rose-300", line: "stroke-rose-400" },
-  cyan: { bg: "bg-cyan-100", text: "text-cyan-700", border: "border-cyan-300", line: "stroke-cyan-400" },
+const colorClasses: Record<string, { bg: string; text: string; border: string; line: string; dot: string }> = {
+  blue: { bg: "bg-blue-100 dark:bg-blue-950/40", text: "text-blue-700 dark:text-blue-200", border: "border-blue-300 dark:border-blue-700", line: "stroke-blue-400", dot: "bg-white dark:bg-blue-950" },
+  green: { bg: "bg-emerald-100 dark:bg-emerald-950/40", text: "text-emerald-700 dark:text-emerald-200", border: "border-emerald-300 dark:border-emerald-700", line: "stroke-emerald-400", dot: "bg-white dark:bg-emerald-950" },
+  amber: { bg: "bg-amber-100 dark:bg-amber-950/40", text: "text-amber-700 dark:text-amber-200", border: "border-amber-300 dark:border-amber-700", line: "stroke-amber-400", dot: "bg-white dark:bg-amber-950" },
+  purple: { bg: "bg-purple-100 dark:bg-purple-950/40", text: "text-purple-700 dark:text-purple-200", border: "border-purple-300 dark:border-purple-700", line: "stroke-purple-400", dot: "bg-white dark:bg-purple-950" },
+  rose: { bg: "bg-rose-100 dark:bg-rose-950/40", text: "text-rose-700 dark:text-rose-200", border: "border-rose-300 dark:border-rose-700", line: "stroke-rose-400", dot: "bg-white dark:bg-rose-950" },
+  cyan: { bg: "bg-cyan-100 dark:bg-cyan-950/40", text: "text-cyan-700 dark:text-cyan-200", border: "border-cyan-300 dark:border-cyan-700", line: "stroke-cyan-400", dot: "bg-white dark:bg-cyan-950" },
 };
 
 export function MindMapSection({ data, aiImages, imagesLoading }: MindMapSectionProps) {
@@ -105,7 +105,7 @@ export function MindMapSection({ data, aiImages, imagesLoading }: MindMapSection
                   className={`rounded-xl border-2 ${colors.border} ${colors.bg} p-4 transition-all hover:scale-[1.02] hover:shadow-lg relative`}
                 >
                   {/* Connection dot at top */}
-                  <div className={`absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 ${colors.border} bg-white`} />
+                  <div className={`absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 ${colors.border} ${colors.dot}`} />
                   
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-2xl">{ramo.icone}</span>

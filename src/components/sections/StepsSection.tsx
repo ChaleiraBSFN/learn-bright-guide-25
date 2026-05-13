@@ -164,7 +164,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
                           className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wide text-amber-600 dark:text-amber-400"
                           style={{ animation: 'arrow-point 1.1s ease-in-out infinite' }}
                         >
-                          Clique aqui
+                          {t('sections.clickHere', 'Clique aqui')}
                         </span>
                         <ArrowRight
                           className="h-5 w-5 text-amber-500 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]"
