@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, useMotionValue } from "framer-motion";
 import { BookOpen, Brain, Dumbbell, ChevronRight, Sparkles, CheckCircle2, Cpu, Map, Trophy, Users, Coins } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
