@@ -147,8 +147,16 @@ serve(async (req) => {
     const lang = languageMap[idioma] || "Português (Brasil)";
     const seed = Math.floor(Math.random() * 1000000);
 
-    const imageInstructions = imagemBase64 
-      ? `\nIMPORTANT: An image was provided. Analyze the image carefully. If it contains exercises or questions, SOLVE them step by step and include the solutions. Create the exercises based on what you see in the image, preserving the original questions and providing detailed solutions.\n`
+    const imageInstructions = imagemBase64
+      ? `\nCRITICAL IMAGE TASK: An image with exercises/questions was attached. You MUST:
+1. Carefully read EVERY exercise/question visible in the image (use OCR).
+2. Use each ORIGINAL question text from the image as the "enunciado" (do not invent new questions; reproduce them faithfully, translated to ${lang} if needed).
+3. SOLVE every exercise step-by-step. Fill "respostaCompleta" with the FULL solution path: setup, formulas, substitutions, calculations, intermediate steps, and final answer.
+4. Fill "explicacao" with WHY each step works (concept-level reasoning, not just the steps).
+5. For "objetiva", pick the correct alternative letter in "resposta" and explain why the others are wrong inside "respostaCompleta".
+6. For "dissertativa", "respostaEsperada" must be a complete model answer with reasoning + calculations.
+7. Generate exactly as many items as there are exercises in the image (ignore the requested quantidade if the image has more/fewer). If the image has no exercises, then generate ${quantidade} new ones about "${sanitize(tema)}".
+8. Show all math/calculations in plain text (e.g. "2x + 3 = 7  =>  2x = 4  =>  x = 2"). NEVER skip steps.\n`
       : "";
 
     const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}" at level "${sanitize(nivel)}". Respond ONLY in ${lang}. ONLY valid JSON.
@@ -157,11 +165,11 @@ ${imageInstructions}
 
 JSON format:
 {"titulo":"string","descricao":"1 sentence","exercicios":[
-  {"tipo":"objetiva","numero":1,"nivel":"string","enunciado":"question","alternativas":["a) opt","b) opt","c) opt","d) opt"],"resposta":"a","respostaCompleta":"full answer","explicacao":"1 sentence","dicaExtra":"tip"},
-  {"tipo":"dissertativa","numero":2,"nivel":"string","enunciado":"question","respostaEsperada":"ideal answer","explicacao":"1 sentence","criterios":["c1","c2"]}
+  {"tipo":"objetiva","numero":1,"nivel":"string","enunciado":"question","alternativas":["a) opt","b) opt","c) opt","d) opt"],"resposta":"a","respostaCompleta":"FULL step-by-step solution with calculations","explicacao":"why it works","dicaExtra":"tip"},
+  {"tipo":"dissertativa","numero":2,"nivel":"string","enunciado":"question","respostaEsperada":"complete model answer with reasoning + calculations","explicacao":"why it works","criterios":["c1","c2"]}
 ],"resumoTema":"2 sentences"}
 
-Rules: Keep JSON keys in Portuguese. Be concise. Vary difficulty. ONLY JSON output.`;
+Rules: Keep JSON keys in Portuguese. Be thorough on solutions when an image is provided. Vary difficulty. ONLY JSON output.`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
