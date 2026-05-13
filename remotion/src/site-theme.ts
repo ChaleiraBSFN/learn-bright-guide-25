@@ -1,25 +1,26 @@
-// Light theme matching the actual Learn Buddy site (src/index.css)
+// Dark theme variant of the Learn Buddy site (used only by the demo video).
+// Mirrors src/index.css `.dark` tokens.
 export const SITE = {
-  bg: "#fbf7ef",            // hsl(40 33% 98%)
-  card: "#ffffff",
-  text: "#0c1426",          // hsl(222 47% 11%)
-  muted: "#6b7280",
-  border: "#e2e8f0",
-  primary: "#1351c8",       // hsl(217 91% 40%) deep blue
-  primaryLight: "#3b82f6",
-  secondary: "#1bb89b",     // hsl(168 76% 42%) teal
-  accent: "#f59e0b",        // hsl(38 92% 50%) amber
-  accentLight: "#fbbf24",
-  // Section colors (mirroring --section-* tokens)
-  sectionObjective: "#1351c8",
-  sectionSummary: "#1bb89b",
-  sectionSteps: "#8b5cf6",      // purple
-  sectionExercises: "#f59e0b",
-  sectionMindmap: "#0ea5e9",    // sky blue
-  sectionPlan: "#10b981",       // emerald
-  sectionErrors: "#ef4444",
-  shadow: "rgba(15, 23, 42, 0.08)",
-  shadowLg: "rgba(15, 23, 42, 0.15)",
+  bg: "#0a0f1c",            // hsl(222 47% 6%)
+  card: "#111a2e",          // hsl(222 47% 12%)
+  text: "#f1f5f9",          // hsl(210 40% 96%)
+  muted: "#94a3b8",         // hsl(215 20% 65%)
+  border: "#1f2a44",        // hsl(222 35% 20%)
+  primary: "#3b82f6",       // brighter blue for dark bg
+  primaryLight: "#60a5fa",
+  secondary: "#2dd4bf",     // brighter teal
+  accent: "#fbbf24",        // amber
+  accentLight: "#fcd34d",
+  // Section colors (kept vivid, work over dark bg)
+  sectionObjective: "#3b82f6",
+  sectionSummary: "#2dd4bf",
+  sectionSteps: "#a78bfa",      // purple
+  sectionExercises: "#fbbf24",
+  sectionMindmap: "#38bdf8",    // sky blue
+  sectionPlan: "#34d399",       // emerald
+  sectionErrors: "#f87171",
+  shadow: "rgba(0, 0, 0, 0.45)",
+  shadowLg: "rgba(0, 0, 0, 0.65)",
   fontDisplay: "Nunito, 'NotoColorEmoji', sans-serif",
   fontBody: "Inter, 'NotoColorEmoji', sans-serif",
 };
