@@ -169,7 +169,7 @@ export function FeatureCarousel() {
     const track = trackRef.current;
     if (!track) return;
 
-    const normalSpeed = 120; // px per second
+    const normalSpeed = 60; // px per second
     const slowSpeed = normalSpeed * 0.35;
 
     let raf: number;
