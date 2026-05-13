@@ -106,7 +106,6 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
                     target="_blank"
                     rel="noopener"
                     referrerPolicy="no-referrer"
-                    onClick={(event) => handleOpen(event, url)}
                     title={`Pesquisar no Google: ${enriched}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-sm text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
@@ -133,7 +132,7 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
                     target="_blank"
                     rel="noopener"
                     referrerPolicy="no-referrer"
-                    onClick={(event) => handleOpen(event, url)}
+                    
                     title={url}
                     className="text-left flex items-start gap-3 p-3 rounded-xl border border-border bg-background/50 hover:bg-muted transition-colors group"
                   >
