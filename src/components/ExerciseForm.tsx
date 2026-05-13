@@ -35,12 +35,14 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
     { value: "avancado", label: t('exercises.difficultyAdvanced') },
   ];
 
+  const hasImage = !!imagemBase64;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tema || !nivel) return;
+    if (!hasImage && (!tema || !nivel)) return;
     onSubmit({
-      tema,
-      nivel,
+      tema: tema || (hasImage ? "Análise da imagem enviada" : ""),
+      nivel: nivel || (hasImage ? "auto" : ""),
       quantidade: parseInt(quantidade),
       dificuldade,
       imagemBase64,
