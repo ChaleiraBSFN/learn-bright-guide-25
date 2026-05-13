@@ -44,14 +44,6 @@ const openExternalUrl = (url: string) => {
   window.location.assign(url);
 };
 
-const getKnownSiteSearchUrl = (siteName: string, query: string): string | null => {
-  const name = normalizeText(siteName);
-  for (const entry of KNOWN_SITES) {
-    if (entry.match.some((m) => name.includes(m))) return entry.build(query);
-  }
-  return null;
-};
-
 const getTrustedDomain = (siteName: string): string | null => {
   const name = normalizeText(siteName);
   return TRUSTED_DOMAINS.find((entry) => entry.match.some((m) => name.includes(m)))?.domain ?? null;
@@ -75,8 +67,6 @@ const getResourceUrl = (
   }
   const baseTerm = site.termoBusca?.trim() || site.nome;
   const query = enrichQuery(baseTerm, tema);
-  const knownSiteUrl = getKnownSiteSearchUrl(site.nome, query);
-  if (knownSiteUrl) return knownSiteUrl;
   const trustedDomain = getTrustedDomain(site.nome);
   if (trustedDomain) return buildSearchUrl(`site:${trustedDomain} ${query}`);
   return buildSearchUrl(`${query} ${site.nome}`);
