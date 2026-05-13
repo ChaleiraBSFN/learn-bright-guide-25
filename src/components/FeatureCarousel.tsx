@@ -168,6 +168,9 @@ export function FeatureCarousel() {
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
+        {/* Tiny edge fades */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-3 bg-gradient-to-r from-background to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-3 bg-gradient-to-l from-background to-transparent" />
 
         <motion.div
           className="flex gap-3 py-2"
@@ -251,22 +254,38 @@ function FeatureCard({
 }) {
   return (
     <motion.div
-      className={`relative flex-shrink-0 w-[200px] sm:w-[220px] md:w-[240px] rounded-2xl border ${feature.borderColor} bg-card overflow-hidden group`}
+      onClick={onOpen}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen()}
+      className={`relative flex-shrink-0 w-[180px] sm:w-[200px] md:w-[220px] rounded-2xl border ${feature.borderColor} bg-card overflow-hidden group cursor-pointer shadow-md hover:shadow-2xl transition-shadow duration-300`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: (index % 3) * 0.1, duration: 0.35 }}
-      whileHover={{ y: -3 }}
+      whileHover={{ y: -6, scale: 1.02 }}
+      whileTap={{ scale: 0.97 }}
+      style={{
+        boxShadow:
+          "0 10px 25px -10px rgba(0,0,0,0.25), 0 4px 10px -4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.08)",
+      }}
     >
       {/* Background gradient */}
       <div
         className={`absolute inset-0 bg-gradient-to-br ${feature.bgGradient} opacity-70 group-hover:opacity-100 transition-opacity duration-300`}
       />
 
+      {/* Glossy highlight */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent" />
+
       <div className="relative p-4 sm:p-5 space-y-3">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div
-            className={`flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl ${feature.color} bg-current/10`}
+            className={`flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl ${feature.color} bg-current/10 shadow-inner`}
+            style={{
+              boxShadow:
+                "inset 0 2px 4px rgba(0,0,0,0.1), 0 2px 6px -2px rgba(0,0,0,0.2)",
+            }}
           >
             <feature.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${feature.color}`} />
           </div>
@@ -282,23 +301,18 @@ function FeatureCard({
           </p>
         </div>
 
-        {/* Saiba mais button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onOpen();
-          }}
-          className={`relative z-10 inline-flex items-center gap-1 text-xs font-semibold ${feature.color} hover:gap-2 transition-all duration-200 uppercase tracking-wider`}
+        {/* Saiba mais hint */}
+        <div
+          className={`relative inline-flex items-center gap-1 text-xs font-semibold ${feature.color} group-hover:gap-2 transition-all duration-200 uppercase tracking-wider`}
         >
           <span>Saiba mais</span>
           <ChevronRight className="h-3.5 w-3.5" />
-        </button>
+        </div>
       </div>
 
       {/* Bottom accent bar */}
       <div
-        className={`absolute bottom-0 left-0 right-0 h-1 ${feature.color.replace("text-", "bg-")} opacity-50 group-hover:opacity-100 transition-opacity duration-300`}
+        className={`absolute bottom-0 left-0 right-0 h-1 ${feature.color.replace("text-", "bg-")} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}
       />
     </motion.div>
   );
