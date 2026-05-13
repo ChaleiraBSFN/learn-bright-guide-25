@@ -86,7 +86,58 @@ const Settings = () => {
 
         <h1 className="text-2xl font-bold text-foreground mb-6">{t('settings.title')}</h1>
 
-        {/* Display Name */}
+        {/* Theme */}
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Palette className="h-5 w-5 text-primary" />
+              {t('settings.appearance', 'Aparência')}
+            </CardTitle>
+            <CardDescription>
+              {t('settings.appearanceDesc', 'Escolha o tema do site para uma experiência mais confortável.')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setTheme('dark')}
+                className={`group relative rounded-xl border-2 p-4 text-left transition-all ${
+                  theme === 'dark'
+                    ? 'border-primary bg-primary/10 shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)]'
+                    : 'border-border hover:border-primary/40'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Moon className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-foreground">{t('settings.themeDark', 'Escuro')}</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.themeDarkDesc', 'Recomendado. Reduz o cansaço visual.')}
+                </p>
+              </button>
+              <button
+                type="button"
+                onClick={() => setTheme('light')}
+                className={`group relative rounded-xl border-2 p-4 text-left transition-all ${
+                  theme === 'light'
+                    ? 'border-primary bg-primary/10 shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)]'
+                    : 'border-border hover:border-primary/40'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Sun className="h-5 w-5 text-accent" />
+                  <span className="font-semibold text-foreground">{t('settings.themeLight', 'Claro')}</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.themeLightDesc', 'Ambientes bem iluminados.')}
+                </p>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
+
         <Card className="mb-4">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
