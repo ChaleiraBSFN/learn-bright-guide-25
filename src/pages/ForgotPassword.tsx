@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { SEO } from '@/components/SEO';
 import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
 
 const ForgotPassword = () => {
@@ -45,6 +46,7 @@ const ForgotPassword = () => {
   if (sent) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <SEO title="E-mail Enviado — Learn Buddy" description="Link de recuperação de senha enviado para seu e-mail." path="/forgot-password" />
         <Button variant="ghost" size="icon" className="absolute top-4 left-4" onClick={() => navigate('/auth')} aria-label={t('auth.backToLogin')}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
@@ -73,6 +75,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <SEO title="Recuperar Senha — Learn Buddy" description="Recupere sua senha do Learn Buddy de forma segura." path="/forgot-password" />
       <Button variant="ghost" size="icon" className="absolute top-4 left-4" onClick={() => navigate('/auth')} aria-label={t('auth.backToLogin')}>
         <ArrowLeft className="h-5 w-5" />
       </Button>

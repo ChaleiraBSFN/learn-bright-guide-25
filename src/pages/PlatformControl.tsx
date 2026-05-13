@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { SEO } from '@/components/SEO';
 import { ArrowLeft, Settings2, Loader2, Map, Users, Megaphone, BookOpen, Zap, Trophy } from 'lucide-react';
 
 interface PlatformSettings {
@@ -133,6 +134,7 @@ const PlatformControl = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Controle da Plataforma — Learn Buddy" description="Painel de controle administrativo da plataforma Learn Buddy." path="/platform-control" />
       <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
         <div className="flex items-center gap-3 mb-6">
           <Button variant="ghost" size="icon" onClick={() => navigate('/admin')}>

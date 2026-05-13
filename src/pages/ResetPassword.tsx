@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { Lock, Loader2, Eye, EyeOff, CheckCircle, Mail } from 'lucide-react';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { SEO } from '@/components/SEO';
 import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
 
 const ResetPassword = () => {
@@ -152,6 +153,7 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <SEO title="Redefinir Senha — Learn Buddy" description="Redefina sua senha do Learn Buddy de forma segura." path="/reset-password" />
       <div className="absolute top-4 right-4"><LanguageSelector /></div>
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
