@@ -38,12 +38,15 @@
     "summaries": "Resúmenes Claros",
     "summariesDetailed": "Detallados",
     "summariesBasic": "Básicos",
+    "summariesLong": "Transforma contenidos complejos en resúmenes claros y objetivos. Nuestra IA identifica los puntos más importantes y organiza todo de forma didáctica para que aprendas más rápido y retengas más información.",
     "mindMaps": "Mapas Visuales",
     "mindMapsComplete": "Completos",
     "mindMapsBasic": "Básicos",
+    "mindMapsLong": "Visualiza el conocimiento de forma única con mapas mentales generados automáticamente. Conecta ideas, ve relaciones y memoriza con facilidad a través de representaciones visuales inteligentes.",
     "exercises": "Ejercicios",
     "exercisesPremium": "10+ con desafíos",
-    "exercisesFree": "3 con respuestas"
+    "exercisesFree": "3 con respuestas",
+    "exercisesLong": "Practica con ejercicios personalizados desde tu nivel hasta el desafío. Recibe corrección instantánea de la IA, explicaciones detalladas y sigue tu evolución paso a paso."
   },
   "form": {
     "premiumMode": "Modo Premium activo - ¡Recibirás contenido completo y detallado!",

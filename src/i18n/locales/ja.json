@@ -38,12 +38,15 @@
     "summaries": "要約",
     "summariesDetailed": "詳細",
     "summariesBasic": "基礎",
+    "summariesLong": "複雑なコンテンツを明確で客観的な要約に変換します。AIが最も重要なポイントを特定し、教育的な方法ですべてを整理し、より速く学び、より多くの情報を保持できるようにします。",
     "mindMaps": "マップ",
     "mindMapsComplete": "完全",
     "mindMapsBasic": "基礎",
+    "mindMapsLong": "自動生成されたマインドマップで、独自の方法で知識を視覚化します。アイデアを接続し、関係性を確認し、インテリジェントな視覚表現を通じて簡単に記憶できます。",
     "exercises": "演習",
     "exercisesPremium": "10+",
-    "exercisesFree": "3つ"
+    "exercisesFree": "3つ",
+    "exercisesLong": "あなたのレベルから挑戦まで、パーソナライズされた演習で練習しましょう。AIによる即座の添削、詳細な説明、そして段階的な進捗追跡を受け取れます。"
   },
   "form": {
     "premiumMode": "プレミアムモード有効！",
