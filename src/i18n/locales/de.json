@@ -38,12 +38,15 @@
     "summaries": "Zusammenfassungen",
     "summariesDetailed": "Detailliert",
     "summariesBasic": "Basis",
+    "summariesLong": "Verwandeln Sie komplexe Inhalte in klare, objektive Zusammenfassungen. Unsere KI identifiziert die wichtigsten Punkte und organisiert alles didaktisch, damit Sie schneller lernen und mehr behalten.",
     "mindMaps": "Karten",
     "mindMapsComplete": "Vollständig",
     "mindMapsBasic": "Basis",
+    "mindMapsLong": "Visualisieren Sie Wissen einzigartig mit automatisch generierten Mindmaps. Verbinden Sie Ideen, erkennen Sie Zusammenhänge und merken Sie sich leicht durch intelligente visuelle Darstellungen.",
     "exercises": "Übungen",
     "exercisesPremium": "10+",
-    "exercisesFree": "3"
+    "exercisesFree": "3",
+    "exercisesLong": "Üben Sie mit personalisierten Übungen von Ihrem Niveau bis zur Herausforderung. Erhalten Sie sofortige KI-Korrektur, detaillierte Erklärungen und verfolgen Sie Ihren Fortschritt Schritt für Schritt."
   },
   "form": {
     "premiumMode": "Premium-Modus aktiv!",

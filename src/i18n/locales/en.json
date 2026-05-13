@@ -39,12 +39,15 @@
     "summaries": "Clear Summaries",
     "summariesDetailed": "Detailed",
     "summariesBasic": "Basic",
+    "summariesLong": "Transform complex content into clear, objective summaries. Our AI identifies the most important points and organizes everything in a didactic way so you learn faster and retain more information.",
     "mindMaps": "Visual Maps",
     "mindMapsComplete": "Complete",
     "mindMapsBasic": "Basic",
+    "mindMapsLong": "Visualize knowledge uniquely with automatically generated mind maps. Connect ideas, see relationships, and memorize easily through intelligent visual representations.",
     "exercises": "Exercises",
     "exercisesPremium": "10+ with challenges",
-    "exercisesFree": "3 with answers"
+    "exercisesFree": "3 with answers",
+    "exercisesLong": "Practice with personalized exercises from your level up to challenge mode. Get instant AI correction, detailed explanations, and track your progress step by step."
   },
   "form": {
     "premiumMode": "Premium mode active - You'll receive complete and detailed content!",

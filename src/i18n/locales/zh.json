@@ -38,12 +38,15 @@
     "summaries": "摘要",
     "summariesDetailed": "详细",
     "summariesBasic": "基础",
+    "summariesLong": "将复杂内容转化为清晰客观的摘要。我们的AI识别最重要的知识点，并以教学方式组织所有内容，让您学得更快、记得更多。",
     "mindMaps": "地图",
     "mindMapsComplete": "完整",
     "mindMapsBasic": "基础",
+    "mindMapsLong": "通过自动生成的心智图，以独特方式可视化知识。连接想法，查看关系，通过智能视觉表示轻松记忆。",
     "exercises": "练习",
     "exercisesPremium": "10+",
-    "exercisesFree": "3个"
+    "exercisesFree": "3个",
+    "exercisesLong": "通过从您的水平到挑战难度的个性化练习进行练习。获得AI即时批改、详细解释，并一步一步跟踪您的进步。"
   },
   "form": {
     "premiumMode": "高级模式已激活！",
