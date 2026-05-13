@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { HelpCircle, Send, Loader2, MessagesSquare } from 'lucide-react';
+import { HelpCircle, Send, Loader2, MessagesSquare, LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -112,7 +112,6 @@ export const SupportChat = () => {
     } else {
       setNewMessage('');
       
-      // Send notification to admin (fire and forget)
       try {
         await supabase.functions.invoke('notify-support-request', {
           body: { 
@@ -121,14 +120,11 @@ export const SupportChat = () => {
           }
         });
       } catch (notifyError) {
-        // Don't fail the message if notification fails
         console.error('Failed to send admin notification:', notifyError);
       }
     }
     setSending(false);
   };
-
-  if (!user) return null;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -156,63 +152,93 @@ export const SupportChat = () => {
             </Button>
           )}
         </SheetHeader>
-        
-        <ScrollArea className="flex-1 pr-4 mt-4" ref={scrollRef}>
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : messages.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
-              {t('support.noMessages')}
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`p-3 rounded-lg max-w-[85%] ${
-                    msg.is_admin_reply
-                      ? 'bg-primary/10 text-foreground mr-auto'
-                      : 'bg-primary text-primary-foreground ml-auto'
-                  }`}
-                >
-                  <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
-                  <p className="text-xs opacity-70 mt-1">
-                    {new Date(msg.created_at).toLocaleString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </ScrollArea>
 
-        <div className="mt-4 flex gap-2">
-          <Textarea
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder={t('support.placeholder')}
-            className="min-h-[60px] resize-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-              }
-            }}
-          />
-          <Button
-            onClick={sendMessage}
-            disabled={sending || !newMessage.trim()}
-            size="icon"
-            className="shrink-0"
-          >
-            {sending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
+        {!user ? (
+          <div className="flex-1 flex flex-col items-center justify-center gap-6 px-4 text-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <LogIn className="h-8 w-8 text-primary" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-bold text-foreground">
+                  Crie uma conta para falar conosco
+                </h3>
+                <p className="text-sm text-muted-foreground max-w-[260px]">
+                  Entre com sua conta para acessar o suporte e conversar diretamente com nossa equipe.
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => {
+                setOpen(false);
+                navigate('/auth');
+              }}
+              className="w-full max-w-[240px] gap-2"
+            >
+              <LogIn className="h-4 w-4" />
+              Entrar ou Cadastrar
+            </Button>
+          </div>
+        ) : (
+          <>
+            <ScrollArea className="flex-1 pr-4 mt-4" ref={scrollRef}>
+              {loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : messages.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">
+                  {t('support.noMessages')}
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`p-3 rounded-lg max-w-[85%] ${
+                        msg.is_admin_reply
+                          ? 'bg-primary/10 text-foreground mr-auto'
+                          : 'bg-primary text-primary-foreground ml-auto'
+                      }`}
+                    >
+                      <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+                      <p className="text-xs opacity-70 mt-1">
+                        {new Date(msg.created_at).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+
+            <div className="mt-4 flex gap-2">
+              <Textarea
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder={t('support.placeholder')}
+                className="min-h-[60px] resize-none"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                }}
+              />
+              <Button
+                onClick={sendMessage}
+                disabled={sending || !newMessage.trim()}
+                size="icon"
+                className="shrink-0"
+              >
+                {sending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </>
+        )}
       </SheetContent>
     </Sheet>
   );
