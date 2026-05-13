@@ -1,35 +1,36 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { lazy, Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
 import { triggerRateLimit } from "@/components/RateLimitBar";
-import { StudyResult } from "@/components/StudyResult";
 import { FeatureCarousel } from "@/components/FeatureCarousel";
-import { ExerciseForm } from "@/components/ExerciseForm";
-import { ExerciseResult } from "@/components/ExerciseResult";
-import { HistoryTab } from "@/components/HistoryTab";
 import { StudyContent, StudyFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
 import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages } from "lucide-react";
-import { GeneratingOverlay } from "@/components/GeneratingOverlay";
 import learnBuddyLogo from "@/assets/learn-buddy-logo.jpeg";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { UserMenu } from "@/components/UserMenu";
 import { SEO } from "@/components/SEO";
-import { SupportChat } from "@/components/SupportChat";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
 import { UpdateNoticeBanner } from "@/components/UpdateNoticeBanner";
-import { FloatingActions } from "@/components/FloatingActions";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useAchievements } from '@/hooks/useAchievements';
+
+const ExerciseForm = lazy(() => import("@/components/ExerciseForm").then((module) => ({ default: module.ExerciseForm })));
+const ExerciseResult = lazy(() => import("@/components/ExerciseResult").then((module) => ({ default: module.ExerciseResult })));
+const FloatingActions = lazy(() => import("@/components/FloatingActions").then((module) => ({ default: module.FloatingActions })));
+const GeneratingOverlay = lazy(() => import("@/components/GeneratingOverlay").then((module) => ({ default: module.GeneratingOverlay })));
+const HistoryTab = lazy(() => import("@/components/HistoryTab").then((module) => ({ default: module.HistoryTab })));
+const StudyResult = lazy(() => import("@/components/StudyResult").then((module) => ({ default: module.StudyResult })));
+const SupportChat = lazy(() => import("@/components/SupportChat").then((module) => ({ default: module.SupportChat })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
