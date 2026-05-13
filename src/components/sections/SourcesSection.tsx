@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, ExternalLink, Globe } from "lucide-react";
 
@@ -25,38 +26,27 @@ const normalizeText = (value: string) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 
-// Mapeamento amplo de sites educacionais conhecidos -> URL de busca interna
-const KNOWN_SITES: Array<{ match: string[]; build: (q: string) => string }> = [
-  { match: ["brasil escola"], build: (q) => `https://brasilescola.uol.com.br/pesquisa?q=${encodeURIComponent(q)}` },
-  { match: ["mundo educacao"], build: (q) => `https://mundoeducacao.uol.com.br/pesquisa?q=${encodeURIComponent(q)}` },
-  { match: ["toda materia", "todamateria"], build: (q) => `https://www.todamateria.com.br/?s=${encodeURIComponent(q)}` },
-  { match: ["khan academy"], build: (q) => `https://pt.khanacademy.org/search?page_search_query=${encodeURIComponent(q)}` },
-  { match: ["wikipedia"], build: (q) => `https://pt.wikipedia.org/w/index.php?search=${encodeURIComponent(q)}` },
-  { match: ["youtube"], build: (q) => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}` },
-  { match: ["coursera"], build: (q) => `https://www.coursera.org/search?query=${encodeURIComponent(q)}` },
-  { match: ["edx"], build: (q) => `https://www.edx.org/search?q=${encodeURIComponent(q)}` },
-  { match: ["infoescola"], build: (q) => `https://www.infoescola.com/?s=${encodeURIComponent(q)}` },
-  { match: ["sobiologia"], build: (q) => `https://www.sobiologia.com.br/?s=${encodeURIComponent(q)}` },
-  { match: ["stoodi"], build: (q) => `https://www.stoodi.com.br/busca/?q=${encodeURIComponent(q)}` },
-  { match: ["descomplica"], build: (q) => `https://descomplica.com.br/busca/?q=${encodeURIComponent(q)}` },
-  { match: ["me salva", "mesalva"], build: (q) => `https://www.mesalva.com/busca?q=${encodeURIComponent(q)}` },
-  { match: ["responde ai", "respondeai"], build: (q) => `https://www.respondeai.com.br/busca?termo=${encodeURIComponent(q)}` },
-  { match: ["bbc"], build: (q) => `https://www.bbc.com/portuguese/search?q=${encodeURIComponent(q)}` },
-  { match: ["nat geo", "national geographic"], build: (q) => `https://www.nationalgeographicbrasil.com/search?q=${encodeURIComponent(q)}` },
-  { match: ["uol"], build: (q) => `https://busca.uol.com.br/?q=${encodeURIComponent(q)}` },
-  { match: ["g1", "globo"], build: (q) => `https://g1.globo.com/busca/?q=${encodeURIComponent(q)}` },
-  { match: ["scielo"], build: (q) => `https://search.scielo.org/?q=${encodeURIComponent(q)}&lang=pt` },
-  { match: ["google scholar", "scholar"], build: (q) => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}&hl=pt-BR` },
-  { match: ["mit"], build: (q) => `https://ocw.mit.edu/search/?q=${encodeURIComponent(q)}` },
-  { match: ["ted"], build: (q) => `https://www.ted.com/search?q=${encodeURIComponent(q)}` },
+const TRUSTED_DOMAINS: Array<{ name: string; domain: string; match: string[]; descricao: string }> = [
+  { name: "Khan Academy", domain: "pt.khanacademy.org", match: ["khan academy"], descricao: "Aulas gratuitas e exercícios guiados para aprender passo a passo." },
+  { name: "Brasil Escola", domain: "brasilescola.uol.com.br", match: ["brasil escola"], descricao: "Explicações escolares populares, diretas e em português." },
+  { name: "Toda Matéria", domain: "todamateria.com.br", match: ["toda materia", "todamateria"], descricao: "Resumos simples, exemplos e revisões rápidas para estudantes." },
+  { name: "Mundo Educação", domain: "mundoeducacao.uol.com.br", match: ["mundo educacao"], descricao: "Conteúdo didático confiável para reforçar o tema estudado." },
+  { name: "InfoEscola", domain: "infoescola.com", match: ["infoescola"], descricao: "Artigos educacionais objetivos para pesquisa complementar." },
 ];
 
-const getKnownSiteSearchUrl = (siteName: string, query: string): string | null => {
-  const name = normalizeText(siteName);
-  for (const entry of KNOWN_SITES) {
-    if (entry.match.some((m) => name.includes(m))) return entry.build(query);
+const openExternalUrl = (url: string) => {
+  const opened = window.open(url, "_blank");
+  if (opened) {
+    opened.opener = null;
+    opened.focus();
+    return;
   }
-  return null;
+  window.location.assign(url);
+};
+
+const getTrustedDomain = (siteName: string): string | null => {
+  const name = normalizeText(siteName);
+  return TRUSTED_DOMAINS.find((entry) => entry.match.some((m) => name.includes(m)))?.domain ?? null;
 };
 
 const enrichQuery = (base: string, tema?: string) => {
@@ -66,24 +56,43 @@ const enrichQuery = (base: string, tema?: string) => {
   return b.includes(t) ? base : `${tema} ${base}`;
 };
 
+const getSearchSuggestions = (consultas: string[], tema?: string) => {
+  const base = tema?.trim() || consultas[0]?.trim() || "tema de estudo";
+  const popular = [base, `${base} resumo`, `${base} explicação fácil`, `${base} exercícios`, `${base} mapa mental`];
+  const merged = [...popular, ...consultas].filter((item) => item.trim().length > 2);
+  return merged.filter((item, index, array) => array.findIndex((other) => normalizeText(other) === normalizeText(item)) === index).slice(0, 6);
+};
+
 const getResourceUrl = (
   site: { url?: string; termoBusca?: string; nome: string },
   tema?: string,
 ): string => {
   const url = site.url?.trim();
-  if (url && /^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i.test(url)) {
-    return url;
+  if (url) {
+    const withProtocol = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+    if (/^https?:\/\/[^\s/$.?#].[^\s]*\.[a-z]{2,}/i.test(withProtocol)) return withProtocol;
   }
   const baseTerm = site.termoBusca?.trim() || site.nome;
   const query = enrichQuery(baseTerm, tema);
-  const knownSiteUrl = getKnownSiteSearchUrl(site.nome, query);
-  if (knownSiteUrl) return knownSiteUrl;
-  // Fallback: Google com restrição de site quando dá pra inferir o domínio do nome
+  const trustedDomain = getTrustedDomain(site.nome);
+  if (trustedDomain) return buildSearchUrl(`site:${trustedDomain} ${query}`);
   return buildSearchUrl(`${query} ${site.nome}`);
+};
+
+const handleOpen = (event: MouseEvent<HTMLAnchorElement>, url: string) => {
+  event.preventDefault();
+  event.stopPropagation();
+  openExternalUrl(url);
 };
 
 export function SourcesSection({ data, tema }: SourcesSectionProps) {
   const { t } = useTranslation();
+  const searchSuggestions = getSearchSuggestions(data.consultas || [], tema);
+  const recommendedSites = TRUSTED_DOMAINS.map((source) => ({
+    nome: source.name,
+    termoBusca: tema || data.sites?.[0]?.termoBusca || data.sites?.[0]?.nome || source.name,
+    descricao: source.descricao,
+  }));
 
   return (
     <section className="section-card bg-card border border-border fade-in" style={{ animationDelay: "0.8s" }}>
@@ -102,7 +111,7 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
               {t("sections.searchSuggestions")}
             </h4>
             <div className="flex flex-wrap gap-2">
-              {data.consultas.map((consulta, index) => {
+              {searchSuggestions.map((consulta, index) => {
                 const enriched = enrichQuery(consulta, tema);
                 const url = buildSearchUrl(enriched);
                 return (
@@ -110,8 +119,9 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
                     key={index}
                     href={url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener"
                     referrerPolicy="no-referrer"
+                    onClick={(event) => handleOpen(event, url)}
                     title={`Pesquisar no Google: ${enriched}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-sm text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
@@ -129,15 +139,16 @@ export function SourcesSection({ data, tema }: SourcesSectionProps) {
               {t("sections.recommendedSources")}
             </h4>
             <div className="grid gap-3 sm:grid-cols-2">
-              {data.sites.map((site, index) => {
+              {recommendedSites.map((site, index) => {
                 const url = getResourceUrl(site, tema);
                 return (
                   <a
                     key={index}
                     href={url}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener"
                     referrerPolicy="no-referrer"
+                    onClick={(event) => handleOpen(event, url)}
                     title={url}
                     className="text-left flex items-start gap-3 p-3 rounded-xl border border-border bg-background/50 hover:bg-muted transition-colors group"
                   >
