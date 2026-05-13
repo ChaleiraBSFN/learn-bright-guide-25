@@ -177,17 +177,9 @@ export function FeatureCarousel() {
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-3 bg-gradient-to-l from-background to-transparent" />
 
         <motion.div
+          ref={trackRef}
           className="flex gap-3 py-2"
-          animate={paused ? undefined : { x: ["0%", "-33.333%"] }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 50,
-              ease: "linear",
-            },
-          }}
-          style={{ width: "fit-content" }}
+          style={{ x, width: "fit-content" }}
         >
           {items.map((feat, i) => (
             <FeatureCard
