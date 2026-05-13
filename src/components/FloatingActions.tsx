@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 export const FloatingActions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
   const [isInstalled] = useState(
