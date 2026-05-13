@@ -176,7 +176,7 @@ export function FeatureCarousel() {
             x: {
               repeat: Infinity,
               repeatType: "loop",
-              duration: 22,
+              duration: 50,
               ease: "linear",
             },
           }}
@@ -251,7 +251,7 @@ function FeatureCard({
 }) {
   return (
     <motion.div
-      className={`relative flex-shrink-0 w-[230px] sm:w-[260px] md:w-[290px] rounded-2xl border-2 ${feature.borderColor} bg-card overflow-hidden group`}
+      className={`relative flex-shrink-0 w-[200px] sm:w-[220px] md:w-[240px] rounded-2xl border ${feature.borderColor} bg-card overflow-hidden group`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: (index % 3) * 0.1, duration: 0.35 }}
