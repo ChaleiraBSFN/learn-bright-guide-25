@@ -351,6 +351,7 @@ export const StudyGroups = () => {
       <Button
         variant="outline"
         size="icon"
+        aria-label={t('groups.title')}
         className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]"
         onClick={() => {
           toast({
@@ -376,7 +377,7 @@ export const StudyGroups = () => {
     />
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]">
+        <Button variant="outline" size="icon" aria-label={t('groups.title')} className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]">
           <Users className="h-5 w-5" />
         </Button>
       </SheetTrigger>
@@ -387,7 +388,7 @@ export const StudyGroups = () => {
             <Button variant="ghost" size="icon" onClick={() => {
               if (view === 'settings' || view === 'history') setView('chat');
               else { setView('list'); setSelectedGroup(null); }
-            }}>
+            }} aria-label={t('common.back')}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
           )}
@@ -399,15 +400,15 @@ export const StudyGroups = () => {
           </SheetTitle>
           {view === 'chat' && (
             <div className="flex gap-1">
-              <Button variant="ghost" size="icon" onClick={() => { setView('history'); if (selectedGroup) loadMemberHistory(selectedGroup.id); }}>
+              <Button variant="ghost" size="icon" onClick={() => { setView('history'); if (selectedGroup) loadMemberHistory(selectedGroup.id); }} aria-label={t('groups.memberHistory')}>
                 <History className="h-4 w-4" />
               </Button>
               {isAdmin && (
                 <>
-                  <Button variant="ghost" size="icon" onClick={() => setInviteOpen(true)}>
+                  <Button variant="ghost" size="icon" onClick={() => setInviteOpen(true)} aria-label={t('groups.inviteMember')}>
                     <UserPlus className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setView('settings')}>
+                  <Button variant="ghost" size="icon" onClick={() => setView('settings')} aria-label={t('groups.settings')}>
                     <Settings className="h-4 w-4" />
                   </Button>
                 </>
@@ -513,7 +514,7 @@ export const StudyGroups = () => {
             <div className="p-3 border-t border-border flex gap-2">
               <label className="cursor-pointer shrink-0">
                 <input type="file" accept="image/*" className="hidden" onChange={handleImageSelect} />
-                <Button variant="ghost" size="icon" asChild><span><ImageIcon className="h-4 w-4" /></span></Button>
+                <Button variant="ghost" size="icon" asChild aria-label={t('groups.sendImage')}><span><ImageIcon className="h-4 w-4" /></span></Button>
               </label>
               <Textarea
                 value={newMessage}
@@ -522,7 +523,7 @@ export const StudyGroups = () => {
                 className="min-h-[40px] max-h-[100px] resize-none"
                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
               />
-              <Button onClick={sendMessage} disabled={sending || !newMessage.trim()} size="icon" className="shrink-0">
+              <Button onClick={sendMessage} disabled={sending || !newMessage.trim()} size="icon" className="shrink-0" aria-label={t('groups.send')}>
                 {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
             </div>
