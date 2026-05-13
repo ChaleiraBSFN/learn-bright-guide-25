@@ -40,7 +40,7 @@ const SectionCard: React.FC<{
           <div style={{ fontFamily: SITE.fontDisplay, fontSize: 20, fontWeight: 800, color: SITE.text, marginBottom: 8 }}>
             {number}. {title}
           </div>
-          <div style={{ fontFamily: SITE.fontBody, color: "rgba(12,20,38,0.9)", fontSize: 15, lineHeight: 1.55 }}>
+          <div style={{ fontFamily: SITE.fontBody, color: SITE.text, opacity: 0.92, fontSize: 15, lineHeight: 1.55 }}>
             {children}
           </div>
         </div>
