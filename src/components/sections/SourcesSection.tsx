@@ -1,4 +1,3 @@
-import type { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, ExternalLink, Globe } from "lucide-react";
 
