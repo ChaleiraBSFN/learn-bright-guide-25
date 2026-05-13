@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { HelpCircle, Send, Loader2 } from 'lucide-react';
+import { HelpCircle, Send, Loader2, MessagesSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -24,7 +26,9 @@ interface Message {
 
 export const SupportChat = () => {
   const { user } = useAuth();
+  const { isAdmin } = useAdmin();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -137,6 +141,20 @@ export const SupportChat = () => {
       <SheetContent className="w-full sm:max-w-md flex flex-col">
         <SheetHeader>
           <SheetTitle>{t('support.chatTitle')}</SheetTitle>
+          {isAdmin && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 mt-2 self-start"
+              onClick={() => {
+                setOpen(false);
+                navigate('/support-admin');
+              }}
+            >
+              <MessagesSquare className="h-4 w-4" />
+              Lista de chats
+            </Button>
+          )}
         </SheetHeader>
         
         <ScrollArea className="flex-1 pr-4 mt-4" ref={scrollRef}>
