@@ -128,9 +128,6 @@ export const SupportChat = () => {
     setSending(false);
   };
 
-  if (!user) return null;
-
-  return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
