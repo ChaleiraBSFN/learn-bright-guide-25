@@ -26,6 +26,10 @@ export function FeatureCarousel() {
   const { t } = useTranslation();
   const [paused, setPaused] = useState(false);
   const [active, setActive] = useState<Feature | null>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
+  const lastTimeRef = useRef<number | null>(null);
+  const x = useMotionValue(0);
 
   const features: Feature[] = [
     {
