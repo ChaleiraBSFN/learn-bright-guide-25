@@ -70,7 +70,7 @@ async function tryModel(model: string, prompt: string, apiKey: string, signal: A
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.4, maxOutputTokens: 1100 },
+          generationConfig: { temperature: 0.4, maxOutputTokens: 4096 },
         }),
         signal,
       }
@@ -97,7 +97,7 @@ async function callGeminiCascade(prompt: string, apiKey: string): Promise<{ text
   let lastStatus = 0;
   for (const model of models) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
     try {
       const { text, status } = await tryModel(model, prompt, apiKey, controller.signal);
       if (text) return { text, lastStatus: 200 };
