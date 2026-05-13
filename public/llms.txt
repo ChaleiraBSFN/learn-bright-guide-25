@@ -1,0 +1,18 @@
+# Learn Buddy (Studdy Buddy)
+
+> Plataforma 100% gratuita para estudar qualquer tema com IA: resumos claros, exercícios corrigidos, mapas mentais e plano de estudos personalizado.
+
+Learn Buddy (também conhecido como Studdy Buddy) é uma plataforma educacional gratuita que usa IA para gerar materiais de estudo personalizados. Suporta 9 idiomas e inclui gamificação, trilha de progresso e ranking competitivo.
+
+## Pages
+
+- [Home](/): Página principal — gerar material de estudo sobre qualquer tema.
+- [Auth](/auth): Criar conta ou entrar.
+- [Install](/install): Instalar Learn Buddy como aplicativo (PWA / mobile).
+- [Downloads](/downloads): Baixar versões nativas do app.
+- [Privacy](/privacy): Política de privacidade.
+
+## Optional
+
+- [Forgot password](/forgot-password): Recuperação de senha.
+- [Reset password](/reset-password): Redefinir senha.

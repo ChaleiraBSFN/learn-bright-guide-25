@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Download, Film, PlayCircle } from 'lucide-react';
 import { FloatingActions } from '@/components/FloatingActions';
 import { Link } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
 
 const downloadFile = async (url: string, filename: string) => {
   try {
@@ -44,6 +45,7 @@ export default function Downloads() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO title="Downloads — Learn Buddy" description="Baixe vídeos demo e materiais do Learn Buddy, plataforma gratuita para estudar com IA." path="/downloads" />
       <FloatingActions />
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <div className="flex items-center justify-between mb-8">
