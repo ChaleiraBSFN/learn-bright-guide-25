@@ -55,7 +55,7 @@ export const FloatingActions = () => {
 
   return (
     <>
-      <div className="fixed right-4 bottom-24 md:bottom-8 z-40 flex flex-col gap-3">
+      <div className="fixed right-3 bottom-6 md:right-4 md:bottom-8 z-40 flex flex-col items-center gap-3 rounded-full border-2 border-foreground/25 bg-background/55 px-2.5 py-3 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),inset_0_-18px_30px_hsl(var(--primary)/0.08),0_14px_34px_-18px_hsl(var(--foreground)/0.55)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/45">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
