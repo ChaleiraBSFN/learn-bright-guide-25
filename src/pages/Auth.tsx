@@ -17,6 +17,7 @@ import { SEO } from '@/components/SEO';
 const countries = [
   { code: 'BR', name: 'Brasil' },
   { code: 'US', name: 'Estados Unidos' },
+  { code: 'CA', name: 'Canadá' },
   { code: 'PT', name: 'Portugal' },
   { code: 'ES', name: 'Espanha' },
   { code: 'AR', name: 'Argentina' },

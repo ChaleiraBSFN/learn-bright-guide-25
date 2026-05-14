@@ -704,6 +704,14 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_public_ranking: {
+        Args: { _limit?: number }
+        Returns: {
+          achievement_count: number
+          display_name: string
+          user_id: string
+        }[]
+      }
       get_rate_limit_remaining: {
         Args: {
           _endpoint: string
