@@ -39,7 +39,7 @@ export const UserMenu = () => {
       toast({ title: t('auth.avatarError'), description: t('auth.invalidAvatarType'), variant: 'destructive' });
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       toast({ title: t('auth.avatarError'), description: t('auth.avatarTooLarge'), variant: 'destructive' });
       return;
     }
