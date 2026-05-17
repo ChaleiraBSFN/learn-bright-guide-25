@@ -29,15 +29,15 @@ export default defineConfig(({ mode }) => ({
         navigateFallback: null,
         runtimeCaching: [
           {
-            // HTML / navigation requests: always try network first so users
-            // get the newest version on every visit (fall back to cache only when offline)
+            // HTML / navigation requests: ALWAYS go to network so new deploys
+            // appear immediately. Only fall back to cache if completely offline.
             urlPattern: ({ request }) => request.mode === "navigate",
-            handler: "NetworkFirst",
-            options: {
-              cacheName: "html-pages",
-              networkTimeoutSeconds: 3,
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 },
-            },
+            handler: "NetworkOnly",
+          },
+          {
+            // index.html itself: never cache
+            urlPattern: /\/index\.html$/,
+            handler: "NetworkOnly",
           },
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
