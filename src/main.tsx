@@ -31,11 +31,11 @@ if (isInIframe || isPreviewHost) {
   const updateSW = registerSW({
     onNeedRefresh() {
       // New version available: clear caches and reload immediately
+      const reload = () => window.location.reload();
       if ('caches' in window) {
-        caches.keys().then(names => Promise.all(names.map(n => caches.delete(n))))
-          .finally(() => { window.location.reload(); });
+        caches.keys().then(names => Promise.all(names.map(n => caches.delete(n)))).finally(reload);
       } else {
-        window.location.reload();
+        reload();
       }
     },
     onOfflineReady() {
