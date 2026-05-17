@@ -33,7 +33,7 @@ if (isInIframe || isPreviewHost) {
       // New version available: clear caches and reload immediately
       if ('caches' in window) {
         caches.keys().then(names => Promise.all(names.map(n => caches.delete(n))))
-          .finally(() => window.location.reload());
+          .finally(() => { window.location.reload(); });
       } else {
         window.location.reload();
       }
