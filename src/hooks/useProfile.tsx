@@ -53,8 +53,8 @@ export const useProfile = () => {
       return null;
     }
 
-    // Validate file size (max 2MB)
-    const maxSize = 2 * 1024 * 1024;
+    // Validate file size (max 20MB)
+    const maxSize = 20 * 1024 * 1024;
     if (file.size > maxSize) {
       console.error('File too large:', file.size);
       return null;
@@ -70,22 +70,23 @@ export const useProfile = () => {
     const fileName = `${user.id}/avatar.${fileExt}`;
 
     try {
-      // Upload file to storage
+      // Upload file to storage (overwrite previous)
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(fileName, file, { upsert: true });
+        .upload(fileName, file, { upsert: true, cacheControl: '3600' });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
+      // Get public URL with cache-busting param so browser/CDN refresh immediately
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
+      const bustedUrl = `${publicUrl}?t=${Date.now()}`;
 
-      // Update profile with avatar URL
+      // Update profile with cache-busted avatar URL so UI refreshes instantly
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: bustedUrl })
         .eq('user_id', user.id);
 
       if (updateError) throw updateError;
@@ -93,7 +94,7 @@ export const useProfile = () => {
       // Refresh profile
       await fetchProfile();
       
-      return publicUrl;
+      return bustedUrl;
     } catch (error) {
       console.error('Error uploading avatar:', error);
       return null;
