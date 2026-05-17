@@ -83,10 +83,10 @@ export const useProfile = () => {
         .getPublicUrl(fileName);
       const bustedUrl = `${publicUrl}?t=${Date.now()}`;
 
-      // Update profile with avatar URL
+      // Update profile with cache-busted avatar URL so UI refreshes instantly
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: bustedUrl })
         .eq('user_id', user.id);
 
       if (updateError) throw updateError;
@@ -94,7 +94,7 @@ export const useProfile = () => {
       // Refresh profile
       await fetchProfile();
       
-      return publicUrl;
+      return bustedUrl;
     } catch (error) {
       console.error('Error uploading avatar:', error);
       return null;
