@@ -20,15 +20,23 @@ if (isInIframe || isPreviewHost) {
     registrations.forEach((registration) => registration.unregister());
   });
 } else {
+  // Auto-reload when a new service worker takes control (new deploy)
+  let reloading = false;
+  navigator.serviceWorker?.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+
   const updateSW = registerSW({
     onNeedRefresh() {
-      // Force reload on any device including mobile PWA
+      // New version available: clear caches and reload immediately
+      const reload = () => window.location.reload();
       if ('caches' in window) {
-        caches.keys().then(names => {
-          names.forEach(name => caches.delete(name));
-        });
+        caches.keys().then(names => Promise.all(names.map(n => caches.delete(n)))).finally(reload);
+      } else {
+        reload();
       }
-      window.location.reload();
     },
     onOfflineReady() {
       console.log("App ready for offline use");
@@ -42,13 +50,7 @@ if (isInIframe || isPreviewHost) {
   setInterval(forceUpdate, 5 * 1000);
 
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      forceUpdate();
-      // Also check for new SW on mobile resume
-      navigator.serviceWorker?.getRegistration().then(reg => {
-        reg?.update().catch(() => {});
-      });
-    }
+    if (document.visibilityState === "visible") forceUpdate();
   });
 
   window.addEventListener("focus", forceUpdate);
