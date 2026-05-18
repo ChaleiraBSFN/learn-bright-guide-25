@@ -55,7 +55,7 @@ export const FloatingActions = () => {
 
   return (
     <>
-      <div className="fixed right-3 bottom-6 md:right-4 md:bottom-8 z-40 flex flex-col items-center gap-3 rounded-full border-2 border-foreground/25 bg-background/55 px-2.5 py-3 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),inset_0_-18px_30px_hsl(var(--primary)/0.08),0_14px_34px_-18px_hsl(var(--foreground)/0.55)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/45">
+      <div className="fixed right-3 bottom-6 md:right-4 md:bottom-8 z-40 flex flex-col items-center gap-2 rounded-full border-2 border-foreground/25 bg-background/55 px-2 py-2.5 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),inset_0_-18px_30px_hsl(var(--primary)/0.08),0_14px_34px_-18px_hsl(var(--foreground)/0.55)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/45">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -63,9 +63,9 @@ export const FloatingActions = () => {
               size="icon"
               onClick={toggleTheme}
               aria-label={theme === 'dark' ? t('settings.themeLight', 'Tema claro') : t('settings.themeDark', 'Tema escuro')}
-              className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]"
+              className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]"
             >
-              {theme === 'dark' ? <Sun className="h-5 w-5 text-accent" /> : <Moon className="h-5 w-5 text-primary" />}
+              {theme === 'dark' ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4 text-primary" />}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left">
@@ -81,9 +81,9 @@ export const FloatingActions = () => {
                 size="icon"
                 onClick={() => setShowTrail(true)}
                 aria-label={t('trail.title', 'Trilha de Progresso')}
-                className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-primary/40 hover:bg-primary hover:text-primary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--primary)/0.6),0_4px_14px_-3px_hsl(var(--primary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--primary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--primary)/0.85),0_6px_20px_-4px_hsl(var(--primary)/0.7)]"
+                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-primary/40 hover:bg-primary hover:text-primary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--primary)/0.6),0_4px_14px_-3px_hsl(var(--primary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--primary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--primary)/0.85),0_6px_20px_-4px_hsl(var(--primary)/0.7)]"
               >
-                <Map className="h-5 w-5 text-primary group-hover:text-primary-foreground" />
+                <Map className="h-4 w-4 text-primary group-hover:text-primary-foreground" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
@@ -100,9 +100,9 @@ export const FloatingActions = () => {
                 size="icon"
                 onClick={() => setShowRanking(true)}
                 aria-label={t('ranking.title')}
-                className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-yellow-500/40 hover:bg-yellow-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(45_100%_50%/0.6),0_4px_14px_-3px_hsl(45_100%_50%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(45_100%_50%/0.85),0_6px_20px_-4px_hsl(45_100%_50%/0.7)]"
+                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-yellow-500/40 hover:bg-yellow-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(45_100%_50%/0.6),0_4px_14px_-3px_hsl(45_100%_50%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(45_100%_50%/0.85),0_6px_20px_-4px_hsl(45_100%_50%/0.7)]"
               >
-                <Trophy className="h-5 w-5 text-yellow-500 group-hover:text-white" />
+                <Trophy className="h-4 w-4 text-yellow-500 group-hover:text-white" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
@@ -123,9 +123,9 @@ export const FloatingActions = () => {
                 size="icon"
                 onClick={() => navigate('/install')}
                 aria-label={t('install.downloadApp')}
-                className="h-12 w-12 !min-w-12 !min-h-12 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-secondary/40 hover:bg-secondary hover:text-secondary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--secondary)/0.6),0_4px_14px_-3px_hsl(var(--secondary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--secondary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--secondary)/0.85),0_6px_20px_-4px_hsl(var(--secondary)/0.7)]"
+                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-secondary/40 hover:bg-secondary hover:text-secondary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--secondary)/0.6),0_4px_14px_-3px_hsl(var(--secondary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--secondary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--secondary)/0.85),0_6px_20px_-4px_hsl(var(--secondary)/0.7)]"
               >
-                <Download className="h-5 w-5 text-secondary group-hover:text-secondary-foreground" />
+                <Download className="h-4 w-4 text-secondary group-hover:text-secondary-foreground" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
