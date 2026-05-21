@@ -329,12 +329,23 @@ function buildPrompt(tema: string, nivel: string, prazo: number, duvidas: string
   const dayWord = dayWordMap[idioma] || "Dia";
   const dailyPlanInstruction = `Generate "planoEstudo" with exactly ${maxDays} blocks, one per day. The "periodo" field MUST be in ${lang}: "${dayWord} 1", "${dayWord} 2", ... "${dayWord} ${maxDays}". Each day must have: specific study tasks for that day and 1-2 practice exercises.`;
 
+  // The internal value "medio" actually means Graduação (undergrad) and "superior" means Pós-graduação.
+  const levelCalibration: Record<string, string> = {
+    fundamental1: "ELEMENTARY SCHOOL (ages 6-10). Simple language, intuitive examples.",
+    fundamental2: "MIDDLE/HIGH SCHOOL (ages 11-17). ENEM-style content, algebra, basic geometry.",
+    medio: "UNDERGRADUATE / GRADUAÇÃO (university — ENADE, vestibulares IME/ITA/Fuvest, OAB 1ª fase, engineering/medicine/law college). REAL exam-style depth: rigorous calculus, formal definitions, multi-step derivations, theorems with conditions. NEVER trivial.",
+    superior: "GRADUATE / PÓS-GRADUAÇÃO (Mestrado/Doutorado, MBA, residência, OAB 2ª fase, concursos federais top-tier, ANPAD, qualifying exams). EXTREMELY rigorous: formal proofs, research-paper-level analysis, advanced abstraction, critical synthesis.",
+  };
+  const nivelInstrucao = levelCalibration[nivel] || `Custom level: ${nivel}`;
+
   return `${style}
 
 Respond ONLY in valid JSON, in ${lang}. Keep JSON keys in Portuguese exactly as shown.
 
 Topic: ${tema}
-Level: ${nivel}
+Internal level code: "${nivel}"
+ACADEMIC LEVEL CALIBRATION (CRITICAL): ${nivelInstrucao}
+The content depth MUST strictly match this calibration. For graduação/pós-graduação use real exam-grade depth (ENADE, concursos, qualifying exams).
 Deadline: ${prazo} days
 ${duvidas ? `Specific questions: ${duvidas}` : ""}
 
@@ -363,6 +374,7 @@ Rules:
   * BUT keep the foreign language words, examples, and vocabulary items in their ORIGINAL foreign language script (e.g., Russian in Cyrillic, Japanese in Kanji/Hiragana, Chinese in Hanzi, etc.)
   * The "exemplo" and "pergunta"/"resposta" fields should contain the foreign language words being studied
 - MATH NOTATION (MANDATORY): NEVER use LaTeX. NEVER use "$", "$$", "\\(", "\\)", "\\[", "\\]". For powers use Unicode superscripts directly: x², x³, x⁴, xⁿ (NEVER "x^2" nor "x**2"). For subscripts use x₁, x₂, H₂O. Square root: √(x). Fractions: (a)/(b). Multiplication: × or ·. Division: ÷. Use normal parentheses ( and ), NEVER "$" as a delimiter. Symbols: π θ α β Δ ≤ ≥ ≠ ≈ ∞.
+- OUTPUT MUST NEVER contain HTML/XML tags, pseudo-tags or unbalanced bracket runs like "<>", "<<>>", "<><>", ">>>", "<eq>", "<math>", "<br>", "<p>", "</p>". Plain readable text only.
 - ONLY output JSON, no extra text.`;
 }
 
