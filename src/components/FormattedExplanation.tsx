@@ -29,8 +29,23 @@ interface Props {
   className?: string;
 }
 
+function sanitizeAiText(input: string): string {
+  if (!input) return "";
+  let s = input;
+  // Remove LaTeX delimiters left over from the AI
+  s = s.replace(/\\\(|\\\)|\\\[|\\\]/g, "");
+  s = s.replace(/\${1,2}/g, "");
+  // Strip pseudo XML tags like <eq>, <math>, <br>, </p>, and garbage runs like <>, <><>, <<>>
+  s = s.replace(/<\/?(eq|math|br|p|span|div|tex|latex)\b[^>]*>/gi, "");
+  s = s.replace(/<+\s*>+/g, "");        // <>, <<>>, < >
+  s = s.replace(/[<>]{2,}/g, "");       // >>>, <<<, ><>
+  // Collapse leftover stray angle brackets that aren't part of math (e.g. "x <> y" → "x  y")
+  s = s.replace(/\s<>\s/g, " ");
+  return s;
+}
+
 export function FormattedExplanation({ text, className = "" }: Props) {
-  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  const lines = sanitizeAiText(text).replace(/\r\n/g, "\n").split("\n");
 
   type Block =
     | { kind: "heading"; text: string }
