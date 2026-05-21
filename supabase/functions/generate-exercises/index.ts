@@ -147,6 +147,18 @@ serve(async (req) => {
     const lang = languageMap[idioma] || "Português (Brasil)";
     const seed = Math.floor(Math.random() * 1000000);
 
+    // Map internal level codes to explicit academic calibration. The internal
+    // value "medio" actually represents Graduação (undergraduate) and "superior"
+    // represents Pós-Graduação — without this mapping the AI confuses them.
+    const levelCalibration: Record<string, string> = {
+      fundamental1: "ELEMENTARY SCHOOL (ages 6-10). Simple language, basic arithmetic, intuitive examples.",
+      fundamental2: "MIDDLE/HIGH SCHOOL (ages 11-17). ENEM-style questions, algebra, basic geometry, reading comprehension.",
+      medio: "UNDERGRADUATE / GRADUAÇÃO (university level — ENADE, vestibulares IME/ITA/Fuvest exatas, OAB 1ª fase, engineering/medicine/law/economics undergraduate courses). Use REAL exam-style questions: rigorous calculus, linear algebra, statistics, formal definitions, multi-step derivations, case analysis. NEVER trivial or high-school level. Cite theorems, laws, articles when relevant.",
+      superior: "GRADUATE / PÓS-GRADUAÇÃO (Mestrado/Doutorado, MBA, residência médica, OAB 2ª fase, concursos federais de alto nível como AFRFB/Magistratura/MPF, ANPAD, GRE/GMAT advanced, PhD qualifying exams). EXTREMELY rigorous: formal proofs, research-paper critique, advanced abstraction, open-ended argumentation, synthesis across multiple sources. Must match published comprehensive exams.",
+      auto: "Infer the appropriate academic level from the topic and context."
+    };
+    const nivelInstrucao = levelCalibration[nivel] || `Custom level: ${sanitize(nivel)}`;
+
     const imageInstructions = imagemBase64
       ? `\nCRITICAL IMAGE TASK: An image with exercises/questions was attached. You MUST:
 1. Carefully read EVERY exercise/question visible in the image (use OCR).
@@ -159,9 +171,14 @@ serve(async (req) => {
 8. Show all math/calculations in plain text (e.g. "2x + 3 = 7  =>  2x = 4  =>  x = 2"). NEVER skip steps.\n`
       : "";
 
-    const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}" at level "${sanitize(nivel)}". Respond ONLY in ${lang}. ONLY valid JSON.
+    const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}". Respond ONLY in ${lang}. ONLY valid JSON.
+
+ACADEMIC LEVEL CALIBRATION (CRITICAL — DO NOT IGNORE):
+Internal level code received: "${sanitize(nivel)}"
+What it means: ${nivelInstrucao}
+Difficulty MUST strictly match this calibration. For graduação/pós-graduação use questions inspired by REAL exams (ENADE, OAB, concursos, qualifying exams, residências). NEVER produce school-level content for university levels.
 ${imageInstructions}
-~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. Difficulty: ${dificuldade}.
+~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. User difficulty modifier: ${dificuldade}.
 
 JSON format:
 {"titulo":"string","descricao":"1 sentence","exercicios":[
@@ -169,7 +186,15 @@ JSON format:
   {"tipo":"dissertativa","numero":2,"nivel":"string","enunciado":"question","respostaEsperada":"complete model answer with reasoning + calculations","explicacao":"why it works","criterios":["c1","c2"]}
 ],"resumoTema":"2 sentences"}
 
-Rules: Keep JSON keys in Portuguese. Be thorough on solutions when an image is provided. Vary difficulty. ONLY JSON output.`;
+OUTPUT FORMATTING (MANDATORY — clean readable text, no garbage symbols):
+- Keep JSON keys in Portuguese.
+- NEVER use LaTeX delimiters ($, $$, \\(, \\), \\[, \\]).
+- NEVER use HTML/XML tags or pseudo-tags like <>, <<>>, <><>, <eq>, <math>, <br>, <p>, </p>.
+- NEVER use markdown code fences (\`\`\`) or backticks for math.
+- Use Unicode directly: x², x³, xⁿ, √(x), π, θ, α, β, Δ, ≤, ≥, ≠, ≈, ∞, ∑, ∫. Subscripts: x₁, x₂, H₂O. Fractions inline: (a)/(b). Multiplication: × or ·. Division: ÷.
+- Plain readable text only. Output must NEVER contain sequences like "<><>", "<<<>>>", ">>>" or other unbalanced bracket runs.
+
+Rules: Vary difficulty within the calibration. ONLY JSON output.`;
 
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
