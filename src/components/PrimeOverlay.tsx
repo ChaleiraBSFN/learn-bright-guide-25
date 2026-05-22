@@ -1,8 +1,16 @@
+import { useEffect } from 'react';
 import { usePrime, formatDuration } from '@/hooks/usePrime';
 import { Sparkles, Crown } from 'lucide-react';
 
 export const PrimeOverlay = () => {
   const { isActive, activeRemainingMs, activeProgress } = usePrime();
+
+  useEffect(() => {
+    if (isActive) {
+      document.documentElement.classList.add('prime-active');
+      return () => document.documentElement.classList.remove('prime-active');
+    }
+  }, [isActive]);
 
   if (!isActive) return null;
 
@@ -43,8 +51,6 @@ export const PrimeOverlay = () => {
           filter: brightness(1.1) saturate(1.3) drop-shadow(0 0 14px hsl(var(--primary) / 0.6));
         }
       `}</style>
-
-      <PrimeBodyClass />
 
       {/* Top banner */}
       <div className="fixed top-0 inset-x-0 z-[60] pointer-events-none">
