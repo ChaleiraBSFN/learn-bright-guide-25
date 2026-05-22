@@ -372,6 +372,7 @@ const Index = () => {
             quantidade: data.quantidade, dificuldade: data.dificuldade,
             idioma: i18n.language,
             imagemBase64: data.imagemBase64,
+            primeBoost: (await import('@/hooks/usePrime')).isPrimeActive(),
           }),
           signal: controller.signal,
         }
