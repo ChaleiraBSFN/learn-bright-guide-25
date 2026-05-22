@@ -125,16 +125,3 @@ export const PrimeOverlay = () => {
   );
 };
 
-const PrimeBodyClass = () => {
-  // Add/remove html class so global hue-rotate kicks in
-  if (typeof document !== 'undefined') {
-    document.documentElement.classList.add('prime-active');
-    // Cleanup on unmount via effect-like pattern
-    queueMicrotask(() => {
-      if (!document.documentElement.classList.contains('prime-active')) {
-        document.documentElement.classList.add('prime-active');
-      }
-    });
-  }
-  return null;
-};
