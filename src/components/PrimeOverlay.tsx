@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePrime, formatDuration } from '@/hooks/usePrime';
-import { Sparkles, Crown } from 'lucide-react';
+import { Crown } from 'lucide-react';
 
 export const PrimeOverlay = () => {
   const { isActive, activeRemainingMs, activeProgress } = usePrime();
@@ -101,29 +101,110 @@ export const PrimeOverlay = () => {
         <div className="absolute -bottom-6 -right-6 w-48 h-48 rounded-full bg-gradient-to-tl from-emerald-400/40 via-teal-500/30 to-transparent blur-2xl"
              style={{ animation: 'prime-corner-pulse 3.2s ease-in-out infinite 1.5s' }} />
 
-        {/* Floating sparkles */}
-        {Array.from({ length: 14 }).map((_, i) => {
-          const left = (i * 7.3) % 100;
-          const delay = (i * 0.7) % 8;
-          const dur = 6 + (i % 5);
-          const size = 12 + (i % 4) * 4;
-          const colors = ['text-yellow-300', 'text-pink-300', 'text-cyan-300', 'text-emerald-300', 'text-purple-300'];
+        {/* Confetti rain */}
+        {Array.from({ length: 50 }).map((_, i) => {
+          const left = (i * 97) % 100;
+          const delay = (i * 0.37) % 6;
+          const dur = 4 + ((i * 13) % 5);
+          const w = 6 + (i % 3) * 3;
+          const h = 10 + (i % 4) * 3;
+          const drift = ((i % 7) - 3) * 30;
+          const colors = ['#fbbf24', '#ec4899', '#22d3ee', '#a78bfa', '#34d399', '#f97316', '#f43f5e'];
           const color = colors[i % colors.length];
+          const round = i % 5 === 0;
           return (
-            <Sparkles
-              key={i}
-              className={`absolute ${color} drop-shadow-[0_0_8px_currentColor]`}
+            <span
+              key={`c${i}`}
+              className="absolute"
               style={{
                 left: `${left}%`,
-                bottom: `-30px`,
-                width: size,
-                height: size,
-                animation: `prime-float-spark ${dur}s linear ${delay}s infinite`,
+                top: 0,
+                width: w,
+                height: round ? w : h,
+                borderRadius: round ? '50%' : '2px',
+                background: color,
+                boxShadow: `0 0 6px ${color}`,
+                ['--drift' as any]: `${drift}px`,
+                animation: `prime-confetti-fall ${dur}s linear ${delay}s infinite`,
               }}
             />
           );
         })}
+
+        {/* Periodic explosion bursts */}
+        <ExplosionLayer />
       </div>
+    </>
+  );
+};
+
+const ExplosionLayer = () => {
+  const [bursts, setBursts] = useState<Array<{ id: number; x: number; y: number; color: string }>>([]);
+
+  useEffect(() => {
+    let id = 0;
+    const palette = ['#fbbf24', '#ec4899', '#22d3ee', '#a78bfa', '#34d399', '#f97316'];
+    const spawn = () => {
+      const b = {
+        id: ++id,
+        x: 10 + Math.random() * 80,
+        y: 15 + Math.random() * 70,
+        color: palette[Math.floor(Math.random() * palette.length)],
+      };
+      setBursts(prev => [...prev, b]);
+      setTimeout(() => setBursts(prev => prev.filter(p => p.id !== b.id)), 1500);
+    };
+    spawn();
+    const iv = setInterval(spawn, 1400);
+    return () => clearInterval(iv);
+  }, []);
+
+  return (
+    <>
+      {bursts.map(b => (
+        <div key={b.id} className="absolute" style={{ left: `${b.x}%`, top: `${b.y}%` }}>
+          {/* Flash */}
+          <span
+            className="absolute rounded-full"
+            style={{
+              left: 0, top: 0, width: 40, height: 40,
+              background: `radial-gradient(circle, ${b.color} 0%, ${b.color}88 40%, transparent 70%)`,
+              animation: 'prime-explode 700ms ease-out forwards',
+            }}
+          />
+          {/* Ring */}
+          <span
+            className="absolute rounded-full border-solid"
+            style={{
+              left: 0, top: 0, width: 30, height: 30,
+              borderColor: b.color,
+              borderWidth: 4,
+              animation: 'prime-explode-ring 900ms ease-out forwards',
+            }}
+          />
+          {/* 12 particles in burst */}
+          {Array.from({ length: 12 }).map((_, j) => {
+            const angle = (j / 12) * Math.PI * 2;
+            const dist = 80 + Math.random() * 60;
+            const bx = Math.cos(angle) * dist;
+            const by = Math.sin(angle) * dist;
+            return (
+              <span
+                key={j}
+                className="absolute rounded-full"
+                style={{
+                  left: 0, top: 0, width: 8, height: 8,
+                  background: b.color,
+                  boxShadow: `0 0 8px ${b.color}`,
+                  ['--bx' as any]: `${bx}px`,
+                  ['--by' as any]: `${by}px`,
+                  animation: `prime-particle-burst 1.2s cubic-bezier(.1,.7,.2,1) forwards`,
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
     </>
   );
 };
