@@ -18,39 +18,42 @@ export const PrimeOverlay = () => {
 
   return (
     <>
-      {/* Rainbow body class injection */}
+      {/* Prime animations — NO body filter (breaks position:fixed) */}
       <style>{`
-        @keyframes prime-rainbow-bg {
-          0%   { filter: hue-rotate(0deg)   saturate(1.25); }
-          50%  { filter: hue-rotate(180deg) saturate(1.4);  }
-          100% { filter: hue-rotate(360deg) saturate(1.25); }
-        }
         @keyframes prime-corner-pulse {
-          0%, 100% { opacity: 0.55; transform: scale(1); }
-          50%      { opacity: 1;    transform: scale(1.15); }
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50%      { opacity: 0.95; transform: scale(1.18); }
         }
-        @keyframes prime-float-spark {
-          0%   { transform: translateY(0) rotate(0deg);   opacity: 0; }
-          10%  { opacity: 1; }
-          100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        @keyframes prime-confetti-fall {
+          0%   { transform: translate3d(0,-10vh,0) rotate(0deg);    opacity: 0; }
+          8%   { opacity: 1; }
+          100% { transform: translate3d(var(--drift,40px),110vh,0) rotate(720deg); opacity: 0.9; }
+        }
+        @keyframes prime-explode {
+          0%   { transform: translate(-50%,-50%) scale(0);   opacity: 1; }
+          70%  { opacity: 1; }
+          100% { transform: translate(-50%,-50%) scale(8);   opacity: 0; }
+        }
+        @keyframes prime-explode-ring {
+          0%   { transform: translate(-50%,-50%) scale(0.2); opacity: 0.9; border-width: 6px; }
+          100% { transform: translate(-50%,-50%) scale(6);   opacity: 0;   border-width: 1px; }
+        }
+        @keyframes prime-particle-burst {
+          0%   { transform: translate(-50%,-50%) translate(0,0)         scale(1); opacity: 1; }
+          100% { transform: translate(-50%,-50%) translate(var(--bx,80px),var(--by,-80px)) scale(0.2); opacity: 0; }
         }
         @keyframes prime-shimmer {
           0%   { background-position: -200% 0; }
           100% { background-position:  200% 0; }
         }
-        html.prime-active body {
-          animation: prime-rainbow-bg 8s ease-in-out infinite;
-        }
-        html.prime-active button,
-        html.prime-active [role="button"] {
-          transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
-        }
-        html.prime-active button:hover,
-        html.prime-active [role="button"]:hover {
-          transform: translateY(-2px) scale(1.04);
-          filter: brightness(1.1) saturate(1.3) drop-shadow(0 0 14px hsl(var(--primary) / 0.6));
+        html.prime-active button:not([data-no-prime]):hover,
+        html.prime-active [role="button"]:not([data-no-prime]):hover {
+          filter: brightness(1.12) saturate(1.25) drop-shadow(0 0 12px hsl(45 100% 60% / 0.55));
+          transition: filter .2s ease;
         }
       `}</style>
+
+      {/* Top banner */}
 
       {/* Top banner */}
       <div className="fixed top-0 inset-x-0 z-[60] pointer-events-none">
