@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePrime, formatDuration } from '@/hooks/usePrime';
-import { Sparkles, Crown } from 'lucide-react';
+import { Crown } from 'lucide-react';
 
 export const PrimeOverlay = () => {
   const { isActive, activeRemainingMs, activeProgress } = usePrime();
@@ -18,39 +18,42 @@ export const PrimeOverlay = () => {
 
   return (
     <>
-      {/* Rainbow body class injection */}
+      {/* Prime animations — NO body filter (breaks position:fixed) */}
       <style>{`
-        @keyframes prime-rainbow-bg {
-          0%   { filter: hue-rotate(0deg)   saturate(1.25); }
-          50%  { filter: hue-rotate(180deg) saturate(1.4);  }
-          100% { filter: hue-rotate(360deg) saturate(1.25); }
-        }
         @keyframes prime-corner-pulse {
-          0%, 100% { opacity: 0.55; transform: scale(1); }
-          50%      { opacity: 1;    transform: scale(1.15); }
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50%      { opacity: 0.95; transform: scale(1.18); }
         }
-        @keyframes prime-float-spark {
-          0%   { transform: translateY(0) rotate(0deg);   opacity: 0; }
-          10%  { opacity: 1; }
-          100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        @keyframes prime-confetti-fall {
+          0%   { transform: translate3d(0,-10vh,0) rotate(0deg);    opacity: 0; }
+          8%   { opacity: 1; }
+          100% { transform: translate3d(var(--drift,40px),110vh,0) rotate(720deg); opacity: 0.9; }
+        }
+        @keyframes prime-explode {
+          0%   { transform: translate(-50%,-50%) scale(0);   opacity: 1; }
+          70%  { opacity: 1; }
+          100% { transform: translate(-50%,-50%) scale(8);   opacity: 0; }
+        }
+        @keyframes prime-explode-ring {
+          0%   { transform: translate(-50%,-50%) scale(0.2); opacity: 0.9; border-width: 6px; }
+          100% { transform: translate(-50%,-50%) scale(6);   opacity: 0;   border-width: 1px; }
+        }
+        @keyframes prime-particle-burst {
+          0%   { transform: translate(-50%,-50%) translate(0,0)         scale(1); opacity: 1; }
+          100% { transform: translate(-50%,-50%) translate(var(--bx,80px),var(--by,-80px)) scale(0.2); opacity: 0; }
         }
         @keyframes prime-shimmer {
           0%   { background-position: -200% 0; }
           100% { background-position:  200% 0; }
         }
-        html.prime-active body {
-          animation: prime-rainbow-bg 8s ease-in-out infinite;
-        }
-        html.prime-active button,
-        html.prime-active [role="button"] {
-          transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
-        }
-        html.prime-active button:hover,
-        html.prime-active [role="button"]:hover {
-          transform: translateY(-2px) scale(1.04);
-          filter: brightness(1.1) saturate(1.3) drop-shadow(0 0 14px hsl(var(--primary) / 0.6));
+        html.prime-active button:not([data-no-prime]):hover,
+        html.prime-active [role="button"]:not([data-no-prime]):hover {
+          filter: brightness(1.12) saturate(1.25) drop-shadow(0 0 12px hsl(45 100% 60% / 0.55));
+          transition: filter .2s ease;
         }
       `}</style>
+
+      {/* Top banner */}
 
       {/* Top banner */}
       <div className="fixed top-0 inset-x-0 z-[60] pointer-events-none">
@@ -98,29 +101,110 @@ export const PrimeOverlay = () => {
         <div className="absolute -bottom-6 -right-6 w-48 h-48 rounded-full bg-gradient-to-tl from-emerald-400/40 via-teal-500/30 to-transparent blur-2xl"
              style={{ animation: 'prime-corner-pulse 3.2s ease-in-out infinite 1.5s' }} />
 
-        {/* Floating sparkles */}
-        {Array.from({ length: 14 }).map((_, i) => {
-          const left = (i * 7.3) % 100;
-          const delay = (i * 0.7) % 8;
-          const dur = 6 + (i % 5);
-          const size = 12 + (i % 4) * 4;
-          const colors = ['text-yellow-300', 'text-pink-300', 'text-cyan-300', 'text-emerald-300', 'text-purple-300'];
+        {/* Confetti rain */}
+        {Array.from({ length: 50 }).map((_, i) => {
+          const left = (i * 97) % 100;
+          const delay = (i * 0.37) % 6;
+          const dur = 4 + ((i * 13) % 5);
+          const w = 6 + (i % 3) * 3;
+          const h = 10 + (i % 4) * 3;
+          const drift = ((i % 7) - 3) * 30;
+          const colors = ['#fbbf24', '#ec4899', '#22d3ee', '#a78bfa', '#34d399', '#f97316', '#f43f5e'];
           const color = colors[i % colors.length];
+          const round = i % 5 === 0;
           return (
-            <Sparkles
-              key={i}
-              className={`absolute ${color} drop-shadow-[0_0_8px_currentColor]`}
+            <span
+              key={`c${i}`}
+              className="absolute"
               style={{
                 left: `${left}%`,
-                bottom: `-30px`,
-                width: size,
-                height: size,
-                animation: `prime-float-spark ${dur}s linear ${delay}s infinite`,
+                top: 0,
+                width: w,
+                height: round ? w : h,
+                borderRadius: round ? '50%' : '2px',
+                background: color,
+                boxShadow: `0 0 6px ${color}`,
+                ['--drift' as any]: `${drift}px`,
+                animation: `prime-confetti-fall ${dur}s linear ${delay}s infinite`,
               }}
             />
           );
         })}
+
+        {/* Periodic explosion bursts */}
+        <ExplosionLayer />
       </div>
+    </>
+  );
+};
+
+const ExplosionLayer = () => {
+  const [bursts, setBursts] = useState<Array<{ id: number; x: number; y: number; color: string }>>([]);
+
+  useEffect(() => {
+    let id = 0;
+    const palette = ['#fbbf24', '#ec4899', '#22d3ee', '#a78bfa', '#34d399', '#f97316'];
+    const spawn = () => {
+      const b = {
+        id: ++id,
+        x: 10 + Math.random() * 80,
+        y: 15 + Math.random() * 70,
+        color: palette[Math.floor(Math.random() * palette.length)],
+      };
+      setBursts(prev => [...prev, b]);
+      setTimeout(() => setBursts(prev => prev.filter(p => p.id !== b.id)), 1500);
+    };
+    spawn();
+    const iv = setInterval(spawn, 1400);
+    return () => clearInterval(iv);
+  }, []);
+
+  return (
+    <>
+      {bursts.map(b => (
+        <div key={b.id} className="absolute" style={{ left: `${b.x}%`, top: `${b.y}%` }}>
+          {/* Flash */}
+          <span
+            className="absolute rounded-full"
+            style={{
+              left: 0, top: 0, width: 40, height: 40,
+              background: `radial-gradient(circle, ${b.color} 0%, ${b.color}88 40%, transparent 70%)`,
+              animation: 'prime-explode 700ms ease-out forwards',
+            }}
+          />
+          {/* Ring */}
+          <span
+            className="absolute rounded-full border-solid"
+            style={{
+              left: 0, top: 0, width: 30, height: 30,
+              borderColor: b.color,
+              borderWidth: 4,
+              animation: 'prime-explode-ring 900ms ease-out forwards',
+            }}
+          />
+          {/* 12 particles in burst */}
+          {Array.from({ length: 12 }).map((_, j) => {
+            const angle = (j / 12) * Math.PI * 2;
+            const dist = 80 + Math.random() * 60;
+            const bx = Math.cos(angle) * dist;
+            const by = Math.sin(angle) * dist;
+            return (
+              <span
+                key={j}
+                className="absolute rounded-full"
+                style={{
+                  left: 0, top: 0, width: 8, height: 8,
+                  background: b.color,
+                  boxShadow: `0 0 8px ${b.color}`,
+                  ['--bx' as any]: `${bx}px`,
+                  ['--by' as any]: `${by}px`,
+                  animation: `prime-particle-burst 1.2s cubic-bezier(.1,.7,.2,1) forwards`,
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
     </>
   );
 };
