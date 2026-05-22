@@ -9,6 +9,7 @@ import { ProgressTrail } from '@/components/ProgressTrail';
 import { RankingDialog } from '@/components/RankingDialog';
 import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { PrimeButton } from '@/components/PrimeButton';
 
 export const FloatingActions = () => {
   const { t } = useTranslation();
@@ -110,6 +111,9 @@ export const FloatingActions = () => {
             </TooltipContent>
           </Tooltip>
         )}
+
+        {/* Prime Button */}
+        <PrimeButton />
 
         {/* Study Groups */}
         {groupsEnabled && <StudyGroups />}

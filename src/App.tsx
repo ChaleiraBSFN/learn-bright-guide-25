@@ -25,6 +25,7 @@ import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import { useTimeTracker } from "@/hooks/useAchievements";
 import { useVisitHeartbeat } from "@/hooks/useVisitHeartbeat";
+import { PrimeOverlay } from "@/components/PrimeOverlay";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const AppContent = () => {
       <Toaster />
       <Sonner />
       <RateLimitBar />
+      <PrimeOverlay />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />

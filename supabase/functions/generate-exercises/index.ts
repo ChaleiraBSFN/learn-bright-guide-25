@@ -14,6 +14,7 @@ const requestSchema = z.object({
   dificuldade: z.string().optional().default("variado"),
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
   imagemBase64: z.string().optional().nullable(),
+  primeBoost: z.boolean().optional().default(false),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').replace(/```/g, '').trim();
@@ -143,7 +144,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, nivel, quantidade, dificuldade, idioma, imagemBase64 } = validationResult.data;
+    const { tema, nivel, quantidade, dificuldade, idioma, imagemBase64, primeBoost } = validationResult.data;
     const lang = languageMap[idioma] || "Português (Brasil)";
     const seed = Math.floor(Math.random() * 1000000);
 
@@ -178,7 +179,9 @@ Internal level code received: "${sanitize(nivel)}"
 What it means: ${nivelInstrucao}
 Difficulty MUST strictly match this calibration. For graduação/pós-graduação use questions inspired by REAL exams (ENADE, OAB, concursos, qualifying exams, residências). NEVER produce school-level content for university levels.
 ${imageInstructions}
-~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. User difficulty modifier: ${dificuldade}.
+~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. User difficulty modifier: ${dificuldade}.${primeBoost ? `
+
+⚡ PRIME BOOST ACTIVE: Reduce the difficulty of EVERY exercise by ~60%. Simplify wording, shorten calculations, prefer the easier end of the calibration band, give more obvious distractors in multiple choice, and avoid tricky edge cases. Keep the same topic and academic context, just make them noticeably easier to solve.` : ''}
 
 JSON format:
 {"titulo":"string","descricao":"1 sentence","exercicios":[
