@@ -112,6 +112,9 @@ export const FloatingActions = () => {
           </Tooltip>
         )}
 
+        {/* Prime Button */}
+        <PrimeButton />
+
         {/* Study Groups */}
         {groupsEnabled && <StudyGroups />}
 
