@@ -645,5 +645,18 @@
     "s12Email": "Электронная почта:",
     "footer": "Используя Learn Buddy, вы соглашаетесь с условиями этой Политики Конфиденциальности. Если вы не согласны, пожалуйста, не используйте приложение.",
     "backHome": "Вернуться на Главную"
+  },
+  "prime": {
+    "banner": "⚡ Режим Prime АКТИВЕН — задания на 60% легче!",
+    "ariaActivate": "Активировать Prime",
+    "tooltipActive": "Prime активен • {time}",
+    "tooltipReady": "Активировать Prime (10 мин, задания на 60% легче)",
+    "tooltipCooldown": "Prime перезаряжается: {time}",
+    "toastAlreadyActiveTitle": "Prime уже активен!",
+    "toastAlreadyActiveDesc": "Осталось: {time}",
+    "toastCooldownTitle": "Prime перезаряжается",
+    "toastCooldownDesc": "Доступно через {time}",
+    "toastActivatedTitle": "👑 Prime АКТИВИРОВАН!",
+    "toastActivatedDesc": "Задания на 60% легче на 10 минут. Наслаждайтесь!"
   }
 }

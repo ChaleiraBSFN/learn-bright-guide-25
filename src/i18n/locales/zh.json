@@ -645,5 +645,18 @@
     "s12Email": "电子邮件：",
     "footer": "通过使用 Learn Buddy，您同意本隐私政策的条款。如果您不同意，请不要使用本应用。",
     "backHome": "返回首页"
+  },
+  "prime": {
+    "banner": "⚡ Prime 模式已启动 — 挑战难度降低 60%！",
+    "ariaActivate": "启动 Prime",
+    "tooltipActive": "Prime 已启动 • {time}",
+    "tooltipReady": "启动 Prime（10 分钟，挑战难度降低 60%）",
+    "tooltipCooldown": "Prime 冷却中：{time}",
+    "toastAlreadyActiveTitle": "Prime 已经启动！",
+    "toastAlreadyActiveDesc": "剩余时间：{time}",
+    "toastCooldownTitle": "Prime 冷却中",
+    "toastCooldownDesc": "{time} 后可用",
+    "toastActivatedTitle": "👑 Prime 已启动！",
+    "toastActivatedDesc": "10 分钟内挑战难度降低 60%，尽情享受！"
   }
 }

@@ -645,5 +645,18 @@
     "s12Email": "メール：",
     "footer": "Learn Buddy を使用することにより、このプライバシーポリシーの条項に同意したものとみなされます。同意しない場合は、本アプリを使用しないでください。",
     "backHome": "ホームに戻る"
+  },
+  "prime": {
+    "banner": "⚡ プライムモード起動中 — チャレンジが60％簡単に！",
+    "ariaActivate": "プライムを起動",
+    "tooltipActive": "プライム有効中 • {time}",
+    "tooltipReady": "プライムを起動 (10分間、チャレンジが60％簡単に)",
+    "tooltipCooldown": "プライム再充填中: {time}",
+    "toastAlreadyActiveTitle": "プライムは既に有効です！",
+    "toastAlreadyActiveDesc": "残り時間: {time}",
+    "toastCooldownTitle": "プライム再充填中",
+    "toastCooldownDesc": "{time} 後に利用可能",
+    "toastActivatedTitle": "👑 プライム起動！",
+    "toastActivatedDesc": "10分間、チャレンジが60％簡単になります。お楽しみください！"
   }
 }

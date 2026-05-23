@@ -158,7 +158,17 @@ serve(async (req) => {
       superior: "GRADUATE / PÓS-GRADUAÇÃO (Mestrado/Doutorado, MBA, residência médica, OAB 2ª fase, concursos federais de alto nível como AFRFB/Magistratura/MPF, ANPAD, GRE/GMAT advanced, PhD qualifying exams). EXTREMELY rigorous: formal proofs, research-paper critique, advanced abstraction, open-ended argumentation, synthesis across multiple sources. Must match published comprehensive exams.",
       auto: "Infer the appropriate academic level from the topic and context."
     };
-    const nivelInstrucao = levelCalibration[nivel] || `Custom level: ${sanitize(nivel)}`;
+    // Prime boost downshifts the academic tier by one level so questions feel ~60% easier.
+    const primeDownshift: Record<string, string> = {
+      fundamental2: "fundamental1",
+      medio: "fundamental2",
+      superior: "medio",
+      fundamental1: "fundamental1",
+      auto: "fundamental2",
+    };
+    const effectiveNivel = primeBoost ? (primeDownshift[nivel] || nivel) : nivel;
+    const nivelInstrucao = levelCalibration[effectiveNivel] || `Custom level: ${sanitize(nivel)}`;
+    const effectiveDificuldade = primeBoost ? "muito fácil (modo Prime)" : dificuldade;
 
     const imageInstructions = imagemBase64
       ? `\nCRITICAL IMAGE TASK: An image with exercises/questions was attached. You MUST:
@@ -172,16 +182,29 @@ serve(async (req) => {
 8. Show all math/calculations in plain text (e.g. "2x + 3 = 7  =>  2x = 4  =>  x = 2"). NEVER skip steps.\n`
       : "";
 
-    const prompt = `Generate ${quantidade} exercises about "${sanitize(tema)}". Respond ONLY in ${lang}. ONLY valid JSON.
+    const prompt = `${primeBoost ? `⚡⚡⚡ PRIME BOOST MODE — HIGHEST PRIORITY OVERRIDE ⚡⚡⚡
+The user activated a temporary "Prime" power-up. Every exercise MUST be approximately 60% EASIER than the normal calibration for this topic and level. This is non-negotiable. Concretely:
+- Shorter statements, simpler numbers, fewer steps.
+- Multiple choice: make the correct answer clearly the most reasonable; distractors should be plausible but obviously weaker.
+- Avoid trick questions, edge cases, multi-concept fusion, and heavy algebraic manipulation.
+- Prefer direct application of a single concept per question.
+- Use the EASIER end of the calibration band below (already downshifted one tier for Prime).
+Keep the same TOPIC, but lower the cognitive load substantially.
+
+` : ''}Generate ${quantidade} exercises about "${sanitize(tema)}". Respond ONLY in ${lang}. ONLY valid JSON.
 
 ACADEMIC LEVEL CALIBRATION (CRITICAL — DO NOT IGNORE):
-Internal level code received: "${sanitize(nivel)}"
+Internal level code received: "${sanitize(nivel)}"${primeBoost ? ` (downshifted to "${effectiveNivel}" by Prime boost)` : ''}
 What it means: ${nivelInstrucao}
-Difficulty MUST strictly match this calibration. For graduação/pós-graduação use questions inspired by REAL exams (ENADE, OAB, concursos, qualifying exams, residências). NEVER produce school-level content for university levels.
+Difficulty MUST strictly match this calibration.${primeBoost ? ' Because Prime is active, stay near the EASY end of this band.' : ' For graduação/pós-graduação use questions inspired by REAL exams (ENADE, OAB, concursos, qualifying exams, residências). NEVER produce school-level content for university levels.'}
 ${imageInstructions}
-~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. User difficulty modifier: ${dificuldade}.${primeBoost ? `
+~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. User difficulty modifier: ${effectiveDificuldade}.
 
-⚡ PRIME BOOST ACTIVE: Reduce the difficulty of EVERY exercise by ~60%. Simplify wording, shorten calculations, prefer the easier end of the calibration band, give more obvious distractors in multiple choice, and avoid tricky edge cases. Keep the same topic and academic context, just make them noticeably easier to solve.` : ''}
+JSON format:
+{"titulo":"string","descricao":"1 sentence","exercicios":[
+  {"tipo":"objetiva","numero":1,"nivel":"string","enunciado":"question","alternativas":["a) opt","b) opt","c) opt","d) opt"],"resposta":"a","respostaCompleta":"FULL step-by-step solution with calculations","explicacao":"why it works","dicaExtra":"tip"},
+  {"tipo":"dissertativa","numero":2,"nivel":"string","enunciado":"question","respostaEsperada":"complete model answer with reasoning + calculations","explicacao":"why it works","criterios":["c1","c2"]}
+],"resumoTema":"2 sentences"}
 
 JSON format:
 {"titulo":"string","descricao":"1 sentence","exercicios":[
