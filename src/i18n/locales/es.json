@@ -639,5 +639,18 @@
     "s12Email": "Correo electrónico:",
     "footer": "Al usar Learn Buddy, aceptas los términos de esta Política de Privacidad. Si no estás de acuerdo, por favor, no uses la aplicación.",
     "backHome": "Volver al Inicio"
+  },
+  "prime": {
+    "banner": "⚡ Modo Prime ACTIVO — ¡desafíos 60% más fáciles!",
+    "ariaActivate": "Activar Prime",
+    "tooltipActive": "Prime activo • {time}",
+    "tooltipReady": "Activar Prime (10 min, desafíos 60% más fáciles)",
+    "tooltipCooldown": "Prime en recarga: {time}",
+    "toastAlreadyActiveTitle": "¡Prime ya está activo!",
+    "toastAlreadyActiveDesc": "Tiempo restante: {time}",
+    "toastCooldownTitle": "Prime en recarga",
+    "toastCooldownDesc": "Disponible en {time}",
+    "toastActivatedTitle": "👑 ¡Prime ACTIVADO!",
+    "toastActivatedDesc": "Desafíos 60% más fáciles durante 10 minutos. ¡Disfruta!"
   }
 }
