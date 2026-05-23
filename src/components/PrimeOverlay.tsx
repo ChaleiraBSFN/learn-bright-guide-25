@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { usePrime, formatDuration } from '@/hooks/usePrime';
 import { Crown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const PrimeOverlay = () => {
+  const { t } = useTranslation();
   const { isActive, activeRemainingMs, activeProgress } = usePrime();
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export const PrimeOverlay = () => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm font-bold truncate">
-                  ⚡ Modo Prime ATIVO — desafios 60% mais fáceis!
+                  {t('prime.banner')}
                 </p>
                 <span className="text-sm font-mono font-bold tabular-nums shrink-0">
                   {formatDuration(activeRemainingMs)}

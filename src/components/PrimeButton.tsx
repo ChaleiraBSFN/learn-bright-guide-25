@@ -3,26 +3,28 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePrime, formatDuration } from '@/hooks/usePrime';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 export const PrimeButton = () => {
+  const { t } = useTranslation();
   const { isActive, canActivate, cooldownRemainingMs, activeRemainingMs, activate } = usePrime();
 
   const handleClick = () => {
     if (isActive) {
-      toast.info('Prime já está ativo!', {
-        description: `Tempo restante: ${formatDuration(activeRemainingMs)}`,
+      toast.info(t('prime.toastAlreadyActiveTitle'), {
+        description: t('prime.toastAlreadyActiveDesc', { time: formatDuration(activeRemainingMs) }),
       });
       return;
     }
     if (!canActivate) {
-      toast.error('Prime em recarga', {
-        description: `Disponível em ${formatDuration(cooldownRemainingMs)}`,
+      toast.error(t('prime.toastCooldownTitle'), {
+        description: t('prime.toastCooldownDesc', { time: formatDuration(cooldownRemainingMs) }),
       });
       return;
     }
     if (activate()) {
-      toast.success('👑 Prime ATIVADO!', {
-        description: 'Desafios 60% mais fáceis por 10 minutos. Aproveite!',
+      toast.success(t('prime.toastActivatedTitle'), {
+        description: t('prime.toastActivatedDesc'),
       });
     }
   };
@@ -37,7 +39,7 @@ export const PrimeButton = () => {
             variant="outline"
             size="icon"
             onClick={handleClick}
-            aria-label="Ativar Prime"
+            aria-label={t('prime.ariaActivate')}
             className={`h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full backdrop-blur-sm border-2 transition-all
               ${isActive
                 ? 'bg-gradient-to-br from-yellow-400 to-pink-500 border-yellow-300 text-white shadow-[0_0_30px_-2px_hsl(45_100%_50%/0.9),0_0_50px_-4px_hsl(320_100%_60%/0.6)] animate-pulse'
@@ -51,10 +53,10 @@ export const PrimeButton = () => {
         </TooltipTrigger>
         <TooltipContent side="left">
           {isActive
-            ? `Prime ativo • ${formatDuration(activeRemainingMs)}`
+            ? t('prime.tooltipActive', { time: formatDuration(activeRemainingMs) })
             : canActivate
-              ? 'Ativar Prime (10 min, desafios 60% mais fáceis)'
-              : `Prime em recarga: ${formatDuration(cooldownRemainingMs)}`}
+              ? t('prime.tooltipReady')
+              : t('prime.tooltipCooldown', { time: formatDuration(cooldownRemainingMs) })}
         </TooltipContent>
       </Tooltip>
       {cooldownLabel && !isActive && (
