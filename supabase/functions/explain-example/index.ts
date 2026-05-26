@@ -217,14 +217,23 @@ REGRAS DE NOTAÇÃO MATEMÁTICA (OBRIGATÓRIO):
 
 OUTRAS REGRAS: idioma ${langName}; sem blocos \`\`\`; comece direto pela primeira seção.`;
 
-    const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
+    const geminiKeys = [
+      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
+    ].filter(Boolean) as string[];
+    geminiKeys.sort(() => Math.random() - 0.5);
     let content: string | null = null;
     let lastStatus = 0;
 
-    if (geminiKey) {
-      const result = await callGeminiCascade(prompt, geminiKey);
+    for (const key of geminiKeys) {
+      const result = await callGeminiCascade(prompt, key);
       content = result.text;
       lastStatus = result.lastStatus;
+      if (content) break;
+      console.log(`[Explain] Key failed (status ${lastStatus}), rotating...`);
     }
 
     if (!content) {

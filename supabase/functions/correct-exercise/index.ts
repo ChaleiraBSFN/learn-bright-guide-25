@@ -139,9 +139,20 @@ Resposta esperada: ${respostaEsperada}
 ${criterios.length > 0 ? `Critérios:\n${criterios.map((c, i) => `${i + 1}. ${c}`).join('\n')}` : ''}
 Resposta do aluno: ${respostaUsuario}`;
 
-    const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
+    const geminiKeys = [
+      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
+    ].filter(Boolean) as string[];
+    geminiKeys.sort(() => Math.random() - 0.5);
     let content: string | null = null;
-    if (geminiKey) content = await callGeminiDirect(fullPrompt, geminiKey);
+    for (const key of geminiKeys) {
+      content = await callGeminiDirect(fullPrompt, key);
+      if (content) break;
+      console.log(`[Correct] Key failed, rotating...`);
+    }
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Serviço indisponível. Tente novamente." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });

@@ -87,12 +87,20 @@ serve(async (req) => {
       });
     }
 
-    const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
-    if (!geminiKey) {
+    const geminiKeys = [
+      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
+    ].filter(Boolean) as string[];
+    if (geminiKeys.length === 0) {
       return new Response(JSON.stringify({ error: "Translation service unavailable" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    // Shuffle to distribute load across keys
+    geminiKeys.sort(() => Math.random() - 0.5);
 
     const lang = languageMap[targetLanguage] || targetLanguage;
     const contentJson = JSON.stringify(content);
@@ -109,7 +117,12 @@ IMPORTANT RULE: If the content is about learning a foreign language (e.g., learn
 
 ${contentJson}`;
 
-    const result = await callGemini(prompt, geminiKey);
+    let result: string | null = null;
+    for (const key of geminiKeys) {
+      result = await callGemini(prompt, key);
+      if (result) break;
+      console.log(`[Translate] Key failed, rotating to next...`);
+    }
     if (!result) {
       return new Response(JSON.stringify({ error: "Translation failed" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },

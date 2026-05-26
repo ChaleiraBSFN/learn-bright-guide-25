@@ -443,7 +443,14 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     const dayTokens = maxDays * 250;
     const maxTokens = Math.min(baseTokens + dayTokens, 16000);
 
-    const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
+    const geminiKeys = [
+      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
+    ].filter(Boolean) as string[];
+    geminiKeys.sort(() => Math.random() - 0.5);
     let content: string | null = null;
     let lastStatus = 0;
 
@@ -470,10 +477,12 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
       console.log('[Cache] MISS', cacheKey.slice(0, 12));
     }
 
-    if (geminiKey) {
-      const result = await callGeminiDirect(prompt, geminiKey, maxTokens, temperature, imagemBase64);
+    for (const key of geminiKeys) {
+      const result = await callGeminiDirect(prompt, key, maxTokens, temperature, imagemBase64);
       content = result.text;
       lastStatus = result.lastStatus;
+      if (content) break;
+      console.log(`[StudyContent] Key failed (status ${lastStatus}), rotating...`);
     }
 
     if (!content) {

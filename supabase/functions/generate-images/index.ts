@@ -101,8 +101,14 @@ serve(async (req) => {
       );
     }
 
-    const GEMINI_KEY = Deno.env.get("GOOGLE_GEMINI_API_KEY");
-    if (!GEMINI_KEY) throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
+    const geminiKeys = [
+      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
+      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
+    ].filter(Boolean) as string[];
+    if (geminiKeys.length === 0) throw new Error("GOOGLE_GEMINI_API_KEY is not configured");
 
     const sanitizedTema = tema.replace(/[<>]/g, "").replace(/```/g, "").trim().slice(0, 200);
     const sanitizedNivel = (nivel || "medio").replace(/[<>]/g, "").trim().slice(0, 50);
@@ -132,13 +138,23 @@ serve(async (req) => {
       });
     }
 
-    console.log(`Generating ${prompts.length} SVGs in parallel for: ${sanitizedTema}`);
+    console.log(`Generating ${prompts.length} SVGs in parallel for: ${sanitizedTema} (rotating across ${geminiKeys.length} keys)`);
 
-    // Stagger requests by 250ms to spread per-second quota
+    // Helper: try each key until success
+    const tryAllKeys = async (prompt: string): Promise<string | null> => {
+      const shuffled = [...geminiKeys].sort(() => Math.random() - 0.5);
+      for (const key of shuffled) {
+        const result = await generateSvg(prompt, key);
+        if (result) return result;
+      }
+      return null;
+    };
+
+    // Stagger requests by 250ms to spread per-second quota; distribute prompts across keys
     const results = await Promise.allSettled(
       prompts.map((p, i) =>
         new Promise<string | null>((resolve) =>
-          setTimeout(() => resolve(generateSvg(p.prompt, GEMINI_KEY) as any), i * 250)
+          setTimeout(() => resolve(tryAllKeys(p.prompt) as any), i * 250)
         ).then((v) => v)
       )
     );
