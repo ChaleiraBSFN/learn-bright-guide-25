@@ -100,9 +100,69 @@ function parseAIJson(content: string): any {
   else if (cleaned.startsWith("```")) cleaned = cleaned.slice(3);
   if (cleaned.endsWith("```")) cleaned = cleaned.slice(0, -3);
   cleaned = cleaned.trim();
-  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-  if (jsonMatch) cleaned = jsonMatch[0];
-  return JSON.parse(cleaned);
+
+  try { return JSON.parse(cleaned); } catch (_) {}
+
+  const start = cleaned.indexOf("{");
+  if (start === -1) throw new Error("No JSON object found");
+  cleaned = cleaned.slice(start);
+
+  try { return JSON.parse(cleaned); } catch (_) {}
+
+  // Repair truncated JSON: track string state + brace/bracket depth,
+  // truncate to last complete top-level element, then close open structures.
+  let inString = false;
+  let escape = false;
+  const stack: string[] = [];
+  let lastSafeInArray = -1;
+
+  for (let i = 0; i < cleaned.length; i++) {
+    const ch = cleaned[i];
+    if (escape) { escape = false; continue; }
+    if (inString) {
+      if (ch === "\\") { escape = true; continue; }
+      if (ch === '"') { inString = false; }
+      continue;
+    }
+    if (ch === '"') { inString = true; continue; }
+    if (ch === "{" || ch === "[") {
+      stack.push(ch === "{" ? "}" : "]");
+    } else if (ch === "}" || ch === "]") {
+      if (stack.length && stack[stack.length - 1] === ch) stack.pop();
+      // Safe truncation: just closed an item while still inside an outer array
+      if (stack.length >= 1 && stack[stack.length - 1] === "]") {
+        lastSafeInArray = i + 1;
+      }
+    }
+  }
+
+  let repaired = cleaned;
+  if (lastSafeInArray > 0) {
+    repaired = cleaned.slice(0, lastSafeInArray);
+    // Recompute stack for truncated string
+    const s: string[] = [];
+    let inStr = false, esc = false;
+    for (let i = 0; i < repaired.length; i++) {
+      const ch = repaired[i];
+      if (esc) { esc = false; continue; }
+      if (inStr) {
+        if (ch === "\\") { esc = true; continue; }
+        if (ch === '"') inStr = false;
+        continue;
+      }
+      if (ch === '"') { inStr = true; continue; }
+      if (ch === "{" || ch === "[") s.push(ch === "{" ? "}" : "]");
+      else if ((ch === "}" || ch === "]") && s.length && s[s.length - 1] === ch) s.pop();
+    }
+    repaired = repaired.replace(/,\s*$/, "");
+    while (s.length) repaired += s.pop();
+  } else {
+    if (inString) repaired += '"';
+    repaired = repaired.replace(/,\s*$/, "");
+    while (stack.length) repaired += stack.pop();
+  }
+
+  return JSON.parse(repaired);
 }
 
 serve(async (req) => {
@@ -225,15 +285,26 @@ Rules: Vary difficulty within the calibration. ONLY JSON output.`;
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
 
-    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, 4096, imagemBase64);
+    // Scale output tokens with quantity (~700 tokens per exercise, +1500 overhead, capped at 32k)
+    const dynamicMaxTokens = Math.min(32000, 1500 + quantidade * 700);
+
+    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, dynamicMaxTokens, imagemBase64);
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     let exercises;
-    try { exercises = parseAIJson(content); } catch {
+    try {
+      exercises = parseAIJson(content);
+    } catch (e) {
+      console.error("[parseAIJson] failed:", (e as Error).message, "len:", content.length, "tail:", content.slice(-200));
       return new Response(JSON.stringify({ error: "Erro ao processar resposta." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Guard: ensure at least one valid exercise survived truncation repair
+    if (!exercises?.exercicios || !Array.isArray(exercises.exercicios) || exercises.exercicios.length === 0) {
+      return new Response(JSON.stringify({ error: "Resposta vazia. Tente reduzir a quantidade." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     return new Response(JSON.stringify(exercises), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
