@@ -100,9 +100,69 @@ function parseAIJson(content: string): any {
   else if (cleaned.startsWith("```")) cleaned = cleaned.slice(3);
   if (cleaned.endsWith("```")) cleaned = cleaned.slice(0, -3);
   cleaned = cleaned.trim();
-  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-  if (jsonMatch) cleaned = jsonMatch[0];
-  return JSON.parse(cleaned);
+
+  try { return JSON.parse(cleaned); } catch (_) {}
+
+  const start = cleaned.indexOf("{");
+  if (start === -1) throw new Error("No JSON object found");
+  cleaned = cleaned.slice(start);
+
+  try { return JSON.parse(cleaned); } catch (_) {}
+
+  // Repair truncated JSON: track string state + brace/bracket depth,
+  // truncate to last complete top-level element, then close open structures.
+  let inString = false;
+  let escape = false;
+  const stack: string[] = [];
+  let lastSafeInArray = -1;
+
+  for (let i = 0; i < cleaned.length; i++) {
+    const ch = cleaned[i];
+    if (escape) { escape = false; continue; }
+    if (inString) {
+      if (ch === "\\") { escape = true; continue; }
+      if (ch === '"') { inString = false; }
+      continue;
+    }
+    if (ch === '"') { inString = true; continue; }
+    if (ch === "{" || ch === "[") {
+      stack.push(ch === "{" ? "}" : "]");
+    } else if (ch === "}" || ch === "]") {
+      if (stack.length && stack[stack.length - 1] === ch) stack.pop();
+      // Safe truncation: just closed an item while still inside an outer array
+      if (stack.length >= 1 && stack[stack.length - 1] === "]") {
+        lastSafeInArray = i + 1;
+      }
+    }
+  }
+
+  let repaired = cleaned;
+  if (lastSafeInArray > 0) {
+    repaired = cleaned.slice(0, lastSafeInArray);
+    // Recompute stack for truncated string
+    const s: string[] = [];
+    let inStr = false, esc = false;
+    for (let i = 0; i < repaired.length; i++) {
+      const ch = repaired[i];
+      if (esc) { esc = false; continue; }
+      if (inStr) {
+        if (ch === "\\") { esc = true; continue; }
+        if (ch === '"') inStr = false;
+        continue;
+      }
+      if (ch === '"') { inStr = true; continue; }
+      if (ch === "{" || ch === "[") s.push(ch === "{" ? "}" : "]");
+      else if ((ch === "}" || ch === "]") && s.length && s[s.length - 1] === ch) s.pop();
+    }
+    repaired = repaired.replace(/,\s*$/, "");
+    while (s.length) repaired += s.pop();
+  } else {
+    if (inString) repaired += '"';
+    repaired = repaired.replace(/,\s*$/, "");
+    while (stack.length) repaired += stack.pop();
+  }
+
+  return JSON.parse(repaired);
 }
 
 serve(async (req) => {
