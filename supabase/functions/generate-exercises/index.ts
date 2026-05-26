@@ -285,15 +285,26 @@ Rules: Vary difficulty within the calibration. ONLY JSON output.`;
     const geminiKey = Deno.env.get("GOOGLE_GEMINI_API_KEY");
     let content: string | null = null;
 
-    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, 4096, imagemBase64);
+    // Scale output tokens with quantity (~700 tokens per exercise, +1500 overhead, capped at 32k)
+    const dynamicMaxTokens = Math.min(32000, 1500 + quantidade * 700);
+
+    if (geminiKey) content = await callGeminiDirect(prompt, geminiKey, dynamicMaxTokens, imagemBase64);
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     let exercises;
-    try { exercises = parseAIJson(content); } catch {
+    try {
+      exercises = parseAIJson(content);
+    } catch (e) {
+      console.error("[parseAIJson] failed:", (e as Error).message, "len:", content.length, "tail:", content.slice(-200));
       return new Response(JSON.stringify({ error: "Erro ao processar resposta." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Guard: ensure at least one valid exercise survived truncation repair
+    if (!exercises?.exercicios || !Array.isArray(exercises.exercicios) || exercises.exercicios.length === 0) {
+      return new Response(JSON.stringify({ error: "Resposta vazia. Tente reduzir a quantidade." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     return new Response(JSON.stringify(exercises), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
