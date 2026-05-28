@@ -49,6 +49,17 @@ serve(async (req) => {
     // Initialize Resend
     const resend = new Resend(resendKey);
 
+    // HTML-escape user-supplied values to prevent HTML/email injection
+    const escapeHtml = (s: string) => String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+    const safeEmail = escapeHtml(user.email);
+    const safeUserId = escapeHtml(user.id);
+
     // Admin email
     const adminEmail = "learnbuddyco@proton.me";
 
