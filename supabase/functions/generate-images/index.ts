@@ -100,6 +100,26 @@ serve(async (req) => {
   }
 
   try {
+    try {
+      const serviceClient = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
+      let userId: string | null = null;
+      const authHeader = req.headers.get('Authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        const ac = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_ANON_KEY') ?? '', { global: { headers: { Authorization: authHeader } } });
+        const { data } = await ac.auth.getUser();
+        if (data?.user) userId = data.user.id;
+      }
+      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+      const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
+      const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
+        _user_id: rateLimitId, _endpoint: 'generate-images', _max_requests: userId ? 20 : 5, _window_minutes: 60
+      });
+      if (isAllowed === false) {
+        return new Response(JSON.stringify({ error: 'Limite de requisições excedido.' }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    } catch (e) { console.error('[generate-images] rate-limit error', e); }
+
+
     const { tema, nivel, passos } = await req.json();
 
     if (!tema || typeof tema !== "string" || tema.length < 2) {
