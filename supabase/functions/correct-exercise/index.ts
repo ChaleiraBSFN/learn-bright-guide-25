@@ -89,7 +89,8 @@ serve(async (req) => {
       if (!authError && authUser) userId = authUser.id;
     }
 
-    const rateLimitId = userId || `anon_${req.headers.get('x-forwarded-for') || 'unknown'}`;
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
     const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
       _user_id: rateLimitId, _endpoint: 'correct-exercise', _max_requests: userId ? 30 : 10, _window_minutes: 60
     });
