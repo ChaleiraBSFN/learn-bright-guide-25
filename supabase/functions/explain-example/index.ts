@@ -113,10 +113,38 @@ async function callGeminiCascade(prompt: string, apiKey: string): Promise<{ text
 }
 
 
+const toAnonUuid = async (input: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const digest = await crypto.subtle.digest("SHA-256", encoder.encode(input));
+  const hex = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Rate limit per IP / user
+    try {
+      const serviceClient = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
+      let userId: string | null = null;
+      const authHeader = req.headers.get('Authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        const ac = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_ANON_KEY') ?? '', { global: { headers: { Authorization: authHeader } } });
+        const { data } = await ac.auth.getUser();
+        if (data?.user) userId = data.user.id;
+      }
+      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+      const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
+      const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
+        _user_id: rateLimitId, _endpoint: 'explain-example', _max_requests: userId ? 40 : 15, _window_minutes: 60
+      });
+      if (isAllowed === false) {
+        return new Response(JSON.stringify({ error: 'Limite de requisições excedido.' }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    } catch (e) { console.error('[explain-example] rate-limit error', e); }
+
+
     const rawBody = await req.json();
     const validationResult = requestSchema.safeParse(rawBody);
     
