@@ -78,11 +78,12 @@ export function ImageUpload({ onImageChange, disabled }: ImageUploadProps) {
             type="button"
             variant="destructive"
             size="icon"
+            aria-label="Remover imagem"
             className="absolute top-2 right-2 h-8 w-8 rounded-full"
             onClick={handleClear}
             disabled={disabled}
           >
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
       ) : (
