@@ -19,10 +19,30 @@ const toAnonUuid = async (input: string): Promise<string> => {
   }
 
   try {
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+
+    // IP rate limit: prevent mass registration abuse
+    try {
+      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+      const rateLimitId = await toAnonUuid(`anon_${clientIp}`);
+      const { data: isAllowed } = await supabaseAdmin.rpc('check_rate_limit', {
+        _user_id: rateLimitId, _endpoint: 'create-user', _max_requests: 5, _window_minutes: 60
+      });
+      if (isAllowed === false) {
+        return new Response(JSON.stringify({ error: "Muitas tentativas. Tente novamente mais tarde." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    } catch (e) { console.error('[create-user] rate-limit error', e); }
+
     const { email, password, data } = await req.json();
 
     if (!email || !password) {
-      return new Response(JSON.stringify({ error: "Email and password required" }), {
+      return new Response(JSON.stringify({ error: "Erro ao criar conta. Verifique os dados e tente novamente." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -31,23 +51,18 @@ const toAnonUuid = async (input: string): Promise<string> => {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (typeof email !== 'string' || !emailRegex.test(email) || email.length > 255) {
-      return new Response(JSON.stringify({ error: "Invalid email format" }), {
+      return new Response(JSON.stringify({ error: "Erro ao criar conta. Verifique os dados e tente novamente." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     if (typeof password !== 'string' || password.length < 1 || password.length > 128) {
-      return new Response(JSON.stringify({ error: "Password is required" }), {
+      return new Response(JSON.stringify({ error: "Erro ao criar conta. Verifique os dados e tente novamente." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
 
     // Create user with admin API (bypasses password strength checks)
     const { data: userData, error } = await supabaseAdmin.auth.admin.createUser({
@@ -58,14 +73,14 @@ const toAnonUuid = async (input: string): Promise<string> => {
     });
 
     if (error) {
-      // Don't expose internal error details
-      const safeErrors = ["User already registered", "already been registered"];
-      const isSafe = safeErrors.some(m => error.message.includes(m));
-      return new Response(JSON.stringify({ error: isSafe ? error.message : "Erro ao criar conta. Tente novamente." }), {
+      // Generic error to prevent email enumeration
+      console.error("[create-user] signup error:", error.message);
+      return new Response(JSON.stringify({ error: "Erro ao criar conta. Tente novamente." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     return new Response(JSON.stringify({ user: userData.user }), {
       status: 200,
