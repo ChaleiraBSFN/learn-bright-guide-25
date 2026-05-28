@@ -49,6 +49,17 @@ serve(async (req) => {
     // Initialize Resend
     const resend = new Resend(resendKey);
 
+    // HTML-escape user-supplied values to prevent HTML/email injection
+    const escapeHtml = (s: string) => String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+    const safeEmail = escapeHtml(user.email);
+    const safeUserId = escapeHtml(user.id);
+
     // Admin email
     const adminEmail = "learnbuddyco@proton.me";
 
@@ -82,14 +93,15 @@ serve(async (req) => {
               <p>Um usuário enviou uma mensagem no chat de suporte e precisa de ajuda.</p>
               
               <div class="message-box">
-                <p><strong>📧 Email do Usuário:</strong> ${user.email}</p>
-                <p><strong>🆔 ID do Usuário:</strong> ${user.id}</p>
+                <p><strong>📧 Email do Usuário:</strong> ${safeEmail}</p>
+                <p><strong>🆔 ID do Usuário:</strong> ${safeUserId}</p>
                 <p><strong>📅 Data/Hora:</strong> ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</p>
                 <p><strong>💬 Mensagem:</strong></p>
                 <blockquote style="background: #f5f5f5; padding: 15px; border-radius: 6px; margin: 10px 0;">
-                  ${message}
+                  ${safeMessage}
                 </blockquote>
               </div>
+
               
               <p>Por favor, acesse o painel de suporte para responder a esta solicitação.</p>
               

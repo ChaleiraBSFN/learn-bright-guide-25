@@ -7,6 +7,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const toAnonUuid = async (input: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const digest = await crypto.subtle.digest("SHA-256", encoder.encode(input));
+  const hex = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+};
+
 const requestSchema = z.object({
   pergunta: z.string().min(3).max(2000),
   respostaUsuario: z.string().min(1).max(5000),
@@ -14,6 +21,7 @@ const requestSchema = z.object({
   criterios: z.array(z.string()).optional().default([]),
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
 });
+
 
 // === AI PROVIDER ABSTRACTION ===
 async function callGeminiDirect(prompt: string, apiKey: string): Promise<string | null> {
@@ -81,7 +89,8 @@ serve(async (req) => {
       if (!authError && authUser) userId = authUser.id;
     }
 
-    const rateLimitId = userId || `anon_${req.headers.get('x-forwarded-for') || 'unknown'}`;
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
     const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
       _user_id: rateLimitId, _endpoint: 'correct-exercise', _max_requests: userId ? 30 : 10, _window_minutes: 60
     });

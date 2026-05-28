@@ -1,4 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "npm:@supabase/supabase-js@2.57.2";
+
+const toAnonUuid = async (input: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const digest = await crypto.subtle.digest("SHA-256", encoder.encode(input));
+  const hex = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+};
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -92,6 +100,26 @@ serve(async (req) => {
   }
 
   try {
+    try {
+      const serviceClient = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
+      let userId: string | null = null;
+      const authHeader = req.headers.get('Authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        const ac = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_ANON_KEY') ?? '', { global: { headers: { Authorization: authHeader } } });
+        const { data } = await ac.auth.getUser();
+        if (data?.user) userId = data.user.id;
+      }
+      const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+      const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
+      const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
+        _user_id: rateLimitId, _endpoint: 'generate-images', _max_requests: userId ? 20 : 5, _window_minutes: 60
+      });
+      if (isAllowed === false) {
+        return new Response(JSON.stringify({ error: 'Limite de requisições excedido.' }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    } catch (e) { console.error('[generate-images] rate-limit error', e); }
+
+
     const { tema, nivel, passos } = await req.json();
 
     if (!tema || typeof tema !== "string" || tema.length < 2) {
