@@ -451,7 +451,7 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <img src={learnBuddyLogo} alt="Learn Buddy" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
               <div className="hidden sm:block">
-                <h1 className="font-display text-xl font-bold text-foreground">Learn Buddy</h1>
+                <span className="font-display text-xl font-bold text-foreground block">Learn Buddy</span>
                 <p className="text-xs text-muted-foreground">{t('header.subtitle')}</p>
               </div>
             </div>

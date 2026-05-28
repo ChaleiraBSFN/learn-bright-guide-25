@@ -66,7 +66,7 @@ const Install = () => {
       <Card className="max-w-lg w-full">
         <CardHeader className="text-center">
           <Smartphone className="h-16 w-16 text-primary mx-auto mb-4" />
-          <CardTitle className="text-2xl">{t('install.installTitle')}</CardTitle>
+          <h2 className="text-2xl font-semibold leading-none tracking-tight">{t('install.installTitle')}</h2>
           <CardDescription>{t('install.installDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
