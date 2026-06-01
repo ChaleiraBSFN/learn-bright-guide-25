@@ -57,6 +57,7 @@ const AppContent = () => {
           <Route path="/ai-config" element={<AIConfigAdmin />} />
           <Route path="/downloads" element={<Downloads />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/community" element={<Community />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
