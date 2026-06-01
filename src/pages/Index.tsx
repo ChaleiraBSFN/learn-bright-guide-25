@@ -295,7 +295,12 @@ const Index = () => {
       }
 
       const content = await response.json();
-      if (!content || !content.objetivo || !content.resumo) {
+      // Accept the response if it has the standard study fields OR just the image analysis
+      // (when the user uploaded only an image, the AI may return mostly analiseImagem)
+      const hasUsableContent = content && (
+        (content.objetivo && content.resumo) || content.analiseImagem
+      );
+      if (!hasUsableContent) {
         throw new Error("O conteúdo gerado está incompleto. Tente novamente.");
       }
 
