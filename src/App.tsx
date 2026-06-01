@@ -23,6 +23,7 @@ import AIConfigAdmin from "./pages/AIConfigAdmin";
 import Downloads from "./pages/Downloads";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
+import Community from "./pages/Community";
 import { useTimeTracker } from "@/hooks/useAchievements";
 import { useVisitHeartbeat } from "@/hooks/useVisitHeartbeat";
 import { PrimeOverlay } from "@/components/PrimeOverlay";
