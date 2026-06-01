@@ -135,7 +135,7 @@ export default function Community() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO title="Comunidade — Studdy Buddy" description="Comunidade de estudantes: compartilhe exercícios, soluções e dúvidas." />
+      <SEO title="Comunidade — Studdy Buddy" description="Comunidade de estudantes: compartilhe exercícios, soluções e dúvidas." path="/community" />
 
       <header className="sticky top-0 z-30 border-b-2 border-foreground/10 bg-background/80 backdrop-blur-lg">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
