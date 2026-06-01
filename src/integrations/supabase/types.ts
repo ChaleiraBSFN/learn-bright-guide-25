@@ -71,6 +71,138 @@ export type Database = {
         }
         Relationships: []
       }
+      community_buddies: {
+        Row: {
+          author_id: string
+          created_at: string
+          donor_id: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          donor_id: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          donor_id?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_buddies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts: {
+        Row: {
+          buddy_count: number
+          comment_count: number
+          content: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          like_count: number
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          buddy_count?: number
+          comment_count?: number
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          like_count?: number
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          buddy_count?: number
+          comment_count?: number
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          like_count?: number
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       engine_notices: {
         Row: {
           created_at: string
@@ -660,6 +792,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      donate_buddy: { Args: { _post_id: string }; Returns: number }
       get_credits: { Args: { _user_id: string }; Returns: number }
       get_group_member_history: {
         Args: { _group_id: string }
