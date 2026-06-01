@@ -242,14 +242,15 @@ serve(async (req) => {
 8. Show all math/calculations in plain text (e.g. "2x + 3 = 7  =>  2x = 4  =>  x = 2"). NEVER skip steps.\n`
       : "";
 
-    const prompt = `${primeBoost ? `⚡⚡⚡ PRIME BOOST MODE — HIGHEST PRIORITY OVERRIDE ⚡⚡⚡
-The user activated a temporary "Prime" power-up. Every exercise MUST be approximately 60% EASIER than the normal calibration for this topic and level. This is non-negotiable. Concretely:
-- Shorter statements, simpler numbers, fewer steps.
-- Multiple choice: make the correct answer clearly the most reasonable; distractors should be plausible but obviously weaker.
-- Avoid trick questions, edge cases, multi-concept fusion, and heavy algebraic manipulation.
-- Prefer direct application of a single concept per question.
-- Use the EASIER end of the calibration band below (already downshifted one tier for Prime).
-Keep the same TOPIC, but lower the cognitive load substantially.
+    const prompt = `${primeBoost ? `⚡⚡⚡ PRIME BOOST MODE — HIGHEST PRIORITY OVERRIDE (NON-NEGOTIABLE) ⚡⚡⚡
+The user activated a temporary "Prime" power-up. Every exercise MUST be DRASTICALLY EASIER — target roughly 60% reduction in cognitive load vs the normal calibration. This rule overrides any later instruction. Concretely:
+- Statements: short (1-2 sentences max), direct, one concept per question.
+- Numbers: use ONLY whole integers. NEVER use decimals/floats. If a natural calculation would yield a float (e.g. 7.5, 3.333, 2.71), ROUND to the nearest integer and adjust the question so the math still works cleanly. Prefer numbers between 1 and 20.
+- Operations: at most 1-2 steps. No nested formulas, no multi-concept fusion, no edge cases, no tricky wording.
+- Multiple choice: the correct answer should be the most obviously reasonable one; distractors plausible but clearly weaker.
+- Use the EASIER end of the calibration band (already downshifted one tier by Prime).
+- All intermediate results in "respostaCompleta" must also be integers (round if needed) — never display a number like 2.5 or 3.33.
+Keep the same TOPIC, but lower difficulty substantially.
 
 ` : ''}Generate ${quantidade} exercises about "${sanitize(tema)}". Respond ONLY in ${lang}. ONLY valid JSON.
 
