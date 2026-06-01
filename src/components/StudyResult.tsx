@@ -40,7 +40,9 @@ interface StudyResultProps {
 export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesLoading, onGenerateExercise, isGeneratingExercise }: StudyResultProps) {
   const { t } = useTranslation();
 
-  if (!content || !content.objetivo || !content.resumo) {
+  // Allow render when the AI returned only image analysis (no full study material)
+  const hasAnyContent = content && (content.objetivo || content.resumo || content.analiseImagem);
+  if (!hasAnyContent) {
     return (
       <div className="text-center py-12 space-y-4">
         <p className="text-muted-foreground">{t('result.contentNotLoaded')}</p>
