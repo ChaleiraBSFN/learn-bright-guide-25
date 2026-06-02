@@ -26,6 +26,7 @@ import {
 import {
   Users, Plus, Send, Loader2, ArrowLeft, Settings, UserPlus,
   Copy, Crown, Shield, Trash2, LogOut, Image as ImageIcon, History,
+  MessageCircle,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -361,7 +362,7 @@ export const StudyGroups = () => {
           navigate('/auth');
         }}
       >
-        <Users className="h-4 w-4" />
+        <MessageCircle className="h-4 w-4" />
       </Button>
     );
   }
@@ -378,7 +379,7 @@ export const StudyGroups = () => {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" aria-label={t('groups.title')} className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]">
-          <Users className="h-4 w-4" />
+          <MessageCircle className="h-4 w-4" />
         </Button>
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-lg flex flex-col p-0">

@@ -17,6 +17,7 @@ import { SEO } from "@/components/SEO";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
 import { UpdateNoticeBanner } from "@/components/UpdateNoticeBanner";
+import { CommunityBanner } from "@/components/CommunityBanner";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
@@ -508,6 +509,10 @@ const Index = () => {
 
               {/* Engine Notice Banner */}
               <EngineNoticeBanner />
+
+              {/* Community Banner */}
+              <CommunityBanner />
+
 
               {/* Hero Section */}
               <div className="text-center space-y-3 md:space-y-4 px-2">
