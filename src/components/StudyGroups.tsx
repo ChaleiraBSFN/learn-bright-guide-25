@@ -362,7 +362,7 @@ export const StudyGroups = () => {
           navigate('/auth');
         }}
       >
-        <Users className="h-4 w-4" />
+        <MessageCircle className="h-4 w-4" />
       </Button>
     );
   }
