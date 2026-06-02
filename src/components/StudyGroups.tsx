@@ -26,6 +26,7 @@ import {
 import {
   Users, Plus, Send, Loader2, ArrowLeft, Settings, UserPlus,
   Copy, Crown, Shield, Trash2, LogOut, Image as ImageIcon, History,
+  MessageCircle,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
