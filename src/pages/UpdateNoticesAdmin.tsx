@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { SEO } from '@/components/SEO';
-import { ArrowLeft, Megaphone, Loader2, Trash2, Send } from 'lucide-react';
+import { ArrowLeft, Megaphone, Loader2, Trash2, Send, Pencil, X } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface UpdateNotice {
@@ -48,6 +48,7 @@ const UpdateNoticesAdmin = () => {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [type, setType] = useState<string>('announcement');
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
@@ -96,6 +97,18 @@ const UpdateNoticesAdmin = () => {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: async (params: { id: string; title: string; message: string; type: string }) => {
+      const { id, ...updates } = params;
+      const { error } = await supabase.from('update_notices').update(updates).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['update-notices-admin'] });
+      qc.invalidateQueries({ queryKey: ['update-notices-active'] });
+    },
+  });
+
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from('update_notices').delete().eq('id', id);
@@ -107,18 +120,37 @@ const UpdateNoticesAdmin = () => {
     },
   });
 
-  const handleAdd = async () => {
+  const resetForm = () => {
+    setEditingId(null);
+    setTitle('');
+    setMessage('');
+    setType('announcement');
+  };
+
+  const startEdit = (notice: UpdateNotice) => {
+    setEditingId(notice.id);
+    setTitle(notice.title);
+    setMessage(notice.message);
+    setType(notice.type);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSubmit = async () => {
     if (!title.trim() || !message.trim()) {
       toast({ title: 'Erro', description: 'Preencha título e mensagem.', variant: 'destructive' });
       return;
     }
     try {
-      await addMutation.mutateAsync({ title: title.trim(), message: message.trim(), type });
-      setTitle('');
-      setMessage('');
-      toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
+      if (editingId) {
+        await updateMutation.mutateAsync({ id: editingId, title: title.trim(), message: message.trim(), type });
+        toast({ title: 'Aviso atualizado!' });
+      } else {
+        await addMutation.mutateAsync({ title: title.trim(), message: message.trim(), type });
+        toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
+      }
+      resetForm();
     } catch {
-      toast({ title: 'Erro', description: 'Falha ao criar aviso.', variant: 'destructive' });
+      toast({ title: 'Erro', description: 'Falha ao salvar aviso.', variant: 'destructive' });
     }
   };
 
@@ -133,6 +165,7 @@ const UpdateNoticesAdmin = () => {
   const handleDelete = async (id: string) => {
     try {
       await deleteMutation.mutateAsync(id);
+      if (editingId === id) resetForm();
       toast({ title: 'Aviso removido!' });
     } catch {
       toast({ title: 'Erro', description: 'Falha ao remover.', variant: 'destructive' });
@@ -165,7 +198,7 @@ const UpdateNoticesAdmin = () => {
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-lg">Criar Novo Aviso</CardTitle>
+            <CardTitle className="text-lg">{editingId ? 'Editar Aviso' : 'Criar Novo Aviso'}</CardTitle>
             <CardDescription>Avisos aparecem na tela inicial para todos os usuários</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -192,10 +225,17 @@ const UpdateNoticesAdmin = () => {
                 ))}
               </div>
             </div>
-            <Button onClick={handleAdd} disabled={addMutation.isPending} className="gap-2">
-              {addMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              Publicar Aviso
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleSubmit} disabled={addMutation.isPending || updateMutation.isPending} className="gap-2">
+                {(addMutation.isPending || updateMutation.isPending) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                {editingId ? 'Salvar Alterações' : 'Publicar Aviso'}
+              </Button>
+              {editingId && (
+                <Button variant="ghost" onClick={resetForm} className="gap-2">
+                  <X className="h-4 w-4" /> Cancelar
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
 
@@ -221,6 +261,14 @@ const UpdateNoticesAdmin = () => {
                     </p>
                   </div>
                   <div className="flex gap-1 shrink-0">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-xs h-7 gap-1"
+                      onClick={() => startEdit(notice)}
+                    >
+                      <Pencil className="h-3 w-3" /> Editar
+                    </Button>
                     <Button
                       size="sm"
                       variant={notice.active ? 'outline' : 'default'}

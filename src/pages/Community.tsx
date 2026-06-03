@@ -109,7 +109,8 @@ export default function Community() {
   useEffect(() => {
     const ch = supabase
       .channel('community-feed')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_posts' }, () => loadPosts())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_posts' }, () => loadPosts())
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'community_posts' }, () => loadPosts())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [loadPosts]);
@@ -202,9 +203,9 @@ export default function Community() {
             {t('community.empty')}
           </Card>
         ) : (
-          <AnimatePresence>
+          <div>
             {posts.map(post => (
-              <motion.div key={post.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div key={post.id} className="mb-4">
                 <PostCard
                   post={post}
                   meta={TYPE_META[post.type]}
@@ -218,9 +219,9 @@ export default function Community() {
                   onCommentAdded={() => setPosts(prev => prev.map(p => p.id === post.id ? { ...p, comment_count: p.comment_count + 1 } : p))}
                   onCommentRemoved={() => setPosts(prev => prev.map(p => p.id === post.id ? { ...p, comment_count: Math.max(0, p.comment_count - 1) } : p))}
                 />
-              </motion.div>
+              </div>
             ))}
-          </AnimatePresence>
+          </div>
         )}
       </main>
 
