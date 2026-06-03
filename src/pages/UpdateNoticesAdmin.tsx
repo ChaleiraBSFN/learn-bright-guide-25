@@ -263,6 +263,14 @@ const UpdateNoticesAdmin = () => {
                   <div className="flex gap-1 shrink-0">
                     <Button
                       size="sm"
+                      variant="outline"
+                      className="text-xs h-7 gap-1"
+                      onClick={() => startEdit(notice)}
+                    >
+                      <Pencil className="h-3 w-3" /> Editar
+                    </Button>
+                    <Button
+                      size="sm"
                       variant={notice.active ? 'outline' : 'default'}
                       className="text-xs h-7"
                       onClick={() => handleToggle(notice.id, notice.active)}
