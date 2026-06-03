@@ -48,6 +48,7 @@ const UpdateNoticesAdmin = () => {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [type, setType] = useState<string>('announcement');
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth');
