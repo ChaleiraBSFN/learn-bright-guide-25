@@ -311,6 +311,48 @@ export type Database = {
         }
         Relationships: []
       }
+      promo_banners: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          cta_label: string
+          description: string
+          icon: string
+          id: string
+          route: string
+          sort_order: number
+          title: string
+          variant: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          cta_label?: string
+          description: string
+          icon?: string
+          id?: string
+          route?: string
+          sort_order?: number
+          title: string
+          variant?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          cta_label?: string
+          description?: string
+          icon?: string
+          id?: string
+          route?: string
+          sort_order?: number
+          title?: string
+          variant?: string
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           created_at: string
