@@ -22,7 +22,7 @@ export const CommunityBanner = () => {
       <div className="absolute -left-4 -bottom-8 h-20 w-20 rounded-full bg-fuchsia-500/20 blur-2xl" aria-hidden />
       <div className="relative flex items-center gap-3">
         <div className="shrink-0 rounded-xl bg-violet-500/20 p-2.5 ring-2 ring-violet-500/30">
-          <HeartHandshake className="h-5 w-5 text-violet-600 dark:text-violet-300" />
+          <Users className="h-5 w-5 text-violet-600 dark:text-violet-300" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-display text-sm md:text-base font-bold text-violet-900 dark:text-violet-100">
