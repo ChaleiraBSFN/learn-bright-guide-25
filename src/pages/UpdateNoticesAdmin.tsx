@@ -198,7 +198,7 @@ const UpdateNoticesAdmin = () => {
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-lg">Criar Novo Aviso</CardTitle>
+            <CardTitle className="text-lg">{editingId ? 'Editar Aviso' : 'Criar Novo Aviso'}</CardTitle>
             <CardDescription>Avisos aparecem na tela inicial para todos os usuários</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -225,10 +225,17 @@ const UpdateNoticesAdmin = () => {
                 ))}
               </div>
             </div>
-            <Button onClick={handleAdd} disabled={addMutation.isPending} className="gap-2">
-              {addMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              Publicar Aviso
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleSubmit} disabled={addMutation.isPending || updateMutation.isPending} className="gap-2">
+                {(addMutation.isPending || updateMutation.isPending) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                {editingId ? 'Salvar Alterações' : 'Publicar Aviso'}
+              </Button>
+              {editingId && (
+                <Button variant="ghost" onClick={resetForm} className="gap-2">
+                  <X className="h-4 w-4" /> Cancelar
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
 
