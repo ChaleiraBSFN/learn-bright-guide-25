@@ -97,6 +97,18 @@ const UpdateNoticesAdmin = () => {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: async (params: { id: string; title: string; message: string; type: string }) => {
+      const { id, ...updates } = params;
+      const { error } = await supabase.from('update_notices').update(updates).eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['update-notices-admin'] });
+      qc.invalidateQueries({ queryKey: ['update-notices-active'] });
+    },
+  });
+
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from('update_notices').delete().eq('id', id);
@@ -108,18 +120,37 @@ const UpdateNoticesAdmin = () => {
     },
   });
 
-  const handleAdd = async () => {
+  const resetForm = () => {
+    setEditingId(null);
+    setTitle('');
+    setMessage('');
+    setType('announcement');
+  };
+
+  const startEdit = (notice: UpdateNotice) => {
+    setEditingId(notice.id);
+    setTitle(notice.title);
+    setMessage(notice.message);
+    setType(notice.type);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSubmit = async () => {
     if (!title.trim() || !message.trim()) {
       toast({ title: 'Erro', description: 'Preencha título e mensagem.', variant: 'destructive' });
       return;
     }
     try {
-      await addMutation.mutateAsync({ title: title.trim(), message: message.trim(), type });
-      setTitle('');
-      setMessage('');
-      toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
+      if (editingId) {
+        await updateMutation.mutateAsync({ id: editingId, title: title.trim(), message: message.trim(), type });
+        toast({ title: 'Aviso atualizado!' });
+      } else {
+        await addMutation.mutateAsync({ title: title.trim(), message: message.trim(), type });
+        toast({ title: 'Aviso criado!', description: 'O aviso aparecerá para todos os usuários.' });
+      }
+      resetForm();
     } catch {
-      toast({ title: 'Erro', description: 'Falha ao criar aviso.', variant: 'destructive' });
+      toast({ title: 'Erro', description: 'Falha ao salvar aviso.', variant: 'destructive' });
     }
   };
 
@@ -134,6 +165,7 @@ const UpdateNoticesAdmin = () => {
   const handleDelete = async (id: string) => {
     try {
       await deleteMutation.mutateAsync(id);
+      if (editingId === id) resetForm();
       toast({ title: 'Aviso removido!' });
     } catch {
       toast({ title: 'Erro', description: 'Falha ao remover.', variant: 'destructive' });
