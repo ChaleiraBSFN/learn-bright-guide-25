@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue } from "framer-motion";
-import { BookOpen, Brain, Dumbbell, ChevronRight, Sparkles, CheckCircle2, Cpu, Map, Trophy, Users, Coins } from "lucide-react";
+import { BookOpen, Brain, Dumbbell, ChevronRight, Sparkles, CheckCircle2, Cpu, Map, Trophy, Users, Coins, HeartHandshake } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -142,6 +142,21 @@ export function FeatureCarousel() {
         "Grupo da turma do 3º ano para revisar para o ENEM juntos.",
         "Chat em tempo real para tirar dúvidas com colegas durante o estudo.",
         "Compartilhe resumos e mapas mentais gerados pela IA com o grupo.",
+      ],
+    },
+    {
+      id: "community",
+      icon: HeartHandshake,
+      color: "text-violet-500",
+      bgGradient: "from-violet-500/10 via-fuchsia-500/5 to-transparent",
+      borderColor: "border-violet-500/30",
+      title: t("features.community"),
+      description: t("features.communityLong"),
+      detail: t("features.communityDetail"),
+      examples: [
+        t("features.communityExample1"),
+        t("features.communityExample2"),
+        t("features.communityExample3"),
       ],
     },
     {
