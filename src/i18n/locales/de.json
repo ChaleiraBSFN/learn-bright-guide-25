@@ -46,7 +46,13 @@
     "exercises": "Übungen",
     "exercisesPremium": "10+",
     "exercisesFree": "3",
-    "exercisesLong": "Üben Sie mit personalisierten Übungen von Ihrem Niveau bis zur Herausforderung. Erhalten Sie sofortige KI-Korrektur, detaillierte Erklärungen und verfolgen Sie Ihren Fortschritt Schritt für Schritt."
+    "exercisesLong": "Üben Sie mit personalisierten Übungen von Ihrem Niveau bis zur Herausforderung. Erhalten Sie sofortige KI-Korrektur, detaillierte Erklärungen und verfolgen Sie Ihren Fortschritt Schritt für Schritt.",
+    "community": "Community",
+    "communityLong": "Teile Aufgaben, Fragen und Lösungen mit Studierenden weltweit — und verdiene Buddies.",
+    "communityDetail": "Poste Aufgaben, Fotos und Fragen. Like, kommentiere und spende Buddies (Credits) an Leute, die dir helfen. Moderiert und 100% kostenlos.",
+    "communityExample1": "Poste das Foto einer schweren Aufgabe und erhalte Lösungen aus der Community.",
+    "communityExample2": "Spende Buddies an die Person, deren Lösung dich in der Prüfung gerettet hat.",
+    "communityExample3": "Filtere nach Aufgaben, Fragen, Lösungen oder Fotos."
   },
   "form": {
     "premiumMode": "Premium-Modus aktiv!",

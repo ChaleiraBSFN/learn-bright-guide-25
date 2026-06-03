@@ -46,7 +46,13 @@
     "exercises": "练习",
     "exercisesPremium": "10+",
     "exercisesFree": "3个",
-    "exercisesLong": "通过从您的水平到挑战难度的个性化练习进行练习。获得AI即时批改、详细解释，并一步一步跟踪您的进步。"
+    "exercisesLong": "通过从您的水平到挑战难度的个性化练习进行练习。获得AI即时批改、详细解释，并一步一步跟踪您的进步。",
+    "community": "社区",
+    "communityLong": "与全球学生分享练习题、疑问和解答，赚取 buddies。",
+    "communityDetail": "发布练习题、照片和疑问。点赞、评论并向帮助你的人捐赠 buddies（积分）。已审核，100% 免费。",
+    "communityExample1": "发布一道难题的照片，获得社区的解答。",
+    "communityExample2": "向救了你考试的解答作者捐赠 buddies。",
+    "communityExample3": "按练习、疑问、解答或照片筛选。"
   },
   "form": {
     "premiumMode": "高级模式已激活！",

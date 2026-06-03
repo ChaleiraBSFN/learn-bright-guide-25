@@ -17,7 +17,7 @@ import { SEO } from "@/components/SEO";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
 import { UpdateNoticeBanner } from "@/components/UpdateNoticeBanner";
-import { CommunityBanner } from "@/components/CommunityBanner";
+import { PromoBanners } from "@/components/PromoBanners";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
@@ -510,8 +510,8 @@ const Index = () => {
               {/* Engine Notice Banner */}
               <EngineNoticeBanner />
 
-              {/* Community Banner */}
-              <CommunityBanner />
+              {/* Promo Banners (admin-managed) */}
+              <PromoBanners />
 
 
               {/* Hero Section */}

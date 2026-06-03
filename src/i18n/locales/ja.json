@@ -46,7 +46,13 @@
     "exercises": "演習",
     "exercisesPremium": "10+",
     "exercisesFree": "3つ",
-    "exercisesLong": "あなたのレベルから挑戦まで、パーソナライズされた演習で練習しましょう。AIによる即座の添削、詳細な説明、そして段階的な進捗追跡を受け取れます。"
+    "exercisesLong": "あなたのレベルから挑戦まで、パーソナライズされた演習で練習しましょう。AIによる即座の添削、詳細な説明、そして段階的な進捗追跡を受け取れます。",
+    "community": "コミュニティ",
+    "communityLong": "世界中の学生と問題・質問・解答を共有してbuddyを獲得しよう。",
+    "communityDetail": "問題・写真・質問を投稿。いいね・コメント・buddy（クレジット）を寄付して助け合えます。モデレート済みで完全無料。",
+    "communityExample1": "難しい問題の写真を投稿してコミュニティから解答を受け取る。",
+    "communityExample2": "テストを救ってくれた解答の投稿者にbuddyを寄付。",
+    "communityExample3": "問題・質問・解答・写真でフィルタリング。"
   },
   "form": {
     "premiumMode": "プレミアムモード有効！",

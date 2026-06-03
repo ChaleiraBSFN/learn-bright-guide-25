@@ -46,7 +46,13 @@
     "exercises": "Exercices",
     "exercisesPremium": "10+ avec défis",
     "exercisesFree": "3 avec réponses",
-    "exercisesLong": "Pratiquez avec des exercices personnalisés de votre niveau jusqu'au défi. Recevez une correction instantanée par l'IA, des explications détaillées et suivez vos progrès étape par étape."
+    "exercisesLong": "Pratiquez avec des exercices personnalisés de votre niveau jusqu'au défi. Recevez une correction instantanée par l'IA, des explications détaillées et suivez vos progrès étape par étape.",
+    "community": "Communauté",
+    "communityLong": "Partagez exercices, doutes et solutions avec des étudiants du monde entier — et gagnez des buddies.",
+    "communityDetail": "Publiez des exercices, photos et questions. Likez, commentez et offrez des buddies (crédits) à ceux qui vous aident. Modéré et 100% gratuit.",
+    "communityExample1": "Publiez la photo d'un exercice difficile et recevez des solutions de la communauté.",
+    "communityExample2": "Offrez des buddies à l'auteur d'une solution qui vous a sauvé.",
+    "communityExample3": "Filtrez par exercices, questions, solutions ou photos pour trouver ce dont vous avez besoin."
   },
   "form": {
     "premiumMode": "Mode premium actif - Vous recevrez du contenu complet et détaillé !",
