@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { SEO } from '@/components/SEO';
-import { ArrowLeft, Megaphone, Loader2, Trash2, Send } from 'lucide-react';
+import { ArrowLeft, Megaphone, Loader2, Trash2, Send, Pencil, X } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface UpdateNotice {
