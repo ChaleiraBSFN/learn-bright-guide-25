@@ -122,7 +122,7 @@ export const FloatingActions = () => {
               aria-label={t('community.tooltip', 'Comunidade')}
               className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-violet-500/40 hover:bg-violet-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(270_70%_55%/0.6),0_4px_14px_-3px_hsl(270_70%_55%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2)]"
             >
-              <HeartHandshake className="h-4 w-4 text-violet-500" />
+              <Users className="h-4 w-4 text-violet-500" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left">{t('community.tooltip', 'Comunidade')}</TooltipContent>
