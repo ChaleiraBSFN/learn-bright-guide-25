@@ -47,7 +47,13 @@
     "exercises": "Exercises",
     "exercisesPremium": "10+ with challenges",
     "exercisesFree": "3 with answers",
-    "exercisesLong": "Practice with personalized exercises from your level up to challenge mode. Get instant AI correction, detailed explanations, and track your progress step by step."
+    "exercisesLong": "Practice with personalized exercises from your level up to challenge mode. Get instant AI correction, detailed explanations, and track your progress step by step.",
+    "community": "Community",
+    "communityLong": "Share exercises, doubts and solutions with students worldwide — and earn buddies.",
+    "communityDetail": "Post exercises, photos and doubts. Like, comment and donate buddies (credits) to help people who help you. Fully moderated and 100% free.",
+    "communityExample1": "Post a photo of a tough exercise and get solutions from the community.",
+    "communityExample2": "Donate buddies to the author of a solution that saved your test.",
+    "communityExample3": "Filter by exercises, doubts, solutions or photos to find what you need."
   },
   "form": {
     "premiumMode": "Premium mode active - You'll receive complete and detailed content!",

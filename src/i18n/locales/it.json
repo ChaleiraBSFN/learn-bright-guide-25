@@ -46,7 +46,13 @@
     "exercises": "Esercizi",
     "exercisesPremium": "10+",
     "exercisesFree": "3",
-    "exercisesLong": "Esercitati con esercizi personalizzati dal tuo livello fino alla sfida. Ricevi correzione istantanea dall'IA, spiegazioni dettagliate e segui i tuoi progressi passo dopo passo."
+    "exercisesLong": "Esercitati con esercizi personalizzati dal tuo livello fino alla sfida. Ricevi correzione istantanea dall'IA, spiegazioni dettagliate e segui i tuoi progressi passo dopo passo.",
+    "community": "Community",
+    "communityLong": "Condividi esercizi, dubbi e soluzioni con studenti di tutto il mondo — e guadagna buddies.",
+    "communityDetail": "Pubblica esercizi, foto e dubbi. Metti like, commenta e dona buddies (crediti) a chi ti aiuta. Moderato e 100% gratis.",
+    "communityExample1": "Pubblica la foto di un esercizio difficile e ricevi soluzioni dalla community.",
+    "communityExample2": "Dona buddies all'autore di una soluzione che ti ha salvato.",
+    "communityExample3": "Filtra per esercizi, dubbi, soluzioni o foto."
   },
   "form": {
     "premiumMode": "Modalità premium attiva!",
