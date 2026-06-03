@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { HeartHandshake, ArrowRight } from 'lucide-react';
+import { Users, ArrowRight } from 'lucide-react';
 
 export const CommunityBanner = () => {
   const { t } = useTranslation();
