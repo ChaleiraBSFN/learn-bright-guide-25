@@ -192,6 +192,36 @@ const ChatBuddy = () => {
       if (raf) cancelAnimationFrame(raf);
       flush();
       if (!acc.trim()) throw new Error(t("chatBuddy.error", "Falha ao responder."));
+
+      // Save / update the conversation in the study history (logged users)
+      if (user) {
+        try {
+          const finalMessages: ChatMessage[] = [...snapshot, userMsg, { role: "model", text: acc }];
+          // strip heavy base64 from saved history (keep small previews only)
+          const slim = finalMessages.map(m => ({
+            role: m.role,
+            text: m.text,
+            images: m.images?.map(i => ({ mimeType: i.mimeType, preview: i.preview?.slice(0, 200000) })),
+          }));
+          const topic = (snapshot[0]?.text || userMsg.text || "Chat").slice(0, 120);
+          const payload = { messages: slim };
+          if (historyId) {
+            await supabase.from("user_history").update({ content: payload, topic }).eq("id", historyId);
+          } else {
+            const { data, error } = await supabase
+              .from("user_history")
+              .insert({ user_id: user.id, type: "chat", topic, level: null, content: payload })
+              .select("id")
+              .single();
+            if (!error && data) {
+              setHistoryId(data.id);
+              try { localStorage.setItem(HISTORY_ID_KEY, data.id); } catch {}
+            }
+          }
+        } catch (err) {
+          console.error("Failed to save chat history", err);
+        }
+      }
     } catch (e: any) {
       toast({ title: t("chatBuddy.errorTitle", "Erro"), description: e.message, variant: "destructive" });
       setMessages(snapshot);
@@ -203,7 +233,9 @@ const ChatBuddy = () => {
 
   const clearChat = () => {
     setMessages([]);
+    setHistoryId(null);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    try { localStorage.removeItem(HISTORY_ID_KEY); } catch {}
   };
 
   const onKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
