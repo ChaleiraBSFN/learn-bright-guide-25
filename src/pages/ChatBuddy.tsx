@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
-import { ArrowLeft, Send, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Sparkles, Trash2, ImagePlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SEO } from "@/components/SEO";
@@ -10,12 +10,51 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import learnBuddyLogo from "@/assets/learn-buddy-logo.jpeg";
 
+interface ChatImage {
+  mimeType: string;
+  data: string; // base64 (no data: prefix)
+  preview: string; // data url for UI
+}
+
 interface ChatMessage {
   role: "user" | "model";
   text: string;
+  images?: { mimeType: string; data: string; preview: string }[];
 }
 
 const STORAGE_KEY = "lb_chat_buddy_messages";
+const MAX_IMAGES = 3;
+const MAX_DIM = 1280;
+const JPEG_QUALITY = 0.82;
+
+async function fileToCompressedBase64(file: File): Promise<ChatImage> {
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result as string);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const i = new Image();
+    i.onload = () => resolve(i);
+    i.onerror = reject;
+    i.src = dataUrl;
+  });
+  let { width, height } = img;
+  if (width > MAX_DIM || height > MAX_DIM) {
+    const scale = Math.min(MAX_DIM / width, MAX_DIM / height);
+    width = Math.round(width * scale);
+    height = Math.round(height * scale);
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d")!;
+  ctx.drawImage(img, 0, 0, width, height);
+  const out = canvas.toDataURL("image/jpeg", JPEG_QUALITY);
+  const base64 = out.split(",")[1];
+  return { mimeType: "image/jpeg", data: base64, preview: out };
+}
 
 const ChatBuddy = () => {
   const { t, i18n } = useTranslation();
@@ -29,30 +68,67 @@ const ChatBuddy = () => {
     return [];
   });
   const [input, setInput] = useState("");
+  const [pendingImages, setPendingImages] = useState<ChatImage[]>([]);
   const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30))); } catch {}
+    try {
+      // strip image data from storage to keep it small; keep previews only of last 6
+      const slim = messages.slice(-30).map(m => ({ ...m, images: m.images?.slice(0, 3) }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
+    } catch {}
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
+  const onPickFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const slots = MAX_IMAGES - pendingImages.length;
+    const arr = Array.from(files).slice(0, slots);
+    const added: ChatImage[] = [];
+    for (const f of arr) {
+      if (!f.type.startsWith("image/")) continue;
+      if (f.size > 15 * 1024 * 1024) {
+        toast({ title: t("chatBuddy.imgTooBigTitle", "Imagem muito grande"), description: t("chatBuddy.imgTooBig", "Máx 15MB por imagem."), variant: "destructive" });
+        continue;
+      }
+      try {
+        added.push(await fileToCompressedBase64(f));
+      } catch {
+        toast({ title: "Erro", description: t("chatBuddy.imgFail", "Não foi possível ler a imagem."), variant: "destructive" });
+      }
+    }
+    if (added.length) setPendingImages(p => [...p, ...added]);
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
   const send = async () => {
     const text = input.trim();
-    if (!text || loading) return;
-    const next: ChatMessage[] = [...messages, { role: "user", text }];
+    if ((!text && pendingImages.length === 0) || loading) return;
+    const userMsg: ChatMessage = {
+      role: "user",
+      text,
+      images: pendingImages.map(i => ({ mimeType: i.mimeType, data: i.data, preview: i.preview })),
+    };
+    const next: ChatMessage[] = [...messages, userMsg];
     setMessages(next);
     setInput("");
+    setPendingImages([]);
     setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (session?.access_token) headers["Authorization"] = `Bearer ${session.access_token}`;
 
-      const recent = next.slice(-20);
+      const recent = next.slice(-12).map(m => ({
+        role: m.role,
+        text: m.text || "",
+        images: m.images?.map(i => ({ mimeType: i.mimeType, data: i.data })),
+      }));
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-buddy`, {
         method: "POST",
         headers,
@@ -80,6 +156,16 @@ const ChatBuddy = () => {
 
   const onKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+  };
+
+  const onPaste = (e: React.ClipboardEvent) => {
+    const files = Array.from(e.clipboardData.files).filter(f => f.type.startsWith("image/"));
+    if (files.length > 0) {
+      e.preventDefault();
+      const dt = new DataTransfer();
+      files.forEach(f => dt.items.add(f));
+      onPickFiles(dt.files);
+    }
   };
 
   return (
@@ -113,7 +199,7 @@ const ChatBuddy = () => {
               </div>
               <div>
                 <h2 className="font-display text-xl sm:text-2xl font-bold">{t("chatBuddy.heroTitle", "Olá! Em que posso ajudar?")}</h2>
-                <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">{t("chatBuddy.heroDesc", "Pergunte sobre matérias, peça exercícios, ajuda com código, roteiros de estudo, ou qualquer dúvida.")}</p>
+                <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">{t("chatBuddy.heroDesc", "Pergunte sobre matérias, peça exercícios, ajuda com código, roteiros de estudo, ou envie uma foto de um exercício.")}</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-xl mx-auto pt-2">
                 {[
@@ -140,12 +226,19 @@ const ChatBuddy = () => {
                   ? "bg-primary text-primary-foreground rounded-br-md"
                   : "bg-card border-2 border-foreground/10 rounded-bl-md"
               }`}>
+                {m.images && m.images.length > 0 && (
+                  <div className={`flex flex-wrap gap-1.5 ${m.text ? "mb-2" : ""}`}>
+                    {m.images.map((img, idx) => (
+                      <img key={idx} src={img.preview} alt="" className="max-h-48 rounded-lg border border-foreground/15 object-cover" />
+                    ))}
+                  </div>
+                )}
                 {m.role === "model" ? (
                   <div className="prose prose-sm dark:prose-invert max-w-none prose-pre:bg-muted prose-pre:text-foreground prose-pre:rounded-lg prose-pre:text-xs prose-code:text-xs prose-headings:font-display prose-headings:mt-3 prose-headings:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5">
                     <ReactMarkdown>{m.text}</ReactMarkdown>
                   </div>
                 ) : (
-                  <p className="whitespace-pre-wrap break-words">{m.text}</p>
+                  m.text && <p className="whitespace-pre-wrap break-words">{m.text}</p>
                 )}
               </div>
             </div>
@@ -167,17 +260,55 @@ const ChatBuddy = () => {
 
       <footer className="sticky bottom-0 border-t-2 border-foreground/15 bg-background/90 backdrop-blur-xl">
         <div className="max-w-3xl mx-auto px-3 sm:px-4 py-3">
+          {pendingImages.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {pendingImages.map((img, idx) => (
+                <div key={idx} className="relative">
+                  <img src={img.preview} alt="" className="h-16 w-16 object-cover rounded-lg border-2 border-foreground/15" />
+                  <button
+                    type="button"
+                    onClick={() => setPendingImages(p => p.filter((_, i) => i !== idx))}
+                    className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-md"
+                    aria-label="Remover"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="flex items-end gap-2 rounded-2xl border-2 border-foreground/15 bg-background p-2 shadow-md focus-within:border-primary/50 transition-colors">
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => onPickFiles(e.target.files)}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => fileRef.current?.click()}
+              disabled={loading || pendingImages.length >= MAX_IMAGES}
+              className="h-10 w-10 rounded-xl shrink-0 text-muted-foreground hover:text-primary"
+              aria-label={t("chatBuddy.addImage", "Anexar imagem")}
+              title={t("chatBuddy.addImage", "Anexar imagem")}
+            >
+              <ImagePlus className="h-5 w-5" />
+            </Button>
             <Textarea
               ref={inputRef}
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={onKey}
+              onPaste={onPaste}
               placeholder={t("chatBuddy.placeholder", "Pergunte qualquer coisa…")}
               className="flex-1 min-h-[44px] max-h-40 resize-none border-0 bg-transparent focus-visible:ring-0 text-sm px-2 py-2"
               disabled={loading}
             />
-            <Button onClick={send} disabled={loading || !input.trim()} size="icon" className="h-10 w-10 rounded-xl shrink-0">
+            <Button onClick={send} disabled={loading || (!input.trim() && pendingImages.length === 0)} size="icon" className="h-10 w-10 rounded-xl shrink-0">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
