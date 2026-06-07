@@ -37,6 +37,13 @@ interface PromoBanner {
   active: boolean;
   sort_order: number;
   created_at: string;
+  start_at: string | null;
+  end_at: string | null;
+  daily_start_minutes: number | null;
+  daily_end_minutes: number | null;
+  days_of_week: number[] | null;
+  max_per_day: number | null;
+  max_per_week: number | null;
 }
 
 const typeColors: Record<string, string> = {
@@ -212,10 +219,42 @@ const NoticesTab = ({ userId }: { userId?: string }) => {
   );
 };
 
+const DOW = [
+  { v: 0, l: 'Dom' }, { v: 1, l: 'Seg' }, { v: 2, l: 'Ter' }, { v: 3, l: 'Qua' },
+  { v: 4, l: 'Qui' }, { v: 5, l: 'Sex' }, { v: 6, l: 'Sáb' },
+];
+
+const minutesToHHMM = (m: number | null) => {
+  if (m == null) return '';
+  const h = Math.floor(m / 60).toString().padStart(2, '0');
+  const mm = (m % 60).toString().padStart(2, '0');
+  return `${h}:${mm}`;
+};
+const hhmmToMinutes = (s: string): number | null => {
+  if (!s) return null;
+  const [h, m] = s.split(':').map(Number);
+  if (Number.isNaN(h)) return null;
+  return h * 60 + (m || 0);
+};
+const isoToLocalInput = (iso: string | null) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+const localInputToIso = (s: string) => (s ? new Date(s).toISOString() : null);
+
 const PromoBannersTab = ({ userId }: { userId?: string }) => {
   const { toast } = useToast();
   const qc = useQueryClient();
-  const empty = { title: '', description: '', cta_label: 'Explorar', route: '/community', icon: 'users', variant: 'violet', sort_order: 0 };
+  const empty = {
+    title: '', description: '', cta_label: 'Explorar', route: '/community',
+    icon: 'users', variant: 'violet', sort_order: 0,
+    start_at: null as string | null, end_at: null as string | null,
+    daily_start_minutes: null as number | null, daily_end_minutes: null as number | null,
+    days_of_week: null as number[] | null,
+    max_per_day: null as number | null, max_per_week: null as number | null,
+  };
   const [form, setForm] = useState(empty);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -270,7 +309,14 @@ const PromoBannersTab = ({ userId }: { userId?: string }) => {
 
   const startEdit = (b: PromoBanner) => {
     setEditingId(b.id);
-    setForm({ title: b.title, description: b.description, cta_label: b.cta_label, route: b.route, icon: b.icon, variant: b.variant, sort_order: b.sort_order });
+    setForm({
+      title: b.title, description: b.description, cta_label: b.cta_label, route: b.route,
+      icon: b.icon, variant: b.variant, sort_order: b.sort_order,
+      start_at: b.start_at, end_at: b.end_at,
+      daily_start_minutes: b.daily_start_minutes, daily_end_minutes: b.daily_end_minutes,
+      days_of_week: b.days_of_week,
+      max_per_day: b.max_per_day, max_per_week: b.max_per_week,
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -345,6 +391,68 @@ const PromoBannersTab = ({ userId }: { userId?: string }) => {
             </div>
           </div>
           <div><Label>Ordem (menor aparece primeiro)</Label><Input type="number" value={form.sort_order} onChange={e => setForm(f => ({ ...f, sort_order: parseInt(e.target.value) || 0 }))} className="mt-1 w-32" /></div>
+
+          <div className="rounded-lg border-2 border-dashed border-muted p-4 space-y-4">
+            <div>
+              <h4 className="font-semibold text-sm">📅 Programação (opcional)</h4>
+              <p className="text-xs text-muted-foreground">Deixe em branco para exibir sempre. Combine os filtros como quiser.</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <Label>Aparece a partir de</Label>
+                <Input type="datetime-local" value={isoToLocalInput(form.start_at)} onChange={e => setForm(f => ({ ...f, start_at: localInputToIso(e.target.value) }))} className="mt-1" />
+              </div>
+              <div>
+                <Label>Some em</Label>
+                <Input type="datetime-local" value={isoToLocalInput(form.end_at)} onChange={e => setForm(f => ({ ...f, end_at: localInputToIso(e.target.value) }))} className="mt-1" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <Label>Horário diário — início</Label>
+                <Input type="time" value={minutesToHHMM(form.daily_start_minutes)} onChange={e => setForm(f => ({ ...f, daily_start_minutes: hhmmToMinutes(e.target.value) }))} className="mt-1" />
+              </div>
+              <div>
+                <Label>Horário diário — fim</Label>
+                <Input type="time" value={minutesToHHMM(form.daily_end_minutes)} onChange={e => setForm(f => ({ ...f, daily_end_minutes: hhmmToMinutes(e.target.value) }))} className="mt-1" />
+              </div>
+            </div>
+
+            <div>
+              <Label>Dias da semana (em branco = todos)</Label>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {DOW.map(d => {
+                  const selected = form.days_of_week?.includes(d.v);
+                  return (
+                    <button
+                      key={d.v}
+                      type="button"
+                      onClick={() => setForm(f => {
+                        const cur = new Set(f.days_of_week || []);
+                        if (cur.has(d.v)) cur.delete(d.v); else cur.add(d.v);
+                        const arr = Array.from(cur).sort();
+                        return { ...f, days_of_week: arr.length ? arr : null };
+                      })}
+                      className={`rounded-full border px-3 py-1 text-xs ${selected ? 'bg-primary text-primary-foreground border-primary' : 'border-muted'}`}
+                    >{d.l}</button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <Label>Máx. vezes por dia (por usuário)</Label>
+                <Input type="number" min={1} placeholder="ilimitado" value={form.max_per_day ?? ''} onChange={e => setForm(f => ({ ...f, max_per_day: e.target.value ? parseInt(e.target.value) : null }))} className="mt-1" />
+              </div>
+              <div>
+                <Label>Máx. vezes por semana (por usuário)</Label>
+                <Input type="number" min={1} placeholder="ilimitado" value={form.max_per_week ?? ''} onChange={e => setForm(f => ({ ...f, max_per_week: e.target.value ? parseInt(e.target.value) : null }))} className="mt-1" />
+              </div>
+            </div>
+          </div>
           <div className="flex gap-2">
             <Button onClick={submit} disabled={addMutation.isPending || updateMutation.isPending} className="gap-2">
               {(addMutation.isPending || updateMutation.isPending) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
