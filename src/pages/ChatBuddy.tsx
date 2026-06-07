@@ -23,6 +23,7 @@ interface ChatMessage {
 }
 
 const STORAGE_KEY = "lb_chat_buddy_messages";
+const HISTORY_ID_KEY = "lb_chat_buddy_history_id";
 const MAX_IMAGES = 3;
 const MAX_DIM = 1280;
 const JPEG_QUALITY = 0.82;
