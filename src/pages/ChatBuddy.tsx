@@ -58,6 +58,71 @@ async function fileToCompressedBase64(file: File): Promise<ChatImage> {
   return { mimeType: "image/jpeg", data: base64, preview: out };
 }
 
+function extractText(node: any): string {
+  if (node == null) return "";
+  if (typeof node === "string") return node;
+  if (Array.isArray(node)) return node.map(extractText).join("");
+  if (typeof node === "object" && node.props) return extractText(node.props.children);
+  return "";
+}
+
+const CodeBlock = ({ children }: { children?: React.ReactNode }) => {
+  const [copied, setCopied] = useState(false);
+  const text = extractText(children);
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
+  return (
+    <div className="relative group my-3 not-prose">
+      <button
+        type="button"
+        onClick={onCopy}
+        className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 rounded-md border border-foreground/15 bg-background/90 backdrop-blur px-2 py-1 text-[10px] font-medium text-foreground/70 hover:text-foreground hover:bg-background shadow-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+        aria-label="Copiar"
+      >
+        {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
+        {copied ? "Copiado" : "Copiar"}
+      </button>
+      <pre className="bg-muted text-foreground rounded-lg text-xs p-3 pr-16 border border-foreground/10 overflow-x-auto max-w-full">
+        {children}
+      </pre>
+    </div>
+  );
+};
+
+const CopyableBlock = ({ text, children }: { text: string; children: React.ReactNode }) => {
+  const [copied, setCopied] = useState(false);
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
+  return (
+    <div className="relative group my-3 not-prose">
+      <button
+        type="button"
+        onClick={onCopy}
+        className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 rounded-md border border-foreground/15 bg-background/90 backdrop-blur px-2 py-1 text-[10px] font-medium text-foreground/70 hover:text-foreground hover:bg-background shadow-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+        aria-label="Copiar"
+      >
+        {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
+        {copied ? "Copiado" : "Copiar"}
+      </button>
+      <div className="overflow-x-auto max-w-full rounded-lg border border-foreground/10 bg-muted/40 p-2">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+
+
 const ChatBuddy = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
