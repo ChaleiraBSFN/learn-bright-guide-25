@@ -219,10 +219,42 @@ const NoticesTab = ({ userId }: { userId?: string }) => {
   );
 };
 
+const DOW = [
+  { v: 0, l: 'Dom' }, { v: 1, l: 'Seg' }, { v: 2, l: 'Ter' }, { v: 3, l: 'Qua' },
+  { v: 4, l: 'Qui' }, { v: 5, l: 'Sex' }, { v: 6, l: 'Sáb' },
+];
+
+const minutesToHHMM = (m: number | null) => {
+  if (m == null) return '';
+  const h = Math.floor(m / 60).toString().padStart(2, '0');
+  const mm = (m % 60).toString().padStart(2, '0');
+  return `${h}:${mm}`;
+};
+const hhmmToMinutes = (s: string): number | null => {
+  if (!s) return null;
+  const [h, m] = s.split(':').map(Number);
+  if (Number.isNaN(h)) return null;
+  return h * 60 + (m || 0);
+};
+const isoToLocalInput = (iso: string | null) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+const localInputToIso = (s: string) => (s ? new Date(s).toISOString() : null);
+
 const PromoBannersTab = ({ userId }: { userId?: string }) => {
   const { toast } = useToast();
   const qc = useQueryClient();
-  const empty = { title: '', description: '', cta_label: 'Explorar', route: '/community', icon: 'users', variant: 'violet', sort_order: 0 };
+  const empty = {
+    title: '', description: '', cta_label: 'Explorar', route: '/community',
+    icon: 'users', variant: 'violet', sort_order: 0,
+    start_at: null as string | null, end_at: null as string | null,
+    daily_start_minutes: null as number | null, daily_end_minutes: null as number | null,
+    days_of_week: null as number[] | null,
+    max_per_day: null as number | null, max_per_week: null as number | null,
+  };
   const [form, setForm] = useState(empty);
   const [editingId, setEditingId] = useState<string | null>(null);
 
