@@ -151,7 +151,7 @@ export const PromoBanners = () => {
 
   return (
     <div className="space-y-2">
-      {banners.map((b) => {
+      {visible.map((b) => {
         const Icon = iconMap[b.icon] || Users;
         const s = variantStyles[b.variant] || variantStyles.violet;
         return (
