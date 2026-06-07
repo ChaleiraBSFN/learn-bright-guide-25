@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
-import { ArrowLeft, Send, Loader2, Sparkles, Trash2, ImagePlus, X } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Sparkles, Trash2, ImagePlus, X, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SEO } from "@/components/SEO";
