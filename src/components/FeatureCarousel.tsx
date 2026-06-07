@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useMotionValue } from "framer-motion";
-import { BookOpen, Brain, Dumbbell, ChevronRight, Sparkles, CheckCircle2, Cpu, Map, Trophy, Users, Coins, HeartHandshake } from "lucide-react";
+import { BookOpen, Brain, Dumbbell, ChevronRight, Sparkles, CheckCircle2, Cpu, Map, Trophy, Users, Coins, HeartHandshake, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -157,6 +157,21 @@ export function FeatureCarousel() {
         t("features.communityExample1"),
         t("features.communityExample2"),
         t("features.communityExample3"),
+      ],
+    },
+    {
+      id: "chatBuddy",
+      icon: MessageSquare,
+      color: "text-rose-500",
+      bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
+      borderColor: "border-rose-500/30",
+      title: t("features.chatBuddy"),
+      description: t("features.chatBuddyLong"),
+      detail: t("features.chatBuddyDetail"),
+      examples: [
+        t("features.chatBuddyExample1"),
+        t("features.chatBuddyExample2"),
+        t("features.chatBuddyExample3"),
       ],
     },
     {

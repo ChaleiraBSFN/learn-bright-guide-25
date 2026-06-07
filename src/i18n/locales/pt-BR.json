@@ -53,7 +53,13 @@
     "communityDetail": "Publique exercícios, fotos e dúvidas. Curta, comente e doe buddies (créditos) para ajudar quem está te ajudando. Tudo moderado e 100% grátis.",
     "communityExample1": "Publique uma foto de um exercício difícil e receba soluções da comunidade.",
     "communityExample2": "Doe buddies para o autor de uma solução que te salvou na prova.",
-    "communityExample3": "Filtre por exercícios, dúvidas, soluções ou fotos para achar o que precisa."
+    "communityExample3": "Filtre por exercícios, dúvidas, soluções ou fotos para achar o que precisa.",
+    "chatBuddy": "Chat com Learn Buddy",
+    "chatBuddyLong": "Converse com a IA do Learn Buddy para tirar dúvidas, resolver exercícios, receber ajuda com códigos e muito mais.",
+    "chatBuddyDetail": "Seu tutor virtual disponível 24h. Tire dúvidas de qualquer matéria, peça explicações passo a passo, ajuda com programação, roteiros de estudo e materiais personalizados. Tudo em tempo real e 100% grátis.",
+    "chatBuddyExample1": "Envie uma foto de um exercício de Matemática e receba a resolução comentada.",
+    "chatBuddyExample2": "Peça ajuda para debugar um código em Python ou qualquer linguagem.",
+    "chatBuddyExample3": "Peça um roteiro de estudos personalizado para qualquer prova ou concurso."
   },
   "form": {
     "premiumMode": "Modo Premium ativado - Você receberá conteúdo completo e detalhado!",

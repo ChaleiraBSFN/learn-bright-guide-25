@@ -52,7 +52,13 @@
     "communityDetail": "Pubblica esercizi, foto e dubbi. Metti like, commenta e dona buddies (crediti) a chi ti aiuta. Moderato e 100% gratis.",
     "communityExample1": "Pubblica la foto di un esercizio difficile e ricevi soluzioni dalla community.",
     "communityExample2": "Dona buddies all'autore di una soluzione che ti ha salvato.",
-    "communityExample3": "Filtra per esercizi, dubbi, soluzioni o foto."
+    "communityExample3": "Filtra per esercizi, dubbi, soluzioni o foto.",
+    "chatBuddy": "Chat con Learn Buddy",
+    "chatBuddyLong": "Chatta con l'IA di Learn Buddy per fare domande, risolvere esercizi, ricevere aiuto con il codice e altro.",
+    "chatBuddyDetail": "Il tuo tutor virtuale disponibile 24h. Fai domande su qualsiasi materia, chiedi spiegazioni passo dopo passo, aiuto con la programmazione, guide di studio e materiali personalizzati. Tutto in tempo reale e 100% gratuito.",
+    "chatBuddyExample1": "Invia la foto di un esercizio di Matematica e ricevi la soluzione commentata.",
+    "chatBuddyExample2": "Chiedi aiuto per debuggare codice in Python o qualsiasi linguaggio.",
+    "chatBuddyExample3": "Richiedi una guida di studio personalizzata per qualsiasi esame."
   },
   "form": {
     "premiumMode": "Modalità premium attiva!",

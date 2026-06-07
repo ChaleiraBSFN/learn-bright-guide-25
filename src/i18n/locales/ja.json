@@ -52,7 +52,13 @@
     "communityDetail": "問題・写真・質問を投稿。いいね・コメント・buddy（クレジット）を寄付して助け合えます。モデレート済みで完全無料。",
     "communityExample1": "難しい問題の写真を投稿してコミュニティから解答を受け取る。",
     "communityExample2": "テストを救ってくれた解答の投稿者にbuddyを寄付。",
-    "communityExample3": "問題・質問・解答・写真でフィルタリング。"
+    "communityExample3": "問題・質問・解答・写真でフィルタリング。",
+    "chatBuddy": "Learn Buddyチャット",
+    "chatBuddyLong": "Learn BuddyのAIとチャットして、質問したり、演習を解いたり、コーディングの助けを得たりできます。",
+    "chatBuddyDetail": "24時間対応のバーチャルチューター。どの科目でも質問、ステップバイステップの説明、プログラミングの助け、学習ガイドやパーソナライズされた教材を求められます。すべてリアルタイムで完全無料。",
+    "chatBuddyExample1": "数学の問題の写真を送って、解説付きの解答を受け取る。",
+    "chatBuddyExample2": "Pythonや他の言語のコードデバッグの助けを求める。",
+    "chatBuddyExample3": "どの試験に対してもパーソナライズされた学習ガイドをリクエスト。"
   },
   "form": {
     "premiumMode": "プレミアムモード有効！",
