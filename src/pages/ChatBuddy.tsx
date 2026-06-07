@@ -262,23 +262,40 @@ const ChatBuddy = () => {
       if (user) {
         try {
           const finalMessages: ChatMessage[] = [...snapshot, userMsg, { role: "model", text: acc }];
-          // strip heavy base64 from saved history (keep small previews only)
+          // strip ALL base64 image data from saved history to keep payload small
           const slim = finalMessages.map(m => ({
             role: m.role,
             text: m.text,
-            images: m.images?.map(i => ({ mimeType: i.mimeType, preview: i.preview?.slice(0, 200000) })),
+            images: m.images && m.images.length > 0
+              ? m.images.map(i => ({ mimeType: i.mimeType, placeholder: true }))
+              : undefined,
           }));
-          const topic = (snapshot[0]?.text || userMsg.text || "Chat").slice(0, 120);
+          const firstUserText = finalMessages.find(mm => mm.role === "user" && mm.text)?.text;
+          const topic = (firstUserText || userMsg.text || "Chat").slice(0, 120);
           const payload = { messages: slim };
+
+          let savedId: string | null = null;
           if (historyId) {
-            await supabase.from("user_history").update({ content: payload, topic }).eq("id", historyId);
-          } else {
+            const { data, error } = await supabase
+              .from("user_history")
+              .update({ content: payload, topic })
+              .eq("id", historyId)
+              .eq("user_id", user.id)
+              .select("id")
+              .maybeSingle();
+            if (error) console.error("chat history update error", error);
+            if (data?.id) savedId = data.id;
+          }
+          if (!savedId) {
             const { data, error } = await supabase
               .from("user_history")
               .insert({ user_id: user.id, type: "chat", topic, level: null, content: payload })
               .select("id")
               .single();
-            if (!error && data) {
+            if (error) {
+              console.error("chat history insert error", error);
+            } else if (data) {
+              savedId = data.id;
               setHistoryId(data.id);
               try { localStorage.setItem(HISTORY_ID_KEY, data.id); } catch {}
             }
