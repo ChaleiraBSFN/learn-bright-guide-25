@@ -303,7 +303,8 @@
     "deleteDescription": "¿Estás seguro de que quieres eliminar este elemento del historial?",
     "cancel": "Cancelar",
     "confirm": "Eliminar",
-    "saved": "¡Guardado en el historial!"
+    "saved": "¡Guardado en el historial!",
+    "chat": "Chat Buddy"
   },
   "exercises": {
     "topic": "Tema de los Ejercicios",

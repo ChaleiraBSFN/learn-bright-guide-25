@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { History, BookOpen, PenTool, Trash2, LogIn, Eye } from "lucide-react";
+import { History, BookOpen, PenTool, MessageCircle, Trash2, LogIn, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +22,7 @@ import {
 
 interface HistoryEntry {
   id: string;
-  type: "study" | "exercise";
+  type: "study" | "exercise" | "chat";
   topic: string;
   level: string | null;
   content: any;
@@ -37,6 +38,7 @@ export const HistoryTab = ({ onViewStudy, onViewExercise }: HistoryTabProps) => 
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -68,6 +70,13 @@ export const HistoryTab = ({ onViewStudy, onViewExercise }: HistoryTabProps) => 
   const handleView = (entry: HistoryEntry) => {
     if (entry.type === "study") {
       onViewStudy(entry.content, entry.topic);
+    } else if (entry.type === "chat") {
+      navigate("/chat-buddy", {
+        state: {
+          messages: entry.content?.messages || [],
+          historyId: entry.id,
+        },
+      });
     } else {
       onViewExercise(entry.content);
     }
@@ -113,6 +122,8 @@ export const HistoryTab = ({ onViewStudy, onViewExercise }: HistoryTabProps) => 
                 <div className="shrink-0">
                   {entry.type === "study" ? (
                     <BookOpen className="h-5 w-5 text-primary" />
+                  ) : entry.type === "chat" ? (
+                    <MessageCircle className="h-5 w-5 text-accent" />
                   ) : (
                     <PenTool className="h-5 w-5 text-secondary" />
                   )}
@@ -120,8 +131,12 @@ export const HistoryTab = ({ onViewStudy, onViewExercise }: HistoryTabProps) => 
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-foreground text-sm truncate">{entry.topic}</p>
                   <p className="text-xs text-muted-foreground">
-                    {entry.type === "study" ? t("tabs.study") : t("tabs.exercises")} •{" "}
-                    {format(new Date(entry.created_at), "dd/MM/yyyy HH:mm")}
+                    {entry.type === "study"
+                      ? t("tabs.study")
+                      : entry.type === "chat"
+                      ? t("history.chat", "Chat Buddy")
+                      : t("tabs.exercises")}{" "}
+                    • {format(new Date(entry.created_at), "dd/MM/yyyy HH:mm")}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {entry.level && (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Send, Loader2, Sparkles, Trash2, ImagePlus, X } from "lucide-react";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SEO } from "@/components/SEO";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import learnBuddyLogo from "@/assets/learn-buddy-logo.jpeg";
 
@@ -23,6 +24,7 @@ interface ChatMessage {
 }
 
 const STORAGE_KEY = "lb_chat_buddy_messages";
+const HISTORY_ID_KEY = "lb_chat_buddy_history_id";
 const MAX_IMAGES = 3;
 const MAX_DIM = 1280;
 const JPEG_QUALITY = 0.82;
@@ -59,13 +61,21 @@ async function fileToCompressedBase64(file: File): Promise<ChatImage> {
 const ChatBuddy = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
   const { toast } = useToast();
+  const initial = (location.state as any) || null;
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (initial?.messages) return initial.messages as ChatMessage[];
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) return JSON.parse(raw);
     } catch {}
     return [];
+  });
+  const [historyId, setHistoryId] = useState<string | null>(() => {
+    if (initial?.historyId) return initial.historyId as string;
+    try { return localStorage.getItem(HISTORY_ID_KEY); } catch { return null; }
   });
   const [input, setInput] = useState("");
   const [pendingImages, setPendingImages] = useState<ChatImage[]>([]);
@@ -73,6 +83,19 @@ const ChatBuddy = () => {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // If we navigated in with state, persist it as the current session
+  useEffect(() => {
+    if (initial?.messages) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(initial.messages)); } catch {}
+    }
+    if (initial?.historyId) {
+      try { localStorage.setItem(HISTORY_ID_KEY, initial.historyId); } catch {}
+    }
+    // clear nav state so refresh doesn't replay it
+    if (initial) navigate(location.pathname, { replace: true, state: null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     try {
@@ -169,6 +192,36 @@ const ChatBuddy = () => {
       if (raf) cancelAnimationFrame(raf);
       flush();
       if (!acc.trim()) throw new Error(t("chatBuddy.error", "Falha ao responder."));
+
+      // Save / update the conversation in the study history (logged users)
+      if (user) {
+        try {
+          const finalMessages: ChatMessage[] = [...snapshot, userMsg, { role: "model", text: acc }];
+          // strip heavy base64 from saved history (keep small previews only)
+          const slim = finalMessages.map(m => ({
+            role: m.role,
+            text: m.text,
+            images: m.images?.map(i => ({ mimeType: i.mimeType, preview: i.preview?.slice(0, 200000) })),
+          }));
+          const topic = (snapshot[0]?.text || userMsg.text || "Chat").slice(0, 120);
+          const payload = { messages: slim };
+          if (historyId) {
+            await supabase.from("user_history").update({ content: payload, topic }).eq("id", historyId);
+          } else {
+            const { data, error } = await supabase
+              .from("user_history")
+              .insert({ user_id: user.id, type: "chat", topic, level: null, content: payload })
+              .select("id")
+              .single();
+            if (!error && data) {
+              setHistoryId(data.id);
+              try { localStorage.setItem(HISTORY_ID_KEY, data.id); } catch {}
+            }
+          }
+        } catch (err) {
+          console.error("Failed to save chat history", err);
+        }
+      }
     } catch (e: any) {
       toast({ title: t("chatBuddy.errorTitle", "Erro"), description: e.message, variant: "destructive" });
       setMessages(snapshot);
@@ -180,7 +233,9 @@ const ChatBuddy = () => {
 
   const clearChat = () => {
     setMessages([]);
+    setHistoryId(null);
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
+    try { localStorage.removeItem(HISTORY_ID_KEY); } catch {}
   };
 
   const onKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

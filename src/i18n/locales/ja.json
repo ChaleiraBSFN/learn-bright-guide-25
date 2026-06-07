@@ -309,7 +309,8 @@
     "deleteDescription": "削除しますか？",
     "cancel": "キャンセル",
     "confirm": "削除",
-    "saved": "保存しました！"
+    "saved": "保存しました！",
+    "chat": "チャットバディ"
   },
   "exercises": {
     "topic": "演習テーマ",

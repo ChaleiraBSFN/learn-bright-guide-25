@@ -309,7 +309,8 @@
     "deleteDescription": "Löschen?",
     "cancel": "Abbrechen",
     "confirm": "Löschen",
-    "saved": "Gespeichert!"
+    "saved": "Gespeichert!",
+    "chat": "Chat Buddy"
   },
   "exercises": {
     "topic": "Thema",

@@ -309,7 +309,8 @@
     "deleteDescription": "Удалить?",
     "cancel": "Отмена",
     "confirm": "Удалить",
-    "saved": "Сохранено!"
+    "saved": "Сохранено!",
+    "chat": "Чат-помощник"
   },
   "exercises": {
     "topic": "Тема",

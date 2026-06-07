@@ -312,7 +312,8 @@
     "deleteDescription": "Are you sure you want to delete this history item?",
     "cancel": "Cancel",
     "confirm": "Delete",
-    "saved": "Saved to history!"
+    "saved": "Saved to history!",
+    "chat": "Chat Buddy"
   },
   "exercises": {
     "topic": "Exercise Subject",
