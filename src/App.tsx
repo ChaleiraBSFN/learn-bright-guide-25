@@ -24,9 +24,9 @@ import Downloads from "./pages/Downloads";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import Community from "./pages/Community";
+import ChatBuddy from "./pages/ChatBuddy";
 import { useTimeTracker } from "@/hooks/useAchievements";
 import { useVisitHeartbeat } from "@/hooks/useVisitHeartbeat";
-import { PrimeOverlay } from "@/components/PrimeOverlay";
 
 const queryClient = new QueryClient();
 
