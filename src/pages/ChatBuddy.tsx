@@ -245,7 +245,9 @@ const ChatBuddy = () => {
             </div>
           )}
 
-          {messages.map((m, i) => (
+          {messages.map((m, i) => {
+            if (m.role === "model" && !m.text && (!m.images || m.images.length === 0)) return null;
+            return (
             <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
               {m.role === "model" && (
                 <img src={learnBuddyLogo} alt="" className="h-8 w-8 rounded-lg border border-foreground/15 mr-2 shrink-0 self-start mt-0.5" />
