@@ -66,7 +66,7 @@ function extractText(node: any): string {
   return "";
 }
 
-const CodeBlock = ({ children }: { children?: React.ReactNode }) => {
+const CodeBlock = ({ children }: { children?: ReactNode }) => {
   const [copied, setCopied] = useState(false);
   const text = extractText(children);
   const onCopy = async () => {
@@ -94,7 +94,7 @@ const CodeBlock = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
-const CopyableBlock = ({ text, children }: { text: string; children: React.ReactNode }) => {
+const CopyableBlock = ({ text, children }: { text: string; children: ReactNode }) => {
   const [copied, setCopied] = useState(false);
   const onCopy = async () => {
     try {
