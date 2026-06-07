@@ -317,11 +317,18 @@ export type Database = {
           created_at: string
           created_by: string | null
           cta_label: string
+          daily_end_minutes: number | null
+          daily_start_minutes: number | null
+          days_of_week: number[] | null
           description: string
+          end_at: string | null
           icon: string
           id: string
+          max_per_day: number | null
+          max_per_week: number | null
           route: string
           sort_order: number
+          start_at: string | null
           title: string
           variant: string
         }
@@ -330,11 +337,18 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           cta_label?: string
+          daily_end_minutes?: number | null
+          daily_start_minutes?: number | null
+          days_of_week?: number[] | null
           description: string
+          end_at?: string | null
           icon?: string
           id?: string
+          max_per_day?: number | null
+          max_per_week?: number | null
           route?: string
           sort_order?: number
+          start_at?: string | null
           title: string
           variant?: string
         }
@@ -343,11 +357,18 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           cta_label?: string
+          daily_end_minutes?: number | null
+          daily_start_minutes?: number | null
+          days_of_week?: number[] | null
           description?: string
+          end_at?: string | null
           icon?: string
           id?: string
+          max_per_day?: number | null
+          max_per_week?: number | null
           route?: string
           sort_order?: number
+          start_at?: string | null
           title?: string
           variant?: string
         }
