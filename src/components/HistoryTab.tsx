@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { History, BookOpen, PenTool, Trash2, LogIn, Eye } from "lucide-react";
+import { History, BookOpen, PenTool, MessageCircle, Trash2, LogIn, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +22,7 @@ import {
 
 interface HistoryEntry {
   id: string;
-  type: "study" | "exercise";
+  type: "study" | "exercise" | "chat";
   topic: string;
   level: string | null;
   content: any;
@@ -37,6 +38,7 @@ export const HistoryTab = ({ onViewStudy, onViewExercise }: HistoryTabProps) => 
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
