@@ -56,6 +56,70 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
   },
 };
 
+function isWithinSchedule(b: any, now: Date): boolean {
+  if (b.start_at && new Date(b.start_at) > now) return false;
+  if (b.end_at && new Date(b.end_at) < now) return false;
+  if (Array.isArray(b.days_of_week) && b.days_of_week.length > 0) {
+    if (!b.days_of_week.includes(now.getDay())) return false;
+  }
+  const mins = now.getHours() * 60 + now.getMinutes();
+  const s = b.daily_start_minutes;
+  const e = b.daily_end_minutes;
+  if (s != null && e != null) {
+    if (s <= e) {
+      if (mins < s || mins >= e) return false;
+    } else {
+      // overnight window e.g. 22:00 -> 06:00
+      if (mins < s && mins >= e) return false;
+    }
+  } else if (s != null && mins < s) {
+    return false;
+  } else if (e != null && mins >= e) {
+    return false;
+  }
+  return true;
+}
+
+// ISO week number
+function isoWeekKey(d: Date): string {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(((+t - +yearStart) / 86400000 + 1) / 7);
+  return `${t.getUTCFullYear()}-W${week}`;
+}
+
+const IMP_KEY = 'lb_banner_impressions_v1';
+type ImpRecord = Record<string, { day: string; dayCount: number; week: string; weekCount: number }>;
+
+function readImpressions(): ImpRecord {
+  try { return JSON.parse(localStorage.getItem(IMP_KEY) || '{}'); } catch { return {}; }
+}
+
+function withinCaps(b: any, now: Date, imps: ImpRecord): boolean {
+  const rec = imps[b.id];
+  if (!rec) return true;
+  const today = now.toISOString().slice(0, 10);
+  const week = isoWeekKey(now);
+  if (b.max_per_day != null && rec.day === today && rec.dayCount >= b.max_per_day) return false;
+  if (b.max_per_week != null && rec.week === week && rec.weekCount >= b.max_per_week) return false;
+  return true;
+}
+
+function recordImpression(id: string, now: Date) {
+  const imps = readImpressions();
+  const today = now.toISOString().slice(0, 10);
+  const week = isoWeekKey(now);
+  const r = imps[id] || { day: today, dayCount: 0, week, weekCount: 0 };
+  if (r.day !== today) { r.day = today; r.dayCount = 0; }
+  if (r.week !== week) { r.week = week; r.weekCount = 0; }
+  r.dayCount += 1;
+  r.weekCount += 1;
+  imps[id] = r;
+  try { localStorage.setItem(IMP_KEY, JSON.stringify(imps)); } catch {}
+}
+
 export const PromoBanners = () => {
   const navigate = useNavigate();
   const { data: banners } = useQuery({
@@ -73,7 +137,17 @@ export const PromoBanners = () => {
     refetchInterval: 60_000,
   });
 
-  if (!banners || banners.length === 0) return null;
+  const now = new Date();
+  const imps = readImpressions();
+  const visible = (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
+
+  // record impressions once per render set
+  if (typeof window !== 'undefined') {
+    setTimeout(() => visible.forEach(b => recordImpression(b.id, new Date())), 0);
+  }
+
+  if (visible.length === 0) return null;
+
 
   return (
     <div className="space-y-2">
