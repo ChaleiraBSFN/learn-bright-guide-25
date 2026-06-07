@@ -7,9 +7,15 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const imageSchema = z.object({
+  mimeType: z.string().regex(/^image\/(png|jpeg|jpg|webp|gif|heic|heif)$/i),
+  data: z.string().min(1).max(8_000_000), // base64, ~6MB binary max
+});
+
 const messageSchema = z.object({
   role: z.enum(["user", "model"]),
-  text: z.string().min(1).max(8000),
+  text: z.string().max(8000).optional().default(""),
+  images: z.array(imageSchema).max(4).optional(),
 });
 
 const requestSchema = z.object({
@@ -23,21 +29,36 @@ const langMap: Record<string, string> = {
   "zh": "中文", "ja": "日本語", "ru": "русский",
 };
 
-const buildSystemInstruction = (lang: string) => `Você é o Learn Buddy, um(a) tutor(a) virtual amigável, paciente e inteligente da plataforma Learn Buddy. Sua missão é ajudar estudantes com QUALQUER coisa que precisem: explicar matéria, resolver exercícios, dar dicas de estudo, criar roteiros, ajudar com código de programação, revisar redações, sugerir materiais, motivar, tirar dúvidas pessoais sobre estudos, etc.
+const buildSystemInstruction = (lang: string) => `Você é o Learn Buddy, um(a) tutor(a) virtual amigável, paciente, inteligente e SEM CENSURA INDEVIDA da plataforma Learn Buddy. Sua missão é ajudar o usuário com QUALQUER coisa que ele precisar — sem julgar, sem evitar temas, sem dar respostas vagas por excesso de cautela.
+
+POLÍTICA DE TEMAS:
+- Responda sobre QUALQUER assunto que o usuário pedir: matérias escolares, programação, vestibular, ENEM, redação, filosofia, política, religião, sexualidade educativa, relacionamentos, saúde mental, drogas (informação/redução de danos), história sensível, etc.
+- NÃO recuse temas por serem polêmicos, adultos, controversos ou desconfortáveis. Apenas trate com respeito e precisão.
+- NÃO faça discursos de "procure um profissional" como resposta principal — primeiro ajude de verdade, e só mencione ajuda profissional se for realmente crítico (ex.: ideação suicida iminente).
+- ÚNICA exceção: se o pedido for conteúdo SEXUAL EXPLÍCITO envolvendo menores, instruções para criar armas reais de destruição em massa, ou conteúdo de ódio direcionado a perseguir indivíduo identificado — recuse de forma curta e ofereça alternativa educativa.
+- Conteúdo adulto entre adultos, palavrões, humor pesado, temas tabu educacionais → ok responder normalmente e com naturalidade.
 
 PERSONALIDADE:
-- Caloroso, encorajador, divertido (use emojis com moderação 🎯✨📚💡).
-- Direto ao ponto, sem enrolação — respostas focadas e úteis.
-- Trate o usuário como amigo de estudos, não como aluno em sala formal.
+- Caloroso, encorajador, divertido (emojis com moderação 🎯✨📚💡).
+- Direto ao ponto, sem enrolação.
+- Trate o usuário como amigo de estudos.
 
 REGRAS DE RESPOSTA:
 - Responda SEMPRE em ${lang}.
-- Use Markdown: **negrito**, listas com "-", títulos com ##, e blocos de código com \`\`\`linguagem para código.
+- Use Markdown: **negrito**, listas com "-", títulos "##", blocos \`\`\`linguagem para código.
 - Para matemática NÃO use LaTeX. Use Unicode: x², √(x), π, ≤, ≥, ≠, ≈, ½, ⅓.
-- Para exercícios: explique o raciocínio passo a passo, não só a resposta.
+- Para exercícios: explique o raciocínio passo a passo.
 - Para código: forneça código limpo, comentado, e explique brevemente.
-- Se a pergunta for vaga, faça 1 pergunta de clarificação curta.
-- Mantenha respostas concisas por padrão; aprofunde se o estudante pedir.`;
+- Se a pergunta for vaga, faça 1 pergunta curta de clarificação.
+- Se houver IMAGEM anexada: descreva/analise o que vê e responda à pergunta sobre a imagem (resolver exercício, identificar erro de código, explicar diagrama, etc.).
+- Respostas concisas por padrão; aprofunde se pedirem.`;
+
+const safetySettings = [
+  { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+  { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
+  { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" },
+  { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" },
+];
 
 async function tryModel(model: string, contents: any[], systemInstruction: string, apiKey: string, signal: AbortSignal): Promise<{ text: string | null; status: number }> {
   try {
@@ -49,14 +70,19 @@ async function tryModel(model: string, contents: any[], systemInstruction: strin
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: systemInstruction }] },
           contents,
-          generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
+          safetySettings,
+          generationConfig: { temperature: 0.85, maxOutputTokens: 4096 },
         }),
         signal,
       }
     );
-    if (!response.ok) return { text: null, status: response.status };
+    if (!response.ok) {
+      const errText = await response.text().catch(() => "");
+      console.error(`[chat-buddy] ${model} ${response.status}: ${errText.slice(0, 300)}`);
+      return { text: null, status: response.status };
+    }
     const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const text = data.candidates?.[0]?.content?.parts?.map((p: any) => p.text).filter(Boolean).join("\n");
     return text ? { text, status: 200 } : { text: null, status: 502 };
   } catch (e: any) {
     if (e.name !== "AbortError") console.error(`[chat-buddy] ${model}:`, e.message);
@@ -64,17 +90,19 @@ async function tryModel(model: string, contents: any[], systemInstruction: strin
   }
 }
 
-async function callGemini(contents: any[], systemInstruction: string, apiKey: string): Promise<{ text: string | null; lastStatus: number }> {
-  const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash", "gemini-1.5-pro"];
+async function callGemini(contents: any[], systemInstruction: string, apiKey: string, hasImage: boolean): Promise<{ text: string | null; lastStatus: number }> {
+  const models = hasImage
+    ? ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
+    : ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash", "gemini-1.5-pro"];
   let lastStatus = 0;
   for (const model of models) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
       const { text, status } = await tryModel(model, contents, systemInstruction, apiKey, controller.signal);
       if (text) return { text, lastStatus: 200 };
       lastStatus = status;
-      if (status !== 429 && status < 500) break;
+      if (status !== 429 && status < 500 && status !== 0) break;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -115,6 +143,7 @@ serve(async (req) => {
     const rawBody = await req.json();
     const parsed = requestSchema.safeParse(rawBody);
     if (!parsed.success) {
+      console.error("[chat-buddy] invalid body", parsed.error.flatten());
       return new Response(JSON.stringify({ error: "Dados inválidos." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
@@ -122,7 +151,17 @@ serve(async (req) => {
     const langName = langMap[idioma || "pt-BR"] || "português brasileiro";
     const systemInstruction = buildSystemInstruction(langName);
 
-    const contents = messages.map(m => ({ role: m.role, parts: [{ text: m.text }] }));
+    let hasImage = false;
+    const contents = messages.map(m => {
+      const parts: any[] = [];
+      if (m.images && m.images.length > 0) {
+        hasImage = true;
+        for (const img of m.images) parts.push({ inlineData: { mimeType: img.mimeType, data: img.data } });
+      }
+      if (m.text && m.text.trim()) parts.push({ text: m.text });
+      if (parts.length === 0) parts.push({ text: "" });
+      return { role: m.role, parts };
+    });
 
     const geminiKeys = [
       Deno.env.get("GOOGLE_GEMINI_API_KEY"),
@@ -131,12 +170,18 @@ serve(async (req) => {
       Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
       Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
     ].filter(Boolean) as string[];
+
+    if (geminiKeys.length === 0) {
+      console.error("[chat-buddy] No Gemini API keys configured");
+      return new Response(JSON.stringify({ error: "Serviço não configurado." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     geminiKeys.sort(() => Math.random() - 0.5);
 
     let content: string | null = null;
     let lastStatus = 0;
     for (const key of geminiKeys) {
-      const result = await callGemini(contents, systemInstruction, key);
+      const result = await callGemini(contents, systemInstruction, key, hasImage);
       content = result.text;
       lastStatus = result.lastStatus;
       if (content) break;
@@ -145,7 +190,7 @@ serve(async (req) => {
     if (!content) {
       const isRate = lastStatus === 429;
       return new Response(
-        JSON.stringify({ error: isRate ? "Limite de requisições excedido." : "Serviço indisponível." }),
+        JSON.stringify({ error: isRate ? "Limite de requisições excedido." : "Não consegui gerar resposta agora. Tente reformular." }),
         { status: isRate ? 429 : 503, headers: { ...corsHeaders, "Content-Type": "application/json", ...(isRate ? { "Retry-After": "60" } : {}) } }
       );
     }
