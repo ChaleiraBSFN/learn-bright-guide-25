@@ -39,7 +39,7 @@ const AppContent = () => {
       <Toaster />
       <Sonner />
       <RateLimitBar />
-      <PrimeOverlay />
+      
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
