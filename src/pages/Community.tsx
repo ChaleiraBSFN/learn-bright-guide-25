@@ -271,7 +271,7 @@ function PostCard({ post, meta, currentUserId, timeAgo, onLike, onDonate, onDele
       </div>
 
       <div className="px-4 pb-3">
-        <h3 className="font-bold text-base md:text-lg mb-1">{post.title}</h3>
+        <h2 className="font-bold text-base md:text-lg mb-1">{post.title}</h2>
         {post.content && <p className="text-sm whitespace-pre-wrap text-foreground/90">{post.content}</p>}
       </div>
 

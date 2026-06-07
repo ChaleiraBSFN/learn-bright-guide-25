@@ -21,6 +21,21 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://studdybuddy.com.br/downloads</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://studdybuddy.com.br/community</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://studdybuddy.com.br/chat-buddy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://studdybuddy.com.br/privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

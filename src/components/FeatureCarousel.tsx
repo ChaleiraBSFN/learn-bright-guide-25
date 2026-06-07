@@ -354,9 +354,9 @@ function FeatureCard({
 
         {/* Content */}
         <div className="space-y-1.5">
-          <h3 className="font-display text-base sm:text-lg font-bold text-foreground leading-tight">
+          <h2 className="font-display text-base sm:text-lg font-bold text-foreground leading-tight">
             {feature.title}
-          </h3>
+          </h2>
           <p className="text-sm sm:text-[0.95rem] text-muted-foreground leading-snug line-clamp-3">
             {feature.description}
           </p>
