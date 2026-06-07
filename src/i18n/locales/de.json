@@ -52,7 +52,13 @@
     "communityDetail": "Poste Aufgaben, Fotos und Fragen. Like, kommentiere und spende Buddies (Credits) an Leute, die dir helfen. Moderiert und 100% kostenlos.",
     "communityExample1": "Poste das Foto einer schweren Aufgabe und erhalte Lösungen aus der Community.",
     "communityExample2": "Spende Buddies an die Person, deren Lösung dich in der Prüfung gerettet hat.",
-    "communityExample3": "Filtere nach Aufgaben, Fragen, Lösungen oder Fotos."
+    "communityExample3": "Filtere nach Aufgaben, Fragen, Lösungen oder Fotos.",
+    "chatBuddy": "Chat mit Learn Buddy",
+    "chatBuddyLong": "Chatte mit der Learn Buddy KI, um Fragen zu stellen, Übungen zu lösen, Hilfe beim Programmieren zu bekommen und mehr.",
+    "chatBuddyDetail": "Dein virtueller Tutor, rund um die Uhr verfügbar. Stelle Fragen zu jedem Fach, fordere Schritt-für-Schritt-Erklärungen an, Hilfe beim Programmieren, Lernpläne und personalisiertes Material. Alles in Echtzeit und 100% kostenlos.",
+    "chatBuddyExample1": "Sende ein Foto einer Mathe-Aufgabe und erhalte eine kommentierte Lösung.",
+    "chatBuddyExample2": "Bitte um Hilfe beim Debuggen von Python-Code oder jeder anderen Sprache.",
+    "chatBuddyExample3": "Fordere einen personalisierten Lernplan für jede Prüfung an."
   },
   "form": {
     "premiumMode": "Premium-Modus aktiv!",

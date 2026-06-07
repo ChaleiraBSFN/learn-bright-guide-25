@@ -53,7 +53,13 @@
     "communityDetail": "Post exercises, photos and doubts. Like, comment and donate buddies (credits) to help people who help you. Fully moderated and 100% free.",
     "communityExample1": "Post a photo of a tough exercise and get solutions from the community.",
     "communityExample2": "Donate buddies to the author of a solution that saved your test.",
-    "communityExample3": "Filter by exercises, doubts, solutions or photos to find what you need."
+    "communityExample3": "Filter by exercises, doubts, solutions or photos to find what you need.",
+    "chatBuddy": "Chat with Learn Buddy",
+    "chatBuddyLong": "Chat with Learn Buddy AI to ask questions, solve exercises, get coding help, and more.",
+    "chatBuddyDetail": "Your virtual tutor available 24/7. Ask questions about any subject, get step-by-step explanations, programming help, study guides and personalized materials. All in real time and 100% free.",
+    "chatBuddyExample1": "Send a photo of a Math exercise and get a commented solution.",
+    "chatBuddyExample2": "Ask for help debugging code in Python or any language.",
+    "chatBuddyExample3": "Request a personalized study guide for any exam or competition."
   },
   "form": {
     "premiumMode": "Premium mode active - You'll receive complete and detailed content!",

@@ -52,7 +52,13 @@
     "communityDetail": "Publiez des exercices, photos et questions. Likez, commentez et offrez des buddies (crédits) à ceux qui vous aident. Modéré et 100% gratuit.",
     "communityExample1": "Publiez la photo d'un exercice difficile et recevez des solutions de la communauté.",
     "communityExample2": "Offrez des buddies à l'auteur d'une solution qui vous a sauvé.",
-    "communityExample3": "Filtrez par exercices, questions, solutions ou photos pour trouver ce dont vous avez besoin."
+    "communityExample3": "Filtrez par exercices, questions, solutions ou photos pour trouver ce dont vous avez besoin.",
+    "chatBuddy": "Chat avec Learn Buddy",
+    "chatBuddyLong": "Discutez avec l'IA de Learn Buddy pour poser des questions, résoudre des exercices, obtenir de l'aide pour coder, et plus encore.",
+    "chatBuddyDetail": "Votre tuteur virtuel disponible 24h/24. Posez des questions sur n'importe quelle matière, demandez des explications étape par étape, de l'aide en programmation, des guides d'étude et du matériel personnalisé. Tout en temps réel et 100% gratuit.",
+    "chatBuddyExample1": "Envoyez une photo d'un exercice de maths et recevez la solution commentée.",
+    "chatBuddyExample2": "Demandez de l'aide pour déboguer du code Python ou tout autre langage.",
+    "chatBuddyExample3": "Demandez un guide d'étude personnalisé pour n'importe quel examen."
   },
   "form": {
     "premiumMode": "Mode premium actif - Vous recevrez du contenu complet et détaillé !",

@@ -52,7 +52,13 @@
     "communityDetail": "发布练习题、照片和疑问。点赞、评论并向帮助你的人捐赠 buddies（积分）。已审核，100% 免费。",
     "communityExample1": "发布一道难题的照片，获得社区的解答。",
     "communityExample2": "向救了你考试的解答作者捐赠 buddies。",
-    "communityExample3": "按练习、疑问、解答或照片筛选。"
+    "communityExample3": "按练习、疑问、解答或照片筛选。",
+    "chatBuddy": "与Learn Buddy聊天",
+    "chatBuddyLong": "与Learn Buddy AI聊天，提问、解答练习、获取编程帮助等。",
+    "chatBuddyDetail": "您的24小时虚拟导师。询问任何科目的问题，获取逐步解释、编程帮助、学习指南和个性化材料。全部实时且100%免费。",
+    "chatBuddyExample1": "发送一道数学题的照片，获取带注释的解答。",
+    "chatBuddyExample2": "请求帮助调试Python或任何语言的代码。",
+    "chatBuddyExample3": "请求为任何考试定制的学习指南。"
   },
   "form": {
     "premiumMode": "高级模式已激活！",
