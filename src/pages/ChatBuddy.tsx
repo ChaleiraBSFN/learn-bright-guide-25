@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown from "react-markdown";
-import { ArrowLeft, Send, Loader2, Sparkles, Trash2, ImagePlus, X } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Sparkles, Trash2, ImagePlus, X, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SEO } from "@/components/SEO";
@@ -57,6 +57,71 @@ async function fileToCompressedBase64(file: File): Promise<ChatImage> {
   const base64 = out.split(",")[1];
   return { mimeType: "image/jpeg", data: base64, preview: out };
 }
+
+function extractText(node: any): string {
+  if (node == null) return "";
+  if (typeof node === "string") return node;
+  if (Array.isArray(node)) return node.map(extractText).join("");
+  if (typeof node === "object" && node.props) return extractText(node.props.children);
+  return "";
+}
+
+const CodeBlock = ({ children }: { children?: ReactNode }) => {
+  const [copied, setCopied] = useState(false);
+  const text = extractText(children);
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
+  return (
+    <div className="relative group my-3 not-prose">
+      <button
+        type="button"
+        onClick={onCopy}
+        className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 rounded-md border border-foreground/15 bg-background/90 backdrop-blur px-2 py-1 text-[10px] font-medium text-foreground/70 hover:text-foreground hover:bg-background shadow-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+        aria-label="Copiar"
+      >
+        {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
+        {copied ? "Copiado" : "Copiar"}
+      </button>
+      <pre className="bg-muted text-foreground rounded-lg text-xs p-3 pr-16 border border-foreground/10 overflow-x-auto max-w-full">
+        {children}
+      </pre>
+    </div>
+  );
+};
+
+const CopyableBlock = ({ text, children }: { text: string; children: ReactNode }) => {
+  const [copied, setCopied] = useState(false);
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
+  return (
+    <div className="relative group my-3 not-prose">
+      <button
+        type="button"
+        onClick={onCopy}
+        className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 rounded-md border border-foreground/15 bg-background/90 backdrop-blur px-2 py-1 text-[10px] font-medium text-foreground/70 hover:text-foreground hover:bg-background shadow-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+        aria-label="Copiar"
+      >
+        {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
+        {copied ? "Copiado" : "Copiar"}
+      </button>
+      <div className="overflow-x-auto max-w-full rounded-lg border border-foreground/10 bg-muted/40 p-2">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+
 
 const ChatBuddy = () => {
   const { t, i18n } = useTranslation();
@@ -307,7 +372,7 @@ const ChatBuddy = () => {
               {m.role === "model" && (
                 <img src={learnBuddyLogo} alt="" className="h-8 w-8 rounded-lg border border-foreground/15 mr-2 shrink-0 self-start mt-0.5" />
               )}
-              <div className={`max-w-[85%] sm:max-w-[78%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm ${
+              <div className={`max-w-[85%] sm:max-w-[78%] min-w-0 overflow-hidden rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm ${
                 m.role === "user"
                   ? "bg-primary text-primary-foreground rounded-br-md"
                   : "bg-card border-2 border-foreground/10 rounded-bl-md"
@@ -320,21 +385,38 @@ const ChatBuddy = () => {
                   </div>
                 )}
                 {m.role === "model" ? (
-                  <div className="prose prose-sm dark:prose-invert max-w-none
+                  <div className="prose prose-sm dark:prose-invert max-w-none break-words
                     prose-headings:font-display prose-headings:font-bold
                     prose-h1:text-base prose-h1:mt-4 prose-h1:mb-2 prose-h1:pb-1 prose-h1:border-b-2 prose-h1:border-primary/20
                     prose-h2:text-sm prose-h2:mt-4 prose-h2:mb-2 prose-h2:flex prose-h2:items-center prose-h2:gap-1.5 prose-h2:text-primary
                     prose-h3:text-sm prose-h3:mt-3 prose-h3:mb-1.5 prose-h3:text-foreground/90
-                    prose-p:my-2 prose-p:leading-relaxed
+                    prose-p:my-2 prose-p:leading-relaxed prose-p:break-words
                     prose-ul:my-2 prose-ul:space-y-1.5 prose-ol:my-2 prose-ol:space-y-1.5
-                    prose-li:my-0 prose-li:leading-relaxed prose-li:marker:text-primary
+                    prose-li:my-0 prose-li:leading-relaxed prose-li:marker:text-primary prose-li:break-words
                     prose-strong:text-foreground prose-strong:font-bold
-                    prose-code:text-xs prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
-                    prose-pre:bg-muted prose-pre:text-foreground prose-pre:rounded-lg prose-pre:text-xs prose-pre:my-3 prose-pre:p-3 prose-pre:border prose-pre:border-foreground/10
+                    prose-code:text-xs prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-code:break-words
                     prose-blockquote:border-l-4 prose-blockquote:border-primary/40 prose-blockquote:bg-primary/5 prose-blockquote:py-1 prose-blockquote:px-3 prose-blockquote:my-2 prose-blockquote:not-italic prose-blockquote:rounded-r
                     prose-hr:my-4 prose-hr:border-foreground/10
-                    prose-table:text-xs prose-th:bg-muted prose-th:px-2 prose-th:py-1.5 prose-td:px-2 prose-td:py-1.5 prose-td:border prose-th:border prose-th:border-foreground/15 prose-td:border-foreground/10">
-                    <ReactMarkdown>{m.text}</ReactMarkdown>
+                    prose-a:text-primary prose-a:break-all">
+                    <ReactMarkdown
+                      components={{
+                        pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
+                        table: ({ children }) => (
+                          <CopyableBlock text={extractText(children)}>
+                            <table className="text-xs w-full border-collapse">{children}</table>
+                          </CopyableBlock>
+                        ),
+                        th: ({ children }) => (
+                          <th className="bg-muted px-2 py-1.5 border border-foreground/15 text-left">{children}</th>
+                        ),
+                        td: ({ children }) => (
+                          <td className="px-2 py-1.5 border border-foreground/10 align-top">{children}</td>
+                        ),
+                        a: ({ children, href }) => (
+                          <a href={href} target="_blank" rel="noreferrer" className="text-primary underline break-all">{children}</a>
+                        ),
+                      }}
+                    >{m.text}</ReactMarkdown>
                   </div>
                 ) : (
                   m.text && <p className="whitespace-pre-wrap break-words">{m.text}</p>
