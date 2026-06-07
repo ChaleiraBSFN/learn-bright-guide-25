@@ -286,10 +286,9 @@ const ChatBuddy = () => {
             </div>
           ))}
 
-          {loading && (
-            <div className="flex justify-start">
-              <img src={learnBuddyLogo} alt="" className="h-8 w-8 rounded-lg border border-foreground/15 mr-2 shrink-0" />
-              <div className="bg-card border-2 border-foreground/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
+          {loading && messages[messages.length - 1]?.role === "model" && !messages[messages.length - 1]?.text && (
+            <div className="flex justify-start -mt-2">
+              <div className="ml-10 bg-card border-2 border-foreground/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "0ms" }} />
                 <span className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "150ms" }} />
                 <span className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "300ms" }} />
