@@ -62,6 +62,17 @@ const VARIANT_OPTIONS = [
   { key: 'rose', label: 'Rosa', dot: 'bg-rose-500' },
 ];
 
+const ROUTE_OPTIONS: { value: string; label: string }[] = [
+  { value: '/', label: '🏠 Início — Gerar conteúdo / exercícios' },
+  { value: '/community', label: '👥 Comunidade' },
+  { value: '/chat-buddy', label: '💬 Chat com Learn Buddy (IA)' },
+  { value: '/install', label: '📲 Baixar App (Instalar)' },
+  { value: '/downloads', label: '⬇️ Downloads (Android / Desktop)' },
+  { value: '/settings', label: '⚙️ Configurações' },
+  { value: '/privacy', label: '🔒 Privacidade' },
+  { value: '/auth', label: '🔑 Login / Cadastro' },
+];
+
 const NoticesTab = ({ userId }: { userId?: string }) => {
   const { toast } = useToast();
   const qc = useQueryClient();
