@@ -114,7 +114,8 @@ const ChatBuddy = () => {
       text,
       images: pendingImages.map(i => ({ mimeType: i.mimeType, data: i.data, preview: i.preview })),
     };
-    const next: ChatMessage[] = [...messages, userMsg];
+    const next: ChatMessage[] = [...messages, userMsg, { role: "model", text: "" }];
+    const snapshot = messages;
     setMessages(next);
     setInput("");
     setPendingImages([]);
@@ -124,7 +125,7 @@ const ChatBuddy = () => {
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (session?.access_token) headers["Authorization"] = `Bearer ${session.access_token}`;
 
-      const recent = next.slice(-12).map(m => ({
+      const recent = [...snapshot, userMsg].slice(-12).map(m => ({
         role: m.role,
         text: m.text || "",
         images: m.images?.map(i => ({ mimeType: i.mimeType, data: i.data })),
@@ -134,15 +135,43 @@ const ChatBuddy = () => {
         headers,
         body: JSON.stringify({ messages: recent, idioma: i18n.language }),
       });
-      if (!res.ok) {
+      if (!res.ok || !res.body) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || t("chatBuddy.error", "Falha ao responder."));
       }
-      const data = await res.json();
-      setMessages(m => [...m, { role: "model", text: data.reply }]);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      let raf = 0;
+      const flush = () => {
+        setMessages(curr => {
+          const copy = [...curr];
+          const last = copy[copy.length - 1];
+          if (last && last.role === "model") {
+            copy[copy.length - 1] = { ...last, text: acc };
+          }
+          return copy;
+        });
+      };
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        if (!raf) {
+          raf = requestAnimationFrame(() => {
+            raf = 0;
+            flush();
+          });
+        }
+      }
+      acc += decoder.decode();
+      if (raf) cancelAnimationFrame(raf);
+      flush();
+      if (!acc.trim()) throw new Error(t("chatBuddy.error", "Falha ao responder."));
     } catch (e: any) {
       toast({ title: t("chatBuddy.errorTitle", "Erro"), description: e.message, variant: "destructive" });
-      setMessages(messages);
+      setMessages(snapshot);
     } finally {
       setLoading(false);
       setTimeout(() => inputRef.current?.focus(), 50);
