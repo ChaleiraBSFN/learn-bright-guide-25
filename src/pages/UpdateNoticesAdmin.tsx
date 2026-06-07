@@ -37,6 +37,13 @@ interface PromoBanner {
   active: boolean;
   sort_order: number;
   created_at: string;
+  start_at: string | null;
+  end_at: string | null;
+  daily_start_minutes: number | null;
+  daily_end_minutes: number | null;
+  days_of_week: number[] | null;
+  max_per_day: number | null;
+  max_per_week: number | null;
 }
 
 const typeColors: Record<string, string> = {
