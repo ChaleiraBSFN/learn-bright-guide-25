@@ -138,16 +138,20 @@ export const PromoBanners = () => {
     refetchInterval: 60_000,
   });
 
-  const now = new Date();
-  const imps = readImpressions();
-  const visible = (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
+  const visible = useMemo(() => {
+    const now = new Date();
+    const imps = readImpressions();
+    return (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
+  }, [banners]);
 
-  // record impressions once per render set
-  if (typeof window !== 'undefined') {
-    setTimeout(() => visible.forEach(b => recordImpression(b.id, new Date())), 0);
-  }
+  useEffect(() => {
+    if (visible.length === 0) return;
+    const now = new Date();
+    visible.forEach(b => recordImpression(b.id, now));
+  }, [visible]);
 
   if (visible.length === 0) return null;
+
 
 
   return (
