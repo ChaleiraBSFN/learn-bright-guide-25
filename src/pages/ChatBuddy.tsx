@@ -114,7 +114,8 @@ const ChatBuddy = () => {
       text,
       images: pendingImages.map(i => ({ mimeType: i.mimeType, data: i.data, preview: i.preview })),
     };
-    const next: ChatMessage[] = [...messages, userMsg];
+    const next: ChatMessage[] = [...messages, userMsg, { role: "model", text: "" }];
+    const snapshot = messages;
     setMessages(next);
     setInput("");
     setPendingImages([]);
@@ -124,7 +125,7 @@ const ChatBuddy = () => {
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (session?.access_token) headers["Authorization"] = `Bearer ${session.access_token}`;
 
-      const recent = next.slice(-12).map(m => ({
+      const recent = [...snapshot, userMsg].slice(-12).map(m => ({
         role: m.role,
         text: m.text || "",
         images: m.images?.map(i => ({ mimeType: i.mimeType, data: i.data })),
@@ -134,15 +135,43 @@ const ChatBuddy = () => {
         headers,
         body: JSON.stringify({ messages: recent, idioma: i18n.language }),
       });
-      if (!res.ok) {
+      if (!res.ok || !res.body) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || t("chatBuddy.error", "Falha ao responder."));
       }
-      const data = await res.json();
-      setMessages(m => [...m, { role: "model", text: data.reply }]);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      let raf = 0;
+      const flush = () => {
+        setMessages(curr => {
+          const copy = [...curr];
+          const last = copy[copy.length - 1];
+          if (last && last.role === "model") {
+            copy[copy.length - 1] = { ...last, text: acc };
+          }
+          return copy;
+        });
+      };
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        if (!raf) {
+          raf = requestAnimationFrame(() => {
+            raf = 0;
+            flush();
+          });
+        }
+      }
+      acc += decoder.decode();
+      if (raf) cancelAnimationFrame(raf);
+      flush();
+      if (!acc.trim()) throw new Error(t("chatBuddy.error", "Falha ao responder."));
     } catch (e: any) {
       toast({ title: t("chatBuddy.errorTitle", "Erro"), description: e.message, variant: "destructive" });
-      setMessages(messages);
+      setMessages(snapshot);
     } finally {
       setLoading(false);
       setTimeout(() => inputRef.current?.focus(), 50);
@@ -216,7 +245,9 @@ const ChatBuddy = () => {
             </div>
           )}
 
-          {messages.map((m, i) => (
+          {messages.map((m, i) => {
+            if (m.role === "model" && !m.text && (!m.images || m.images.length === 0)) return null;
+            return (
             <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
               {m.role === "model" && (
                 <img src={learnBuddyLogo} alt="" className="h-8 w-8 rounded-lg border border-foreground/15 mr-2 shrink-0 self-start mt-0.5" />
@@ -255,12 +286,11 @@ const ChatBuddy = () => {
                 )}
               </div>
             </div>
-          ))}
+          );})}
 
-          {loading && (
-            <div className="flex justify-start">
-              <img src={learnBuddyLogo} alt="" className="h-8 w-8 rounded-lg border border-foreground/15 mr-2 shrink-0" />
-              <div className="bg-card border-2 border-foreground/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
+          {loading && messages[messages.length - 1]?.role === "model" && !messages[messages.length - 1]?.text && (
+            <div className="flex justify-start -mt-2">
+              <div className="ml-10 bg-card border-2 border-foreground/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "0ms" }} />
                 <span className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "150ms" }} />
                 <span className="h-2 w-2 rounded-full bg-primary/60 animate-bounce" style={{ animationDelay: "300ms" }} />
