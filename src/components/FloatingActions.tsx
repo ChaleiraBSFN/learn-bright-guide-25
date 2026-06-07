@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -9,7 +9,6 @@ import { ProgressTrail } from '@/components/ProgressTrail';
 import { RankingDialog } from '@/components/RankingDialog';
 import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { PrimeButton } from '@/components/PrimeButton';
 
 export const FloatingActions = () => {
   const { t } = useTranslation();
