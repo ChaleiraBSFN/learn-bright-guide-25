@@ -9,7 +9,7 @@ const corsHeaders = {
 
 const imageSchema = z.object({
   mimeType: z.string().regex(/^image\/(png|jpeg|jpg|webp|gif|heic|heif)$/i),
-  data: z.string().min(1).max(8_000_000), // base64, ~6MB binary max
+  data: z.string().min(1).max(8_000_000),
 });
 
 const messageSchema = z.object({
@@ -87,54 +87,22 @@ const safetySettings = [
   { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" },
 ];
 
-async function tryModel(model: string, contents: any[], systemInstruction: string, apiKey: string, signal: AbortSignal): Promise<{ text: string | null; status: number }> {
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemInstruction }] },
-          contents,
-          safetySettings,
-          generationConfig: { temperature: 0.85, maxOutputTokens: 4096 },
-        }),
-        signal,
-      }
-    );
-    if (!response.ok) {
-      const errText = await response.text().catch(() => "");
-      console.error(`[chat-buddy] ${model} ${response.status}: ${errText.slice(0, 300)}`);
-      return { text: null, status: response.status };
+async function streamGemini(model: string, contents: any[], systemInstruction: string, apiKey: string, signal: AbortSignal) {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemInstruction }] },
+        contents,
+        safetySettings,
+        generationConfig: { temperature: 0.85, maxOutputTokens: 4096 },
+      }),
+      signal,
     }
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.map((p: any) => p.text).filter(Boolean).join("\n");
-    return text ? { text, status: 200 } : { text: null, status: 502 };
-  } catch (e: any) {
-    if (e.name !== "AbortError") console.error(`[chat-buddy] ${model}:`, e.message);
-    return { text: null, status: 0 };
-  }
-}
-
-async function callGemini(contents: any[], systemInstruction: string, apiKey: string, hasImage: boolean): Promise<{ text: string | null; lastStatus: number }> {
-  const models = hasImage
-    ? ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
-    : ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash", "gemini-1.5-pro"];
-  let lastStatus = 0;
-  for (const model of models) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    try {
-      const { text, status } = await tryModel(model, contents, systemInstruction, apiKey, controller.signal);
-      if (text) return { text, lastStatus: 200 };
-      lastStatus = status;
-      if (status !== 429 && status < 500 && status !== 0) break;
-    } finally {
-      clearTimeout(timeoutId);
-    }
-  }
-  return { text: null, lastStatus };
+  );
+  return response;
 }
 
 const toAnonUuid = async (input: string): Promise<string> => {
@@ -199,30 +167,94 @@ serve(async (req) => {
     ].filter(Boolean) as string[];
 
     if (geminiKeys.length === 0) {
-      console.error("[chat-buddy] No Gemini API keys configured");
       return new Response(JSON.stringify({ error: "Serviço não configurado." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     geminiKeys.sort(() => Math.random() - 0.5);
 
-    let content: string | null = null;
+    const models = hasImage
+      ? ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
+      : ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash"];
+
+    // Try keys/models until one starts streaming successfully (returns 200 and first chunk)
+    let upstream: Response | null = null;
     let lastStatus = 0;
-    for (const key of geminiKeys) {
-      const result = await callGemini(contents, systemInstruction, key, hasImage);
-      content = result.text;
-      lastStatus = result.lastStatus;
-      if (content) break;
+    outer: for (const key of geminiKeys) {
+      for (const model of models) {
+        try {
+          const r = await streamGemini(model, contents, systemInstruction, key, req.signal);
+          if (r.ok) { upstream = r; break outer; }
+          lastStatus = r.status;
+          const errText = await r.text().catch(() => "");
+          console.error(`[chat-buddy] ${model} ${r.status}: ${errText.slice(0, 200)}`);
+          // 4xx other than 429 → don't retry same key with smaller model
+          if (r.status !== 429 && r.status < 500) break;
+        } catch (e: any) {
+          console.error(`[chat-buddy] fetch error ${model}:`, e.message);
+          lastStatus = 0;
+        }
+      }
     }
 
-    if (!content) {
+    if (!upstream || !upstream.body) {
       const isRate = lastStatus === 429;
       return new Response(
-        JSON.stringify({ error: isRate ? "Limite de requisições excedido." : "Não consegui gerar resposta agora. Tente reformular." }),
-        { status: isRate ? 429 : 503, headers: { ...corsHeaders, "Content-Type": "application/json", ...(isRate ? { "Retry-After": "60" } : {}) } }
+        JSON.stringify({ error: isRate ? "Limite de requisições excedido." : "Serviço indisponível." }),
+        { status: isRate ? 429 : 503, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    return new Response(JSON.stringify({ reply: content.trim() }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    // Transform Gemini SSE into a plain text delta stream
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = upstream!.body!.getReader();
+        const decoder = new TextDecoder();
+        const encoder = new TextEncoder();
+        let buffer = "";
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) continue;
+              const payload = trimmed.slice(5).trim();
+              if (!payload || payload === "[DONE]") continue;
+              try {
+                const json = JSON.parse(payload);
+                const parts = json?.candidates?.[0]?.content?.parts;
+                if (Array.isArray(parts)) {
+                  for (const p of parts) {
+                    if (typeof p?.text === "string" && p.text.length > 0) {
+                      controller.enqueue(encoder.encode(p.text));
+                    }
+                  }
+                }
+              } catch { /* ignore malformed chunk */ }
+            }
+          }
+          controller.close();
+        } catch (e) {
+          console.error("[chat-buddy] stream error", e);
+          try { controller.close(); } catch {}
+        }
+      },
+      cancel() {
+        try { upstream!.body!.cancel(); } catch {}
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+        "X-Accel-Buffering": "no",
+      },
+    });
   } catch (error) {
     console.error("[chat-buddy] error:", error);
     return new Response(JSON.stringify({ error: "Erro no chat." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
