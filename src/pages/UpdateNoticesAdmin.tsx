@@ -309,7 +309,14 @@ const PromoBannersTab = ({ userId }: { userId?: string }) => {
 
   const startEdit = (b: PromoBanner) => {
     setEditingId(b.id);
-    setForm({ title: b.title, description: b.description, cta_label: b.cta_label, route: b.route, icon: b.icon, variant: b.variant, sort_order: b.sort_order });
+    setForm({
+      title: b.title, description: b.description, cta_label: b.cta_label, route: b.route,
+      icon: b.icon, variant: b.variant, sort_order: b.sort_order,
+      start_at: b.start_at, end_at: b.end_at,
+      daily_start_minutes: b.daily_start_minutes, daily_end_minutes: b.daily_end_minutes,
+      days_of_week: b.days_of_week,
+      max_per_day: b.max_per_day, max_per_week: b.max_per_week,
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
