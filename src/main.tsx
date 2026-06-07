@@ -52,10 +52,18 @@ if (isInIframe || isPreviewHost) {
 
   const forceUpdate = () => updateSW(true).catch(() => {});
 
-  // Fast version-fingerprint check: fetches index.html bypassing any cache,
-  // compares its hash, and triggers a hard reload when the build changes.
-  // This catches new deploys even when the service worker is slow to notice.
-  let lastFingerprint: string | null = null;
+  // Fast version-fingerprint check: compares the currently loaded build's
+  // asset hashes against a freshly fetched index.html. Baseline comes from
+  // the live document so even the FIRST poll can detect a stale tab.
+  const currentAssets = Array.from(
+    document.querySelectorAll('script[src^="/assets/"], link[href^="/assets/"]')
+  )
+    .map((el) => el.getAttribute("src") || el.getAttribute("href") || "")
+    .filter(Boolean)
+    .sort()
+    .join("|");
+  let lastFingerprint: string = currentAssets;
+
   const fingerprintIndex = async () => {
     try {
       const res = await fetch(`/?_v=${Date.now()}`, {
@@ -64,24 +72,24 @@ if (isInIframe || isPreviewHost) {
       });
       if (!res.ok) return;
       const text = await res.text();
-      // Hash only the asset references (script/link tags carry the build hash)
-      const assetRefs = (text.match(/(?:src|href)="\/assets\/[^"]+"/g) || []).join("|");
+      const assetRefs = (text.match(/\/assets\/[^"'\s>]+/g) || []).sort().join("|");
       const fp = assetRefs || text.length.toString();
-      if (lastFingerprint && lastFingerprint !== fp) {
+      if (lastFingerprint && fp && lastFingerprint !== fp) {
         hardReload();
         return;
       }
-      lastFingerprint = fp;
+      if (!lastFingerprint) lastFingerprint = fp;
     } catch {}
   };
 
+  // Immediate check on boot — catches users opening a stale tab
   fingerprintIndex();
 
-  // Poll every 3 seconds for updates (both SW + index fingerprint)
+  // Poll every 2 seconds for updates (both SW + index fingerprint)
   setInterval(() => {
     forceUpdate();
     fingerprintIndex();
-  }, 3 * 1000);
+  }, 2 * 1000);
 
   const onWake = () => {
     forceUpdate();
