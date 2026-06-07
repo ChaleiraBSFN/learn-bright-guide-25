@@ -24,9 +24,9 @@ import Downloads from "./pages/Downloads";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import Community from "./pages/Community";
+import ChatBuddy from "./pages/ChatBuddy";
 import { useTimeTracker } from "@/hooks/useAchievements";
 import { useVisitHeartbeat } from "@/hooks/useVisitHeartbeat";
-import { PrimeOverlay } from "@/components/PrimeOverlay";
 
 const queryClient = new QueryClient();
 
@@ -39,7 +39,7 @@ const AppContent = () => {
       <Toaster />
       <Sonner />
       <RateLimitBar />
-      <PrimeOverlay />
+      
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -58,6 +58,7 @@ const AppContent = () => {
           <Route path="/downloads" element={<Downloads />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/chat-buddy" element={<ChatBuddy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

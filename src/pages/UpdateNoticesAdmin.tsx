@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { SEO } from '@/components/SEO';
 import { ArrowLeft, Megaphone, Loader2, Trash2, Send, Pencil, X, Image as ImageIcon } from 'lucide-react';
@@ -59,6 +60,17 @@ const VARIANT_OPTIONS = [
   { key: 'amber', label: 'Âmbar', dot: 'bg-amber-500' },
   { key: 'emerald', label: 'Verde', dot: 'bg-emerald-500' },
   { key: 'rose', label: 'Rosa', dot: 'bg-rose-500' },
+];
+
+const ROUTE_OPTIONS: { value: string; label: string }[] = [
+  { value: '/', label: '🏠 Início — Gerar conteúdo / exercícios' },
+  { value: '/community', label: '👥 Comunidade' },
+  { value: '/chat-buddy', label: '💬 Chat com Learn Buddy (IA)' },
+  { value: '/install', label: '📲 Baixar App (Instalar)' },
+  { value: '/downloads', label: '⬇️ Downloads (Android / Desktop)' },
+  { value: '/settings', label: '⚙️ Configurações' },
+  { value: '/privacy', label: '🔒 Privacidade' },
+  { value: '/auth', label: '🔑 Login / Cadastro' },
 ];
 
 const NoticesTab = ({ userId }: { userId?: string }) => {
@@ -293,9 +305,24 @@ const PromoBannersTab = ({ userId }: { userId?: string }) => {
         <CardContent className="space-y-4">
           <div><Label>Título</Label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="✨ Conheça a Comunidade!" className="mt-1" /></div>
           <div><Label>Descrição</Label><Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="mt-1 min-h-[70px]" /></div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div><Label>Texto do botão</Label><Input value={form.cta_label} onChange={e => setForm(f => ({ ...f, cta_label: e.target.value }))} className="mt-1" /></div>
-            <div><Label>Rota (link)</Label><Input value={form.route} onChange={e => setForm(f => ({ ...f, route: e.target.value }))} placeholder="/community" className="mt-1" /></div>
+            <div>
+              <Label>Rota (para onde o botão leva)</Label>
+              <Select value={ROUTE_OPTIONS.some(r => r.value === form.route) ? form.route : '__custom'} onValueChange={(v) => { if (v !== '__custom') setForm(f => ({ ...f, route: v })); }}>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="Escolha uma rota" /></SelectTrigger>
+                <SelectContent>
+                  {ROUTE_OPTIONS.map(r => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+                  <SelectItem value="__custom">✏️ Outra (personalizar abaixo)</SelectItem>
+                </SelectContent>
+              </Select>
+              <Input
+                value={form.route}
+                onChange={e => setForm(f => ({ ...f, route: e.target.value }))}
+                placeholder="/community"
+                className="mt-2 text-xs font-mono"
+              />
+            </div>
           </div>
           <div>
             <Label>Cor</Label>

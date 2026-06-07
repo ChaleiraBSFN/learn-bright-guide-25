@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -9,7 +9,6 @@ import { ProgressTrail } from '@/components/ProgressTrail';
 import { RankingDialog } from '@/components/RankingDialog';
 import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { PrimeButton } from '@/components/PrimeButton';
 
 export const FloatingActions = () => {
   const { t } = useTranslation();
@@ -128,8 +127,22 @@ export const FloatingActions = () => {
           <TooltipContent side="left">{t('community.tooltip', 'Comunidade')}</TooltipContent>
         </Tooltip>
 
-        {/* Prime Button */}
-        <PrimeButton />
+        {/* Chat Buddy */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => navigate('/chat-buddy')}
+              aria-label={t('chatBuddy.tooltip', 'Chat com Learn Buddy')}
+              className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-pink-500/40 hover:bg-pink-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(330_80%_60%/0.6),0_4px_14px_-3px_hsl(330_80%_60%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(330_80%_60%/0.85)]"
+            >
+              <MessageSquare className="h-4 w-4 text-pink-500" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">{t('chatBuddy.tooltip', 'Chat com Learn Buddy')}</TooltipContent>
+        </Tooltip>
+
 
         {/* Study Groups */}
         {groupsEnabled && <StudyGroups />}
