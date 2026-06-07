@@ -309,7 +309,8 @@
     "deleteDescription": "Êtes-vous sûr ?",
     "cancel": "Annuler",
     "confirm": "Supprimer",
-    "saved": "Sauvegardé !"
+    "saved": "Sauvegardé !",
+    "chat": "Chat Buddy"
   },
   "exercises": {
     "topic": "Sujet des exercices",

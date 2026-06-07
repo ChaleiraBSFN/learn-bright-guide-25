@@ -312,7 +312,8 @@
     "deleteDescription": "Tem certeza que deseja excluir este item do histórico?",
     "cancel": "Cancelar",
     "confirm": "Excluir",
-    "saved": "Salvo no histórico!"
+    "saved": "Salvo no histórico!",
+    "chat": "Chat Buddy"
   },
   "exercises": {
     "topic": "Assunto dos Exercícios",
