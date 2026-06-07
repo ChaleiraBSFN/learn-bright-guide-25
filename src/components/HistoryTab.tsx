@@ -70,6 +70,13 @@ export const HistoryTab = ({ onViewStudy, onViewExercise }: HistoryTabProps) => 
   const handleView = (entry: HistoryEntry) => {
     if (entry.type === "study") {
       onViewStudy(entry.content, entry.topic);
+    } else if (entry.type === "chat") {
+      navigate("/chat-buddy", {
+        state: {
+          messages: entry.content?.messages || [],
+          historyId: entry.id,
+        },
+      });
     } else {
       onViewExercise(entry.content);
     }
