@@ -61,13 +61,21 @@ async function fileToCompressedBase64(file: File): Promise<ChatImage> {
 const ChatBuddy = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
   const { toast } = useToast();
+  const initial = (location.state as any) || null;
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (initial?.messages) return initial.messages as ChatMessage[];
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) return JSON.parse(raw);
     } catch {}
     return [];
+  });
+  const [historyId, setHistoryId] = useState<string | null>(() => {
+    if (initial?.historyId) return initial.historyId as string;
+    try { return localStorage.getItem(HISTORY_ID_KEY); } catch { return null; }
   });
   const [input, setInput] = useState("");
   const [pendingImages, setPendingImages] = useState<ChatImage[]>([]);
@@ -75,6 +83,19 @@ const ChatBuddy = () => {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // If we navigated in with state, persist it as the current session
+  useEffect(() => {
+    if (initial?.messages) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(initial.messages)); } catch {}
+    }
+    if (initial?.historyId) {
+      try { localStorage.setItem(HISTORY_ID_KEY, initial.historyId); } catch {}
+    }
+    // clear nav state so refresh doesn't replay it
+    if (initial) navigate(location.pathname, { replace: true, state: null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     try {
