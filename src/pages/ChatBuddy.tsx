@@ -286,7 +286,7 @@ const ChatBuddy = () => {
                 )}
               </div>
             </div>
-          ))}
+          );})}
 
           {loading && messages[messages.length - 1]?.role === "model" && !messages[messages.length - 1]?.text && (
             <div className="flex justify-start -mt-2">
