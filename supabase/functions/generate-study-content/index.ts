@@ -388,15 +388,19 @@ serve(async (req) => {
       }
     }
 
-    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || req.headers.get('cf-connecting-ip')
+      || req.headers.get('x-real-ip')
+      || req.headers.get('user-agent')
+      || 'unknown';
     const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
-    const maxRequests = isPremium ? 600 : (userId ? 200 : 100);
+    const maxRequests = isPremium ? 240 : (userId ? 180 : 900);
     const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
-      _user_id: rateLimitId, _endpoint: 'generate-study-content', _max_requests: maxRequests, _window_minutes: 60,
+      _user_id: rateLimitId, _endpoint: 'generate-study-content', _max_requests: maxRequests, _window_minutes: 1,
     });
 
     if (isAllowed === false) {
-      return new Response(JSON.stringify({ error: 'Limite de requisições excedido.' }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: 'Muitas requisições ao mesmo tempo. Tente novamente em alguns segundos.' }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "2" } });
     }
 
     let rawBody;
@@ -472,7 +476,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
 
     if (!content) {
       if (lastStatus === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições atingido. Tente novamente em alguns instantes." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } });
+        return new Response(JSON.stringify({ error: "Gemini está no limite agora. Tente novamente em alguns segundos." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "2" } });
       }
       return new Response(JSON.stringify({ error: "Serviço indisponível. Tente novamente." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }

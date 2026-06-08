@@ -69,23 +69,32 @@ Rules:
 }
 
 async function callGemini(prompt: string, key: string, maxTokens: number) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json" },
-      }),
-    });
-    if (!res.ok) return { text: null, lastStatus: res.status };
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    return { text: text ?? null, lastStatus: res.status };
-  } catch {
-    return { text: null, lastStatus: 0 };
+  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-flash"];
+  let lastStatus = 0;
+
+  for (const model of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json" },
+        }),
+      });
+      lastStatus = res.status;
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return { text, lastStatus: 200 };
+      }
+      if (res.status !== 429 && res.status < 500) break;
+    } catch {
+      lastStatus = 0;
+    }
   }
+
+  return { text: null, lastStatus };
 }
 
 function parseJson(raw: string): any {
@@ -107,13 +116,17 @@ serve(async (req) => {
       if (authUser) userId = authUser.id;
     }
 
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      || req.headers.get("cf-connecting-ip")
+      || req.headers.get("x-real-ip")
+      || req.headers.get("user-agent")
+      || "unknown";
     const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
     const { data: isAllowed } = await serviceClient.rpc("check_rate_limit", {
-      _user_id: rateLimitId, _endpoint: "generate-study-plan", _max_requests: userId ? 200 : 100, _window_minutes: 60,
+      _user_id: rateLimitId, _endpoint: "generate-study-plan", _max_requests: userId ? 180 : 900, _window_minutes: 1,
     });
     if (isAllowed === false) {
-      return new Response(JSON.stringify({ error: "Limite de requisições excedido." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Muitas requisições ao mesmo tempo. Tente novamente em alguns segundos." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "2" } });
     }
 
     let rawBody;
@@ -151,7 +164,7 @@ serve(async (req) => {
 
     if (!content) {
       const status = lastStatus === 429 ? 429 : 503;
-      return new Response(JSON.stringify({ error: status === 429 ? "Limite atingido. Tente novamente em alguns instantes." : "Serviço indisponível." }), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: status === 429 ? "Gemini está no limite agora. Tente novamente em alguns segundos." : "Serviço indisponível." }), { status, headers: { ...corsHeaders, "Content-Type": "application/json", ...(status === 429 ? { "Retry-After": "2" } : {}) } });
     }
 
     let result;
