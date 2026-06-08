@@ -234,7 +234,9 @@ export const FloatingActions = () => {
             </TooltipContent>
           </Tooltip>
         )}
-      </div>
+        </div>
+      )}
+
 
       {/* Progress Trail Dialog */}
       <ProgressTrail open={showTrail} onClose={() => setShowTrail(false)} />
