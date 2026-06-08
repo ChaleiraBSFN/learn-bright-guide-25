@@ -33,6 +33,7 @@ const GeneratingOverlay = lazy(() => import("@/components/GeneratingOverlay").th
 const HistoryTab = lazy(() => import("@/components/HistoryTab").then((module) => ({ default: module.HistoryTab })));
 const StudyResult = lazy(() => import("@/components/StudyResult").then((module) => ({ default: module.StudyResult })));
 const SupportChat = lazy(() => import("@/components/SupportChat").then((module) => ({ default: module.SupportChat })));
+const StudyPlanSection = lazy(() => import("@/components/sections/StudyPlanSection").then((m) => ({ default: m.StudyPlanSection })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
