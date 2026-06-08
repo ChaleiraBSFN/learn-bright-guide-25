@@ -16,9 +16,10 @@ interface StudyPlanSectionProps {
   };
   onGenerateExercise?: (taskDescription: string) => void;
   isGeneratingExercise?: boolean;
+  hideNumberPrefix?: boolean;
 }
 
-export function StudyPlanSection({ data, onGenerateExercise, isGeneratingExercise }: StudyPlanSectionProps) {
+export function StudyPlanSection({ data, onGenerateExercise, isGeneratingExercise, hideNumberPrefix }: StudyPlanSectionProps) {
   const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   
