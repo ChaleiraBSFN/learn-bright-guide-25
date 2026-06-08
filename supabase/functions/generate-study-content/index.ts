@@ -429,7 +429,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     const maxDays = Math.min(prazo, 30);
     const baseTokens = isPremium ? 8000 : 5000;
     const dayTokens = maxDays * 250;
-    const maxTokens = Math.min(baseTokens + dayTokens, 16000);
+    const maxTokens = isPremium ? 9000 : 6000;
 
     const geminiKeys = [
       Deno.env.get("GOOGLE_GEMINI_API_KEY"),
