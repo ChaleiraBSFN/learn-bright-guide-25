@@ -10,7 +10,7 @@ const corsHeaders = {
 const requestSchema = z.object({
   tema: z.string().min(1).max(200),
   nivel: z.string().min(1).max(50),
-  prazo: z.number().int().min(1).max(365),
+  prazo: z.number().int().min(0).max(365).optional().default(0),
   duvidas: z.string().max(1000).optional().nullable(),
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
   imagemBase64: z.string().optional().nullable(),
