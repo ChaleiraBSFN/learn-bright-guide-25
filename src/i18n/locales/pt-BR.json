@@ -753,5 +753,9 @@
     "bannerTitle": "✨ Conheça a Comunidade!",
     "bannerDesc": "Compartilhe exercícios, soluções e dúvidas com estudantes de todo o mundo. Doe buddies para ajudar quem você curte!",
     "bannerCta": "Explorar"
+  },
+  "fullscreen": {
+    "enter": "Tela Cheia",
+    "exit": "Sair da Tela Cheia"
   }
 }

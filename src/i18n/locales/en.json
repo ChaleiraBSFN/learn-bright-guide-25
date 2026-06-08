@@ -751,5 +751,9 @@
     "bannerTitle": "✨ Meet the Community!",
     "bannerDesc": "Share exercises, solutions and doubts with students from everywhere. Donate buddies to support who you like!",
     "bannerCta": "Explore"
+  },
+  "fullscreen": {
+    "enter": "Full Screen",
+    "exit": "Exit Full Screen"
   }
 }

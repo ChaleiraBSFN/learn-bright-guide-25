@@ -738,5 +738,9 @@
     "bannerTitle": "✨ Découvrez la Communauté !",
     "bannerDesc": "Partagez exercices, solutions et doutes avec des étudiants du monde entier. Donnez des buddies pour soutenir vos préférés !",
     "bannerCta": "Explorer"
+  },
+  "fullscreen": {
+    "enter": "Plein Écran",
+    "exit": "Quitter le Plein Écran"
   }
 }
