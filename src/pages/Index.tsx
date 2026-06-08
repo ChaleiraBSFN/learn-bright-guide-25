@@ -718,6 +718,30 @@ const Index = () => {
                 />
               </Suspense>
             </motion.div>
+          ) : planContent ? (
+            <motion.div
+              key="plan-result"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="mx-auto max-w-4xl relative"
+            >
+              <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
+                <StudyPlanSection
+                  data={planContent.planoEstudo}
+                  onGenerateExercise={(taskDescription) => {
+                    handleExerciseSubmit({
+                      tema: taskDescription,
+                      nivel: "medio",
+                      quantidade: 5,
+                      dificuldade: "variado",
+                    });
+                  }}
+                  isGeneratingExercise={isExerciseLoading}
+                />
+              </Suspense>
+            </motion.div>
           ) : null}
         </AnimatePresence>
       </main>
