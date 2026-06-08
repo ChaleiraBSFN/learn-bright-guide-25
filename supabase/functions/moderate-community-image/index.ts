@@ -56,10 +56,10 @@ serve(async (req) => {
 
     const serviceClient = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
     const { data: allowed } = await serviceClient.rpc("check_rate_limit", {
-      _user_id: user.id, _endpoint: "moderate-community-image", _max_requests: 30, _window_minutes: 60,
+      _user_id: user.id, _endpoint: "moderate-community-image", _max_requests: 120, _window_minutes: 1,
     });
     if (allowed === false) {
-      return new Response(JSON.stringify({ error: "Rate limited" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Muitas requisições ao mesmo tempo. Tente novamente em alguns segundos." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "2" } });
     }
 
     const body = await req.json().catch(() => ({}));
