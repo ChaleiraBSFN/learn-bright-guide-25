@@ -297,7 +297,8 @@
   "tabs": {
     "study": "Materiale",
     "exercises": "Esercizi",
-    "history": "Cronologia"
+    "history": "Cronologia",
+    "plan": "Piano di Studio"
   },
   "history": {
     "title": "Cronologia",
@@ -742,5 +743,20 @@
   "fullscreen": {
     "enter": "Schermo Intero",
     "exit": "Esci da Schermo Intero"
+  },
+  "planForm": {
+    "title": "Genera Piano di Studio",
+    "topic": "Argomento",
+    "topicPh": "Es.: Calcolo I, Rivoluzione Francese, Programmazione Python...",
+    "days": "Numero di giorni",
+    "daysPh": "Es.: 7",
+    "level": "Livello scolastico",
+    "doubts": "Domande specifiche (opzionale)",
+    "doubtsPh": "Dicci su cosa vorresti concentrarti...",
+    "generate": "Genera piano",
+    "generating": "Generazione piano...",
+    "success": "Piano pronto!",
+    "successDesc": "Il tuo piano di studio è stato generato.",
+    "backToForm": "Indietro"
   }
 }

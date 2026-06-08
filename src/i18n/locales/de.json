@@ -297,7 +297,8 @@
   "tabs": {
     "study": "Lernmaterial",
     "exercises": "Übungen",
-    "history": "Verlauf"
+    "history": "Verlauf",
+    "plan": "Lernplan"
   },
   "history": {
     "title": "Verlauf",
@@ -742,5 +743,20 @@
   "fullscreen": {
     "enter": "Vollbild",
     "exit": "Vollbild beenden"
+  },
+  "planForm": {
+    "title": "Lernplan erstellen",
+    "topic": "Thema",
+    "topicPh": "Z.B.: Analysis I, Französische Revolution, Python-Programmierung...",
+    "days": "Anzahl der Tage",
+    "daysPh": "Z.B.: 7",
+    "level": "Bildungsstufe",
+    "doubts": "Spezifische Fragen (optional)",
+    "doubtsPh": "Worauf möchten Sie sich konzentrieren?",
+    "generate": "Plan erstellen",
+    "generating": "Plan wird erstellt...",
+    "success": "Plan bereit!",
+    "successDesc": "Ihr Lernplan wurde erstellt.",
+    "backToForm": "Zurück"
   }
 }

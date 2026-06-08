@@ -3,11 +3,12 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
+import { StudyPlanForm } from "@/components/StudyPlanForm";
 import { triggerRateLimit } from "@/components/RateLimitBar";
 import { FeatureCarousel } from "@/components/FeatureCarousel";
-import { StudyContent, StudyFormData } from "@/types/study";
+import { StudyContent, StudyFormData, StudyPlanContent, StudyPlanFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
-import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages } from "lucide-react";
+import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages, CalendarDays } from "lucide-react";
 import learnBuddyLogo from "@/assets/learn-buddy-logo.jpeg";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,6 +33,7 @@ const GeneratingOverlay = lazy(() => import("@/components/GeneratingOverlay").th
 const HistoryTab = lazy(() => import("@/components/HistoryTab").then((module) => ({ default: module.HistoryTab })));
 const StudyResult = lazy(() => import("@/components/StudyResult").then((module) => ({ default: module.StudyResult })));
 const SupportChat = lazy(() => import("@/components/SupportChat").then((module) => ({ default: module.SupportChat })));
+const StudyPlanSection = lazy(() => import("@/components/sections/StudyPlanSection").then((m) => ({ default: m.StudyPlanSection })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
@@ -96,6 +98,10 @@ const Index = () => {
   const [isExerciseLoading, setIsExerciseLoading] = useState(false);
   const [isFinishingExercise, setIsFinishingExercise] = useState(false);
   const [exerciseContent, setExerciseContent] = useState<ExerciseContent | null>(null);
+
+  const [isPlanLoading, setIsPlanLoading] = useState(false);
+  const [planContent, setPlanContent] = useState<StudyPlanContent | null>(null);
+  const [currentPlanTema, setCurrentPlanTema] = useState("");
 
   const [settings, setSettings] = useState<PlatformSettings>(getSettings());
   const [activeTab, setActiveTab] = useState(() => {
@@ -275,7 +281,7 @@ const Index = () => {
           method: "POST",
           headers,
           body: JSON.stringify({ 
-            tema: data.tema, nivel: data.nivel, prazo: data.prazo,
+            tema: data.tema, nivel: data.nivel,
             duvidas: data.duvidas, idioma: i18n.language,
             imagemBase64: data.imagemBase64,
           }),
@@ -309,7 +315,7 @@ const Index = () => {
       setStudyContent(content);
       contentLanguageRef.current = i18n.language;
       await useCredit();
-      saveToHistory("study", data.tema, data.nivel, content, { prazo: data.prazo });
+      saveToHistory("study", data.tema, data.nivel, content);
 
       // Start image generation IN PARALLEL with the finishing animation,
       // so images are ready (or close to it) when overlay disappears — works on mobile too.
@@ -435,16 +441,85 @@ const Index = () => {
     }
   };
 
+  const handlePlanSubmit = async (data: StudyPlanFormData) => {
+    if (!hasCredits) {
+      toast({ title: t('credits.noCredits'), description: user ? t('credits.earnMore') : t('credits.signupForMore'), variant: 'destructive' });
+      return;
+    }
+    setIsPlanLoading(true);
+    setPlanContent(null);
+    setCurrentPlanTema(data.tema);
+
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (sessionData.session?.access_token) {
+        headers.Authorization = `Bearer ${sessionData.session.access_token}`;
+      }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-study-plan`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            tema: data.tema, nivel: data.nivel, dias: data.dias,
+            duvidas: data.duvidas, idioma: i18n.language,
+          }),
+          signal: controller.signal,
+        }
+      );
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Erro desconhecido" }));
+        if (response.status === 429) {
+          const retryAfter = Number(response.headers.get("retry-after")) || 60;
+          triggerRateLimit(retryAfter);
+          throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        }
+        if (response.status === 402) throw new Error("Créditos insuficientes.");
+        throw new Error(errorData.error || "Erro ao gerar roteiro");
+      }
+
+      const content = await response.json() as StudyPlanContent;
+      if (!content?.planoEstudo?.blocos?.length) {
+        throw new Error("O roteiro gerado está incompleto. Tente novamente.");
+      }
+
+      setPlanContent(content);
+      await useCredit();
+      saveToHistory("study", data.tema, data.nivel, content, { kind: "plan", dias: data.dias });
+
+      toast({ title: t('planForm.success'), description: t('planForm.successDesc') });
+      checkAndUnlock('generate_study');
+    } catch (error) {
+      console.error("Error generating plan:", error);
+      const message = error instanceof Error
+        ? (error.name === 'AbortError' ? 'A conexão demorou muito. Verifique sua internet e tente novamente.' : error.message)
+        : "Não foi possível gerar o roteiro.";
+      toast({ title: "Erro", description: message, variant: "destructive" });
+      setPlanContent(null);
+    } finally {
+      setIsPlanLoading(false);
+    }
+  };
+
   const handleReset = () => {
     setStudyContent(null);
     setExerciseContent(null);
+    setPlanContent(null);
     setCurrentTema("");
+    setCurrentPlanTema("");
     setAiImages([]);
     setWebImages([]);
   };
 
-  const showingResult = studyContent || exerciseContent;
-  const viewKey = showingResult ? (studyContent ? "study-result" : "exercise-result") : "form";
+  const showingResult = studyContent || exerciseContent || planContent;
+  const viewKey = showingResult ? (studyContent ? "study-result" : planContent ? "plan-result" : "exercise-result") : "form";
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
@@ -533,7 +608,7 @@ const Index = () => {
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full grid h-auto gap-3 bg-transparent p-0" style={{ gridTemplateColumns: `repeat(${[settings.studyGenEnabled, settings.exercisesEnabled, true].filter(Boolean).length}, minmax(0, 1fr))` }}>
+                <TabsList className="w-full grid h-auto gap-3 bg-transparent p-0" style={{ gridTemplateColumns: `repeat(${[settings.studyGenEnabled, settings.exercisesEnabled, true, true].filter(Boolean).length}, minmax(0, 1fr))` }}>
                   {settings.studyGenEnabled && (
                     <TabsTrigger value="study" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                       <BookOpen className="h-4 w-4" />
@@ -546,6 +621,10 @@ const Index = () => {
                       <span className="hidden sm:inline">{t('tabs.exercises')}</span>
                     </TabsTrigger>
                   )}
+                  <TabsTrigger value="plan" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                    <CalendarDays className="h-4 w-4" />
+                    <span className="hidden sm:inline">{t('tabs.plan')}</span>
+                  </TabsTrigger>
                   <TabsTrigger value="history" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <History className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.history')}</span>
@@ -570,6 +649,10 @@ const Index = () => {
                         <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
                           <ExerciseForm onSubmit={handleExerciseSubmit} isLoading={isExerciseLoading} />
                         </Suspense>
+                      </div>
+                    ) : activeTab === "plan" ? (
+                      <div className="card-elevated p-6 md:p-8">
+                        <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
                       </div>
                     ) : (
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
@@ -635,6 +718,31 @@ const Index = () => {
                 />
               </Suspense>
             </motion.div>
+          ) : planContent ? (
+            <motion.div
+              key="plan-result"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="mx-auto max-w-4xl relative"
+            >
+              <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
+                <StudyPlanSection
+                  data={planContent.planoEstudo}
+                  hideNumberPrefix
+                  onGenerateExercise={(taskDescription) => {
+                    handleExerciseSubmit({
+                      tema: taskDescription,
+                      nivel: "medio",
+                      quantidade: 5,
+                      dificuldade: "variado",
+                    });
+                  }}
+                  isGeneratingExercise={isExerciseLoading}
+                />
+              </Suspense>
+            </motion.div>
           ) : null}
         </AnimatePresence>
       </main>
@@ -644,6 +752,13 @@ const Index = () => {
         {isLoading && (
           <Suspense fallback={null}>
             <GeneratingOverlay type="study" isFinishing={isFinishingStudy} />
+          </Suspense>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isPlanLoading && (
+          <Suspense fallback={null}>
+            <GeneratingOverlay type="study" isFinishing={false} />
           </Suspense>
         )}
       </AnimatePresence>

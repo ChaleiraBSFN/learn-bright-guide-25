@@ -297,7 +297,8 @@
   "tabs": {
     "study": "学習教材",
     "exercises": "演習生成",
-    "history": "履歴"
+    "history": "履歴",
+    "plan": "学習計画"
   },
   "history": {
     "title": "履歴",
@@ -742,5 +743,20 @@
   "fullscreen": {
     "enter": "全画面表示",
     "exit": "全画面表示を終了"
+  },
+  "planForm": {
+    "title": "学習計画を生成",
+    "topic": "テーマ",
+    "topicPh": "例：微積分I、フランス革命、Pythonプログラミング...",
+    "days": "日数",
+    "daysPh": "例：7",
+    "level": "教育レベル",
+    "doubts": "具体的な質問（任意）",
+    "doubtsPh": "重点的に学びたいことを教えてください...",
+    "generate": "計画を生成",
+    "generating": "計画を生成中...",
+    "success": "計画ができました！",
+    "successDesc": "学習計画が生成されました。",
+    "backToForm": "戻る"
   }
 }

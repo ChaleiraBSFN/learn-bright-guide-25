@@ -97,8 +97,28 @@ export interface StudyContent {
 export interface StudyFormData {
   tema: string;
   nivel: string;
-  prazo: number;
+  prazo?: number;
   duvidas: string;
   isPremium?: boolean;
   imagemBase64?: string;
+}
+
+export interface StudyPlanFormData {
+  tema: string;
+  nivel: string;
+  dias: number;
+  duvidas: string;
+}
+
+export interface StudyPlanContent {
+  planoEstudo: {
+    titulo: string;
+    blocos: Array<{
+      numero: number;
+      periodo: string;
+      objetivo: string;
+      tarefas: string[];
+      evidencia: string;
+    }>;
+  };
 }

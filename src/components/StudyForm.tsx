@@ -5,10 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BookOpen, GraduationCap, Calendar, HelpCircle, Sparkles } from "lucide-react";
+import { BookOpen, GraduationCap, HelpCircle, Sparkles } from "lucide-react";
 import { StudyFormData } from "@/types/study";
 import { ImageUpload } from "./ImageUpload";
-
 
 interface StudyFormProps {
   onSubmit: (data: StudyFormData) => void;
@@ -18,7 +17,6 @@ interface StudyFormProps {
 export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
   const [tema, setTema] = useState("");
   const [nivel, setNivel] = useState("");
-  const [prazo, setPrazo] = useState("");
   const [duvidas, setDuvidas] = useState("");
   const [imagemBase64, setImagemBase64] = useState<string | undefined>();
   const { t } = useTranslation();
@@ -34,13 +32,11 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Quando há imagem, basta a imagem — IA detecta tema/nível
-    if (!hasImage && (!tema || !nivel || !prazo)) return;
+    if (!hasImage && (!tema || !nivel)) return;
 
     onSubmit({
       tema: tema || (hasImage ? "Análise da imagem enviada" : ""),
       nivel: nivel || (hasImage ? "auto" : ""),
-      prazo: prazo ? parseInt(prazo) : (hasImage ? 1 : 0),
       duvidas,
       imagemBase64,
     });
@@ -50,7 +46,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       {hasImage && (
         <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-3 text-sm text-foreground">
-          ✨ Imagem detectada — você pode enviar apenas a imagem. Tema, nível e prazo viraram opcionais; a IA analisará automaticamente.
+          ✨ Imagem detectada — você pode enviar apenas a imagem. Tema e nível viraram opcionais; a IA analisará automaticamente.
         </div>
       )}
 
@@ -69,43 +65,23 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="nivel" className="flex items-center gap-2 text-base font-medium min-h-[1.75rem]">
-            <GraduationCap className="h-4 w-4 text-secondary" />
-            {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
-          </Label>
-          <Select value={nivel} onValueChange={setNivel} required={!hasImage}>
-            <SelectTrigger id="nivel" className="bg-card h-12">
-              <SelectValue placeholder={hasImage ? "Opcional" : t('form.selectLevel')} />
-            </SelectTrigger>
-            <SelectContent className="bg-popover z-50">
-              {niveis.map((n) => (
-                <SelectItem key={n.value} value={n.value}>
-                  {n.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="prazo" className="flex items-center gap-2 text-base font-medium min-h-[1.75rem]">
-            <Calendar className="h-4 w-4 text-accent" />
-            {t('form.deadline')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
-          </Label>
-          <Input
-            id="prazo"
-            type="number"
-            min="1"
-            max="90"
-            placeholder={hasImage ? "Opcional" : "Ex.: 7"}
-            value={prazo}
-            onChange={(e) => setPrazo(e.target.value)}
-            required={!hasImage}
-            className="bg-card h-12"
-          />
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="nivel" className="flex items-center gap-2 text-base font-medium">
+          <GraduationCap className="h-4 w-4 text-secondary" />
+          {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
+        </Label>
+        <Select value={nivel} onValueChange={setNivel} required={!hasImage}>
+          <SelectTrigger id="nivel" className="bg-card h-12">
+            <SelectValue placeholder={hasImage ? "Opcional" : t('form.selectLevel')} />
+          </SelectTrigger>
+          <SelectContent className="bg-popover z-50">
+            {niveis.map((n) => (
+              <SelectItem key={n.value} value={n.value}>
+                {n.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
@@ -129,7 +105,7 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         variant="hero"
         size="xl"
         className="w-full"
-        disabled={isLoading || (!hasImage && (!tema || !nivel || !prazo))}
+        disabled={isLoading || (!hasImage && (!tema || !nivel))}
       >
         {isLoading ? (
           <>

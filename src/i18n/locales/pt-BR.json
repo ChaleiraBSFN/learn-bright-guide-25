@@ -300,7 +300,8 @@
   "tabs": {
     "study": "Tirar Dúvidas",
     "exercises": "Gerar Exercícios",
-    "history": "Histórico"
+    "history": "Histórico",
+    "plan": "Roteiro de Estudo"
   },
   "history": {
     "title": "Seu Histórico",
@@ -757,5 +758,20 @@
   "fullscreen": {
     "enter": "Tela Cheia",
     "exit": "Sair da Tela Cheia"
+  },
+  "planForm": {
+    "title": "Gerar Roteiro de Estudo",
+    "topic": "Tema",
+    "topicPh": "Ex.: Cálculo I, Revolução Francesa, Programação Python...",
+    "days": "Quantidade de dias",
+    "daysPh": "Ex.: 7",
+    "level": "Nível de ensino",
+    "doubts": "Dúvidas específicas (opcional)",
+    "doubtsPh": "Conte o que você gostaria de focar...",
+    "generate": "Gerar roteiro",
+    "generating": "Gerando roteiro...",
+    "success": "Roteiro pronto!",
+    "successDesc": "Seu plano de estudos foi gerado.",
+    "backToForm": "Voltar"
   }
 }
