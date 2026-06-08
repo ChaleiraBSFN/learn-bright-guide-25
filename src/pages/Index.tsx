@@ -578,13 +578,13 @@ const Index = () => {
               className="mx-auto max-w-2xl space-y-8"
             >
               {/* Update Notice Banner */}
-              <UpdateNoticeBanner />
+              <Suspense fallback={null}><UpdateNoticeBanner /></Suspense>
 
               {/* Engine Notice Banner */}
-              <EngineNoticeBanner />
+              <Suspense fallback={null}><EngineNoticeBanner /></Suspense>
 
               {/* Promo Banners (admin-managed) */}
-              <PromoBanners />
+              <Suspense fallback={null}><PromoBanners /></Suspense>
 
 
               {/* Hero Section */}
@@ -603,7 +603,7 @@ const Index = () => {
               </div>
 
               {/* Feature Banner Carousel */}
-              <FeatureCarousel />
+              <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-muted" />}><FeatureCarousel /></Suspense>
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
