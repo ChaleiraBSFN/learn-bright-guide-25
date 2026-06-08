@@ -4,31 +4,33 @@ import { RateLimitBar } from "@/components/RateLimitBar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
-import ManageUsers from "./pages/ManageUsers";
-import SupportAdmin from "./pages/SupportAdmin";
-import Install from "./pages/Install";
-import EngineNoticesAdmin from "./pages/EngineNoticesAdmin";
 
-import Settings from "./pages/Settings";
-import ResetPassword from "./pages/ResetPassword";
-import ForgotPassword from "./pages/ForgotPassword";
-import UpdateNoticesAdmin from "./pages/UpdateNoticesAdmin";
-import PlatformControl from "./pages/PlatformControl";
-import AIConfigAdmin from "./pages/AIConfigAdmin";
-import Downloads from "./pages/Downloads";
-import Privacy from "./pages/Privacy";
-import NotFound from "./pages/NotFound";
-import Community from "./pages/Community";
-import ChatBuddy from "./pages/ChatBuddy";
 import { useTimeTracker } from "@/hooks/useAchievements";
 import { useVisitHeartbeat } from "@/hooks/useVisitHeartbeat";
 
 const queryClient = new QueryClient();
+
+const Auth = lazy(() => import("./pages/Auth"));
+const Admin = lazy(() => import("./pages/Admin"));
+const ManageUsers = lazy(() => import("./pages/ManageUsers"));
+const SupportAdmin = lazy(() => import("./pages/SupportAdmin"));
+const Install = lazy(() => import("./pages/Install"));
+const EngineNoticesAdmin = lazy(() => import("./pages/EngineNoticesAdmin"));
+const Settings = lazy(() => import("./pages/Settings"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const UpdateNoticesAdmin = lazy(() => import("./pages/UpdateNoticesAdmin"));
+const PlatformControl = lazy(() => import("./pages/PlatformControl"));
+const AIConfigAdmin = lazy(() => import("./pages/AIConfigAdmin"));
+const Downloads = lazy(() => import("./pages/Downloads"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Community = lazy(() => import("./pages/Community"));
+const ChatBuddy = lazy(() => import("./pages/ChatBuddy"));
 
 const AppContent = () => {
   useTimeTracker();
@@ -41,26 +43,28 @@ const AppContent = () => {
       <RateLimitBar />
       
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/manage-users" element={<ManageUsers />} />
-          <Route path="/support-admin" element={<SupportAdmin />} />
-          <Route path="/install" element={<Install />} />
-          <Route path="/engine-notices" element={<EngineNoticesAdmin />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/update-notices" element={<UpdateNoticesAdmin />} />
-          <Route path="/platform-control" element={<PlatformControl />} />
-          <Route path="/ai-config" element={<AIConfigAdmin />} />
-          <Route path="/downloads" element={<Downloads />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/chat-buddy" element={<ChatBuddy />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/manage-users" element={<ManageUsers />} />
+            <Route path="/support-admin" element={<SupportAdmin />} />
+            <Route path="/install" element={<Install />} />
+            <Route path="/engine-notices" element={<EngineNoticesAdmin />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/update-notices" element={<UpdateNoticesAdmin />} />
+            <Route path="/platform-control" element={<PlatformControl />} />
+            <Route path="/ai-config" element={<AIConfigAdmin />} />
+            <Route path="/downloads" element={<Downloads />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/chat-buddy" element={<ChatBuddy />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </>
   );
