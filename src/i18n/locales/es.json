@@ -732,5 +732,9 @@
     "bannerTitle": "✨ ¡Conoce la Comunidad!",
     "bannerDesc": "Comparte ejercicios, soluciones y dudas con estudiantes de todo el mundo. ¡Dona buddies para apoyar a quien te guste!",
     "bannerCta": "Explorar"
+  },
+  "fullscreen": {
+    "enter": "Pantalla Completa",
+    "exit": "Salir de Pantalla Completa"
   }
 }

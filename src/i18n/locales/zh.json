@@ -738,5 +738,9 @@
     "bannerTitle": "✨ 加入社区！",
     "bannerDesc": "与全球学生分享练习、解答与疑问。给你喜欢的人捐赠buddy支持他们！",
     "bannerCta": "探索"
+  },
+  "fullscreen": {
+    "enter": "全屏",
+    "exit": "退出全屏"
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -9,11 +9,13 @@ import { ProgressTrail } from '@/components/ProgressTrail';
 import { RankingDialog } from '@/components/RankingDialog';
 import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useFullscreen } from '@/hooks/useFullscreen';
 
 export const FloatingActions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
   const [isInstalled] = useState(
@@ -70,6 +72,24 @@ export const FloatingActions = () => {
           </TooltipTrigger>
           <TooltipContent side="left">
             {theme === 'dark' ? t('settings.themeLight', 'Tema claro') : t('settings.themeDark', 'Tema escuro')}
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Fullscreen */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? t('fullscreen.exit', 'Sair da Tela Cheia') : t('fullscreen.enter', 'Tela Cheia')}
+              className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-foreground/20 hover:bg-foreground hover:text-background transition-all shadow-[0_0_24px_-2px_hsl(var(--foreground)/0.3),0_4px_14px_-3px_hsl(var(--foreground)/0.25),inset_0_1px_0_hsl(0_0%_100%/0.2)]"
+            >
+              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            {isFullscreen ? t('fullscreen.exit', 'Sair da Tela Cheia') : t('fullscreen.enter', 'Tela Cheia')}
           </TooltipContent>
         </Tooltip>
 

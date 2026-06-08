@@ -738,5 +738,9 @@
     "bannerTitle": "✨ Entdecke die Community!",
     "bannerDesc": "Teile Übungen, Lösungen und Zweifel mit Schülern weltweit. Spende Buddies, um deine Favoriten zu unterstützen!",
     "bannerCta": "Erkunden"
+  },
+  "fullscreen": {
+    "enter": "Vollbild",
+    "exit": "Vollbild beenden"
   }
 }
