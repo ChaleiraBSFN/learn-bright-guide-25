@@ -291,7 +291,8 @@
   "tabs": {
     "study": "Material de Estudio",
     "exercises": "Generar Ejercicios",
-    "history": "Historial"
+    "history": "Historial",
+    "plan": "Plan de Estudio"
   },
   "history": {
     "title": "Tu Historial",
@@ -736,5 +737,20 @@
   "fullscreen": {
     "enter": "Pantalla Completa",
     "exit": "Salir de Pantalla Completa"
+  },
+  "planForm": {
+    "title": "Generar Plan de Estudio",
+    "topic": "Tema",
+    "topicPh": "Ej.: Cálculo I, Revolución Francesa, Programación Python...",
+    "days": "Cantidad de días",
+    "daysPh": "Ej.: 7",
+    "level": "Nivel educativo",
+    "doubts": "Dudas específicas (opcional)",
+    "doubtsPh": "Cuéntanos en qué te gustaría enfocarte...",
+    "generate": "Generar plan",
+    "generating": "Generando plan...",
+    "success": "¡Plan listo!",
+    "successDesc": "Tu plan de estudio ha sido generado.",
+    "backToForm": "Volver"
   }
 }

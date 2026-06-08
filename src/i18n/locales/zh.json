@@ -297,7 +297,8 @@
   "tabs": {
     "study": "学习材料",
     "exercises": "生成练习",
-    "history": "历史"
+    "history": "历史",
+    "plan": "学习计划"
   },
   "history": {
     "title": "历史",
@@ -742,5 +743,20 @@
   "fullscreen": {
     "enter": "全屏",
     "exit": "退出全屏"
+  },
+  "planForm": {
+    "title": "生成学习计划",
+    "topic": "主题",
+    "topicPh": "例如：微积分I、法国大革命、Python编程...",
+    "days": "天数",
+    "daysPh": "例如：7",
+    "level": "教育水平",
+    "doubts": "具体问题（可选）",
+    "doubtsPh": "告诉我们你想重点学习什么...",
+    "generate": "生成计划",
+    "generating": "正在生成计划...",
+    "success": "计划已就绪！",
+    "successDesc": "您的学习计划已生成。",
+    "backToForm": "返回"
   }
 }

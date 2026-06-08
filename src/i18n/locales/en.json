@@ -300,7 +300,8 @@
   "tabs": {
     "study": "Study Material",
     "exercises": "Generate Exercises",
-    "history": "History"
+    "history": "History",
+    "plan": "Study Plan"
   },
   "history": {
     "title": "Your History",
@@ -755,5 +756,20 @@
   "fullscreen": {
     "enter": "Full Screen",
     "exit": "Exit Full Screen"
+  },
+  "planForm": {
+    "title": "Generate Study Plan",
+    "topic": "Topic",
+    "topicPh": "Ex.: Calculus I, French Revolution, Python Programming...",
+    "days": "Number of days",
+    "daysPh": "Ex.: 7",
+    "level": "Education level",
+    "doubts": "Specific questions (optional)",
+    "doubtsPh": "Tell us what you would like to focus on...",
+    "generate": "Generate plan",
+    "generating": "Generating plan...",
+    "success": "Plan ready!",
+    "successDesc": "Your study plan has been generated.",
+    "backToForm": "Back"
   }
 }

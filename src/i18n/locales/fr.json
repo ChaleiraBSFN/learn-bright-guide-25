@@ -297,7 +297,8 @@
   "tabs": {
     "study": "Matériel d'étude",
     "exercises": "Générer des exercices",
-    "history": "Historique"
+    "history": "Historique",
+    "plan": "Plan d'étude"
   },
   "history": {
     "title": "Votre historique",
@@ -742,5 +743,20 @@
   "fullscreen": {
     "enter": "Plein Écran",
     "exit": "Quitter le Plein Écran"
+  },
+  "planForm": {
+    "title": "Générer un plan d'étude",
+    "topic": "Sujet",
+    "topicPh": "Ex.: Calcul I, Révolution française, Programmation Python...",
+    "days": "Nombre de jours",
+    "daysPh": "Ex.: 7",
+    "level": "Niveau d'enseignement",
+    "doubts": "Questions spécifiques (facultatif)",
+    "doubtsPh": "Dites-nous sur quoi vous voulez vous concentrer...",
+    "generate": "Générer le plan",
+    "generating": "Génération du plan...",
+    "success": "Plan prêt!",
+    "successDesc": "Votre plan d'étude a été généré.",
+    "backToForm": "Retour"
   }
 }
