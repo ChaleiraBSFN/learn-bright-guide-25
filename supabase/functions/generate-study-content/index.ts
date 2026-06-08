@@ -426,9 +426,6 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium) + imageAnalysisInstruction;
     const { temperature } = getSubjectStyle(tema);
     
-    const maxDays = Math.min(prazo, 30);
-    const baseTokens = isPremium ? 8000 : 5000;
-    const dayTokens = maxDays * 250;
     const maxTokens = isPremium ? 9000 : 6000;
 
     const geminiKeys = [
