@@ -26,6 +26,19 @@ export const FloatingActions = () => {
   const [rankingEnabled, setRankingEnabled] = useState(true);
   const [trailEnabled, setTrailEnabled] = useState(true);
   const [groupsEnabled, setGroupsEnabled] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+
+  // Auto-collapse while generating content
+  useEffect(() => {
+    const onGen = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.generating) setCollapsed(true);
+      else setCollapsed(false);
+    };
+    window.addEventListener('lb_generating_changed', onGen);
+    return () => window.removeEventListener('lb_generating_changed', onGen);
+  }, []);
+
 
   useEffect(() => {
     const checkSettings = () => {
