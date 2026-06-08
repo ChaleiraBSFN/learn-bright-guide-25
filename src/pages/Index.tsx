@@ -651,7 +651,9 @@ const Index = () => {
                       </div>
                     ) : activeTab === "plan" ? (
                       <div className="card-elevated p-6 md:p-8">
-                        <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
+                        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+                          <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
+                        </Suspense>
                       </div>
                     ) : (
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
