@@ -441,16 +441,85 @@ const Index = () => {
     }
   };
 
+  const handlePlanSubmit = async (data: StudyPlanFormData) => {
+    if (!hasCredits) {
+      toast({ title: t('credits.noCredits'), description: user ? t('credits.earnMore') : t('credits.signupForMore'), variant: 'destructive' });
+      return;
+    }
+    setIsPlanLoading(true);
+    setPlanContent(null);
+    setCurrentPlanTema(data.tema);
+
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (sessionData.session?.access_token) {
+        headers.Authorization = `Bearer ${sessionData.session.access_token}`;
+      }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-study-plan`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            tema: data.tema, nivel: data.nivel, dias: data.dias,
+            duvidas: data.duvidas, idioma: i18n.language,
+          }),
+          signal: controller.signal,
+        }
+      );
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Erro desconhecido" }));
+        if (response.status === 429) {
+          const retryAfter = Number(response.headers.get("retry-after")) || 60;
+          triggerRateLimit(retryAfter);
+          throw new Error("Limite de requisições excedido. Aguarde alguns instantes.");
+        }
+        if (response.status === 402) throw new Error("Créditos insuficientes.");
+        throw new Error(errorData.error || "Erro ao gerar roteiro");
+      }
+
+      const content = await response.json() as StudyPlanContent;
+      if (!content?.planoEstudo?.blocos?.length) {
+        throw new Error("O roteiro gerado está incompleto. Tente novamente.");
+      }
+
+      setPlanContent(content);
+      await useCredit();
+      saveToHistory("study", data.tema, data.nivel, content, { kind: "plan", dias: data.dias });
+
+      toast({ title: t('planForm.success'), description: t('planForm.successDesc') });
+      checkAndUnlock('generate_study');
+    } catch (error) {
+      console.error("Error generating plan:", error);
+      const message = error instanceof Error
+        ? (error.name === 'AbortError' ? 'A conexão demorou muito. Verifique sua internet e tente novamente.' : error.message)
+        : "Não foi possível gerar o roteiro.";
+      toast({ title: "Erro", description: message, variant: "destructive" });
+      setPlanContent(null);
+    } finally {
+      setIsPlanLoading(false);
+    }
+  };
+
   const handleReset = () => {
     setStudyContent(null);
     setExerciseContent(null);
+    setPlanContent(null);
     setCurrentTema("");
+    setCurrentPlanTema("");
     setAiImages([]);
     setWebImages([]);
   };
 
-  const showingResult = studyContent || exerciseContent;
-  const viewKey = showingResult ? (studyContent ? "study-result" : "exercise-result") : "form";
+  const showingResult = studyContent || exerciseContent || planContent;
+  const viewKey = showingResult ? (studyContent ? "study-result" : planContent ? "plan-result" : "exercise-result") : "form";
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
