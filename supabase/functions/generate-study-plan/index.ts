@@ -69,23 +69,32 @@ Rules:
 }
 
 async function callGemini(prompt: string, key: string, maxTokens: number) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json" },
-      }),
-    });
-    if (!res.ok) return { text: null, lastStatus: res.status };
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    return { text: text ?? null, lastStatus: res.status };
-  } catch {
-    return { text: null, lastStatus: 0 };
+  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-flash"];
+  let lastStatus = 0;
+
+  for (const model of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json" },
+        }),
+      });
+      lastStatus = res.status;
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return { text, lastStatus: 200 };
+      }
+      if (res.status !== 429 && res.status < 500) break;
+    } catch {
+      lastStatus = 0;
+    }
   }
+
+  return { text: null, lastStatus };
 }
 
 function parseJson(raw: string): any {
