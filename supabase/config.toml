@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.explain-example]
 verify_jwt = false
+
+[functions.generate-study-plan]
+verify_jwt = false
