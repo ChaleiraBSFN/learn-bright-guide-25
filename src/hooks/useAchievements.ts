@@ -53,6 +53,10 @@ type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
 const TRAIL_STORAGE_KEY = 'lb_custom_achievements_v2';
 const LEGACY_TRAIL_STORAGE_KEY = 'lb_custom_achievements';
 const TRAIL_VERSION = 'trail-visual-editor-v2';
+const TRAIL_NODES_CACHE_MS = 60_000;
+
+let trailNodesMemoryCache: { nodes: TrailNodeDef[]; expiresAt: number } | null = null;
+let trailNodesRequest: Promise<TrailNodeDef[]> | null = null;
 
 const MANUAL_POSITIONS: [number, number][] = [
   [140, 60], [280, 100], [430, 70], [570, 130], [700, 90], [830, 160], [900, 280],
@@ -269,25 +273,39 @@ export const useAchievementData = () => {
   const [nodes, setNodes] = useState<TrailNodeDef[]>(defaultTrailNodes);
 
   useEffect(() => {
-    const loadNodes = async () => {
+    const loadNodes = async (force = false) => {
+      if (!force && trailNodesMemoryCache && trailNodesMemoryCache.expiresAt > Date.now()) {
+        setNodes(trailNodesMemoryCache.nodes);
+        return;
+      }
+
       // Try loading from DB first (ai_config table), then fallback to localStorage
       try {
-        const { data, error } = await supabase
-          .from('ai_config')
-          .select('config_data')
-          .eq('section', 'trail_nodes')
-          .maybeSingle();
-
-        if (!error && data && data.config_data) {
-          const dbNodes = (data.config_data as any).nodes;
-          if (Array.isArray(dbNodes) && dbNodes.length > 0) {
-            const normalized = normalizeStoredNodes(dbNodes);
-            setNodes(normalized);
-            // Also update localStorage for offline access
-            persistTrailNodes(normalized);
-            return;
-          }
+        if (!trailNodesRequest || force) {
+          trailNodesRequest = supabase
+            .from('ai_config')
+            .select('config_data')
+            .eq('section', 'trail_nodes')
+            .maybeSingle()
+            .then(({ data, error }) => {
+              if (error) throw error;
+              const dbNodes = (data?.config_data as any)?.nodes;
+              if (Array.isArray(dbNodes) && dbNodes.length > 0) {
+                const normalized = normalizeStoredNodes(dbNodes);
+                persistTrailNodes(normalized);
+                trailNodesMemoryCache = { nodes: normalized, expiresAt: Date.now() + TRAIL_NODES_CACHE_MS };
+                return normalized;
+              }
+              const stored = readStoredTrailNodes() ?? persistTrailNodes(defaultTrailNodes);
+              trailNodesMemoryCache = { nodes: stored, expiresAt: Date.now() + TRAIL_NODES_CACHE_MS };
+              return stored;
+            })
+            .finally(() => {
+              trailNodesRequest = null;
+            });
         }
+        setNodes(await trailNodesRequest);
+        return;
       } catch {
         // Fallback to localStorage if DB fails
       }
@@ -301,9 +319,10 @@ export const useAchievementData = () => {
     };
 
     loadNodes();
-    window.addEventListener('achievements_updated', loadNodes);
-    window.addEventListener('trail_nodes_updated', loadNodes);
-    window.addEventListener('storage', loadNodes);
+    const loadFreshNodes = () => loadNodes(true);
+    window.addEventListener('achievements_updated', loadFreshNodes);
+    window.addEventListener('trail_nodes_updated', loadFreshNodes);
+    window.addEventListener('storage', loadFreshNodes);
     window.addEventListener('focus', loadNodes);
     window.addEventListener('online', loadNodes);
     window.addEventListener('pageshow', loadNodes);
@@ -315,18 +334,18 @@ export const useAchievementData = () => {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'ai_config', filter: 'section=eq.trail_nodes' },
-        () => loadNodes(),
+        () => loadNodes(true),
       )
       .subscribe();
 
-    // Refresh from DB every 15s as a fallback
-    const interval = setInterval(loadNodes, 15000);
+    // Refresh from DB every minute as a fallback; realtime handles immediate admin changes.
+    const interval = setInterval(() => loadNodes(true), 60_000);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('achievements_updated', loadNodes);
-      window.removeEventListener('trail_nodes_updated', loadNodes);
-      window.removeEventListener('storage', loadNodes);
+      window.removeEventListener('achievements_updated', loadFreshNodes);
+      window.removeEventListener('trail_nodes_updated', loadFreshNodes);
+      window.removeEventListener('storage', loadFreshNodes);
       window.removeEventListener('focus', loadNodes);
       window.removeEventListener('online', loadNodes);
       window.removeEventListener('pageshow', loadNodes);
