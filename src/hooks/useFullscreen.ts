@@ -1,62 +1,56 @@
 import { useState, useEffect, useCallback } from 'react';
 
+interface FullscreenDocument extends Document {
+  webkitFullscreenElement?: Element | null;
+  mozFullScreenElement?: Element | null;
+  msFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => Promise<void>;
+  mozCancelFullScreen?: () => Promise<void>;
+  msExitFullscreen?: () => Promise<void>;
+}
+
+interface FullscreenElement extends HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void>;
+  mozRequestFullScreen?: () => Promise<void>;
+  msRequestFullscreen?: () => Promise<void>;
+}
+
 export const useFullscreen = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const updateState = useCallback(() => {
+    const doc = document as FullscreenDocument;
     setIsFullscreen(
       !!(
-        document.fullscreenElement ||
-        // @ts-expect-error vendor prefixed
-        document.webkitFullscreenElement ||
-        // @ts-expect-error vendor prefixed
-        document.mozFullScreenElement ||
-        // @ts-expect-error vendor prefixed
-        document.msFullscreenElement
+        doc.fullscreenElement ||
+        doc.webkitFullscreenElement ||
+        doc.mozFullScreenElement ||
+        doc.msFullscreenElement
       )
     );
   }, []);
 
   useEffect(() => {
     updateState();
-    document.addEventListener('fullscreenchange', updateState);
-    // @ts-expect-error vendor prefixed
-    document.addEventListener('webkitfullscreenchange', updateState);
-    // @ts-expect-error vendor prefixed
-    document.addEventListener('mozfullscreenchange', updateState);
-    // @ts-expect-error vendor prefixed
-    document.addEventListener('MSFullscreenChange', updateState);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', updateState);
-      // @ts-expect-error vendor prefixed
-      document.removeEventListener('webkitfullscreenchange', updateState);
-      // @ts-expect-error vendor prefixed
-      document.removeEventListener('mozfullscreenchange', updateState);
-      // @ts-expect-error vendor prefixed
-      document.removeEventListener('MSFullscreenChange', updateState);
-    };
+    const events = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+    events.forEach((evt) => document.addEventListener(evt, updateState));
+    return () => events.forEach((evt) => document.removeEventListener(evt, updateState));
   }, [updateState]);
 
   const enter = useCallback(async () => {
-    const el = document.documentElement;
+    const el = document.documentElement as FullscreenElement;
     if (el.requestFullscreen) await el.requestFullscreen();
-    // @ts-expect-error vendor prefixed
     else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-    // @ts-expect-error vendor prefixed
     else if (el.mozRequestFullScreen) await el.mozRequestFullScreen();
-    // @ts-expect-error vendor prefixed
     else if (el.msRequestFullscreen) await el.msRequestFullscreen();
   }, []);
 
   const exit = useCallback(async () => {
-    if (document.exitFullscreen) await document.exitFullscreen();
-    // @ts-expect-error vendor prefixed
-    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-    // @ts-expect-error vendor prefixed
-    else if (document.mozCancelFullScreen) await document.mozCancelFullScreen();
-    // @ts-expect-error vendor prefixed
-    else if (document.msExitFullscreen) await document.msExitFullscreen();
+    const doc = document as FullscreenDocument;
+    if (doc.exitFullscreen) await doc.exitFullscreen();
+    else if (doc.webkitExitFullscreen) await doc.webkitExitFullscreen();
+    else if (doc.mozCancelFullScreen) await doc.mozCancelFullScreen();
+    else if (doc.msExitFullscreen) await doc.msExitFullscreen();
   }, []);
 
   const toggle = useCallback(() => {
