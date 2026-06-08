@@ -71,6 +71,54 @@ export type Database = {
         }
         Relationships: []
       }
+      carousel_items: {
+        Row: {
+          active: boolean
+          color_theme: string
+          created_at: string
+          created_by: string | null
+          description: string
+          detail: string
+          examples: string[]
+          icon: string
+          id: string
+          item_key: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          color_theme?: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          detail?: string
+          examples?: string[]
+          icon?: string
+          id?: string
+          item_key: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          color_theme?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          detail?: string
+          examples?: string[]
+          icon?: string
+          id?: string
+          item_key?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_buddies: {
         Row: {
           author_id: string
