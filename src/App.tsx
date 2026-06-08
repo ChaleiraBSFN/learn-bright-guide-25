@@ -31,6 +31,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Community = lazy(() => import("./pages/Community"));
 const ChatBuddy = lazy(() => import("./pages/ChatBuddy"));
+const CarouselBannersAdmin = lazy(() => import("./pages/CarouselBannersAdmin"));
 
 const AppContent = () => {
   useTimeTracker();
@@ -62,6 +63,7 @@ const AppContent = () => {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/community" element={<Community />} />
             <Route path="/chat-buddy" element={<ChatBuddy />} />
+            <Route path="/carousel-banners" element={<CarouselBannersAdmin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
