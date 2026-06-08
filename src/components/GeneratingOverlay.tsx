@@ -47,6 +47,15 @@ export function GeneratingOverlay({ type, isFinishing }: GeneratingOverlayProps)
   const particles = useParticles(24);
   const confetti = useConfetti(30);
 
+  // Notify floating actions to collapse while generating
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('lb_generating_changed', { detail: { generating: true } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent('lb_generating_changed', { detail: { generating: false } }));
+    };
+  }, []);
+
+
   const tips = isStudy
     ? [
         t('generating.tipStudy1', 'Analisando o tema solicitado...'),
