@@ -320,14 +320,6 @@ const languageMap: Record<string, string> = {
 function buildPrompt(tema: string, nivel: string, prazo: number, duvidas: string | null, idioma: string, isPremium: boolean): string {
   const lang = languageMap[idioma] || "Português (Brasil)";
   const { style } = getSubjectStyle(tema);
-  
-  const maxDays = Math.min(prazo, 30);
-  const dayWordMap: Record<string, string> = {
-    "pt-BR": "Dia", en: "Day", es: "Día", fr: "Jour",
-    de: "Tag", it: "Giorno", ja: "日目", zh: "第天", ru: "День",
-  };
-  const dayWord = dayWordMap[idioma] || "Dia";
-  const dailyPlanInstruction = `Generate "planoEstudo" with exactly ${maxDays} blocks, one per day. The "periodo" field MUST be in ${lang}: "${dayWord} 1", "${dayWord} 2", ... "${dayWord} ${maxDays}". Each day must have: specific study tasks for that day and 1-2 practice exercises.`;
 
   // The internal value "medio" actually means Graduação (undergrad) and "superior" means Pós-graduação.
   const levelCalibration: Record<string, string> = {
@@ -346,7 +338,6 @@ Topic: ${tema}
 Internal level code: "${nivel}"
 ACADEMIC LEVEL CALIBRATION (CRITICAL): ${nivelInstrucao}
 The content depth MUST strictly match this calibration. For graduação/pós-graduação use real exam-grade depth (ENADE, concursos, qualifying exams).
-Deadline: ${prazo} days
 ${duvidas ? `Specific questions: ${duvidas}` : ""}
 
 Return this JSON structure:
@@ -357,7 +348,6 @@ Return this JSON structure:
   "exercicios": {"titulo": "string", "lista": [{"nivel": "string", "pergunta": "string", "resposta": "string", "explicacao": "1 sentence"}]},
   "errosComuns": {"titulo": "string", "lista": [{"erro": "string", "comoEvitar": "string"}]},
   "mapaVisual": {"titulo": "string", "temaCentral": "string", "ramos": [{"nome": "string", "icone": "emoji", "cor": "string", "subitens": ["string"]}]},
-  "planoEstudo": {"titulo": "string", "blocos": [{"numero": 1, "periodo": "${dayWord} 1", "objetivo": "string", "tarefas": ["task1", "task2", "exercise: question?"], "evidencia": "string"}]},
   "fontes": {"titulo": "string", "consultas": ["string"], "sites": [{"nome": "string", "termoBusca": "string", "descricao": "string"}]}
   ${isPremium ? `,"videosRecomendados": {"titulo": "string", "lista": [{"titulo": "string", "canal": "string", "descricao": "string", "termoBusca": "string"}]},
   "imagensIlustrativas": {"titulo": "string", "lista": [{"descricao": "string"}]}` : ""}
@@ -365,8 +355,6 @@ Return this JSON structure:
 
 Rules:
 - ${isPremium ? "5 steps, 6 exercises, 4 errors, 6 branches" : "3 steps, 3 exercises, 2 errors, 4 branches"}
-- ${dailyPlanInstruction}
-- Each day's tasks MUST include at least 1 exercise/question to practice
 - Be CONCISE in most fields, BUT the "conceito" field MUST be deep and detailed: at least 7 lines / 7-9 sentences each. Never short.
 - Respond ONLY in ${lang}, even if the topic is in another language.
 - CRITICAL EXCEPTION: If the user is asking to learn words/vocabulary/phrases in a FOREIGN language (e.g., "aprender palavras em russo", "learn Japanese words"), then:
