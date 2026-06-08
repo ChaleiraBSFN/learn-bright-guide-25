@@ -16,7 +16,8 @@ const iconMap: Record<string, any> = {
 
 const variantStyles: Record<string, { border: string; bg: string; ring: string; text: string; cta: string; glow1: string; glow2: string; }> = {
   violet: {
-    border: 'border-violet-500/40 hover:border-violet-500/70',
+    border: 'border-violet-700 hover:border-violet-900 dark:border-violet-500/40 dark:hover:border-violet-500/70',
+
     bg: 'from-violet-500/15 via-fuchsia-500/10 to-purple-600/15',
     ring: 'bg-violet-500/20 ring-violet-500/30',
     text: 'text-violet-600 dark:text-violet-300',
@@ -24,7 +25,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-violet-500/20', glow2: 'bg-fuchsia-500/20',
   },
   blue: {
-    border: 'border-blue-500/40 hover:border-blue-500/70',
+    border: 'border-blue-700 hover:border-blue-900 dark:border-blue-500/40 dark:hover:border-blue-500/70',
     bg: 'from-blue-500/15 via-cyan-500/10 to-sky-600/15',
     ring: 'bg-blue-500/20 ring-blue-500/30',
     text: 'text-blue-600 dark:text-blue-300',
@@ -32,7 +33,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-blue-500/20', glow2: 'bg-cyan-500/20',
   },
   amber: {
-    border: 'border-amber-500/40 hover:border-amber-500/70',
+    border: 'border-amber-700 hover:border-amber-900 dark:border-amber-500/40 dark:hover:border-amber-500/70',
     bg: 'from-amber-500/15 via-orange-500/10 to-yellow-600/15',
     ring: 'bg-amber-500/20 ring-amber-500/30',
     text: 'text-amber-600 dark:text-amber-300',
@@ -40,7 +41,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-amber-500/20', glow2: 'bg-orange-500/20',
   },
   emerald: {
-    border: 'border-emerald-500/40 hover:border-emerald-500/70',
+    border: 'border-emerald-700 hover:border-emerald-900 dark:border-emerald-500/40 dark:hover:border-emerald-500/70',
     bg: 'from-emerald-500/15 via-teal-500/10 to-green-600/15',
     ring: 'bg-emerald-500/20 ring-emerald-500/30',
     text: 'text-emerald-600 dark:text-emerald-300',
@@ -48,7 +49,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-emerald-500/20', glow2: 'bg-teal-500/20',
   },
   rose: {
-    border: 'border-rose-500/40 hover:border-rose-500/70',
+    border: 'border-rose-700 hover:border-rose-900 dark:border-rose-500/40 dark:hover:border-rose-500/70',
     bg: 'from-rose-500/15 via-pink-500/10 to-red-600/15',
     ring: 'bg-rose-500/20 ring-rose-500/30',
     text: 'text-rose-600 dark:text-rose-300',

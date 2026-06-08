@@ -38,27 +38,27 @@ const THEME_MAP: Record<string, { color: string; bgGradient: string; borderColor
   primary: {
     color: "text-primary",
     bgGradient: "from-primary/10 via-primary/5 to-transparent",
-    borderColor: "border-primary/30",
+    borderColor: "border-primary dark:border-primary/30",
   },
   secondary: {
     color: "text-secondary",
     bgGradient: "from-secondary/10 via-secondary/5 to-transparent",
-    borderColor: "border-secondary/30",
+    borderColor: "border-secondary dark:border-secondary/30",
   },
   accent: {
     color: "text-accent",
     bgGradient: "from-accent/10 via-accent/5 to-transparent",
-    borderColor: "border-accent/30",
+    borderColor: "border-accent dark:border-accent/30",
   },
   violet: {
     color: "text-violet-500",
     bgGradient: "from-violet-500/10 via-fuchsia-500/5 to-transparent",
-    borderColor: "border-violet-500/30",
+    borderColor: "border-violet-700 dark:border-violet-500/30",
   },
   rose: {
     color: "text-rose-500",
     bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
-    borderColor: "border-rose-500/30",
+    borderColor: "border-rose-700 dark:border-rose-500/30",
   },
 };
 
@@ -255,7 +255,7 @@ function FeatureCard({
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen()}
-      className={`relative flex-shrink-0 w-[180px] sm:w-[200px] md:w-[220px] rounded-2xl border ${feature.borderColor} bg-card overflow-hidden group cursor-pointer shadow-md hover:shadow-2xl transition-shadow duration-300`}
+      className={`relative flex-shrink-0 w-[180px] sm:w-[200px] md:w-[220px] rounded-2xl border-2 ${feature.borderColor} bg-card overflow-hidden group cursor-pointer shadow-md hover:shadow-2xl transition-shadow duration-300`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: (index % 3) * 0.1, duration: 0.35 }}
