@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BookOpen, Dumbbell, Sparkles, Brain, Lightbulb, Star, Zap, Rocket, CheckCircle2 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+
 
 interface GeneratingOverlayProps {
   type: "study" | "exercise";
@@ -45,6 +46,15 @@ export function GeneratingOverlay({ type, isFinishing }: GeneratingOverlayProps)
   const Icon = isStudy ? BookOpen : Dumbbell;
   const particles = useParticles(24);
   const confetti = useConfetti(30);
+
+  // Notify floating actions to collapse while generating
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('lb_generating_changed', { detail: { generating: true } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent('lb_generating_changed', { detail: { generating: false } }));
+    };
+  }, []);
+
 
   const tips = isStudy
     ? [
