@@ -125,13 +125,17 @@ serve(async (req) => {
         const { data } = await ac.auth.getUser();
         if (data?.user) userId = data.user.id;
       }
-      const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+      const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+        || req.headers.get("cf-connecting-ip")
+        || req.headers.get("x-real-ip")
+        || req.headers.get("user-agent")
+        || "unknown";
       const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
       const { data: isAllowed } = await serviceClient.rpc("check_rate_limit", {
-        _user_id: rateLimitId, _endpoint: "chat-buddy", _max_requests: userId ? 600 : 100, _window_minutes: 60
+        _user_id: rateLimitId, _endpoint: "chat-buddy", _max_requests: userId ? 360 : 900, _window_minutes: 1
       });
       if (isAllowed === false) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return new Response(JSON.stringify({ error: "Muitas requisições ao mesmo tempo. Tente novamente em alguns segundos." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "2" } });
       }
     } catch (e) { console.error("[chat-buddy] rate-limit error", e); }
 
@@ -200,7 +204,7 @@ serve(async (req) => {
       const isRate = lastStatus === 429;
       return new Response(
         JSON.stringify({ error: isRate ? "Limite de requisições excedido." : "Serviço indisponível." }),
-        { status: isRate ? 429 : 503, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: isRate ? 429 : 503, headers: { ...corsHeaders, "Content-Type": "application/json", ...(isRate ? { "Retry-After": "2" } : {}) } }
       );
     }
 
