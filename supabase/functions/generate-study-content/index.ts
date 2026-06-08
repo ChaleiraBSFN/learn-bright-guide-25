@@ -476,7 +476,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
 
     if (!content) {
       if (lastStatus === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições atingido. Tente novamente em alguns instantes." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } });
+        return new Response(JSON.stringify({ error: "Gemini está no limite agora. Tente novamente em alguns segundos." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "2" } });
       }
       return new Response(JSON.stringify({ error: "Serviço indisponível. Tente novamente." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
