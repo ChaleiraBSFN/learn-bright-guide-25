@@ -49,7 +49,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-emerald-500/20', glow2: 'bg-teal-500/20',
   },
   rose: {
-    border: 'border-rose-500/40 hover:border-rose-500/70',
+    border: 'border-rose-700 hover:border-rose-900 dark:border-rose-500/40 dark:hover:border-rose-500/70',
     bg: 'from-rose-500/15 via-pink-500/10 to-red-600/15',
     ring: 'bg-rose-500/20 ring-rose-500/30',
     text: 'text-rose-600 dark:text-rose-300',
