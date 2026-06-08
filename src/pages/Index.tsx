@@ -28,6 +28,11 @@ const HistoryTab = lazy(() => import("@/components/HistoryTab").then((module) =>
 const StudyResult = lazy(() => import("@/components/StudyResult").then((module) => ({ default: module.StudyResult })));
 const SupportChat = lazy(() => import("@/components/SupportChat").then((module) => ({ default: module.SupportChat })));
 const StudyPlanSection = lazy(() => import("@/components/sections/StudyPlanSection").then((m) => ({ default: m.StudyPlanSection })));
+const StudyPlanForm = lazy(() => import("@/components/StudyPlanForm").then((m) => ({ default: m.StudyPlanForm })));
+const FeatureCarousel = lazy(() => import("@/components/FeatureCarousel").then((m) => ({ default: m.FeatureCarousel })));
+const PromoBanners = lazy(() => import("@/components/PromoBanners").then((m) => ({ default: m.PromoBanners })));
+const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").then((m) => ({ default: m.EngineNoticeBanner })));
+const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
