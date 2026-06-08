@@ -9,13 +9,13 @@
 @layer base {
   :root {
     /* Cores principais - tons educacionais */
-    --background: 40 33% 98%;
+    --background: 40 25% 94%;
     --foreground: 222 47% 11%;
 
-    --card: 0 0% 100%;
+    --card: 40 30% 97%;
     --card-foreground: 222 47% 11%;
 
-    --popover: 0 0% 100%;
+    --popover: 40 30% 97%;
     --popover-foreground: 222 47% 11%;
 
     /* Azul profundo - foco e aprendizado */
