@@ -107,13 +107,17 @@ serve(async (req) => {
       if (authUser) userId = authUser.id;
     }
 
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      || req.headers.get("cf-connecting-ip")
+      || req.headers.get("x-real-ip")
+      || req.headers.get("user-agent")
+      || "unknown";
     const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
     const { data: isAllowed } = await serviceClient.rpc("check_rate_limit", {
-      _user_id: rateLimitId, _endpoint: "generate-study-plan", _max_requests: userId ? 200 : 100, _window_minutes: 60,
+      _user_id: rateLimitId, _endpoint: "generate-study-plan", _max_requests: userId ? 180 : 900, _window_minutes: 1,
     });
     if (isAllowed === false) {
-      return new Response(JSON.stringify({ error: "Limite de requisições excedido." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Muitas requisições ao mesmo tempo. Tente novamente em alguns segundos." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "2" } });
     }
 
     let rawBody;
@@ -151,7 +155,7 @@ serve(async (req) => {
 
     if (!content) {
       const status = lastStatus === 429 ? 429 : 503;
-      return new Response(JSON.stringify({ error: status === 429 ? "Limite atingido. Tente novamente em alguns instantes." : "Serviço indisponível." }), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: status === 429 ? "Gemini está no limite agora. Tente novamente em alguns segundos." : "Serviço indisponível." }), { status, headers: { ...corsHeaders, "Content-Type": "application/json", ...(status === 429 ? { "Retry-After": "2" } : {}) } });
     }
 
     let result;
