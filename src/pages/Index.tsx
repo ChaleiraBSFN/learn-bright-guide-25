@@ -315,7 +315,7 @@ const Index = () => {
       setStudyContent(content);
       contentLanguageRef.current = i18n.language;
       await useCredit();
-      saveToHistory("study", data.tema, data.nivel, content, { prazo: data.prazo });
+      saveToHistory("study", data.tema, data.nivel, content);
 
       // Start image generation IN PARALLEL with the finishing animation,
       // so images are ready (or close to it) when overlay disappears — works on mobile too.
