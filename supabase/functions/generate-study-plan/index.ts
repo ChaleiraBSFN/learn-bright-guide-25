@@ -110,7 +110,7 @@ serve(async (req) => {
     const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
     const { data: isAllowed } = await serviceClient.rpc("check_rate_limit", {
-      _user_id: rateLimitId, _endpoint: "generate-study-plan", _max_requests: userId ? 60 : 30, _window_minutes: 60,
+      _user_id: rateLimitId, _endpoint: "generate-study-plan", _max_requests: userId ? 200 : 100, _window_minutes: 60,
     });
     if (isAllowed === false) {
       return new Response(JSON.stringify({ error: "Limite de requisições excedido." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
