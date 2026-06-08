@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
-import { StudyPlanForm } from "@/components/StudyPlanForm";
 import { triggerRateLimit } from "@/components/RateLimitBar";
-import { FeatureCarousel } from "@/components/FeatureCarousel";
 import { StudyContent, StudyFormData, StudyPlanContent, StudyPlanFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
 import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages, CalendarDays } from "lucide-react";
@@ -16,14 +14,10 @@ import { useToast } from "@/hooks/use-toast";
 import { UserMenu } from "@/components/UserMenu";
 import { SEO } from "@/components/SEO";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { EngineNoticeBanner } from "@/components/EngineNoticeBanner";
-import { UpdateNoticeBanner } from "@/components/UpdateNoticeBanner";
-import { PromoBanners } from "@/components/PromoBanners";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useAchievements } from '@/hooks/useAchievements';
 
 const ExerciseForm = lazy(() => import("@/components/ExerciseForm").then((module) => ({ default: module.ExerciseForm })));
@@ -34,6 +28,11 @@ const HistoryTab = lazy(() => import("@/components/HistoryTab").then((module) =>
 const StudyResult = lazy(() => import("@/components/StudyResult").then((module) => ({ default: module.StudyResult })));
 const SupportChat = lazy(() => import("@/components/SupportChat").then((module) => ({ default: module.SupportChat })));
 const StudyPlanSection = lazy(() => import("@/components/sections/StudyPlanSection").then((m) => ({ default: m.StudyPlanSection })));
+const StudyPlanForm = lazy(() => import("@/components/StudyPlanForm").then((m) => ({ default: m.StudyPlanForm })));
+const FeatureCarousel = lazy(() => import("@/components/FeatureCarousel").then((m) => ({ default: m.FeatureCarousel })));
+const PromoBanners = lazy(() => import("@/components/PromoBanners").then((m) => ({ default: m.PromoBanners })));
+const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").then((m) => ({ default: m.EngineNoticeBanner })));
+const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
@@ -579,13 +578,13 @@ const Index = () => {
               className="mx-auto max-w-2xl space-y-8"
             >
               {/* Update Notice Banner */}
-              <UpdateNoticeBanner />
+              <Suspense fallback={null}><UpdateNoticeBanner /></Suspense>
 
               {/* Engine Notice Banner */}
-              <EngineNoticeBanner />
+              <Suspense fallback={null}><EngineNoticeBanner /></Suspense>
 
               {/* Promo Banners (admin-managed) */}
-              <PromoBanners />
+              <Suspense fallback={null}><PromoBanners /></Suspense>
 
 
               {/* Hero Section */}
@@ -604,7 +603,7 @@ const Index = () => {
               </div>
 
               {/* Feature Banner Carousel */}
-              <FeatureCarousel />
+              <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-muted" />}><FeatureCarousel /></Suspense>
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -652,7 +651,9 @@ const Index = () => {
                       </div>
                     ) : activeTab === "plan" ? (
                       <div className="card-elevated p-6 md:p-8">
-                        <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
+                        <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+                          <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
+                        </Suspense>
                       </div>
                     ) : (
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
