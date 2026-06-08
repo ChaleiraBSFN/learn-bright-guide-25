@@ -33,19 +33,22 @@ export const useAdmin = () => {
 
       let request = adminRoleRequests.get(user.id);
       if (!request) {
-        request = supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .eq('role', 'admin')
-          .maybeSingle()
-          .then(({ data, error }) => {
+        request = (async () => {
+          try {
+            const { data, error } = await supabase
+              .from('user_roles')
+              .select('role')
+              .eq('user_id', user.id)
+              .eq('role', 'admin')
+              .maybeSingle();
             if (error) throw error;
             const value = !!data;
             adminRoleCache.set(user.id, { value, expiresAt: Date.now() + ADMIN_ROLE_CACHE_MS });
             return value;
-          })
-          .finally(() => adminRoleRequests.delete(user.id));
+          } finally {
+            adminRoleRequests.delete(user.id);
+          }
+        })();
         adminRoleRequests.set(user.id, request);
       }
 

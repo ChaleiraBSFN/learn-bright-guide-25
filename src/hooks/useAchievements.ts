@@ -282,12 +282,13 @@ export const useAchievementData = () => {
       // Try loading from DB first (ai_config table), then fallback to localStorage
       try {
         if (!trailNodesRequest || force) {
-          trailNodesRequest = supabase
-            .from('ai_config')
-            .select('config_data')
-            .eq('section', 'trail_nodes')
-            .maybeSingle()
-            .then(({ data, error }) => {
+          trailNodesRequest = (async () => {
+            try {
+              const { data, error } = await supabase
+                .from('ai_config')
+                .select('config_data')
+                .eq('section', 'trail_nodes')
+                .maybeSingle();
               if (error) throw error;
               const dbNodes = (data?.config_data as any)?.nodes;
               if (Array.isArray(dbNodes) && dbNodes.length > 0) {
@@ -299,10 +300,10 @@ export const useAchievementData = () => {
               const stored = readStoredTrailNodes() ?? persistTrailNodes(defaultTrailNodes);
               trailNodesMemoryCache = { nodes: stored, expiresAt: Date.now() + TRAIL_NODES_CACHE_MS };
               return stored;
-            })
-            .finally(() => {
+            } finally {
               trailNodesRequest = null;
-            });
+            }
+          })();
         }
         setNodes(await trailNodesRequest);
         return;
@@ -317,15 +318,16 @@ export const useAchievementData = () => {
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') loadNodes();
     };
+    const loadCachedNodes = () => loadNodes();
 
     loadNodes();
     const loadFreshNodes = () => loadNodes(true);
     window.addEventListener('achievements_updated', loadFreshNodes);
     window.addEventListener('trail_nodes_updated', loadFreshNodes);
     window.addEventListener('storage', loadFreshNodes);
-    window.addEventListener('focus', loadNodes);
-    window.addEventListener('online', loadNodes);
-    window.addEventListener('pageshow', loadNodes);
+    window.addEventListener('focus', loadCachedNodes);
+    window.addEventListener('online', loadCachedNodes);
+    window.addEventListener('pageshow', loadCachedNodes);
     document.addEventListener('visibilitychange', handleVisibility);
 
     // Realtime: listen for trail node updates from admin (syncs across all devices, including mobile)
@@ -346,9 +348,9 @@ export const useAchievementData = () => {
       window.removeEventListener('achievements_updated', loadFreshNodes);
       window.removeEventListener('trail_nodes_updated', loadFreshNodes);
       window.removeEventListener('storage', loadFreshNodes);
-      window.removeEventListener('focus', loadNodes);
-      window.removeEventListener('online', loadNodes);
-      window.removeEventListener('pageshow', loadNodes);
+      window.removeEventListener('focus', loadCachedNodes);
+      window.removeEventListener('online', loadCachedNodes);
+      window.removeEventListener('pageshow', loadCachedNodes);
       document.removeEventListener('visibilitychange', handleVisibility);
       supabase.removeChannel(channel);
     };
