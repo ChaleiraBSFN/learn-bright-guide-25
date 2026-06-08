@@ -36,7 +36,7 @@ export function StudyPlanSection({ data, onGenerateExercise, isGeneratingExercis
           </div>
           <div className="pt-1 md:pt-2">
             <h3 className="font-display text-lg md:text-xl font-bold text-foreground">
-              7. {data.titulo}
+              {hideNumberPrefix ? data.titulo : `7. ${data.titulo}`}
             </h3>
             <p className="text-sm text-muted-foreground">
               {data.blocos.length} {t('sections.daysCount')}
