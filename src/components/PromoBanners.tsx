@@ -25,7 +25,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-violet-500/20', glow2: 'bg-fuchsia-500/20',
   },
   blue: {
-    border: 'border-blue-500/40 hover:border-blue-500/70',
+    border: 'border-blue-700 hover:border-blue-900 dark:border-blue-500/40 dark:hover:border-blue-500/70',
     bg: 'from-blue-500/15 via-cyan-500/10 to-sky-600/15',
     ring: 'bg-blue-500/20 ring-blue-500/30',
     text: 'text-blue-600 dark:text-blue-300',
