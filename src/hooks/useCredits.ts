@@ -3,8 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 const ANON_CREDITS_KEY = 'learn_buddy_anon_credits';
-const ANON_MAX_CREDITS = 10;
-const AUTH_MAX_CREDITS = 15;
+const ANON_MAX_CREDITS = 50;
+const AUTH_MAX_CREDITS = 100;
 
 export const useCredits = () => {
   const { user } = useAuth();
