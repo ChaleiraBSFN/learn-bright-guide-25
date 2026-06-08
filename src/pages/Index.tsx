@@ -755,6 +755,13 @@ const Index = () => {
         )}
       </AnimatePresence>
       <AnimatePresence>
+        {isPlanLoading && (
+          <Suspense fallback={null}>
+            <GeneratingOverlay type="study" isFinishing={false} />
+          </Suspense>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
         {isExerciseLoading && (
           <Suspense fallback={null}>
             <GeneratingOverlay type="exercise" isFinishing={isFinishingExercise} />
