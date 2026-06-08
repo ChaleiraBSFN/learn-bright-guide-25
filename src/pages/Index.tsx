@@ -99,6 +99,10 @@ const Index = () => {
   const [isFinishingExercise, setIsFinishingExercise] = useState(false);
   const [exerciseContent, setExerciseContent] = useState<ExerciseContent | null>(null);
 
+  const [isPlanLoading, setIsPlanLoading] = useState(false);
+  const [planContent, setPlanContent] = useState<StudyPlanContent | null>(null);
+  const [currentPlanTema, setCurrentPlanTema] = useState("");
+
   const [settings, setSettings] = useState<PlatformSettings>(getSettings());
   const [activeTab, setActiveTab] = useState(() => {
     const s = getSettings();
