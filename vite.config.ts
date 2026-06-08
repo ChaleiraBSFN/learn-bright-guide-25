@@ -20,9 +20,9 @@ export default defineConfig(({ mode }) => ({
       "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
     },
     dedupe: [
-      "react", 
-      "react-dom", 
-      "react/jsx-runtime", 
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
       "react/jsx-dev-runtime",
       "@radix-ui/react-context",
       "@radix-ui/react-primitive",
@@ -36,8 +36,13 @@ export default defineConfig(({ mode }) => ({
       "react-dom",
       "react/jsx-runtime",
       "react/jsx-dev-runtime",
+      "react-router-dom",
+      "@supabase/supabase-js",
+      "framer-motion",
+      "lucide-react",
+      "i18next",
+      "react-i18next",
     ],
-    force: true,
     esbuildOptions: {
       resolveExtensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
@@ -45,6 +50,17 @@ export default defineConfig(({ mode }) => ({
   build: {
     commonjsOptions: {
       include: [/node_modules/],
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['framer-motion', 'lucide-react'],
+          'supabase-vendor': ['@supabase/supabase-js'],
+          'i18n-vendor': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          'query-vendor': ['@tanstack/react-query'],
+        },
+      },
     },
   },
 }));
