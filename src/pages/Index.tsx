@@ -281,7 +281,7 @@ const Index = () => {
           method: "POST",
           headers,
           body: JSON.stringify({ 
-            tema: data.tema, nivel: data.nivel, prazo: data.prazo,
+            tema: data.tema, nivel: data.nivel,
             duvidas: data.duvidas, idioma: i18n.language,
             imagemBase64: data.imagemBase64,
           }),
