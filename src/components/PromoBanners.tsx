@@ -16,7 +16,8 @@ const iconMap: Record<string, any> = {
 
 const variantStyles: Record<string, { border: string; bg: string; ring: string; text: string; cta: string; glow1: string; glow2: string; }> = {
   violet: {
-    border: 'border-violet-500/40 hover:border-violet-500/70',
+    border: 'border-violet-700 hover:border-violet-900 dark:border-violet-500/40 dark:hover:border-violet-500/70',
+
     bg: 'from-violet-500/15 via-fuchsia-500/10 to-purple-600/15',
     ring: 'bg-violet-500/20 ring-violet-500/30',
     text: 'text-violet-600 dark:text-violet-300',
