@@ -41,7 +41,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-amber-500/20', glow2: 'bg-orange-500/20',
   },
   emerald: {
-    border: 'border-emerald-500/40 hover:border-emerald-500/70',
+    border: 'border-emerald-700 hover:border-emerald-900 dark:border-emerald-500/40 dark:hover:border-emerald-500/70',
     bg: 'from-emerald-500/15 via-teal-500/10 to-green-600/15',
     ring: 'bg-emerald-500/20 ring-emerald-500/30',
     text: 'text-emerald-600 dark:text-emerald-300',
