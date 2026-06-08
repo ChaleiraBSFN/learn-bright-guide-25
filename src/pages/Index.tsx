@@ -608,7 +608,7 @@ const Index = () => {
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full grid h-auto gap-3 bg-transparent p-0" style={{ gridTemplateColumns: `repeat(${[settings.studyGenEnabled, settings.exercisesEnabled, true].filter(Boolean).length}, minmax(0, 1fr))` }}>
+                <TabsList className="w-full grid h-auto gap-3 bg-transparent p-0" style={{ gridTemplateColumns: `repeat(${[settings.studyGenEnabled, settings.exercisesEnabled, true, true].filter(Boolean).length}, minmax(0, 1fr))` }}>
                   {settings.studyGenEnabled && (
                     <TabsTrigger value="study" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                       <BookOpen className="h-4 w-4" />
@@ -621,6 +621,10 @@ const Index = () => {
                       <span className="hidden sm:inline">{t('tabs.exercises')}</span>
                     </TabsTrigger>
                   )}
+                  <TabsTrigger value="plan" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                    <CalendarDays className="h-4 w-4" />
+                    <span className="hidden sm:inline">{t('tabs.plan')}</span>
+                  </TabsTrigger>
                   <TabsTrigger value="history" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <History className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.history')}</span>
@@ -645,6 +649,10 @@ const Index = () => {
                         <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
                           <ExerciseForm onSubmit={handleExerciseSubmit} isLoading={isExerciseLoading} />
                         </Suspense>
+                      </div>
+                    ) : activeTab === "plan" ? (
+                      <div className="card-elevated p-6 md:p-8">
+                        <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
                       </div>
                     ) : (
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
