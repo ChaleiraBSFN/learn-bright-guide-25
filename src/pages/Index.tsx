@@ -730,6 +730,7 @@ const Index = () => {
               <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
                 <StudyPlanSection
                   data={planContent.planoEstudo}
+                  hideNumberPrefix
                   onGenerateExercise={(taskDescription) => {
                     handleExerciseSubmit({
                       tema: taskDescription,
