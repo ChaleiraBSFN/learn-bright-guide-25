@@ -11,12 +11,14 @@ import { RankingDialog } from '@/components/RankingDialog';
 import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFullscreen } from '@/hooks/useFullscreen';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const FloatingActions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
+  const isMobile = useIsMobile();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
   const [isInstalled] = useState(
@@ -73,37 +75,28 @@ export const FloatingActions = () => {
     <>
       {collapsed ? (
         <div className="fixed right-3 bottom-6 md:right-4 md:bottom-8 z-40">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setCollapsed(false)}
-                aria-label={t('common.showActions', 'Mostrar ações')}
-                className="h-11 w-11 !min-w-11 !min-h-11 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-xl border-2 border-foreground/30 hover:bg-primary hover:text-primary-foreground transition-all shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),0_10px_30px_-12px_hsl(var(--foreground)/0.55)]"
-              >
-                <ChevronUp className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="left">{t('common.showActions', 'Mostrar ações')}</TooltipContent>
-          </Tooltip>
+          <Button
+            variant="outline"
+            size="icon"
+            onPointerDown={(e) => { e.preventDefault(); setCollapsed(false); }}
+            aria-label={t('common.showActions', 'Mostrar ações')}
+            className="h-11 w-11 !min-w-11 !min-h-11 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-xl border-2 border-foreground/30 hover:bg-primary hover:text-primary-foreground transition-all shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),0_10px_30px_-12px_hsl(var(--foreground)/0.55)]"
+          >
+            <ChevronUp className="h-5 w-5" />
+          </Button>
         </div>
       ) : (
         <div className="fixed right-3 bottom-6 md:right-4 md:bottom-8 z-40 flex flex-col items-center gap-2 rounded-full border-2 border-foreground/25 bg-background/55 px-2 py-2.5 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),inset_0_-18px_30px_hsl(var(--primary)/0.08),0_14px_34px_-18px_hsl(var(--foreground)/0.55)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/45">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setCollapsed(true)}
-                aria-label={t('common.hideActions', 'Recolher ações')}
-                className="h-7 w-7 !min-w-7 !min-h-7 shrink-0 p-0 flex items-center justify-center rounded-full hover:bg-foreground/10"
-              >
-                <ChevronDown className="h-3.5 w-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="left">{t('common.hideActions', 'Recolher ações')}</TooltipContent>
-          </Tooltip>
+          <Button
+            variant="ghost"
+            size="icon"
+            onPointerDown={(e) => { e.preventDefault(); setCollapsed(true); }}
+            aria-label={t('common.hideActions', 'Recolher ações')}
+            className="h-7 w-7 !min-w-7 !min-h-7 shrink-0 p-0 flex items-center justify-center rounded-full hover:bg-foreground/10"
+          >
+            <ChevronDown className="h-3.5 w-3.5" />
+          </Button>
+
 
 
         <Tooltip>
@@ -123,23 +116,25 @@ export const FloatingActions = () => {
           </TooltipContent>
         </Tooltip>
 
-        {/* Fullscreen */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={toggleFullscreen}
-              aria-label={isFullscreen ? t('fullscreen.exit', 'Sair da Tela Cheia') : t('fullscreen.enter', 'Tela Cheia')}
-              className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-foreground/20 hover:bg-foreground hover:text-background transition-all shadow-[0_0_24px_-2px_hsl(var(--foreground)/0.3),0_4px_14px_-3px_hsl(var(--foreground)/0.25),inset_0_1px_0_hsl(0_0%_100%/0.2)]"
-            >
-              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="left">
-            {isFullscreen ? t('fullscreen.exit', 'Sair da Tela Cheia') : t('fullscreen.enter', 'Tela Cheia')}
-          </TooltipContent>
-        </Tooltip>
+        {/* Fullscreen (desktop only) */}
+        {!isMobile && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={toggleFullscreen}
+                aria-label={isFullscreen ? t('fullscreen.exit', 'Sair da Tela Cheia') : t('fullscreen.enter', 'Tela Cheia')}
+                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-foreground/20 hover:bg-foreground hover:text-background transition-all shadow-[0_0_24px_-2px_hsl(var(--foreground)/0.3),0_4px_14px_-3px_hsl(var(--foreground)/0.25),inset_0_1px_0_hsl(0_0%_100%/0.2)]"
+              >
+                {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              {isFullscreen ? t('fullscreen.exit', 'Sair da Tela Cheia') : t('fullscreen.enter', 'Tela Cheia')}
+            </TooltipContent>
+          </Tooltip>
+        )}
 
         {trailEnabled && (
           <Tooltip>
