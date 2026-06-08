@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BookOpen, Dumbbell, Sparkles, Brain, Lightbulb, Star, Zap, Rocket, CheckCircle2 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+
 
 interface GeneratingOverlayProps {
   type: "study" | "exercise";
