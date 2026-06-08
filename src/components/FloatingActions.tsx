@@ -11,12 +11,14 @@ import { RankingDialog } from '@/components/RankingDialog';
 import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFullscreen } from '@/hooks/useFullscreen';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const FloatingActions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
+  const isMobile = useIsMobile();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
   const [isInstalled] = useState(
