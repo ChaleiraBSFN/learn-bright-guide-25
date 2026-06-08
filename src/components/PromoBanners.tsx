@@ -33,7 +33,7 @@ const variantStyles: Record<string, { border: string; bg: string; ring: string; 
     glow1: 'bg-blue-500/20', glow2: 'bg-cyan-500/20',
   },
   amber: {
-    border: 'border-amber-500/40 hover:border-amber-500/70',
+    border: 'border-amber-700 hover:border-amber-900 dark:border-amber-500/40 dark:hover:border-amber-500/70',
     bg: 'from-amber-500/15 via-orange-500/10 to-yellow-600/15',
     ring: 'bg-amber-500/20 ring-amber-500/30',
     text: 'text-amber-600 dark:text-amber-300',
