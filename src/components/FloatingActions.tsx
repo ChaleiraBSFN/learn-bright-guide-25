@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, MoreHorizontal } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown } from 'lucide-react';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
@@ -82,7 +82,7 @@ export const FloatingActions = () => {
                 aria-label={t('common.showActions', 'Mostrar ações')}
                 className="h-11 w-11 !min-w-11 !min-h-11 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-xl border-2 border-foreground/30 hover:bg-primary hover:text-primary-foreground transition-all shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),0_10px_30px_-12px_hsl(var(--foreground)/0.55)]"
               >
-                <MoreHorizontal className="h-5 w-5" />
+                <ChevronUp className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">{t('common.showActions', 'Mostrar ações')}</TooltipContent>
@@ -99,7 +99,7 @@ export const FloatingActions = () => {
                 aria-label={t('common.hideActions', 'Recolher ações')}
                 className="h-7 w-7 !min-w-7 !min-h-7 shrink-0 p-0 flex items-center justify-center rounded-full hover:bg-foreground/10"
               >
-                <MoreHorizontal className="h-3.5 w-3.5" />
+                <ChevronDown className="h-3.5 w-3.5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">{t('common.hideActions', 'Recolher ações')}</TooltipContent>
