@@ -390,7 +390,7 @@ serve(async (req) => {
 
     const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
-    const maxRequests = isPremium ? 200 : (userId ? 60 : 30);
+    const maxRequests = isPremium ? 600 : (userId ? 200 : 100);
     const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
       _user_id: rateLimitId, _endpoint: 'generate-study-content', _max_requests: maxRequests, _window_minutes: 60,
     });
