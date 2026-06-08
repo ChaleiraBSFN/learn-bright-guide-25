@@ -527,13 +527,17 @@ const Index = () => {
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <a
+              href="/"
+              aria-label="Learn Buddy - Voltar para a página inicial"
+              className="flex items-center gap-3 rounded-xl transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
               <img src={learnBuddyLogo} alt="Learn Buddy" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
               <div className="hidden sm:block">
                 <span className="font-display text-xl font-bold text-foreground block">Learn Buddy</span>
                 <p className="text-xs text-muted-foreground">{t('header.subtitle')}</p>
               </div>
-            </div>
+            </a>
             <div className="flex items-center gap-2">
               <AnimatePresence>
                 {showingResult && (
