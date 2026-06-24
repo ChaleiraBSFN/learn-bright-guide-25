@@ -44,18 +44,12 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
   const loadRanking = async (showLoader = true) => {
     if (showLoader) setLoading(true);
     try {
-      const { data: achievements, error } = await (supabase.from as any)('user_achievements')
-        .select('user_id')
-        .limit(50000);
+      const { data: rankingRows, error } = await (supabase.rpc as any)('get_public_ranking', { _limit: 100 });
 
       if (error) throw error;
 
-      const counts: Record<string, number> = {};
-      achievements?.forEach((ach: any) => {
-        counts[ach.user_id] = (counts[ach.user_id] || 0) + 1;
-      });
-
-      const userIds = Object.keys(counts);
+      const rows: any[] = Array.isArray(rankingRows) ? rankingRows : [];
+      const userIds = rows.map((r: any) => r.user_id);
       let profiles: any[] = [];
 
       if (userIds.length > 0) {
@@ -65,12 +59,12 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
         if (profs) profiles = profs;
       }
 
-      const sorted = userIds
-        .map((userId) => {
-          const profile = profiles.find((p: any) => p.user_id === userId);
-          const name = profile?.display_name || profile?.email?.split('@')[0] || t('ranking.anonymousStudent');
-          const score = counts[userId];
-          return { userId, name, score, rank: getRankForAchievements(score) };
+      const sorted = rows
+        .map((row: any) => {
+          const profile = profiles.find((p: any) => p.user_id === row.user_id);
+          const name = profile?.display_name || profile?.email?.split('@')[0] || row.display_name || t('ranking.anonymousStudent');
+          const score = Number(row.achievement_count) || 0;
+          return { userId: row.user_id, name, score, rank: getRankForAchievements(score) };
         })
         .sort((a, b) => b.score - a.score)
         .slice(0, 100);
@@ -82,6 +76,7 @@ export const RankingDialog = ({ open, onClose }: RankingDialogProps) => {
     }
     setLoading(false);
   };
+
 
   useEffect(() => {
     if (!open) return;
