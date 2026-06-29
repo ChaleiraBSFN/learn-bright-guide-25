@@ -244,3 +244,28 @@
     opacity: 1;
   }
 }
+
+/* Expanded view: spread content across the full screen width on large devices */
+html[data-expanded="true"] .lb-expand-container {
+  max-width: 100% !important;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  html[data-expanded="true"] .lb-expand-sections {
+    column-count: 2;
+    column-gap: 1.5rem;
+  }
+  html[data-expanded="true"] .lb-expand-sections > * {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+}
+
+@media (min-width: 1536px) {
+  html[data-expanded="true"] .lb-expand-sections {
+    column-count: 3;
+  }
+}
