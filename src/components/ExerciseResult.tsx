@@ -148,7 +148,9 @@ export function ExerciseResult({ content, aiImages, webImages, imagesLoading }: 
       <ImagesSection
         aiImages={aiImages}
         isLoading={imagesLoading}
+        tema={content.resumoTema}
       />
+
 
       {/* Score */}
       {score && (

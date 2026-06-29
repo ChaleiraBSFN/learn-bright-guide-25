@@ -218,37 +218,13 @@ const Index = () => {
     }
   };
 
-  const fetchImages = useCallback(async (tema: string, nivel: string, passos?: Array<{ titulo: string; conceito: string }>) => {
-    setImagesLoading(true);
+  const fetchImages = useCallback(async (_tema: string, _nivel: string, _passos?: Array<{ titulo: string; conceito: string }>) => {
+    // AI image generation disabled. Real images are now linked via Google Images search from the result UI.
+    setImagesLoading(false);
     setAiImages([]);
     setWebImages([]);
-    try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (sessionData.session?.access_token) {
-        headers.Authorization = `Bearer ${sessionData.session.access_token}`;
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-images`,
-        {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ tema, nivel, passos }),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setAiImages(data.aiImages || []);
-        setWebImages(data.webImages || []);
-      }
-    } catch (error) {
-      console.error("Error fetching images:", error);
-    } finally {
-      setImagesLoading(false);
-    }
   }, []);
+
 
   const handleSubmit = async (data: StudyFormData) => {
     if (!hasCredits) {
