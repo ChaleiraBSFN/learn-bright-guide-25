@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Expand, Shrink } from 'lucide-react';
+import { useExpandedView } from '@/hooks/useExpandedView';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ export const FloatingActions = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
+  const { expanded, toggle: toggleExpanded } = useExpandedView();
   const isMobile = useIsMobile();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
@@ -115,6 +117,26 @@ export const FloatingActions = () => {
             {theme === 'dark' ? t('settings.themeLight', 'Tema claro') : t('settings.themeDark', 'Tema escuro')}
           </TooltipContent>
         </Tooltip>
+
+        {/* Expand content width (desktop/tablet only) */}
+        {!isMobile && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={toggleExpanded}
+                aria-label={expanded ? t('expand.collapse', 'Recolher conteúdo') : t('expand.expand', 'Expandir conteúdo')}
+                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-cyan-500/40 hover:bg-cyan-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(190_85%_50%/0.55),0_4px_14px_-3px_hsl(190_85%_50%/0.45),inset_0_1px_0_hsl(0_0%_100%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(190_85%_50%/0.85)]"
+              >
+                {expanded ? <Shrink className="h-4 w-4 text-cyan-500" /> : <Expand className="h-4 w-4 text-cyan-500" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              {expanded ? t('expand.collapse', 'Recolher conteúdo') : t('expand.expand', 'Expandir conteúdo')}
+            </TooltipContent>
+          </Tooltip>
+        )}
 
         {/* Fullscreen (desktop only) */}
         {!isMobile && (
