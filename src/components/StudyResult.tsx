@@ -111,7 +111,9 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
           aiImages={generalAiImages}
           isLoading={imagesLoading}
           data={content.imagensIlustrativas}
+          tema={tema}
         />
+
 
         {content.videosRecomendados && <VideosSection data={content.videosRecomendados} />}
         {content.planoEstudo && (
