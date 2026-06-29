@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Expand, Shrink } from 'lucide-react';
+import { useExpandedView } from '@/hooks/useExpandedView';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ export const FloatingActions = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
+  const { expanded, toggle: toggleExpanded } = useExpandedView();
   const isMobile = useIsMobile();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
