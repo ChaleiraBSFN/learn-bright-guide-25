@@ -683,7 +683,7 @@ const Index = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="mx-auto max-w-4xl relative"
+              className="mx-auto max-w-4xl relative lb-expand-container"
             >
               <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
                 <StudyResult
@@ -712,7 +712,7 @@ const Index = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="mx-auto max-w-4xl relative"
+              className="mx-auto max-w-4xl relative lb-expand-container"
             >
               <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
                 <ExerciseResult
@@ -730,7 +730,7 @@ const Index = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="mx-auto max-w-4xl relative"
+              className="mx-auto max-w-4xl relative lb-expand-container"
             >
               <Suspense fallback={<div className="h-80 animate-pulse rounded-xl bg-muted" />}>
                 <StudyPlanSection

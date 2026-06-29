@@ -73,7 +73,7 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
         </p>
       </div>
 
-      <div className="space-y-4 md:space-y-6">
+      <div className="space-y-4 md:space-y-6 lb-expand-sections">
         {content.analiseImagem && <ImageAnalysisSection data={content.analiseImagem} />}
         {content.objetivo && <ObjectiveSection data={content.objetivo} />}
         
