@@ -3,7 +3,9 @@ const isWorkboxCacheForThisRegistration = (name) => {
   return hasWorkboxBucket || name.includes("workbox") || name.includes("supabase-api");
 };
 
-self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("install", (event) => {
+  event.waitUntil(self.skipWaiting());
+});
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
@@ -20,4 +22,9 @@ self.addEventListener("activate", (event) => {
       }
     })()
   );
+});
+
+// Never intercept or cache requests; this worker only exists to clear legacy caches.
+self.addEventListener("fetch", (event) => {
+  event.respondWith(fetch(event.request, { cache: "no-store" }));
 });
