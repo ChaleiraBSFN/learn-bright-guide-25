@@ -2,9 +2,59 @@
 <html lang="pt-BR" translate="no">
   <head>
     <meta charset="UTF-8" />
+    <!-- Build timestamp: 2026-07-08T00:00:00.000Z -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <script>
+      // Aggressive cache bust for the Lovable editor preview: unregister any
+      // service worker and clear application caches before the app boots.
+      (function () {
+        try {
+          var isPreview =
+            location.hostname.indexOf("id-preview--") !== -1 ||
+            location.hostname.indexOf("lovableproject.com") !== -1 ||
+            location.hostname.indexOf("lovable.app") !== -1 ||
+            self !== top;
+          if (!isPreview && !navigator.serviceWorker) return;
+
+          var clearCaches = function () {
+            if (typeof caches === "undefined") return;
+            caches.keys().then(function (names) {
+              names.forEach(function (name) {
+                if (
+                  /workbox|precache|runtime|supabase-api/.test(name) ||
+                  name.indexOf("googleAnalytics") !== -1
+                ) {
+                  caches.delete(name);
+                }
+              });
+            });
+          };
+
+          var unregisterSW = function () {
+            if (typeof navigator === "undefined" || !navigator.serviceWorker) return;
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              regs.forEach(function (r) {
+                r.unregister();
+              });
+            });
+          };
+
+          unregisterSW();
+          clearCaches();
+
+          if (isPreview && !sessionStorage.getItem("lb-preview-fresh")) {
+            sessionStorage.setItem("lb-preview-fresh", "1");
+            var url = new URL(location.href);
+            if (!url.searchParams.has("_fresh")) {
+              url.searchParams.set("_fresh", Date.now().toString());
+              location.replace(url.toString());
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="google" content="notranslate" />
     <meta http-equiv="Content-Language" content="pt-BR" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -13,12 +63,12 @@
     <meta name="apple-mobile-web-app-title" content="Learn Buddy" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#1a56db" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest?v=2026-07-08" />
+    <link rel="icon" href="/favicon.ico?v=2026-07-08" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2026-07-08" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png?v=2026-07-08" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png?v=2026-07-08" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2026-07-08" />
 
     <!-- Preconnect to Google Fonts for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
