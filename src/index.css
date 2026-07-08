@@ -245,8 +245,9 @@
   }
 }
 
-/* Expanded view: spread content across the full screen width on large devices.
-   Uses CSS multi-column masonry to handle sections of uneven heights cleanly. */
+/* Expanded view ("Tela Cheia"): widen the reading column and keep sections
+   in a clean vertical stack. Multi-column masonry was removed because
+   sections have very uneven heights and it broke reading order. */
 html[data-expanded="true"] .lb-expand-container {
   max-width: 100% !important;
   padding-left: 1.5rem;
@@ -255,23 +256,18 @@ html[data-expanded="true"] .lb-expand-container {
 
 @media (min-width: 1024px) {
   html[data-expanded="true"] .lb-expand-sections {
-    column-count: 2;
-    column-gap: 1.5rem;
-    display: block;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
   }
   html[data-expanded="true"] .lb-expand-sections > * {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    display: block;
     width: 100%;
-    margin: 0 0 1.5rem 0 !important;
   }
 }
 
 @media (min-width: 1536px) {
   html[data-expanded="true"] .lb-expand-sections {
-    column-count: 3;
+    max-width: 1280px;
   }
 }
 
