@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { SEO } from '@/components/SEO';
-import { ArrowLeft, Megaphone, Loader2, Trash2, Send, Pencil, X, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Megaphone, Loader2, Trash2, Send, Pencil, X, Image as ImageIcon, Download } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface UpdateNotice {
@@ -60,7 +60,7 @@ const typeLabels: Record<string, string> = {
   announcement: '📢 Anúncio',
 };
 
-const ICON_OPTIONS = ['users', 'sparkles', 'megaphone', 'trophy', 'book', 'brain', 'dumbbell', 'map', 'coins', 'heart', 'star', 'zap'];
+const ICON_OPTIONS = ['users', 'sparkles', 'megaphone', 'trophy', 'book', 'brain', 'dumbbell', 'map', 'coins', 'heart', 'star', 'zap', 'download'];
 const VARIANT_OPTIONS = [
   { key: 'violet', label: 'Roxo', dot: 'bg-violet-500' },
   { key: 'blue', label: 'Azul', dot: 'bg-blue-500' },

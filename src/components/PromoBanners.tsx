@@ -6,14 +6,13 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Users, Sparkles, Megaphone, Trophy, BookOpen, Brain, Dumbbell,
-  Map, Coins, Heart, Star, Zap, ArrowRight,
-
+  Map, Coins, Heart, Star, Zap, ArrowRight, Download,
 } from 'lucide-react';
 
 const iconMap: Record<string, any> = {
   users: Users, sparkles: Sparkles, megaphone: Megaphone, trophy: Trophy,
   book: BookOpen, brain: Brain, dumbbell: Dumbbell, map: Map,
-  coins: Coins, heart: Heart, star: Star, zap: Zap,
+  coins: Coins, heart: Heart, star: Star, zap: Zap, download: Download,
 };
 
 const variantStyles: Record<string, { border: string; bg: string; ring: string; text: string; cta: string; glow1: string; glow2: string; }> = {
