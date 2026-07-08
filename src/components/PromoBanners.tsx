@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Users, Sparkles, Megaphone, Trophy, BookOpen, Brain, Dumbbell,
-  Map, Coins, Heart, Star, Zap, ArrowRight,
+  Map, Coins, Heart, Star, Zap, ArrowRight, Download,
 } from 'lucide-react';
 
 const iconMap: Record<string, any> = {
@@ -124,6 +125,7 @@ function recordImpression(id: string, now: Date) {
 
 export const PromoBanners = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { data: banners } = useQuery({
     queryKey: ['promo-banners-active'],
     queryFn: async () => {
@@ -181,9 +183,22 @@ export const PromoBanners = () => {
                 <p className={`font-display text-sm md:text-base font-bold ${s.text}`}>{b.title}</p>
                 <p className="text-xs md:text-sm text-foreground/80 mt-0.5">{b.description}</p>
               </div>
-              <div className={`hidden sm:flex shrink-0 items-center gap-1 rounded-full ${s.cta} px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-colors max-w-[160px] text-center leading-tight whitespace-normal break-words`}>
-                <span className="line-clamp-2">{b.cta_label}</span>
-                <ArrowRight className="h-3 w-3 shrink-0 transition-transform group-hover:translate-x-0.5" />
+              <div className="hidden sm:flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  aria-label={t('install.downloadApp')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate('/downloads');
+                  }}
+                  className={`flex h-9 w-9 items-center justify-center rounded-full ${s.cta} text-white shadow-md transition-transform hover:scale-105 active:scale-95`}
+                >
+                  <Download className="h-4 w-4" />
+                </button>
+                <div className={`flex items-center gap-1 rounded-full ${s.cta} px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-colors max-w-[160px] text-center leading-tight whitespace-normal break-words`}>
+                  <span className="line-clamp-2">{b.cta_label}</span>
+                  <ArrowRight className="h-3 w-3 shrink-0 transition-transform group-hover:translate-x-0.5" />
+                </div>
               </div>
             </div>
           </motion.button>
