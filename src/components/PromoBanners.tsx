@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+
 import { supabase } from '@/integrations/supabase/client';
 import {
   Users, Sparkles, Megaphone, Trophy, BookOpen, Brain, Dumbbell,
@@ -126,7 +126,7 @@ function recordImpression(id: string, now: Date) {
 
 export const PromoBanners = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+
   const { data: banners } = useQuery({
     queryKey: ['promo-banners-active'],
     queryFn: async () => {
