@@ -44,14 +44,8 @@ export const useFullscreen = () => {
       else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
       else if (el.mozRequestFullScreen) await el.mozRequestFullScreen();
       else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-      else throw new Error('Fullscreen API not supported');
     } catch (err) {
       console.warn('[fullscreen] blocked', err);
-      // Fallback when inside an iframe without permissions-policy allow="fullscreen"
-      // (e.g. Lovable preview). Open the app in a new tab where fullscreen works.
-      if (window.self !== window.top) {
-        window.open(window.location.href, '_blank', 'noopener,noreferrer');
-      }
     }
   }, []);
 
