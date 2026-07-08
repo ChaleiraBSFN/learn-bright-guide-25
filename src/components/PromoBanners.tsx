@@ -125,6 +125,7 @@ function recordImpression(id: string, now: Date) {
 
 export const PromoBanners = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { data: banners } = useQuery({
     queryKey: ['promo-banners-active'],
     queryFn: async () => {
