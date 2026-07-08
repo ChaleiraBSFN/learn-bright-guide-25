@@ -1,14 +1,30 @@
 // Auto-update checker: polls index.html and reloads when a new build is detected.
-// Compares the hashed JS entry referenced in <head> to detect deploys.
+// Compares the hashed JS/CSS entries and the build timestamp comment in <head>.
 
-const POLL_INTERVAL_MS = 60_000; // 1 minute
+const POLL_INTERVAL_MS = 5_000; // 5 seconds in preview/iframe, throttled elsewhere
 const STORAGE_KEY = "lb-build-signature";
+
+const isPreview =
+  (typeof window !== "undefined" &&
+    (window.location.hostname.includes("id-preview--") ||
+      window.location.hostname.includes("lovableproject.com") ||
+      window.location.hostname.includes("lovable.app"))) ||
+  (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
 
 const extractSignature = (html: string): string | null => {
   // Match the hashed Vite entry script (e.g. /assets/index-ABC123.js) or any modulepreload/script with a hash.
-  const matches = html.match(/\/assets\/[A-Za-z0-9_-]+\.[a-f0-9]{6,}\.(?:js|css)/g);
-  if (!matches || matches.length === 0) return null;
-  return Array.from(new Set(matches)).sort().join("|");
+  const assetMatches = html.match(/\/assets\/[A-Za-z0-9_-]+\.[a-f0-9]{6,}\.(?:js|css)/g);
+  const assets = assetMatches ? Array.from(new Set(assetMatches)).sort().join("|") : "";
+  // Also capture the build timestamp comment so any HTML-only change triggers a reload.
+  const buildTimestamp = html.match(/<!-- Build timestamp: ([^\s]+) -->/)?.[1] || "";
+  const combined = `${buildTimestamp}::${assets}`;
+  return combined.length > 2 ? combined : null;
 };
 
 const fetchCurrentSignature = async (): Promise<string | null> => {
@@ -48,8 +64,12 @@ export const startVersionCheck = () => {
     } catch {}
   }
 
+  let lastCheck = 0;
   const check = async () => {
     if (document.visibilityState !== "visible") return;
+    const now = Date.now();
+    if (now - lastCheck < (isPreview ? 5_000 : POLL_INTERVAL_MS)) return;
+    lastCheck = now;
     const latest = await fetchCurrentSignature();
     if (!latest) return;
     let stored: string | null = null;
@@ -65,7 +85,7 @@ export const startVersionCheck = () => {
     if (stored !== latest) triggerReload();
   };
 
-  setInterval(check, POLL_INTERVAL_MS);
+  setInterval(check, isPreview ? 5_000 : POLL_INTERVAL_MS);
   window.addEventListener("focus", check);
   document.addEventListener("visibilitychange", check);
 };
