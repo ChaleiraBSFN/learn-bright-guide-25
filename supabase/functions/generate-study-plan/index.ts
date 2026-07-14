@@ -41,12 +41,17 @@ function buildPrompt(tema: string, nivel: string, dias: number, duvidas: string 
     medio: "UNDERGRADUATE", superior: "GRADUATE",
   };
   return `You are a study coach. Generate a detailed day-by-day study plan in ${lang}.
-Respond ONLY in valid JSON. JSON keys must stay in Portuguese exactly as shown.
+Respond ONLY in valid JSON. JSON keys must stay in Portuguese exactly as shown; ALL values in ${lang}.
 
-Topic: ${tema}
+===== MANDATORY OUTPUT LANGUAGE =====
+Every string value MUST be in ${lang}, no matter what language the topic was typed in. Translate the topic internally to ${lang} first. Never mirror the topic's language.
+=====================================
+
+Topic (translate internally to ${lang} if written in another language): ${tema}
 Academic level: ${levelMap[nivel] || nivel}
 Total days: ${dias}
-${duvidas ? `Student's specific questions/focus: ${duvidas}` : ""}
+${duvidas ? `Student's specific questions/focus (respond in ${lang}): ${duvidas}` : ""}
+
 
 Return:
 {
