@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, LayoutGrid, Shrink } from 'lucide-react';
-import { useExpandedView } from '@/hooks/useExpandedView';
+import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown } from 'lucide-react';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
