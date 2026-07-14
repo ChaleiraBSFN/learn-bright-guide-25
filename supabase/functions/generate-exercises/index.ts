@@ -256,7 +256,12 @@ The user activated a temporary "Prime" power-up. Every exercise MUST be DRASTICA
 - All intermediate results in "respostaCompleta" must also be integers (round if needed) — never display a number like 2.5 or 3.33.
 Keep the same TOPIC, but lower difficulty substantially.
 
-` : ''}Generate ${quantidade} exercises about "${sanitize(tema)}". Respond ONLY in ${lang}. ONLY valid JSON.
+` : ''}Generate ${quantidade} exercises about "${sanitize(tema)}". ONLY valid JSON.
+
+===== MANDATORY OUTPUT LANGUAGE =====
+Every string in the JSON (titles, statements, alternatives, answers, explanations, hints) MUST be written in ${lang}, regardless of the language of the topic. If the topic is in another language, translate it internally to ${lang} first. NEVER mirror the topic's language. Output language = ${lang}, no exceptions.
+=====================================
+
 
 ACADEMIC LEVEL CALIBRATION (CRITICAL — DO NOT IGNORE):
 Internal level code received: "${sanitize(nivel)}"${primeBoost ? ` (downshifted to "${effectiveNivel}" by Prime boost)` : ''}

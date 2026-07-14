@@ -332,13 +332,20 @@ function buildPrompt(tema: string, nivel: string, prazo: number, duvidas: string
 
   return `${style}
 
-Respond ONLY in valid JSON, in ${lang}. Keep JSON keys in Portuguese exactly as shown.
+===== MANDATORY OUTPUT LANGUAGE =====
+ABSOLUTE RULE: Every single string value in the JSON — titles, explanations, examples, questions, answers, hints, branch names, source descriptions, EVERYTHING — MUST be written in ${lang}.
+This applies REGARDLESS of the language the user typed the topic in. If the topic below is written in another language (e.g. English, Russian, Chinese), you MUST first mentally translate it to ${lang} and then produce ALL output in ${lang}.
+Do NOT mirror the topic's language. Do NOT mix languages. Output language = ${lang}. No exceptions.
+=====================================
 
-Topic: ${tema}
+Respond ONLY in valid JSON, in ${lang}. Keep JSON keys in Portuguese exactly as shown (keys only — all VALUES in ${lang}).
+
+Topic (translate to ${lang} internally if needed): ${tema}
 Internal level code: "${nivel}"
 ACADEMIC LEVEL CALIBRATION (CRITICAL): ${nivelInstrucao}
 The content depth MUST strictly match this calibration. For graduação/pós-graduação use real exam-grade depth (ENADE, concursos, qualifying exams).
-${duvidas ? `Specific questions: ${duvidas}` : ""}
+${duvidas ? `Specific questions (respond in ${lang}): ${duvidas}` : ""}
+
 
 Return this JSON structure:
 {
@@ -356,11 +363,9 @@ Return this JSON structure:
 Rules:
 - ${isPremium ? "5 steps, 6 exercises, 4 errors, 6 branches" : "3 steps, 3 exercises, 2 errors, 4 branches"}
 - Be CONCISE in most fields, BUT the "conceito" field MUST be deep and detailed: at least 7 lines / 7-9 sentences each. Never short.
-- Respond ONLY in ${lang}, even if the topic is in another language.
-- CRITICAL EXCEPTION: If the user is asking to learn words/vocabulary/phrases in a FOREIGN language (e.g., "aprender palavras em russo", "learn Japanese words"), then:
-  * Write ALL explanations, concepts, titles, and descriptions in ${lang}
-  * BUT keep the foreign language words, examples, and vocabulary items in their ORIGINAL foreign language script (e.g., Russian in Cyrillic, Japanese in Kanji/Hiragana, Chinese in Hanzi, etc.)
-  * The "exemplo" and "pergunta"/"resposta" fields should contain the foreign language words being studied
+- Respond ONLY in ${lang}, even if the topic is written in another language. Translate the topic internally and produce ALL prose in ${lang}.
+- NARROW EXCEPTION (only when the topic explicitly asks to LEARN vocabulary/phrases in a foreign language, e.g. "aprender palavras em russo"): keep only the specific vocabulary tokens being taught in their original script; ALL surrounding explanations, titles, translations, and instructions still MUST be in ${lang}.
+
 - MATH NOTATION (MANDATORY): NEVER use LaTeX. NEVER use "$", "$$", "\\(", "\\)", "\\[", "\\]". For powers use Unicode superscripts directly: x², x³, x⁴, xⁿ (NEVER "x^2" nor "x**2"). For subscripts use x₁, x₂, H₂O. Square root: √(x). Fractions: (a)/(b). Multiplication: × or ·. Division: ÷. Use normal parentheses ( and ), NEVER "$" as a delimiter. Symbols: π θ α β Δ ≤ ≥ ≠ ≈ ∞.
 - OUTPUT MUST NEVER contain HTML/XML tags, pseudo-tags or unbalanced bracket runs like "<>", "<<>>", "<><>", ">>>", "<eq>", "<math>", "<br>", "<p>", "</p>". Plain readable text only.
 - ONLY output JSON, no extra text.`;
