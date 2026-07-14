@@ -116,7 +116,7 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
         />
 
 
-        {content.videosRecomendados && <VideosSection data={content.videosRecomendados} />}
+        {content.videosRecomendados && <VideosSection data={content.videosRecomendados} tema={tema} />}
         {content.planoEstudo && (
           <StudyPlanSection
             data={content.planoEstudo}
