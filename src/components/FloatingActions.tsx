@@ -18,7 +18,6 @@ export const FloatingActions = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
-  const { expanded, toggle: toggleExpanded } = useExpandedView();
   const isMobile = useIsMobile();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
