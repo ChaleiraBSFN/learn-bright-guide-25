@@ -39,6 +39,9 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
   const [loadingExp, setLoadingExp] = useState<Record<number, boolean>>({});
   const [currentLang, setCurrentLang] = useState(i18n.language);
 
+  // Ensure steps always start numbering from 1 regardless of what the API returns
+  const normalizedPassos = data.passos.map((passo, index) => ({ ...passo, numero: index + 1 }));
+
   // Clear cached explanations when language changes so they can be regenerated
   useEffect(() => {
     const handleLangChange = (lng: string) => {
