@@ -134,6 +134,18 @@ function writeTranslationCache(cache: TranslationCache) {
   try { localStorage.setItem(TRANSLATION_CACHE_KEY, JSON.stringify(cache)); } catch {}
 }
 
+const loadingLabels: Record<string, string> = {
+  'pt-BR': 'Traduzindo banners...',
+  'en': 'Translating banners...',
+  'es': 'Traduciendo banners...',
+  'fr': 'Traduction des bannières...',
+  'de': 'Banner werden übersetzt...',
+  'it': 'Traduzione dei banner...',
+  'ja': 'バナーを翻訳中...',
+  'zh': '正在翻译横幅...',
+  'ru': 'Перевод баннеров...',
+};
+
 export const PromoBanners = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
