@@ -75,16 +75,7 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
 
       <div className="space-y-4 md:space-y-6 lb-expand-sections">
         {content.analiseImagem && <ImageAnalysisSection data={content.analiseImagem} />}
-        {content.objetivo && <ObjectiveSection data={content.objetivo} />}
-        
-        {content.resumo && (
-          <SummarySection
-            data={content.resumo}
-            summaryImage={summaryImage}
-            imagesLoading={imagesLoading}
-          />
-        )}
-        
+
         {content.demonstracoes && (
           <StepsSection
             data={content.demonstracoes}
@@ -92,6 +83,16 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
             imagesLoading={imagesLoading}
             tema={tema}
             nivel={nivel}
+          />
+        )}
+
+        {content.objetivo && <ObjectiveSection data={content.objetivo} />}
+
+        {content.resumo && (
+          <SummarySection
+            data={content.resumo}
+            summaryImage={summaryImage}
+            imagesLoading={imagesLoading}
           />
         )}
 
