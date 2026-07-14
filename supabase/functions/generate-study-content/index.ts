@@ -332,13 +332,20 @@ function buildPrompt(tema: string, nivel: string, prazo: number, duvidas: string
 
   return `${style}
 
-Respond ONLY in valid JSON, in ${lang}. Keep JSON keys in Portuguese exactly as shown.
+===== MANDATORY OUTPUT LANGUAGE =====
+ABSOLUTE RULE: Every single string value in the JSON — titles, explanations, examples, questions, answers, hints, branch names, source descriptions, EVERYTHING — MUST be written in ${lang}.
+This applies REGARDLESS of the language the user typed the topic in. If the topic below is written in another language (e.g. English, Russian, Chinese), you MUST first mentally translate it to ${lang} and then produce ALL output in ${lang}.
+Do NOT mirror the topic's language. Do NOT mix languages. Output language = ${lang}. No exceptions.
+=====================================
 
-Topic: ${tema}
+Respond ONLY in valid JSON, in ${lang}. Keep JSON keys in Portuguese exactly as shown (keys only — all VALUES in ${lang}).
+
+Topic (translate to ${lang} internally if needed): ${tema}
 Internal level code: "${nivel}"
 ACADEMIC LEVEL CALIBRATION (CRITICAL): ${nivelInstrucao}
 The content depth MUST strictly match this calibration. For graduação/pós-graduação use real exam-grade depth (ENADE, concursos, qualifying exams).
-${duvidas ? `Specific questions: ${duvidas}` : ""}
+${duvidas ? `Specific questions (respond in ${lang}): ${duvidas}` : ""}
+
 
 Return this JSON structure:
 {
