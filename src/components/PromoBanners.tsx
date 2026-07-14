@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Users, Sparkles, Megaphone, Trophy, BookOpen, Brain, Dumbbell,
-  Map, Coins, Heart, Star, Zap, ArrowRight, Download,
+  Map, Coins, Heart, Star, Zap, ArrowRight, Download, Loader2,
 } from 'lucide-react';
 
 const iconMap: Record<string, any> = {
