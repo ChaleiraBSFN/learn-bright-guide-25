@@ -39,6 +39,9 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
   const [loadingExp, setLoadingExp] = useState<Record<number, boolean>>({});
   const [currentLang, setCurrentLang] = useState(i18n.language);
 
+  // Ensure steps always start numbering from 1 regardless of what the API returns
+  const normalizedPassos = data.passos.map((passo, index) => ({ ...passo, numero: index + 1 }));
+
   // Clear cached explanations when language changes so they can be regenerated
   useEffect(() => {
     const handleLangChange = (lng: string) => {
@@ -86,7 +89,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
   };
 
   return (
-    <section className="section-card bg-card border border-border fade-in" style={{ animationDelay: '0.3s' }}>
+    <section className="section-card bg-card border border-border fade-in" style={{ animationDelay: '0.1s' }}>
       <div className="absolute left-0 top-0 h-full w-1.5 rounded-l-2xl bg-section-steps" />
       <div className="space-y-4 md:space-y-6">
         <div className="flex items-start gap-3 md:gap-4">
@@ -94,12 +97,12 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
             <ListOrdered className="h-5 w-5 md:h-6 md:w-6 text-section-steps" />
           </div>
           <h3 className="font-display text-lg md:text-xl font-bold text-foreground pt-1 md:pt-2">
-            3. {data.titulo}
+            1. {data.titulo}
           </h3>
         </div>
-        
+
         <div className="ml-0 md:ml-16 space-y-4 md:space-y-6">
-          {data.passos.map((passo, index) => {
+          {normalizedPassos.map((passo, index) => {
             const img = getStepImage(index);
             return (
               <div 

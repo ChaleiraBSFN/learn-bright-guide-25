@@ -18,7 +18,7 @@ interface SummarySectionProps {
 
 export function SummarySection({ data, summaryImage, imagesLoading }: SummarySectionProps) {
   return (
-    <section className="section-card bg-card border border-border fade-in lb-expand-first" style={{ animationDelay: '0.2s' }}>
+    <section className="section-card bg-card border border-border fade-in lb-expand-first" style={{ animationDelay: '0.3s' }}>
       <div className="absolute left-0 top-0 h-full w-1.5 rounded-l-2xl bg-section-summary" />
       <div className="flex items-start gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-section-summary/10">
@@ -26,7 +26,7 @@ export function SummarySection({ data, summaryImage, imagesLoading }: SummarySec
         </div>
         <div className="space-y-3 flex-1 min-w-0">
           <h3 className="font-display text-xl font-bold text-foreground">
-            2. {data.titulo}
+            3. {data.titulo}
           </h3>
 
           {/* Inline image alongside summary */}
