@@ -4,6 +4,7 @@ import { Youtube, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface VideosSectionProps {
+  tema?: string;
   data: {
     titulo: string;
     lista: Array<{
@@ -16,17 +17,28 @@ interface VideosSectionProps {
   };
 }
 
-export function VideosSection({ data }: VideosSectionProps) {
+const normalize = (v: string) =>
+  v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+const enrichTerm = (base: string, tema?: string) => {
+  const b = (base || "").trim();
+  if (!tema) return b;
+  return normalize(b).includes(normalize(tema)) ? b : `${tema} ${b}`.trim();
+};
+
+export function VideosSection({ data, tema }: VideosSectionProps) {
   const { t } = useTranslation();
 
-  const openVideo = (video: { url?: string; termoBusca: string }) => {
+  const openVideo = (video: { url?: string; termoBusca: string; titulo: string }) => {
     if (video.url && /^https?:\/\//i.test(video.url)) {
-      window.open(video.url, '_blank');
-    } else {
-      const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(video.termoBusca)}`;
-      window.open(searchUrl, '_blank');
+      window.open(video.url, "_blank", "noopener,noreferrer");
+      return;
     }
+    const term = enrichTerm(video.termoBusca || video.titulo, tema);
+    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(term)}`;
+    window.open(searchUrl, "_blank", "noopener,noreferrer");
   };
+
 
   return (
     <Card className="card-elevated slide-up border-accent/30 bg-gradient-to-br from-accent/5 to-transparent">
