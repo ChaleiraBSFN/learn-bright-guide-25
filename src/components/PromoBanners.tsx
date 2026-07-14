@@ -172,7 +172,7 @@ export const PromoBanners = () => {
     return (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
   }, [banners]);
 
-  const { data: translations } = useQuery({
+  const { data: translations, isLoading: isTranslating } = useQuery({
     queryKey: ['promo-banners-translations', lang, visible.map(b => `${b.id}:${b.title}:${b.description}:${b.cta_label}`).join('|')],
     enabled: visible.length > 0 && lang !== 'pt-BR',
     staleTime: 60 * 60 * 1000,
