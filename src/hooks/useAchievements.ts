@@ -332,7 +332,7 @@ export const useAchievementData = () => {
 
     // Realtime: listen for trail node updates from admin (syncs across all devices, including mobile)
     const channel = supabase
-      .channel('ai_config_trail_nodes')
+      .channel(`ai_config_trail_nodes_${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'ai_config', filter: 'section=eq.trail_nodes' },
