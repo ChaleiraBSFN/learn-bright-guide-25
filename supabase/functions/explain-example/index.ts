@@ -208,7 +208,10 @@ CONTEXTO: ${sanitize(contexto || "")}
 TEMA: ${sanitize(tema || "")}
 EXEMPLO: ${sanitize(exemplo)}
 
+IDIOMA OBRIGATÓRIO DE SAÍDA: ${langName}. Escreva TUDO em ${langName}, mesmo que o TEMA, CONTEXTO ou EXEMPLO estejam em outro idioma — traduza mentalmente para ${langName} antes de responder. Nunca espelhe o idioma do input.
+
 Responda em ${langName} usando EXATAMENTE estas 5 seções com Markdown leve. CADA seção tem um TÍTULO em negrito (**) seguido de BULLETS curtos (cada um começando com "- "). NUNCA escreva parágrafos longos — sempre quebre em bullets de no máximo 2 linhas cada.
+
 
 **🎯 O que está acontecendo**
 - 1 bullet com a ideia geral em 1 frase.
