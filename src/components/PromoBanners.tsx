@@ -124,8 +124,20 @@ function recordImpression(id: string, now: Date) {
   try { localStorage.setItem(IMP_KEY, JSON.stringify(imps)); } catch {}
 }
 
+const TRANSLATION_CACHE_KEY = 'lb_banner_translations_v1';
+type TranslationCache = Record<string, Record<string, { title: string; description: string; cta_label: string }>>;
+
+function readTranslationCache(): TranslationCache {
+  try { return JSON.parse(localStorage.getItem(TRANSLATION_CACHE_KEY) || '{}'); } catch { return {}; }
+}
+function writeTranslationCache(cache: TranslationCache) {
+  try { localStorage.setItem(TRANSLATION_CACHE_KEY, JSON.stringify(cache)); } catch {}
+}
+
 export const PromoBanners = () => {
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
+  const lang = i18n.language || 'pt-BR';
 
   const { data: banners } = useQuery({
     queryKey: ['promo-banners-active'],
@@ -148,6 +160,50 @@ export const PromoBanners = () => {
     return (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
   }, [banners]);
 
+  const { data: translations } = useQuery({
+    queryKey: ['promo-banners-translations', lang, visible.map(b => `${b.id}:${b.title}:${b.description}:${b.cta_label}`).join('|')],
+    enabled: visible.length > 0 && lang !== 'pt-BR',
+    staleTime: 60 * 60 * 1000,
+    queryFn: async () => {
+      const cache = readTranslationCache();
+      const result: Record<string, { title: string; description: string; cta_label: string }> = {};
+      const toTranslate: Array<{ id: string; title: string; description: string; cta_label: string }> = [];
+
+      for (const b of visible) {
+        const key = `${b.id}:${b.title}:${b.description}:${b.cta_label}`;
+        const cached = cache[lang]?.[key];
+        if (cached) {
+          result[b.id] = cached;
+        } else {
+          toTranslate.push({ id: b.id, title: b.title, description: b.description, cta_label: b.cta_label });
+        }
+      }
+
+      if (toTranslate.length > 0) {
+        const content: Record<string, { title: string; description: string; cta_label: string }> = {};
+        toTranslate.forEach(b => { content[b.id] = { title: b.title, description: b.description, cta_label: b.cta_label }; });
+
+        const { data, error } = await supabase.functions.invoke('translate-content', {
+          body: { content, targetLanguage: lang },
+        });
+
+        if (!error && data) {
+          if (!cache[lang]) cache[lang] = {};
+          for (const b of toTranslate) {
+            const tr = (data as any)[b.id];
+            if (tr && tr.title && tr.description && tr.cta_label) {
+              result[b.id] = tr;
+              const key = `${b.id}:${b.title}:${b.description}:${b.cta_label}`;
+              cache[lang][key] = tr;
+            }
+          }
+          writeTranslationCache(cache);
+        }
+      }
+      return result;
+    },
+  });
+
   useEffect(() => {
     if (visible.length === 0) return;
     const now = new Date();
@@ -156,13 +212,17 @@ export const PromoBanners = () => {
 
   if (visible.length === 0) return null;
 
-
+  const getText = (b: any) => {
+    if (lang === 'pt-BR') return { title: b.title, description: b.description, cta_label: b.cta_label };
+    return translations?.[b.id] || { title: b.title, description: b.description, cta_label: b.cta_label };
+  };
 
   return (
     <div className="space-y-2">
       {visible.map((b) => {
         const Icon = iconMap[b.icon] || Users;
         const s = variantStyles[b.variant] || variantStyles.violet;
+        const text = getText(b);
         return (
           <motion.button
             key={b.id}
@@ -181,12 +241,12 @@ export const PromoBanners = () => {
                 <Icon className={`h-5 w-5 ${s.text}`} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`font-display text-sm md:text-base font-bold ${s.text}`}>{b.title}</p>
-                <p className="text-xs md:text-sm text-foreground/80 mt-0.5">{b.description}</p>
+                <p className={`font-display text-sm md:text-base font-bold ${s.text}`}>{text.title}</p>
+                <p className="text-xs md:text-sm text-foreground/80 mt-0.5">{text.description}</p>
               </div>
               <div className="hidden sm:flex shrink-0 items-center gap-2">
                 <div className={`flex items-center gap-1 rounded-full ${s.cta} px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-colors max-w-[160px] text-center leading-tight whitespace-normal break-words`}>
-                  <span className="line-clamp-2">{b.cta_label}</span>
+                  <span className="line-clamp-2">{text.cta_label}</span>
                   <ArrowRight className="h-3 w-3 shrink-0 transition-transform group-hover:translate-x-0.5" />
                 </div>
               </div>
