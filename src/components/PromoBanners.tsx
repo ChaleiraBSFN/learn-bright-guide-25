@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Users, Sparkles, Megaphone, Trophy, BookOpen, Brain, Dumbbell,
-  Map, Coins, Heart, Star, Zap, ArrowRight, Download,
+  Map, Coins, Heart, Star, Zap, ArrowRight, Download, Loader2,
 } from 'lucide-react';
 
 const iconMap: Record<string, any> = {
@@ -134,6 +134,18 @@ function writeTranslationCache(cache: TranslationCache) {
   try { localStorage.setItem(TRANSLATION_CACHE_KEY, JSON.stringify(cache)); } catch {}
 }
 
+const loadingLabels: Record<string, string> = {
+  'pt-BR': 'Traduzindo banners...',
+  'en': 'Translating banners...',
+  'es': 'Traduciendo banners...',
+  'fr': 'Traduction des bannières...',
+  'de': 'Banner werden übersetzt...',
+  'it': 'Traduzione dei banner...',
+  'ja': 'バナーを翻訳中...',
+  'zh': '正在翻译横幅...',
+  'ru': 'Перевод баннеров...',
+};
+
 export const PromoBanners = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
@@ -160,7 +172,7 @@ export const PromoBanners = () => {
     return (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
   }, [banners]);
 
-  const { data: translations } = useQuery({
+  const { data: translations, isLoading: isTranslating } = useQuery({
     queryKey: ['promo-banners-translations', lang, visible.map(b => `${b.id}:${b.title}:${b.description}:${b.cta_label}`).join('|')],
     enabled: visible.length > 0 && lang !== 'pt-BR',
     staleTime: 60 * 60 * 1000,
@@ -219,6 +231,12 @@ export const PromoBanners = () => {
 
   return (
     <div className="space-y-2">
+      {isTranslating && (
+        <div className="flex items-center justify-center gap-1.5 pb-1 text-xs text-foreground/60">
+          <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
+          <span>{loadingLabels[lang] || loadingLabels['en']}</span>
+        </div>
+      )}
       {visible.map((b) => {
         const Icon = iconMap[b.icon] || Users;
         const s = variantStyles[b.variant] || variantStyles.violet;
