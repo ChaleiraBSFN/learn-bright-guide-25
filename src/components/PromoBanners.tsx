@@ -231,6 +231,12 @@ export const PromoBanners = () => {
 
   return (
     <div className="space-y-2">
+      {isTranslating && (
+        <div className="flex items-center justify-center gap-1.5 pb-1 text-xs text-foreground/60">
+          <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
+          <span>{loadingLabels[lang] || loadingLabels['en']}</span>
+        </div>
+      )}
       {visible.map((b) => {
         const Icon = iconMap[b.icon] || Users;
         const s = variantStyles[b.variant] || variantStyles.violet;
