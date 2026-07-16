@@ -143,6 +143,7 @@ export const FloatingActions = () => {
         )}
 
         {trailEnabled && (
+          <SectionGate sectionKey="trail" hideWhenDisabled>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -159,9 +160,29 @@ export const FloatingActions = () => {
               {t('trail.title', 'Trilha de Progresso')}
             </TooltipContent>
           </Tooltip>
+          </SectionGate>
         )}
 
-        {rankingEnabled && (
+        {/* Reward shop / mercadinho */}
+        {shopFlag?.enabled !== false && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setShowShop(true)}
+                aria-label={t('rewardShop.title', 'Mercadinho de créditos')}
+                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-emerald-500/40 hover:bg-emerald-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(160_70%_45%/0.6),0_4px_14px_-3px_hsl(160_70%_45%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(160_70%_45%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(160_70%_45%/0.85)]"
+              >
+                <ShoppingBag className="h-4 w-4 text-emerald-500" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              {t('rewardShop.title', 'Mercadinho de créditos')}
+            </TooltipContent>
+          </Tooltip>
+        )}
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
