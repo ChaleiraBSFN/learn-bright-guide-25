@@ -144,6 +144,11 @@ export function FeatureCarousel() {
   const lastTimeRef = useRef<number | null>(null);
   const manualAnimatingRef = useRef(false);
   const x = useMotionValue(0);
+  const scrollbarTrackRef = useRef<HTMLDivElement>(null);
+  const scrollbarThumbRef = useRef<HTMLDivElement>(null);
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+  const [totalWidth, setTotalWidth] = useState(0);
+  const isDraggingThumbRef = useRef(false);
 
   const { data: rows = [] } = useQuery({
     queryKey: ["carousel-items-active"],
