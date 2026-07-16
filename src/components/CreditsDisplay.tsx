@@ -6,6 +6,7 @@ import { Coins, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { RewardShopModal } from '@/components/RewardShopModal';
+import { useUnderDevGate } from '@/hooks/useUnderDevGate';
 
 export const CreditsDisplay = () => {
   const { credits, loading } = useCredits();
@@ -13,6 +14,7 @@ export const CreditsDisplay = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [shopOpen, setShopOpen] = useState(false);
+  const shopGate = useUnderDevGate('shop');
 
   if (loading) {
     return (
@@ -30,7 +32,7 @@ export const CreditsDisplay = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={() => (user ? setShopOpen(true) : navigate('/auth'))}
+            onClick={shopGate.guard(() => (user ? setShopOpen(true) : navigate('/auth')))}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
               isEmpty
                 ? 'bg-destructive/10 text-destructive border border-destructive/30'
@@ -53,6 +55,7 @@ export const CreditsDisplay = () => {
         </TooltipContent>
       </Tooltip>
       <RewardShopModal open={shopOpen} onOpenChange={setShopOpen} />
+      {shopGate.dialog}
     </>
   );
 };
