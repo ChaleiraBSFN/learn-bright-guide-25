@@ -941,6 +941,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      claim_ad_reward: { Args: never; Returns: Json }
       cleanup_expired_ai_cache: { Args: never; Returns: undefined }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       create_pending_subscription: {

@@ -765,7 +765,8 @@
     "limitReached": "Ya usaste los anuncios de hoy. ¡Vuelve mañana!",
     "limitInfo": "Límite de {{max}} anuncios por día.",
     "needLogin": "Inicia sesión para ganar créditos.",
-    "tapForMore": "¡Toca para ganar más!"
+    "tapForMore": "¡Toca para ganar más!",
+    "waitFullAd": "Espera a que termine el anuncio para recibir los créditos."
   },
   "sectionGate": {
     "title": "En desarrollo",

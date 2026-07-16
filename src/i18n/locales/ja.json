@@ -771,7 +771,8 @@
     "limitReached": "本日の広告を使い切りました。明日また来てください!",
     "limitInfo": "1日 {{max}} 広告まで。",
     "needLogin": "クレジット獲得にはログインが必要です。",
-    "tapForMore": "タップしてもっと獲得!"
+    "tapForMore": "タップしてもっと獲得!",
+    "waitFullAd": "クレジットを受け取るには広告が終わるまでお待ちください。"
   },
   "sectionGate": {
     "title": "開発中",

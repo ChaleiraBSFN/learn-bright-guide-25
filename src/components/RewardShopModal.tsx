@@ -57,20 +57,31 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
   const claim = async () => {
     setPhase('claiming');
     try {
-      const { data, error } = await supabase.functions.invoke('claim-ad-reward');
+      const { data, error } = await supabase.rpc('claim_ad_reward');
       if (error) throw error;
-      if (data?.error === 'daily_limit') {
+
+      const result = data as {
+        success?: boolean;
+        error?: string;
+        credits_granted?: number;
+        credits_remaining?: number;
+        used_today?: number;
+      } | null;
+
+      if (result?.error === 'daily_limit') {
         toast.error(t('rewardShop.limitReached', 'Você já usou os anúncios de hoje. Volte amanhã!'));
-      } else if (data?.success) {
+      } else if (result?.error === 'too_fast') {
+        toast.error(t('rewardShop.waitFullAd', 'Aguarde o anúncio terminar para receber os créditos.'));
+      } else if (result?.success) {
         toast.success(
-          t('rewardShop.gained', '+{{n}} créditos!', { n: data.credits_granted }),
+          t('rewardShop.gained', '+{{n}} créditos!', { n: result.credits_granted }),
         );
-        setUsedToday(data.used_today);
-        if (typeof data.credits_remaining === 'number') {
-          window.dispatchEvent(new CustomEvent('credits_changed', { detail: { newTotal: data.credits_remaining } }));
+        setUsedToday(result.used_today ?? null);
+        if (typeof result.credits_remaining === 'number') {
+          window.dispatchEvent(new CustomEvent('credits_changed', { detail: { newTotal: result.credits_remaining } }));
         }
       } else {
-        toast.error(data?.error || t('common.error', 'Erro'));
+        toast.error(result?.error || t('common.error', 'Erro'));
       }
     } catch (e) {
       toast.error(t('common.error', 'Erro'));
