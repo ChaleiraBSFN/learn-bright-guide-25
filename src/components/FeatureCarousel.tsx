@@ -335,6 +335,34 @@ export function FeatureCarousel() {
     manualAnimatingRef.current = false;
   };
 
+  const minThumb = 48;
+  const thumbWidth = totalWidth > 0 && scrollbarWidth > 0
+    ? Math.max(minThumb, scrollbarWidth * (scrollbarWidth / totalWidth))
+    : minThumb;
+  const thumbTravel = Math.max(0, scrollbarWidth - thumbWidth);
+
+  const applyScrollFromRatio = useCallback((ratio: number) => {
+    if (totalWidth <= 0) return;
+    const clamped = Math.max(0, Math.min(1, ratio));
+    const target = clamped * totalWidth;
+    progressRef.current = target;
+    x.set(-target);
+  }, [totalWidth, x]);
+
+  const handleScrollbarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!scrollbarTrackRef.current || thumbTravel <= 0) return;
+    const rect = scrollbarTrackRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const ratio = clickX / scrollbarWidth;
+    applyScrollFromRatio(ratio);
+  };
+
+  const handleThumbDrag = (_: unknown, info: { offset: { x: number } }) => {
+    if (thumbTravel <= 0) return;
+    const ratio = info.offset.x / thumbTravel;
+    applyScrollFromRatio(ratio);
+  };
+
   if (features.length === 0) return null;
 
   return (
@@ -385,6 +413,31 @@ export function FeatureCarousel() {
             />
           ))}
         </motion.div>
+
+        {/* Subtle scrollbar */}
+        <div
+          ref={scrollbarTrackRef}
+          onClick={handleScrollbarClick}
+          className="relative mx-auto mt-2 h-1.5 w-[min(92vw,720px)] cursor-pointer rounded-full bg-foreground/10 hover:bg-foreground/15 transition-colors"
+          aria-label="Barra de rolagem do carrossel"
+          role="scrollbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={totalWidth > 0 ? Math.round((progressRef.current / totalWidth) * 100) : 0}
+        >
+          <motion.div
+            ref={scrollbarThumbRef}
+            drag="x"
+            dragConstraints={{ left: 0, right: thumbTravel }}
+            dragElastic={0}
+            dragMomentum={false}
+            onDrag={handleThumbDrag}
+            onDragStart={() => { isDraggingThumbRef.current = true; setPaused(true); }}
+            onDragEnd={() => { isDraggingThumbRef.current = false; setPaused(false); }}
+            style={{ x: thumbX, width: thumbWidth }}
+            className="absolute top-1/2 -translate-y-1/2 h-2 rounded-full bg-primary/70 hover:bg-primary shadow-sm cursor-grab active:cursor-grabbing"
+          />
+        </div>
       </div>
 
       <Dialog open={!!active} onOpenChange={(open) => !open && setActive(null)}>
