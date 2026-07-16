@@ -276,7 +276,7 @@ export function FeatureCarousel() {
       const delta = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 
-      // Don't advance auto-scroll while a manual nudge animation is running
+      // Don't advance auto-scroll while a manual nudge/drag is running
       if (!manualAnimatingRef.current && !isDraggingThumbRef.current) {
         const speed = paused ? slowSpeed : normalSpeed;
         progressRef.current -= delta * speed;
@@ -288,8 +288,8 @@ export function FeatureCarousel() {
         }
       }
 
-      // Sync scrollbar thumb
-      if (scrollbarWidth > 0 && totalWidth > 0) {
+      // Sync scrollbar thumb only when not being dragged
+      if (!isDraggingThumbRef.current && scrollbarWidth > 0 && totalWidth > 0) {
         const thumbWidth = Math.max(minThumb, scrollbarWidth * (scrollbarWidth / totalWidth));
         const thumbTravel = Math.max(0, scrollbarWidth - thumbWidth);
         const ratio = totalWidth > 0 ? progressRef.current / totalWidth : 0;
