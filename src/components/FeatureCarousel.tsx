@@ -142,6 +142,7 @@ export function FeatureCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const lastTimeRef = useRef<number | null>(null);
+  const manualAnimatingRef = useRef(false);
   const x = useMotionValue(0);
 
   const { data: rows = [] } = useQuery({
