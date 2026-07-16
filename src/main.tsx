@@ -13,48 +13,66 @@ const isInIframe = (() => {
   }
 })();
 
-const isPreviewHost =
+const isLovablePreviewHost =
   window.location.hostname.includes("id-preview--") ||
-  window.location.hostname.includes("lovableproject.com");
+  window.location.hostname.includes("lovableproject.com") ||
+  window.location.hostname.endsWith(".lovable.app");
 
-if (isInIframe || isPreviewHost) {
-  navigator.serviceWorker?.getRegistrations().then((registrations) => {
-    registrations.forEach((registration) => registration.unregister());
-  });
-} else {
-  const isAppCache = (name: string) =>
-    /(^|-)precache-v\d+-|(^|-)runtime-|(^|-)googleAnalytics-/.test(name) ||
-    name.includes("workbox") ||
-    name.includes("supabase-api");
+const isPreviewOrEditor = isInIframe || isLovablePreviewHost;
 
-  const removeStaleServiceWorkers = async () => {
-    try {
-      const registrations = await navigator.serviceWorker?.getRegistrations();
-      if (!registrations?.length) return;
+const isAppCache = (name: string) =>
+  /(^|-)precache-v\d+-|(^|-)runtime-|(^|-)googleAnalytics-/.test(name) ||
+  name.includes("workbox") ||
+  name.includes("supabase-api") ||
+  name.includes("vite") ||
+  name.includes("learn-buddy") ||
+  name.includes("studdy-buddy");
 
-      await Promise.allSettled(registrations.map((registration) => registration.update()));
+const reloadOnceWithFreshUrl = (key: string) => {
+  try {
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+  } catch {}
 
-      if ("caches" in window) {
-        const cacheNames = await caches.keys();
-        await Promise.allSettled(
-          cacheNames.filter(isAppCache).map((name) => caches.delete(name))
-        );
-      }
+  const url = new URL(window.location.href);
+  url.searchParams.set("_fresh", Date.now().toString());
+  window.location.replace(url.toString());
+};
 
-      await Promise.allSettled(registrations.map((registration) => registration.unregister()));
+const removeStaleServiceWorkersAndCaches = async (forcePreviewFreshness = false) => {
+  try {
+    const registrations = await navigator.serviceWorker?.getRegistrations();
 
-      if (!sessionStorage.getItem("lb-sw-cleaned")) {
-        sessionStorage.setItem("lb-sw-cleaned", "1");
-        const url = new URL(window.location.href);
-        url.searchParams.set("_fresh", Date.now().toString());
-        window.location.replace(url.toString());
-      }
-    } catch {}
-  };
+    await Promise.allSettled(
+      registrations?.map((registration) => registration.update()) ?? []
+    );
 
-  removeStaleServiceWorkers();
-  startVersionCheck();
-}
+    let deletedCacheCount = 0;
+    if ("caches" in window) {
+      const cacheNames = await caches.keys();
+      const staleCacheNames = forcePreviewFreshness
+        ? cacheNames
+        : cacheNames.filter(isAppCache);
+
+      deletedCacheCount = staleCacheNames.length;
+      await Promise.allSettled(staleCacheNames.map((name) => caches.delete(name)));
+    }
+
+    await Promise.allSettled(
+      registrations?.map((registration) => registration.unregister()) ?? []
+    );
+
+    if (
+      forcePreviewFreshness &&
+      ((registrations?.length ?? 0) > 0 || deletedCacheCount > 0 || navigator.serviceWorker?.controller)
+    ) {
+      reloadOnceWithFreshUrl("lb-preview-freshness-reloaded-v2");
+    }
+  } catch {}
+};
+
+removeStaleServiceWorkersAndCaches(isPreviewOrEditor);
+startVersionCheck();
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>

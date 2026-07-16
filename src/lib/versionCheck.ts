@@ -1,21 +1,27 @@
 // Auto-update checker: polls index.html and reloads when a new build is detected.
-// Compares the hashed JS entry referenced in <head> to detect deploys.
+// Compares the built JS/CSS assets referenced by index.html to detect deploys.
 
-const POLL_INTERVAL_MS = 60_000; // 1 minute
+const POLL_INTERVAL_MS = 5_000;
 const STORAGE_KEY = "lb-build-signature";
 
 const extractSignature = (html: string): string | null => {
-  // Match the hashed Vite entry script (e.g. /assets/index-ABC123.js) or any modulepreload/script with a hash.
-  const matches = html.match(/\/assets\/[A-Za-z0-9_-]+\.[a-f0-9]{6,}\.(?:js|css)/g);
+  // Match Vite's emitted assets (e.g. /assets/index-ABC123.js or CSS chunks).
+  const matches = html.match(/\/assets\/[^"'<>\s]+\.(?:js|css)/g);
   if (!matches || matches.length === 0) return null;
   return Array.from(new Set(matches)).sort().join("|");
 };
 
 const fetchCurrentSignature = async (): Promise<string | null> => {
   try {
-    const res = await fetch(`/?_v=${Date.now()}`, {
+    const url = new URL(window.location.origin);
+    url.searchParams.set("_fresh", Date.now().toString());
+
+    const res = await fetch(url.toString(), {
       cache: "no-store",
-      headers: { "Cache-Control": "no-cache" },
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+      },
     });
     if (!res.ok) return null;
     const html = await res.text();
@@ -65,7 +71,10 @@ export const startVersionCheck = () => {
     if (stored !== latest) triggerReload();
   };
 
+  window.setTimeout(check, 250);
   setInterval(check, POLL_INTERVAL_MS);
   window.addEventListener("focus", check);
   document.addEventListener("visibilitychange", check);
+  window.addEventListener("pageshow", check);
+  window.addEventListener("online", check);
 };
