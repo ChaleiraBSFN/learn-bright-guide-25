@@ -430,7 +430,7 @@ export function FeatureCarousel() {
           <motion.div
             ref={scrollbarThumbRef}
             drag="x"
-            dragConstraints={{ left: 0, right: thumbTravel }}
+            dragConstraints={scrollbarTrackRef}
             dragElastic={0}
             dragMomentum={false}
             onDrag={handleThumbDrag}
