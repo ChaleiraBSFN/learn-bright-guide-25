@@ -4,8 +4,7 @@ import { UnderDevelopmentDialog } from '@/components/UnderDevelopmentDialog';
 
 /**
  * Intercepts an action when a section is disabled by admin.
- * - If enabled: calls the original handler.
- * - If disabled: opens the "em desenvolvimento" dialog with the admin's message + CTA.
+ * The dialog is only mounted while open (avoids many idle Radix portals).
  */
 export function useUnderDevGate(sectionKey: string) {
   const { flag, loading } = useSectionFlag(sectionKey);
@@ -18,9 +17,9 @@ export function useUnderDevGate(sectionKey: string) {
     else setOpen(true);
   };
 
-  const dialog: ReactNode = (
+  const dialog: ReactNode = open ? (
     <UnderDevelopmentDialog open={open} onOpenChange={setOpen} flag={flag} />
-  );
+  ) : null;
 
   return { enabled, guard, dialog };
 }
