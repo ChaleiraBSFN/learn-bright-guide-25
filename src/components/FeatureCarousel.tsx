@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import {
-  BookOpen, Brain, Dumbbell, ChevronRight, Sparkles, CheckCircle2,
+  BookOpen, Brain, Dumbbell, ChevronRight, ChevronLeft, Sparkles, CheckCircle2,
   Cpu, Map, Trophy, Users, Coins, HeartHandshake, MessageSquare,
-  Heart, Star, Zap, Megaphone,
+  Heart, Star, Zap, Megaphone, Loader2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -87,8 +87,56 @@ interface Feature {
   examples: string[];
 }
 
+const TRANSLATION_CACHE_KEY = 'lb_carousel_translations_v1';
+type CarouselTranslation = { title: string; description: string; detail: string; examples: string[] };
+type TranslationCache = Record<string, Record<string, CarouselTranslation>>;
+
+function readTranslationCache(): TranslationCache {
+  try { return JSON.parse(localStorage.getItem(TRANSLATION_CACHE_KEY) || '{}'); } catch { return {}; }
+}
+function writeTranslationCache(cache: TranslationCache) {
+  try { localStorage.setItem(TRANSLATION_CACHE_KEY, JSON.stringify(cache)); } catch {}
+}
+
+const loadingLabels: Record<string, string> = {
+  'pt-BR': 'Traduzindo...',
+  'en': 'Translating...',
+  'es': 'Traduciendo...',
+  'fr': 'Traduction...',
+  'de': 'Übersetzen...',
+  'it': 'Traduzione...',
+  'ja': '翻訳中...',
+  'zh': '翻译中...',
+  'ru': 'Перевод...',
+};
+
+const saibaMaisLabels: Record<string, string> = {
+  'pt-BR': 'Saiba mais',
+  'en': 'Learn more',
+  'es': 'Saber más',
+  'fr': 'En savoir plus',
+  'de': 'Mehr erfahren',
+  'it': 'Scopri di più',
+  'ja': '詳細を見る',
+  'zh': '了解更多',
+  'ru': 'Подробнее',
+};
+
+const exemplosLabels: Record<string, string> = {
+  'pt-BR': 'Exemplos',
+  'en': 'Examples',
+  'es': 'Ejemplos',
+  'fr': 'Exemples',
+  'de': 'Beispiele',
+  'it': 'Esempi',
+  'ja': '例',
+  'zh': '示例',
+  'ru': 'Примеры',
+};
+
 export function FeatureCarousel() {
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const lang = i18n.language || 'pt-BR';
   const [paused, setPaused] = useState(false);
   const [active, setActive] = useState<Feature | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -110,21 +158,76 @@ export function FeatureCarousel() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const { data: translations, isLoading: isTranslating } = useQuery({
+    queryKey: ['carousel-translations', lang, rows.map(r => `${r.id}:${r.title}`).join('|')],
+    enabled: rows.length > 0 && lang !== 'pt-BR',
+    staleTime: 60 * 60 * 1000,
+    queryFn: async () => {
+      const cache = readTranslationCache();
+      const result: Record<string, CarouselTranslation> = {};
+      const toTranslate: CarouselItemRow[] = [];
+
+      for (const r of rows) {
+        const key = `${r.id}:${r.title}:${r.description}:${r.detail}:${(r.examples || []).join('§')}`;
+        const cached = cache[lang]?.[key];
+        if (cached) result[r.id] = cached;
+        else toTranslate.push(r);
+      }
+
+      if (toTranslate.length > 0) {
+        const content: Record<string, CarouselTranslation> = {};
+        toTranslate.forEach(r => {
+          content[r.id] = {
+            title: r.title,
+            description: r.description,
+            detail: r.detail,
+            examples: r.examples || [],
+          };
+        });
+
+        const { data, error } = await supabase.functions.invoke('translate-content', {
+          body: { content, targetLanguage: lang },
+        });
+
+        if (!error && data) {
+          if (!cache[lang]) cache[lang] = {};
+          for (const r of toTranslate) {
+            const tr = (data as any)[r.id];
+            if (tr && tr.title && tr.description) {
+              const merged: CarouselTranslation = {
+                title: tr.title,
+                description: tr.description,
+                detail: tr.detail || r.detail,
+                examples: Array.isArray(tr.examples) && tr.examples.length ? tr.examples : (r.examples || []),
+              };
+              result[r.id] = merged;
+              const key = `${r.id}:${r.title}:${r.description}:${r.detail}:${(r.examples || []).join('§')}`;
+              cache[lang][key] = merged;
+            }
+          }
+          writeTranslationCache(cache);
+        }
+      }
+      return result;
+    },
+  });
+
   const features: Feature[] = useMemo(() => {
     return rows.map((r) => {
       const theme = THEME_MAP[r.color_theme] || THEME_MAP.primary;
       const Icon = ICON_MAP[r.icon] || Sparkles;
+      const tr = lang !== 'pt-BR' ? translations?.[r.id] : undefined;
       return {
         id: r.item_key,
         icon: Icon,
         ...theme,
-        title: r.title,
-        description: r.description,
-        detail: r.detail,
-        examples: r.examples || [],
+        title: tr?.title ?? r.title,
+        description: tr?.description ?? r.description,
+        detail: tr?.detail ?? r.detail,
+        examples: tr?.examples ?? (r.examples || []),
       };
     });
-  }, [rows]);
+  }, [rows, translations, lang]);
 
   const items = useMemo(
     () => (features.length ? [...features, ...features, ...features] : []),
@@ -163,10 +266,29 @@ export function FeatureCarousel() {
     };
   }, [paused, x, items.length]);
 
+  const nudge = (dir: 1 | -1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    // Approximate card width + gap
+    const step = 232;
+    const totalWidth = track.scrollWidth / 3;
+    progressRef.current += dir * step;
+    if (totalWidth > 0) {
+      progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
+      x.set(-progressRef.current);
+    }
+  };
+
   if (features.length === 0) return null;
 
   return (
     <>
+      {isTranslating && lang !== 'pt-BR' && (
+        <div className="flex items-center justify-center gap-1.5 pb-1 text-xs text-foreground/60">
+          <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
+          <span>{loadingLabels[lang] || loadingLabels['en']}</span>
+        </div>
+      )}
       <div
         className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden"
         onMouseEnter={() => setPaused(true)}
@@ -174,6 +296,23 @@ export function FeatureCarousel() {
       >
         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-3 bg-gradient-to-r from-background to-transparent" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-3 bg-gradient-to-l from-background to-transparent" />
+
+        <button
+          type="button"
+          aria-label="Anterior"
+          onClick={() => nudge(-1)}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/80 backdrop-blur shadow-md hover:bg-background hover:scale-105 active:scale-95 transition"
+        >
+          <ChevronLeft className="h-5 w-5 text-foreground" />
+        </button>
+        <button
+          type="button"
+          aria-label="Próximo"
+          onClick={() => nudge(1)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/80 backdrop-blur shadow-md hover:bg-background hover:scale-105 active:scale-95 transition"
+        >
+          <ChevronRight className="h-5 w-5 text-foreground" />
+        </button>
 
         <motion.div
           ref={trackRef}
@@ -185,6 +324,7 @@ export function FeatureCarousel() {
               key={`${feat.id}-${i}`}
               feature={feat}
               index={i}
+              ctaLabel={saibaMaisLabels[lang] || saibaMaisLabels['en']}
               onOpen={() => setActive(feat)}
             />
           ))}
@@ -215,7 +355,7 @@ export function FeatureCarousel() {
                 <div className="mt-4 space-y-3">
                   <h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                     <Sparkles className={`h-4 w-4 ${active.color}`} />
-                    Exemplos
+                    {exemplosLabels[lang] || exemplosLabels['en']}
                   </h4>
                   <ul className="space-y-2.5">
                     {active.examples.map((ex, idx) => (
@@ -243,10 +383,12 @@ export function FeatureCarousel() {
 function FeatureCard({
   feature,
   index,
+  ctaLabel,
   onOpen,
 }: {
   feature: Feature;
   index: number;
+  ctaLabel: string;
   onOpen: () => void;
 }) {
   return (
@@ -296,7 +438,7 @@ function FeatureCard({
         <div
           className={`relative inline-flex items-center gap-1 text-xs font-semibold ${feature.color} group-hover:gap-2 transition-all duration-200 uppercase tracking-wider`}
         >
-          <span>Saiba mais</span>
+          <span>{ctaLabel}</span>
           <ChevronRight className="h-3.5 w-3.5" />
         </div>
       </div>
