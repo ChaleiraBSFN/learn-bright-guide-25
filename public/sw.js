@@ -5,6 +5,18 @@ const isWorkboxCacheForThisRegistration = (name) => {
 
 self.addEventListener("install", () => self.skipWaiting());
 
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
+  const shouldBypassCache =
+    event.request.mode === "navigate" ||
+    ["document", "script", "style"].includes(event.request.destination);
+
+  if (!shouldBypassCache) return;
+
+  event.respondWith(fetch(new Request(event.request, { cache: "no-store" })));
+});
+
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
