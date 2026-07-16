@@ -270,17 +270,33 @@ export function FeatureCarousel() {
     };
   }, [paused, x, items.length]);
 
-  const nudge = (dir: 1 | -1) => {
+  const nudge = async (dir: 1 | -1) => {
     const track = trackRef.current;
-    if (!track) return;
-    // Approximate card width + gap
-    const step = 232;
+    if (!track || manualAnimatingRef.current) return;
+
+    const card = track.firstElementChild as HTMLElement | null;
+    if (!card) return;
+
+    const gap = 12; // gap-3 = 0.75rem
+    const cardWidth = card.getBoundingClientRect().width;
+    // Move a bit more than one card so the user feels real progress
+    const step = (cardWidth + gap) * 1.35;
+
     const totalWidth = track.scrollWidth / 3;
-    progressRef.current += dir * step;
-    if (totalWidth > 0) {
-      progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
-      x.set(-progressRef.current);
-    }
+    if (totalWidth <= 0) return;
+
+    manualAnimatingRef.current = true;
+    const target = ((progressRef.current + dir * step) % totalWidth + totalWidth) % totalWidth;
+
+    await animate(x, -target, {
+      type: "spring",
+      stiffness: 110,
+      damping: 16,
+      mass: 0.9,
+    });
+
+    progressRef.current = target;
+    manualAnimatingRef.current = false;
   };
 
   if (features.length === 0) return null;
