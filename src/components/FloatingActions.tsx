@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, ShoppingBag } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Coins } from 'lucide-react';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
@@ -172,9 +172,9 @@ export const FloatingActions = () => {
                 size="icon"
                 onClick={() => setShowShop(true)}
                 aria-label={t('rewardShop.title', 'Mercadinho de créditos')}
-                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-emerald-500/40 hover:bg-emerald-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(160_70%_45%/0.6),0_4px_14px_-3px_hsl(160_70%_45%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(160_70%_45%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(160_70%_45%/0.85)]"
+                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-amber-500/40 hover:bg-amber-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(45_100%_50%/0.6),0_4px_14px_-3px_hsl(45_100%_50%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(45_100%_50%/0.85)]"
               >
-                <ShoppingBag className="h-4 w-4 text-emerald-500" />
+                <Coins className="h-4 w-4 text-amber-500" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
