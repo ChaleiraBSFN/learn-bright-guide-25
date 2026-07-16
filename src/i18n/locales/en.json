@@ -771,5 +771,37 @@
     "success": "Plan ready!",
     "successDesc": "Your study plan has been generated.",
     "backToForm": "Back"
+  },
+  "rewardShop": {
+    "title": "Credits shop",
+    "subtitle": "Earn credits by watching short ads.",
+    "rewardLine": "Watch 1 ad → +25 credits",
+    "remainingToday": "{{n}}/{{max}} today",
+    "watchAd": "Watch ad",
+    "watching": "Please wait for the ad to finish…",
+    "granting": "Adding credits…",
+    "gained": "+{{n}} credits!",
+    "limitReached": "You already used today's ads. Come back tomorrow!",
+    "limitInfo": "Limit of {{max}} ads per day.",
+    "needLogin": "Sign in to earn credits.",
+    "tapForMore": "Tap to earn more!"
+  },
+  "sectionGate": {
+    "title": "Under development",
+    "message": "We are working on this feature. Come back soon!",
+    "learnMore": "Learn more"
+  },
+  "adminSections": {
+    "title": "Section Control",
+    "help": "Disable a section to show an \"under development\" message with a redirect button. All changes are applied in realtime to every user.",
+    "enabled": "Active",
+    "disabled": "Under development",
+    "fieldTitle": "Title",
+    "fieldMessage": "Message",
+    "fieldCtaLabel": "Button text (optional)",
+    "fieldCtaUrl": "Button URL (optional)",
+    "enableAll": "Enable all",
+    "disableAll": "Disable all",
+    "saved": "Saved!"
   }
 }

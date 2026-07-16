@@ -758,5 +758,37 @@
     "success": "计划已就绪！",
     "successDesc": "您的学习计划已生成。",
     "backToForm": "返回"
+  },
+  "rewardShop": {
+    "title": "积分商店",
+    "subtitle": "观看短广告获取积分。",
+    "rewardLine": "观看1个广告 → +25 积分",
+    "remainingToday": "今日 {{n}}/{{max}}",
+    "watchAd": "观看广告",
+    "watching": "请等待广告结束…",
+    "granting": "正在添加积分…",
+    "gained": "+{{n}} 积分!",
+    "limitReached": "今日广告已用完,明天再来吧!",
+    "limitInfo": "每日限 {{max}} 个广告。",
+    "needLogin": "登录后获取积分。",
+    "tapForMore": "点击获取更多!"
+  },
+  "sectionGate": {
+    "title": "开发中",
+    "message": "此功能正在开发中,请稍后再来!",
+    "learnMore": "了解更多"
+  },
+  "adminSections": {
+    "title": "版块控制",
+    "help": "禁用某个版块以显示\"开发中\"消息和跳转按钮。所有更改实时生效。",
+    "enabled": "启用",
+    "disabled": "开发中",
+    "fieldTitle": "标题",
+    "fieldMessage": "消息",
+    "fieldCtaLabel": "按钮文字(可选)",
+    "fieldCtaUrl": "按钮URL(可选)",
+    "enableAll": "全部启用",
+    "disableAll": "全部禁用",
+    "saved": "已保存!"
   }
 }

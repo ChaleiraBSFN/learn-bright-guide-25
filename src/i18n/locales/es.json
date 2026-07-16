@@ -752,5 +752,37 @@
     "success": "¡Plan listo!",
     "successDesc": "Tu plan de estudio ha sido generado.",
     "backToForm": "Volver"
+  },
+  "rewardShop": {
+    "title": "Tienda de créditos",
+    "subtitle": "Gana créditos viendo anuncios rápidos.",
+    "rewardLine": "Mira 1 anuncio → +25 créditos",
+    "remainingToday": "{{n}}/{{max}} hoy",
+    "watchAd": "Ver anuncio",
+    "watching": "Espera a que termine el anuncio…",
+    "granting": "Añadiendo créditos…",
+    "gained": "¡+{{n}} créditos!",
+    "limitReached": "Ya usaste los anuncios de hoy. ¡Vuelve mañana!",
+    "limitInfo": "Límite de {{max}} anuncios por día.",
+    "needLogin": "Inicia sesión para ganar créditos.",
+    "tapForMore": "¡Toca para ganar más!"
+  },
+  "sectionGate": {
+    "title": "En desarrollo",
+    "message": "Estamos trabajando en esta función. ¡Vuelve pronto!",
+    "learnMore": "Saber más"
+  },
+  "adminSections": {
+    "title": "Control de Secciones",
+    "help": "Desactiva una sección para mostrar un mensaje de \"en desarrollo\" con botón de redirección. Los cambios se aplican en tiempo real.",
+    "enabled": "Activa",
+    "disabled": "En desarrollo",
+    "fieldTitle": "Título",
+    "fieldMessage": "Mensaje",
+    "fieldCtaLabel": "Texto del botón (opcional)",
+    "fieldCtaUrl": "URL del botón (opcional)",
+    "enableAll": "Activar todas",
+    "disableAll": "Desactivar todas",
+    "saved": "¡Guardado!"
   }
 }
