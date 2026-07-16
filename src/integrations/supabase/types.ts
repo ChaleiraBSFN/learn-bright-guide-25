@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_rewards: {
+        Row: {
+          credits_granted: number
+          id: string
+          user_id: string
+          watched_at: string
+        }
+        Insert: {
+          credits_granted?: number
+          id?: string
+          user_id: string
+          watched_at?: string
+        }
+        Update: {
+          credits_granted?: number
+          id?: string
+          user_id?: string
+          watched_at?: string
+        }
+        Relationships: []
+      }
       ai_config: {
         Row: {
           config_data: Json
@@ -446,6 +467,45 @@ export type Database = {
           request_count?: number
           user_id?: string
           window_start?: string
+        }
+        Relationships: []
+      }
+      section_flags: {
+        Row: {
+          created_at: string
+          cta_label: string | null
+          cta_url: string | null
+          enabled: boolean
+          id: string
+          message: string
+          section_key: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          enabled?: boolean
+          id?: string
+          message?: string
+          section_key: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          enabled?: boolean
+          id?: string
+          message?: string
+          section_key?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
