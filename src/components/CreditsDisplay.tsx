@@ -6,6 +6,7 @@ import { Coins, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { RewardShopModal } from '@/components/RewardShopModal';
+import { useUnderDevGate } from '@/hooks/useUnderDevGate';
 
 export const CreditsDisplay = () => {
   const { credits, loading } = useCredits();
@@ -13,6 +14,7 @@ export const CreditsDisplay = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [shopOpen, setShopOpen] = useState(false);
+  const shopGate = useUnderDevGate('shop');
 
   if (loading) {
     return (
