@@ -206,6 +206,7 @@ export const FloatingActions = () => {
 
 
         {/* Community */}
+        <SectionGate sectionKey="community" hideWhenDisabled>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -220,8 +221,10 @@ export const FloatingActions = () => {
           </TooltipTrigger>
           <TooltipContent side="left">{t('community.tooltip', 'Comunidade')}</TooltipContent>
         </Tooltip>
+        </SectionGate>
 
         {/* Chat Buddy */}
+        <SectionGate sectionKey="chat_buddy" hideWhenDisabled>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -236,10 +239,15 @@ export const FloatingActions = () => {
           </TooltipTrigger>
           <TooltipContent side="left">{t('chatBuddy.tooltip', 'Chat com Learn Buddy')}</TooltipContent>
         </Tooltip>
+        </SectionGate>
 
 
         {/* Study Groups */}
-        {groupsEnabled && <StudyGroups />}
+        {groupsEnabled && (
+          <SectionGate sectionKey="study_groups" hideWhenDisabled>
+            <StudyGroups />
+          </SectionGate>
+        )}
 
         {/* Install Button */}
         {!isInstalled && (
@@ -269,6 +277,9 @@ export const FloatingActions = () => {
 
       {/* Ranking Dialog */}
       <RankingDialog open={showRanking} onClose={() => setShowRanking(false)} />
+
+      {/* Reward Shop Modal */}
+      <RewardShopModal open={showShop} onOpenChange={setShowShop} />
     </>
   );
 };
