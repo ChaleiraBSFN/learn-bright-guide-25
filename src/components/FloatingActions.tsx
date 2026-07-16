@@ -183,6 +183,8 @@ export const FloatingActions = () => {
           </Tooltip>
         )}
 
+        {rankingEnabled && (
+          <SectionGate sectionKey="ranking" hideWhenDisabled>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -199,7 +201,9 @@ export const FloatingActions = () => {
               {t('ranking.title')}
             </TooltipContent>
           </Tooltip>
+          </SectionGate>
         )}
+
 
         {/* Community */}
         <Tooltip>
