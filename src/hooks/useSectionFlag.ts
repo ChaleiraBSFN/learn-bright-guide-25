@@ -32,8 +32,9 @@ let realtimeSetup = false;
 function setupRealtime() {
   if (realtimeSetup) return;
   realtimeSetup = true;
-  supabase
-    .channel('section_flags_realtime')
+  const channelName = `section_flags_rt_${Math.random().toString(36).slice(2, 8)}`;
+  const channel = supabase.channel(channelName);
+  channel
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'section_flags' },
