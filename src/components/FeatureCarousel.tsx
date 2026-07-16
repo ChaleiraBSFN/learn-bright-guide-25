@@ -240,6 +240,27 @@ export function FeatureCarousel() {
     [features],
   );
 
+  const updateDimensions = useCallback(() => {
+    const track = trackRef.current;
+    const scrollbar = scrollbarTrackRef.current;
+    if (track && scrollbar) {
+      const tw = track.scrollWidth / 3;
+      setTotalWidth(tw);
+      setScrollbarWidth(scrollbar.getBoundingClientRect().width);
+    }
+  }, []);
+
+  useEffect(() => {
+    updateDimensions();
+    const handleResize = () => updateDimensions();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateDimensions]);
+
+  useEffect(() => {
+    updateDimensions();
+  }, [items, updateDimensions]);
+
   useEffect(() => {
     const track = trackRef.current;
     if (!track || items.length === 0) return;
