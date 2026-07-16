@@ -771,7 +771,8 @@
     "limitReached": "Vous avez utilisé les pubs du jour. Revenez demain !",
     "limitInfo": "Limite de {{max}} pubs par jour.",
     "needLogin": "Connectez-vous pour gagner des crédits.",
-    "tapForMore": "Touchez pour en gagner plus !"
+    "tapForMore": "Touchez pour en gagner plus !",
+    "waitFullAd": "Attendez la fin de la pub pour recevoir les crédits."
   },
   "sectionGate": {
     "title": "En développement",

@@ -784,7 +784,8 @@
     "limitReached": "You already used today's ads. Come back tomorrow!",
     "limitInfo": "Limit of {{max}} ads per day.",
     "needLogin": "Sign in to earn credits.",
-    "tapForMore": "Tap to earn more!"
+    "tapForMore": "Tap to earn more!",
+    "waitFullAd": "Wait for the ad to finish to receive the credits."
   },
   "sectionGate": {
     "title": "Under development",
