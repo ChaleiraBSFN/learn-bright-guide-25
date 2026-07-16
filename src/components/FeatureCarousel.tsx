@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect, useMemo } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { motion, useMotionValue, animate, useTransform } from "framer-motion";
 import {
   BookOpen, Brain, Dumbbell, ChevronRight, ChevronLeft, Sparkles, CheckCircle2,
   Cpu, Map, Trophy, Users, Coins, HeartHandshake, MessageSquare,
@@ -144,6 +144,12 @@ export function FeatureCarousel() {
   const lastTimeRef = useRef<number | null>(null);
   const manualAnimatingRef = useRef(false);
   const x = useMotionValue(0);
+  const thumbX = useMotionValue(0);
+  const scrollbarTrackRef = useRef<HTMLDivElement>(null);
+  const scrollbarThumbRef = useRef<HTMLDivElement>(null);
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+  const [totalWidth, setTotalWidth] = useState(0);
+  const isDraggingThumbRef = useRef(false);
 
   const { data: rows = [] } = useQuery({
     queryKey: ["carousel-items-active"],
@@ -235,12 +241,34 @@ export function FeatureCarousel() {
     [features],
   );
 
+  const updateDimensions = useCallback(() => {
+    const track = trackRef.current;
+    const scrollbar = scrollbarTrackRef.current;
+    if (track && scrollbar) {
+      const tw = track.scrollWidth / 3;
+      setTotalWidth(tw);
+      setScrollbarWidth(scrollbar.getBoundingClientRect().width);
+    }
+  }, []);
+
+  useEffect(() => {
+    updateDimensions();
+    const handleResize = () => updateDimensions();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateDimensions]);
+
+  useEffect(() => {
+    updateDimensions();
+  }, [items, updateDimensions]);
+
   useEffect(() => {
     const track = trackRef.current;
     if (!track || items.length === 0) return;
 
     const normalSpeed = 60;
     const slowSpeed = normalSpeed * 0.35;
+    const minThumb = 48;
 
     let raf: number;
     const step = (timestamp: number) => {
@@ -248,16 +276,24 @@ export function FeatureCarousel() {
       const delta = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 
-      // Don't advance auto-scroll while a manual nudge animation is running
-      if (!manualAnimatingRef.current) {
+      // Don't advance auto-scroll while a manual nudge/drag is running
+      if (!manualAnimatingRef.current && !isDraggingThumbRef.current) {
         const speed = paused ? slowSpeed : normalSpeed;
         progressRef.current -= delta * speed;
 
-        const totalWidth = track.scrollWidth / 3;
-        if (totalWidth > 0) {
-          progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
+        const tw = track.scrollWidth / 3;
+        if (tw > 0) {
+          progressRef.current = ((progressRef.current % tw) + tw) % tw;
           x.set(-progressRef.current);
         }
+      }
+
+      // Sync scrollbar thumb only when not being dragged
+      if (!isDraggingThumbRef.current && scrollbarWidth > 0 && totalWidth > 0) {
+        const thumbWidth = Math.max(minThumb, scrollbarWidth * (scrollbarWidth / totalWidth));
+        const thumbTravel = Math.max(0, scrollbarWidth - thumbWidth);
+        const ratio = totalWidth > 0 ? progressRef.current / totalWidth : 0;
+        thumbX.set(ratio * thumbTravel);
       }
 
       raf = requestAnimationFrame(step);
@@ -268,7 +304,7 @@ export function FeatureCarousel() {
       cancelAnimationFrame(raf);
       lastTimeRef.current = null;
     };
-  }, [paused, x, items.length]);
+  }, [paused, x, thumbX, items.length, scrollbarWidth, totalWidth]);
 
   const nudge = async (dir: 1 | -1) => {
     const track = trackRef.current;
@@ -297,6 +333,36 @@ export function FeatureCarousel() {
 
     progressRef.current = target;
     manualAnimatingRef.current = false;
+  };
+
+  const minThumb = 48;
+  const thumbWidth = totalWidth > 0 && scrollbarWidth > 0
+    ? Math.max(minThumb, scrollbarWidth * (scrollbarWidth / totalWidth))
+    : minThumb;
+  const thumbTravel = Math.max(0, scrollbarWidth - thumbWidth);
+
+  const applyScrollFromRatio = useCallback((ratio: number) => {
+    if (totalWidth <= 0) return;
+    const clamped = Math.max(0, Math.min(1, ratio));
+    const target = clamped * totalWidth;
+    progressRef.current = target;
+    x.set(-target);
+  }, [totalWidth, x]);
+
+  const handleScrollbarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!scrollbarTrackRef.current || thumbTravel <= 0) return;
+    const rect = scrollbarTrackRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const ratio = clickX / scrollbarWidth;
+    applyScrollFromRatio(ratio);
+  };
+
+  const handleThumbDrag = (_: unknown, info: { point: { x: number } }) => {
+    if (!scrollbarTrackRef.current || scrollbarWidth <= 0) return;
+    const trackRect = scrollbarTrackRef.current.getBoundingClientRect();
+    const relativeX = info.point.x - trackRect.left;
+    const ratio = relativeX / scrollbarWidth;
+    applyScrollFromRatio(ratio);
   };
 
   if (features.length === 0) return null;
@@ -349,6 +415,31 @@ export function FeatureCarousel() {
             />
           ))}
         </motion.div>
+
+        {/* Subtle scrollbar */}
+        <div
+          ref={scrollbarTrackRef}
+          onClick={handleScrollbarClick}
+          className="relative mx-auto mt-2 h-1.5 w-[min(92vw,720px)] cursor-pointer rounded-full bg-foreground/10 hover:bg-foreground/15 transition-colors"
+          aria-label="Barra de rolagem do carrossel"
+          role="scrollbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={totalWidth > 0 ? Math.round((progressRef.current / totalWidth) * 100) : 0}
+        >
+          <motion.div
+            ref={scrollbarThumbRef}
+            drag="x"
+            dragConstraints={scrollbarTrackRef}
+            dragElastic={0}
+            dragMomentum={false}
+            onDrag={handleThumbDrag}
+            onDragStart={() => { isDraggingThumbRef.current = true; setPaused(true); }}
+            onDragEnd={() => { isDraggingThumbRef.current = false; setPaused(false); }}
+            style={{ x: thumbX, width: thumbWidth }}
+            className="absolute top-1/2 -translate-y-1/2 h-2 rounded-full bg-primary/70 hover:bg-primary shadow-sm cursor-grab active:cursor-grabbing"
+          />
+        </div>
       </div>
 
       <Dialog open={!!active} onOpenChange={(open) => !open && setActive(null)}>
