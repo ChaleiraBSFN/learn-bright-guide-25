@@ -11,7 +11,22 @@ export type SectionFlag = {
 };
 
 const cache = new Map<string, SectionFlag>();
-const listeners = new Map<string, Set<(flag: SectionFlag) => void>>();
+const listeners = new Set<() => void>();
+let loaded = false;
+let loadingPromise: Promise<void> | null = null;
+
+async function loadAllFlags() {
+  if (loadingPromise) return loadingPromise;
+  loadingPromise = (async () => {
+    const { data } = await supabase
+      .from('section_flags')
+      .select('section_key,enabled,title,message,cta_label,cta_url');
+    (data as SectionFlag[] | null)?.forEach((row) => cache.set(row.section_key, row));
+    loaded = true;
+    listeners.forEach((cb) => cb());
+  })();
+  return loadingPromise;
+}
 
 let realtimeSetup = false;
 function setupRealtime() {
@@ -26,19 +41,14 @@ function setupRealtime() {
         const row = (payload.new || payload.old) as SectionFlag | undefined;
         if (!row?.section_key) return;
         cache.set(row.section_key, row);
-        listeners.get(row.section_key)?.forEach((cb) => cb(row));
+        listeners.forEach((cb) => cb());
       },
     )
     .subscribe();
 }
 
-async function loadFlag(key: string): Promise<SectionFlag> {
-  const { data } = await supabase
-    .from('section_flags')
-    .select('section_key,enabled,title,message,cta_label,cta_url')
-    .eq('section_key', key)
-    .maybeSingle();
-  const flag: SectionFlag = data ?? {
+function defaultFlag(key: string): SectionFlag {
+  return {
     section_key: key,
     enabled: true,
     title: 'Em desenvolvimento',
@@ -46,43 +56,29 @@ async function loadFlag(key: string): Promise<SectionFlag> {
     cta_label: null,
     cta_url: null,
   };
-  cache.set(key, flag);
-  return flag;
 }
 
 export function useSectionFlag(sectionKey: string) {
-  const [flag, setFlag] = useState<SectionFlag | null>(
-    cache.get(sectionKey) ?? null,
-  );
-  const [loading, setLoading] = useState(!cache.has(sectionKey));
+  const [, setTick] = useState(0);
+  const [loading, setLoading] = useState(!loaded);
 
   useEffect(() => {
     setupRealtime();
-    let mounted = true;
-
-    if (!cache.has(sectionKey)) {
-      loadFlag(sectionKey).then((f) => {
-        if (mounted) {
-          setFlag(f);
-          setLoading(false);
-        }
-      });
+    const cb = () => {
+      setLoading(false);
+      setTick((t) => t + 1);
+    };
+    listeners.add(cb);
+    if (!loaded) {
+      loadAllFlags().then(cb);
     } else {
-      setFlag(cache.get(sectionKey)!);
       setLoading(false);
     }
-
-    const cb = (f: SectionFlag) => {
-      if (mounted) setFlag(f);
-    };
-    if (!listeners.has(sectionKey)) listeners.set(sectionKey, new Set());
-    listeners.get(sectionKey)!.add(cb);
-
     return () => {
-      mounted = false;
-      listeners.get(sectionKey)?.delete(cb);
+      listeners.delete(cb);
     };
-  }, [sectionKey]);
+  }, []);
 
+  const flag = cache.get(sectionKey) ?? (loaded ? defaultFlag(sectionKey) : null);
   return { flag, loading };
 }
