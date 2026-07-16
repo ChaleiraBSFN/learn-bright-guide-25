@@ -248,13 +248,16 @@ export function FeatureCarousel() {
       const delta = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 
-      const speed = paused ? slowSpeed : normalSpeed;
-      progressRef.current -= delta * speed;
+      // Don't advance auto-scroll while a manual nudge animation is running
+      if (!manualAnimatingRef.current) {
+        const speed = paused ? slowSpeed : normalSpeed;
+        progressRef.current -= delta * speed;
 
-      const totalWidth = track.scrollWidth / 3;
-      if (totalWidth > 0) {
-        progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
-        x.set(-progressRef.current);
+        const totalWidth = track.scrollWidth / 3;
+        if (totalWidth > 0) {
+          progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
+          x.set(-progressRef.current);
+        }
       }
 
       raf = requestAnimationFrame(step);
