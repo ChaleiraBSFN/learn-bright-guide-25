@@ -357,9 +357,11 @@ export function FeatureCarousel() {
     applyScrollFromRatio(ratio);
   };
 
-  const handleThumbDrag = (_: unknown, info: { offset: { x: number } }) => {
-    if (thumbTravel <= 0) return;
-    const ratio = info.offset.x / thumbTravel;
+  const handleThumbDrag = (_: unknown, info: { point: { x: number } }) => {
+    if (!scrollbarTrackRef.current || scrollbarWidth <= 0) return;
+    const trackRect = scrollbarTrackRef.current.getBoundingClientRect();
+    const relativeX = info.point.x - trackRect.left;
+    const ratio = relativeX / scrollbarWidth;
     applyScrollFromRatio(ratio);
   };
 
