@@ -268,6 +268,7 @@ export function FeatureCarousel() {
 
     const normalSpeed = 60;
     const slowSpeed = normalSpeed * 0.35;
+    const minThumb = 48;
 
     let raf: number;
     const step = (timestamp: number) => {
@@ -276,15 +277,23 @@ export function FeatureCarousel() {
       lastTimeRef.current = timestamp;
 
       // Don't advance auto-scroll while a manual nudge animation is running
-      if (!manualAnimatingRef.current) {
+      if (!manualAnimatingRef.current && !isDraggingThumbRef.current) {
         const speed = paused ? slowSpeed : normalSpeed;
         progressRef.current -= delta * speed;
 
-        const totalWidth = track.scrollWidth / 3;
-        if (totalWidth > 0) {
-          progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
+        const tw = track.scrollWidth / 3;
+        if (tw > 0) {
+          progressRef.current = ((progressRef.current % tw) + tw) % tw;
           x.set(-progressRef.current);
         }
+      }
+
+      // Sync scrollbar thumb
+      if (scrollbarWidth > 0 && totalWidth > 0) {
+        const thumbWidth = Math.max(minThumb, scrollbarWidth * (scrollbarWidth / totalWidth));
+        const thumbTravel = Math.max(0, scrollbarWidth - thumbWidth);
+        const ratio = totalWidth > 0 ? progressRef.current / totalWidth : 0;
+        thumbX.set(ratio * thumbTravel);
       }
 
       raf = requestAnimationFrame(step);
@@ -295,7 +304,7 @@ export function FeatureCarousel() {
       cancelAnimationFrame(raf);
       lastTimeRef.current = null;
     };
-  }, [paused, x, items.length]);
+  }, [paused, x, thumbX, items.length, scrollbarWidth, totalWidth]);
 
   const nudge = async (dir: 1 | -1) => {
     const track = trackRef.current;
