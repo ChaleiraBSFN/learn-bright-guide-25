@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { motion, useMotionValue } from "framer-motion";
+import { motion, useMotionValue, animate } from "framer-motion";
 import {
   BookOpen, Brain, Dumbbell, ChevronRight, ChevronLeft, Sparkles, CheckCircle2,
   Cpu, Map, Trophy, Users, Coins, HeartHandshake, MessageSquare,
@@ -142,6 +142,7 @@ export function FeatureCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
   const lastTimeRef = useRef<number | null>(null);
+  const manualAnimatingRef = useRef(false);
   const x = useMotionValue(0);
 
   const { data: rows = [] } = useQuery({
@@ -247,13 +248,16 @@ export function FeatureCarousel() {
       const delta = (timestamp - lastTimeRef.current) / 1000;
       lastTimeRef.current = timestamp;
 
-      const speed = paused ? slowSpeed : normalSpeed;
-      progressRef.current -= delta * speed;
+      // Don't advance auto-scroll while a manual nudge animation is running
+      if (!manualAnimatingRef.current) {
+        const speed = paused ? slowSpeed : normalSpeed;
+        progressRef.current -= delta * speed;
 
-      const totalWidth = track.scrollWidth / 3;
-      if (totalWidth > 0) {
-        progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
-        x.set(-progressRef.current);
+        const totalWidth = track.scrollWidth / 3;
+        if (totalWidth > 0) {
+          progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
+          x.set(-progressRef.current);
+        }
       }
 
       raf = requestAnimationFrame(step);
@@ -266,17 +270,33 @@ export function FeatureCarousel() {
     };
   }, [paused, x, items.length]);
 
-  const nudge = (dir: 1 | -1) => {
+  const nudge = async (dir: 1 | -1) => {
     const track = trackRef.current;
-    if (!track) return;
-    // Approximate card width + gap
-    const step = 232;
+    if (!track || manualAnimatingRef.current) return;
+
+    const card = track.firstElementChild as HTMLElement | null;
+    if (!card) return;
+
+    const gap = 12; // gap-3 = 0.75rem
+    const cardWidth = card.getBoundingClientRect().width;
+    // Move a bit more than one card so the user feels real progress
+    const step = (cardWidth + gap) * 1.35;
+
     const totalWidth = track.scrollWidth / 3;
-    progressRef.current += dir * step;
-    if (totalWidth > 0) {
-      progressRef.current = ((progressRef.current % totalWidth) + totalWidth) % totalWidth;
-      x.set(-progressRef.current);
-    }
+    if (totalWidth <= 0) return;
+
+    manualAnimatingRef.current = true;
+    const target = ((progressRef.current + dir * step) % totalWidth + totalWidth) % totalWidth;
+
+    await animate(x, -target, {
+      type: "spring",
+      stiffness: 110,
+      damping: 16,
+      mass: 0.9,
+    });
+
+    progressRef.current = target;
+    manualAnimatingRef.current = false;
   };
 
   if (features.length === 0) return null;
