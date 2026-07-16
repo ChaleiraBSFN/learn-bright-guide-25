@@ -202,13 +202,44 @@ const SectionFlagsAdmin = () => {
                   </div>
                   <div className="md:col-span-2">
                     <Label className="text-xs">
-                      {t('adminSections.fieldCtaUrl', 'URL do botão (opcional)')}
+                      {t('adminSections.fieldCtaUrl', 'Destino do botão')}
                     </Label>
-                    <Input
-                      value={flag.cta_url ?? ''}
-                      placeholder="/community  ou  https://..."
-                      onChange={(e) => update(flag.id, { cta_url: e.target.value })}
-                    />
+                    <Select
+                      value={
+                        flag.cta_url && PRESET_DESTINATIONS.some((p) => p.value === flag.cta_url)
+                          ? flag.cta_url
+                          : flag.cta_url
+                          ? '__custom__'
+                          : '__none__'
+                      }
+                      onValueChange={(v) => {
+                        if (v === '__none__') update(flag.id, { cta_url: null });
+                        else if (v === '__custom__') update(flag.id, { cta_url: flag.cta_url || '/' });
+                        else update(flag.id, { cta_url: v });
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Escolha um destino" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">Sem botão</SelectItem>
+                        {PRESET_DESTINATIONS.map((p) => (
+                          <SelectItem key={p.value} value={p.value}>
+                            {p.label}  <span className="text-muted-foreground">({p.value})</span>
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="__custom__">URL personalizada…</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {flag.cta_url &&
+                      !PRESET_DESTINATIONS.some((p) => p.value === flag.cta_url) && (
+                        <Input
+                          className="mt-2"
+                          value={flag.cta_url ?? ''}
+                          placeholder="/rota-interna  ou  https://..."
+                          onChange={(e) => update(flag.id, { cta_url: e.target.value })}
+                        />
+                      )}
                   </div>
                 </div>
               )}
