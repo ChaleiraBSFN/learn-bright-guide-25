@@ -26,6 +26,12 @@ export const FloatingActions = () => {
   const [showRanking, setShowRanking] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const shopFlag = useSectionFlag('shop').flag;
+  const trailGate = useUnderDevGate('trail');
+  const rankingGate = useUnderDevGate('ranking');
+  const communityGate = useUnderDevGate('community');
+  const chatBuddyGate = useUnderDevGate('chat_buddy');
+  const groupsGate = useUnderDevGate('study_groups');
+  const shopGate = useUnderDevGate('shop');
   const [isInstalled] = useState(
     window.matchMedia('(display-mode: standalone)').matches
   );
