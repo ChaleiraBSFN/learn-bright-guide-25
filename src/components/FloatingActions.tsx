@@ -149,13 +149,12 @@ export const FloatingActions = () => {
         )}
 
         {trailEnabled && (
-          <SectionGate sectionKey="trail" hideWhenDisabled>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setShowTrail(true)}
+                onClick={trailGate.guard(() => setShowTrail(true))}
                 aria-label={t('trail.title', 'Trilha de Progresso')}
                 className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-primary/40 hover:bg-primary hover:text-primary-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--primary)/0.6),0_4px_14px_-3px_hsl(var(--primary)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--primary)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--primary)/0.85),0_6px_20px_-4px_hsl(var(--primary)/0.7)]"
               >
@@ -166,37 +165,33 @@ export const FloatingActions = () => {
               {t('trail.title', 'Trilha de Progresso')}
             </TooltipContent>
           </Tooltip>
-          </SectionGate>
         )}
 
         {/* Reward shop / mercadinho */}
-        {shopFlag?.enabled !== false && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowShop(true)}
-                aria-label={t('rewardShop.title', 'Mercadinho de créditos')}
-                className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-amber-500/40 hover:bg-amber-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(45_100%_50%/0.6),0_4px_14px_-3px_hsl(45_100%_50%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(45_100%_50%/0.85)]"
-              >
-                <Coins className="h-4 w-4 text-amber-500" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="left">
-              {t('rewardShop.title', 'Mercadinho de créditos')}
-            </TooltipContent>
-          </Tooltip>
-        )}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={shopGate.guard(() => setShowShop(true))}
+              aria-label={t('rewardShop.title', 'Mercadinho de créditos')}
+              className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-amber-500/40 hover:bg-amber-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(45_100%_50%/0.6),0_4px_14px_-3px_hsl(45_100%_50%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(45_100%_50%/0.85)]"
+            >
+              <Coins className="h-4 w-4 text-amber-500" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            {t('rewardShop.title', 'Mercadinho de créditos')}
+          </TooltipContent>
+        </Tooltip>
 
         {rankingEnabled && (
-          <SectionGate sectionKey="ranking" hideWhenDisabled>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setShowRanking(true)}
+                onClick={rankingGate.guard(() => setShowRanking(true))}
                 aria-label={t('ranking.title')}
                 className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-yellow-500/40 hover:bg-yellow-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(45_100%_50%/0.6),0_4px_14px_-3px_hsl(45_100%_50%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(45_100%_50%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(45_100%_50%/0.85),0_6px_20px_-4px_hsl(45_100%_50%/0.7)]"
               >
@@ -207,18 +202,16 @@ export const FloatingActions = () => {
               {t('ranking.title')}
             </TooltipContent>
           </Tooltip>
-          </SectionGate>
         )}
 
 
         {/* Community */}
-        <SectionGate sectionKey="community" hideWhenDisabled>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              onClick={() => navigate('/community')}
+              onClick={communityGate.guard(() => navigate('/community'))}
               aria-label={t('community.tooltip', 'Comunidade')}
               className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-violet-500/40 hover:bg-violet-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(270_70%_55%/0.6),0_4px_14px_-3px_hsl(270_70%_55%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2)]"
             >
@@ -227,16 +220,14 @@ export const FloatingActions = () => {
           </TooltipTrigger>
           <TooltipContent side="left">{t('community.tooltip', 'Comunidade')}</TooltipContent>
         </Tooltip>
-        </SectionGate>
 
         {/* Chat Buddy */}
-        <SectionGate sectionKey="chat_buddy" hideWhenDisabled>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              onClick={() => navigate('/chat-buddy')}
+              onClick={chatBuddyGate.guard(() => navigate('/chat-buddy'))}
               aria-label={t('chatBuddy.tooltip', 'Chat com Learn Buddy')}
               className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-pink-500/40 hover:bg-pink-500 hover:text-white transition-all shadow-[0_0_24px_-2px_hsl(330_80%_60%/0.6),0_4px_14px_-3px_hsl(330_80%_60%/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2)] hover:shadow-[0_0_36px_-2px_hsl(330_80%_60%/0.85)]"
             >
@@ -245,14 +236,28 @@ export const FloatingActions = () => {
           </TooltipTrigger>
           <TooltipContent side="left">{t('chatBuddy.tooltip', 'Chat com Learn Buddy')}</TooltipContent>
         </Tooltip>
-        </SectionGate>
 
 
         {/* Study Groups */}
         {groupsEnabled && (
-          <SectionGate sectionKey="study_groups" hideWhenDisabled>
+          groupsGate.enabled ? (
             <StudyGroups />
-          </SectionGate>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={groupsGate.guard(() => {})}
+                  aria-label={t('groups.title', 'Grupos de Estudo')}
+                  className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-cyan-500/40 hover:bg-cyan-500 hover:text-white transition-all"
+                >
+                  <Users className="h-4 w-4 text-cyan-500" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="left">{t('groups.title', 'Grupos de Estudo')}</TooltipContent>
+            </Tooltip>
+          )
         )}
 
         {/* Install Button */}
