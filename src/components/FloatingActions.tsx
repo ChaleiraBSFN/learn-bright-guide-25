@@ -291,6 +291,14 @@ export const FloatingActions = () => {
 
       {/* Reward Shop Modal */}
       <RewardShopModal open={showShop} onOpenChange={setShowShop} />
+
+      {/* Under-development dialogs (shown when admin disables a section) */}
+      {trailGate.dialog}
+      {rankingGate.dialog}
+      {communityGate.dialog}
+      {chatBuddyGate.dialog}
+      {groupsGate.dialog}
+      {shopGate.dialog}
     </>
   );
 };
