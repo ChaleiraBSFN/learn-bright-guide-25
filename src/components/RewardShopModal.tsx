@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { AdSenseSlot } from '@/components/AdSenseSlot';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useCredits } from '@/hooks/useCredits';
+
 import { toast } from 'sonner';
 import { Coins, Play, Gift, Loader2 } from 'lucide-react';
 
@@ -21,7 +21,6 @@ interface Props {
 export const RewardShopModal = ({ open, onOpenChange }: Props) => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { refetch } = useCredits();
   const [phase, setPhase] = useState<'idle' | 'watching' | 'claiming'>('idle');
   const [progress, setProgress] = useState(0);
   const [usedToday, setUsedToday] = useState<number | null>(null);
@@ -67,7 +66,9 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
           t('rewardShop.gained', '+{{n}} créditos!', { n: data.credits_granted }),
         );
         setUsedToday(data.used_today);
-        refetch();
+        if (typeof data.credits_remaining === 'number') {
+          window.dispatchEvent(new CustomEvent('credits_changed', { detail: { newTotal: data.credits_remaining } }));
+        }
       } else {
         toast.error(data?.error || t('common.error', 'Erro'));
       }
