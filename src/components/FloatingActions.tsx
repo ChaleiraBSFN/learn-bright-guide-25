@@ -12,8 +12,8 @@ import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFullscreen } from '@/hooks/useFullscreen';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { SectionGate } from '@/components/SectionGate';
 import { useSectionFlag } from '@/hooks/useSectionFlag';
+import { useUnderDevGate } from '@/hooks/useUnderDevGate';
 import { RewardShopModal } from '@/components/RewardShopModal';
 
 export const FloatingActions = () => {
