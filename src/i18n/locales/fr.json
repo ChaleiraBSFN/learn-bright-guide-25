@@ -758,5 +758,37 @@
     "success": "Plan prêt!",
     "successDesc": "Votre plan d'étude a été généré.",
     "backToForm": "Retour"
+  },
+  "rewardShop": {
+    "title": "Boutique de crédits",
+    "subtitle": "Gagnez des crédits en regardant de courtes pubs.",
+    "rewardLine": "Regardez 1 pub → +25 crédits",
+    "remainingToday": "{{n}}/{{max}} aujourd'hui",
+    "watchAd": "Regarder la pub",
+    "watching": "Attendez la fin de la pub…",
+    "granting": "Ajout des crédits…",
+    "gained": "+{{n}} crédits !",
+    "limitReached": "Vous avez utilisé les pubs du jour. Revenez demain !",
+    "limitInfo": "Limite de {{max}} pubs par jour.",
+    "needLogin": "Connectez-vous pour gagner des crédits.",
+    "tapForMore": "Touchez pour en gagner plus !"
+  },
+  "sectionGate": {
+    "title": "En développement",
+    "message": "Nous travaillons sur cette fonctionnalité. Revenez bientôt !",
+    "learnMore": "En savoir plus"
+  },
+  "adminSections": {
+    "title": "Contrôle des sections",
+    "help": "Désactivez une section pour afficher un message \"en développement\" avec un bouton de redirection. Modifications appliquées en temps réel.",
+    "enabled": "Active",
+    "disabled": "En développement",
+    "fieldTitle": "Titre",
+    "fieldMessage": "Message",
+    "fieldCtaLabel": "Texte du bouton (facultatif)",
+    "fieldCtaUrl": "URL du bouton (facultatif)",
+    "enableAll": "Tout activer",
+    "disableAll": "Tout désactiver",
+    "saved": "Enregistré !"
   }
 }

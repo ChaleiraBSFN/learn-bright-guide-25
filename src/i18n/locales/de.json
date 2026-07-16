@@ -758,5 +758,37 @@
     "success": "Plan bereit!",
     "successDesc": "Ihr Lernplan wurde erstellt.",
     "backToForm": "Zurück"
+  },
+  "rewardShop": {
+    "title": "Credit-Shop",
+    "subtitle": "Verdiene Credits mit kurzen Anzeigen.",
+    "rewardLine": "1 Anzeige ansehen → +25 Credits",
+    "remainingToday": "{{n}}/{{max}} heute",
+    "watchAd": "Anzeige ansehen",
+    "watching": "Bitte warte auf das Ende der Anzeige…",
+    "granting": "Credits werden hinzugefügt…",
+    "gained": "+{{n}} Credits!",
+    "limitReached": "Du hast die heutigen Anzeigen aufgebraucht. Komm morgen wieder!",
+    "limitInfo": "Limit von {{max}} Anzeigen pro Tag.",
+    "needLogin": "Melde dich an, um Credits zu verdienen.",
+    "tapForMore": "Tippen, um mehr zu verdienen!"
+  },
+  "sectionGate": {
+    "title": "In Entwicklung",
+    "message": "Wir arbeiten an dieser Funktion. Schau bald wieder vorbei!",
+    "learnMore": "Mehr erfahren"
+  },
+  "adminSections": {
+    "title": "Bereichssteuerung",
+    "help": "Deaktiviere einen Bereich, um eine \"In Entwicklung\"-Meldung mit Weiterleitungs-Button anzuzeigen. Änderungen erfolgen in Echtzeit.",
+    "enabled": "Aktiv",
+    "disabled": "In Entwicklung",
+    "fieldTitle": "Titel",
+    "fieldMessage": "Nachricht",
+    "fieldCtaLabel": "Button-Text (optional)",
+    "fieldCtaUrl": "Button-URL (optional)",
+    "enableAll": "Alle aktivieren",
+    "disableAll": "Alle deaktivieren",
+    "saved": "Gespeichert!"
   }
 }

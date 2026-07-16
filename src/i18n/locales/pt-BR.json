@@ -773,5 +773,37 @@
     "success": "Roteiro pronto!",
     "successDesc": "Seu plano de estudos foi gerado.",
     "backToForm": "Voltar"
+  },
+  "rewardShop": {
+    "title": "Mercadinho de créditos",
+    "subtitle": "Ganhe créditos assistindo anúncios rápidos.",
+    "rewardLine": "Assista 1 anúncio → +25 créditos",
+    "remainingToday": "{{n}}/{{max}} hoje",
+    "watchAd": "Assistir anúncio",
+    "watching": "Aguarde o anúncio terminar…",
+    "granting": "Adicionando créditos…",
+    "gained": "+{{n}} créditos!",
+    "limitReached": "Você já usou os anúncios de hoje. Volte amanhã!",
+    "limitInfo": "Limite de {{max}} anúncios por dia.",
+    "needLogin": "Faça login para ganhar créditos.",
+    "tapForMore": "Toque para ganhar mais!"
+  },
+  "sectionGate": {
+    "title": "Em desenvolvimento",
+    "message": "Estamos trabalhando nesta funcionalidade. Volte em breve!",
+    "learnMore": "Saiba mais"
+  },
+  "adminSections": {
+    "title": "Controle de Seções",
+    "help": "Desative uma seção para mostrar uma mensagem de \"em desenvolvimento\" com botão de redirecionamento. Todas as alterações são aplicadas em tempo real para todos os usuários.",
+    "enabled": "Ativa",
+    "disabled": "Em desenvolvimento",
+    "fieldTitle": "Título",
+    "fieldMessage": "Mensagem",
+    "fieldCtaLabel": "Texto do botão (opcional)",
+    "fieldCtaUrl": "URL do botão (opcional)",
+    "enableAll": "Ativar todas",
+    "disableAll": "Desativar todas",
+    "saved": "Salvo!"
   }
 }

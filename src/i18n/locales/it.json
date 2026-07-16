@@ -758,5 +758,37 @@
     "success": "Piano pronto!",
     "successDesc": "Il tuo piano di studio è stato generato.",
     "backToForm": "Indietro"
+  },
+  "rewardShop": {
+    "title": "Negozio di crediti",
+    "subtitle": "Guadagna crediti guardando brevi annunci.",
+    "rewardLine": "Guarda 1 annuncio → +25 crediti",
+    "remainingToday": "{{n}}/{{max}} oggi",
+    "watchAd": "Guarda annuncio",
+    "watching": "Attendi la fine dell'annuncio…",
+    "granting": "Aggiunta crediti…",
+    "gained": "+{{n}} crediti!",
+    "limitReached": "Hai già usato gli annunci di oggi. Torna domani!",
+    "limitInfo": "Limite di {{max}} annunci al giorno.",
+    "needLogin": "Accedi per guadagnare crediti.",
+    "tapForMore": "Tocca per guadagnarne di più!"
+  },
+  "sectionGate": {
+    "title": "In sviluppo",
+    "message": "Stiamo lavorando a questa funzione. Torna presto!",
+    "learnMore": "Scopri di più"
+  },
+  "adminSections": {
+    "title": "Controllo Sezioni",
+    "help": "Disattiva una sezione per mostrare un messaggio \"in sviluppo\" con pulsante di reindirizzamento. Modifiche in tempo reale.",
+    "enabled": "Attiva",
+    "disabled": "In sviluppo",
+    "fieldTitle": "Titolo",
+    "fieldMessage": "Messaggio",
+    "fieldCtaLabel": "Testo del pulsante (opzionale)",
+    "fieldCtaUrl": "URL del pulsante (opzionale)",
+    "enableAll": "Attiva tutte",
+    "disableAll": "Disattiva tutte",
+    "saved": "Salvato!"
   }
 }

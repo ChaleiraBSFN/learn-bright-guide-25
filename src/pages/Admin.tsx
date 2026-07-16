@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, ArrowLeft, BarChart3, Cpu, Images, Loader2, Map, Megaphone, MessageCircle, Settings2, Shield } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, BarChart3, Cpu, Images, Loader2, Map, Megaphone, MessageCircle, Settings2, Shield, ToggleLeft } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import TrailVisualEditor from '@/components/admin/TrailVisualEditor';
 
@@ -128,6 +128,16 @@ const Admin = () => {
                     Banners do Carrossel
                   </CardTitle>
                   <CardDescription>Adicione, edite, troque ícone e ordene os cards do carrossel da home</CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="cursor-pointer transition-colors hover:border-primary" onClick={() => navigate('/section-flags')}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ToggleLeft className="h-5 w-5 text-amber-500" />
+                    Controle de Seções
+                  </CardTitle>
+                  <CardDescription>Ative/desative qualquer aba (ranking, trilha, grupos, comunidade, mercadinho...) e configure mensagem "em desenvolvimento"</CardDescription>
                 </CardHeader>
               </Card>
             </div>

@@ -758,5 +758,37 @@
     "success": "計画ができました！",
     "successDesc": "学習計画が生成されました。",
     "backToForm": "戻る"
+  },
+  "rewardShop": {
+    "title": "クレジットショップ",
+    "subtitle": "短い広告を見てクレジットを獲得。",
+    "rewardLine": "1つの広告を視聴 → +25 クレジット",
+    "remainingToday": "本日 {{n}}/{{max}}",
+    "watchAd": "広告を見る",
+    "watching": "広告が終わるまでお待ちください…",
+    "granting": "クレジットを追加中…",
+    "gained": "+{{n}} クレジット!",
+    "limitReached": "本日の広告を使い切りました。明日また来てください!",
+    "limitInfo": "1日 {{max}} 広告まで。",
+    "needLogin": "クレジット獲得にはログインが必要です。",
+    "tapForMore": "タップしてもっと獲得!"
+  },
+  "sectionGate": {
+    "title": "開発中",
+    "message": "この機能は現在開発中です。またお越しください!",
+    "learnMore": "詳しく見る"
+  },
+  "adminSections": {
+    "title": "セクション管理",
+    "help": "セクションを無効化すると「開発中」メッセージとリダイレクトボタンを表示します。変更は即時反映。",
+    "enabled": "有効",
+    "disabled": "開発中",
+    "fieldTitle": "タイトル",
+    "fieldMessage": "メッセージ",
+    "fieldCtaLabel": "ボタンテキスト(任意)",
+    "fieldCtaUrl": "ボタンURL(任意)",
+    "enableAll": "すべて有効化",
+    "disableAll": "すべて無効化",
+    "saved": "保存しました!"
   }
 }
