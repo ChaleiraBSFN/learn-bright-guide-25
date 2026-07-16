@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown } from 'lucide-react';
+import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, ShoppingBag } from 'lucide-react';
 
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,9 @@ import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFullscreen } from '@/hooks/useFullscreen';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { SectionGate } from '@/components/SectionGate';
+import { useSectionFlag } from '@/hooks/useSectionFlag';
+import { RewardShopModal } from '@/components/RewardShopModal';
 
 export const FloatingActions = () => {
   const { t } = useTranslation();
@@ -21,6 +24,8 @@ export const FloatingActions = () => {
   const isMobile = useIsMobile();
   const [showTrail, setShowTrail] = useState(false);
   const [showRanking, setShowRanking] = useState(false);
+  const [showShop, setShowShop] = useState(false);
+  const shopFlag = useSectionFlag('shop').flag;
   const [isInstalled] = useState(
     window.matchMedia('(display-mode: standalone)').matches
   );
