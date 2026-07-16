@@ -55,6 +55,7 @@ export const CreditsDisplay = () => {
         </TooltipContent>
       </Tooltip>
       <RewardShopModal open={shopOpen} onOpenChange={setShopOpen} />
+      {shopGate.dialog}
     </>
   );
 };
