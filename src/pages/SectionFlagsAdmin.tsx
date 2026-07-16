@@ -13,6 +13,25 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { ArrowLeft, Loader2, Save, ToggleLeft } from 'lucide-react';
 import { SEO } from '@/components/SEO';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+// Destinos predefinidos (rotas existentes no app). Redirecionam dentro da própria página.
+const PRESET_DESTINATIONS: { value: string; label: string }[] = [
+  { value: '/', label: 'Início (gerador principal)' },
+  { value: '/community', label: 'Comunidade' },
+  { value: '/chat-buddy', label: 'Chat Buddy' },
+  { value: '/settings', label: 'Configurações' },
+  { value: '/downloads', label: 'Downloads / App' },
+  { value: '/install', label: 'Instalar app (PWA)' },
+  { value: '/auth', label: 'Entrar / Cadastro' },
+  { value: '/privacy', label: 'Política de privacidade' },
+];
 
 type Flag = {
   id: string;
