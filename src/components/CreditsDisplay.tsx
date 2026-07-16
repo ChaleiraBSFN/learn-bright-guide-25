@@ -32,7 +32,7 @@ export const CreditsDisplay = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={() => (user ? setShopOpen(true) : navigate('/auth'))}
+            onClick={shopGate.guard(() => (user ? setShopOpen(true) : navigate('/auth')))}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
               isEmpty
                 ? 'bg-destructive/10 text-destructive border border-destructive/30'
