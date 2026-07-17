@@ -756,6 +756,8 @@
   "rewardShop": {
     "title": "Tienda de créditos",
     "subtitle": "Gana créditos viendo anuncios rápidos.",
+    "pageTitle": "Tienda de créditos — Learn Buddy",
+    "pageDescription": "Gana créditos viendo anuncios rápidos en Learn Buddy.",
     "rewardLine": "Mira 1 anuncio → +25 créditos",
     "remainingToday": "{{n}} de {{max}} usados hoy",
     "watchAd": "Ver anuncio",

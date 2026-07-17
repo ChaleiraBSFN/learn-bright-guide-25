@@ -775,6 +775,8 @@
   "rewardShop": {
     "title": "Credits shop",
     "subtitle": "Earn credits by watching short ads.",
+    "pageTitle": "Credits Shop — Learn Buddy",
+    "pageDescription": "Earn credits by watching short ads on Learn Buddy.",
     "rewardLine": "Watch 1 ad → +25 credits",
     "remainingToday": "{{n}}/{{max}} used today",
     "watchAd": "Watch ad",
