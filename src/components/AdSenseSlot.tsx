@@ -52,6 +52,7 @@ const ensureAdsenseScript = () =>
   });
 
 export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
+  const { t } = useTranslation();
   const insRef = useRef<HTMLModElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pushedRef = useRef(false);
