@@ -8,6 +8,7 @@ export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
 export const ADSENSE_SLOT = '7188987191';
 const ADSENSE_SCRIPT_ID = 'learn-buddy-adsense-script';
 const ADSENSE_FALLBACK_DELAY_MS = 3500;
+const ADSENSE_ALLOWED_HOSTS = ['studdybuddy.com.br', 'www.studdybuddy.com.br', 'learn-bright-guide-25.lovable.app'];
 
 declare global {
   interface Window {
@@ -56,7 +57,9 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
   const [index, setIndex] = useState(() => Math.floor(Math.random() * LEARN_BUDDY_ADS.length));
   const [adState, setAdState] = useState<'loading' | 'filled' | 'fallback'>('loading');
 
-  const hasAdsense = Boolean(ADSENSE_CLIENT && ADSENSE_SLOT);
+  const canRequestAdsense =
+    typeof window !== 'undefined' && ADSENSE_ALLOWED_HOSTS.includes(window.location.hostname);
+  const hasAdsense = Boolean(ADSENSE_CLIENT && ADSENSE_SLOT && canRequestAdsense);
 
   useEffect(() => {
     if (!hasAdsense) return;
