@@ -763,7 +763,7 @@
     "title": "Credit-Shop",
     "subtitle": "Verdiene Credits mit kurzen Anzeigen.",
     "rewardLine": "1 Anzeige ansehen → +25 Credits",
-    "remainingToday": "{{n}}/{{max}} heute",
+    "remainingToday": "{{n}}/{{max}} heute genutzt",
     "watchAd": "Anzeige ansehen",
     "watching": "Bitte warte auf das Ende der Anzeige…",
     "granting": "Credits werden hinzugefügt…",

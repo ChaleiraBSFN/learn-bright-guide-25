@@ -776,7 +776,7 @@
     "title": "Credits shop",
     "subtitle": "Earn credits by watching short ads.",
     "rewardLine": "Watch 1 ad → +25 credits",
-    "remainingToday": "{{n}}/{{max}} today",
+    "remainingToday": "{{n}}/{{max}} used today",
     "watchAd": "Watch ad",
     "watching": "Please wait for the ad to finish…",
     "granting": "Adding credits…",

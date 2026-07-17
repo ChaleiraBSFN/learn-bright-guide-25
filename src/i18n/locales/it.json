@@ -763,7 +763,7 @@
     "title": "Negozio di crediti",
     "subtitle": "Guadagna crediti guardando brevi annunci.",
     "rewardLine": "Guarda 1 annuncio → +25 crediti",
-    "remainingToday": "{{n}}/{{max}} oggi",
+    "remainingToday": "{{n}}/{{max}} usati oggi",
     "watchAd": "Guarda annuncio",
     "watching": "Attendi la fine dell'annuncio…",
     "granting": "Aggiunta crediti…",

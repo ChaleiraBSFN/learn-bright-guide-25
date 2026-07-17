@@ -763,7 +763,7 @@
     "title": "Boutique de crédits",
     "subtitle": "Gagnez des crédits en regardant de courtes pubs.",
     "rewardLine": "Regardez 1 pub → +25 crédits",
-    "remainingToday": "{{n}}/{{max}} aujourd'hui",
+    "remainingToday": "{{n}}/{{max}} utilisés aujourd'hui",
     "watchAd": "Regarder la pub",
     "watching": "Attendez la fin de la pub…",
     "granting": "Ajout des crédits…",

@@ -136,7 +136,7 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
 
   const promoFallback = (
     <div
-      className={`relative h-full min-h-[220px] overflow-hidden rounded-xl border-2 border-primary/30 bg-foreground ${className}`}
+      className={`relative aspect-video w-full overflow-hidden rounded-xl border-2 border-primary/30 bg-foreground ${className}`}
     >
       <video
         ref={videoRef}
@@ -166,12 +166,12 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
   }
 
   return (
-    <div className={`relative min-h-[250px] overflow-hidden rounded-xl ${className}`}>
-      {adState !== 'filled' && <div className="absolute inset-0">{promoFallback}</div>}
+    <div className={`relative w-full overflow-hidden rounded-xl ${className}`}>
+      {adState !== 'filled' && <div className="relative z-10">{promoFallback}</div>}
       <ins
         ref={insRef}
-        className={`adsbygoogle block min-h-[250px] w-full transition-opacity duration-300 ${
-          adState === 'filled' ? 'opacity-100' : 'pointer-events-none opacity-0'
+        className={`adsbygoogle block w-full transition-opacity duration-300 ${
+          adState === 'filled' ? 'opacity-100' : 'pointer-events-none opacity-0 absolute inset-0'
         }`}
         style={{ display: 'block', minHeight: 250 }}
         data-ad-client={ADSENSE_CLIENT}
