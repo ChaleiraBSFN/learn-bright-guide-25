@@ -136,7 +136,7 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
 
   const promoFallback = (
     <div
-      className={`relative h-full min-h-[220px] overflow-hidden rounded-xl border-2 border-primary/30 bg-foreground ${className}`}
+      className={`relative aspect-video w-full overflow-hidden rounded-xl border-2 border-primary/30 bg-foreground ${className}`}
     >
       <video
         ref={videoRef}
