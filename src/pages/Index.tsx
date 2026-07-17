@@ -33,6 +33,7 @@ const FeatureCarousel = lazy(() => import("@/components/FeatureCarousel").then((
 const PromoBanners = lazy(() => import("@/components/PromoBanners").then((m) => ({ default: m.PromoBanners })));
 const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").then((m) => ({ default: m.EngineNoticeBanner })));
 const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
+const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({ default: m.AdSenseSlot })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
@@ -646,6 +647,11 @@ const Index = () => {
                             setExerciseContent(content);
                           }}
                         />
+                        <div className="mt-6">
+                          <Suspense fallback={null}>
+                            <AdSenseSlot />
+                          </Suspense>
+                        </div>
                       </Suspense>
                     )}
                   </motion.div>
@@ -680,6 +686,11 @@ const Index = () => {
                   isGeneratingExercise={isExerciseLoading}
                 />
               </Suspense>
+              <div className="mt-8">
+                <Suspense fallback={null}>
+                  <AdSenseSlot />
+                </Suspense>
+              </div>
             </motion.div>
           ) : exerciseContent ? (
             <motion.div
@@ -698,6 +709,11 @@ const Index = () => {
                   imagesLoading={imagesLoading}
                 />
               </Suspense>
+              <div className="mt-8">
+                <Suspense fallback={null}>
+                  <AdSenseSlot />
+                </Suspense>
+              </div>
             </motion.div>
           ) : planContent ? (
             <motion.div
@@ -723,6 +739,11 @@ const Index = () => {
                   isGeneratingExercise={isExerciseLoading}
                 />
               </Suspense>
+              <div className="mt-8">
+                <Suspense fallback={null}>
+                  <AdSenseSlot />
+                </Suspense>
+              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>
