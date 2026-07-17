@@ -686,6 +686,11 @@ const Index = () => {
                   isGeneratingExercise={isExerciseLoading}
                 />
               </Suspense>
+              <div className="mt-8">
+                <Suspense fallback={null}>
+                  <AdSenseSlot />
+                </Suspense>
+              </div>
             </motion.div>
           ) : exerciseContent ? (
             <motion.div
@@ -704,6 +709,11 @@ const Index = () => {
                   imagesLoading={imagesLoading}
                 />
               </Suspense>
+              <div className="mt-8">
+                <Suspense fallback={null}>
+                  <AdSenseSlot />
+                </Suspense>
+              </div>
             </motion.div>
           ) : planContent ? (
             <motion.div
@@ -729,6 +739,11 @@ const Index = () => {
                   isGeneratingExercise={isExerciseLoading}
                 />
               </Suspense>
+              <div className="mt-8">
+                <Suspense fallback={null}>
+                  <AdSenseSlot />
+                </Suspense>
+              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>
