@@ -647,6 +647,11 @@ const Index = () => {
                             setExerciseContent(content);
                           }}
                         />
+                        <div className="mt-6">
+                          <Suspense fallback={null}>
+                            <AdSenseSlot />
+                          </Suspense>
+                        </div>
                       </Suspense>
                     )}
                   </motion.div>
