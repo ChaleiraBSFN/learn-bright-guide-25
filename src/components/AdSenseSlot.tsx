@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+
 
 /**
  * Ad slot showing rotating Learn Buddy promo videos.
@@ -53,6 +55,8 @@ const ensureAdsenseScript = () =>
 
 export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const insRef = useRef<HTMLModElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pushedRef = useRef(false);
@@ -137,8 +141,9 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
   };
 
   const openRewardShop = () => {
-    window.dispatchEvent(new CustomEvent('open_reward_shop', { bubbles: true }));
+    navigate('/reward-shop');
   };
+
 
   const promoFallback = (
     <div
