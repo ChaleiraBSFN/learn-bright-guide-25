@@ -611,7 +611,9 @@
     "noCredits": "Sem créditos",
     "signupForMore": "Crie uma conta para ganhar mais créditos!",
     "earnMore": "Complete desafios da trilha para ganhar mais créditos!",
-    "label": "Créditos"
+    "label": "Créditos",
+    "whatFor": "Para que servem os créditos?",
+    "explanation": "Créditos são usados para gerar materiais de estudo, exercícios e planos de estudo personalizados."
   },
   "privacy": {
     "title": "Política de Privacidade",
@@ -777,6 +779,8 @@
   "rewardShop": {
     "title": "Mercadinho de créditos",
     "subtitle": "Ganhe créditos assistindo anúncios rápidos.",
+    "pageTitle": "Mercadinho de créditos — Learn Buddy",
+    "pageDescription": "Ganhe créditos assistindo anúncios rápidos no Learn Buddy.",
     "rewardLine": "Assista 1 anúncio → +25 créditos",
     "remainingToday": "{{n}} de {{max}} usados hoje",
     "watchAd": "Assistir anúncio",

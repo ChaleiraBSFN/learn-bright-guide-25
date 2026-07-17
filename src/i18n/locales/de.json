@@ -554,7 +554,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "Wofür sind Credits?",
+    "explanation": "Credits werden verwendet, um Lernmaterialien, Übungen und personalisierte Lernpläne zu erstellen."
   },
   "ranking": {
     "title": "Erfolge-Ranking",
@@ -762,6 +764,8 @@
   "rewardShop": {
     "title": "Credit-Shop",
     "subtitle": "Verdiene Credits mit kurzen Anzeigen.",
+    "pageTitle": "Credit-Shop — Learn Buddy",
+    "pageDescription": "Verdiene Credits mit kurzen Anzeigen auf Learn Buddy.",
     "rewardLine": "1 Anzeige ansehen → +25 Credits",
     "remainingToday": "{{n}}/{{max}} heute genutzt",
     "watchAd": "Anzeige ansehen",

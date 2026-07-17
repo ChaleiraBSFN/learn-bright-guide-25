@@ -554,7 +554,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "Для чего нужны кредиты?",
+    "explanation": "Кредиты используются для создания учебных материалов, упражнений и персонализированных планов обучения."
   },
   "ranking": {
     "title": "Рейтинг достижений",
@@ -762,6 +764,8 @@
   "rewardShop": {
     "title": "Магазин кредитов",
     "subtitle": "Зарабатывайте кредиты, смотря короткую рекламу.",
+    "pageTitle": "Магазин кредитов — Learn Buddy",
+    "pageDescription": "Зарабатывайте кредиты, смотря короткую рекламу на Learn Buddy.",
     "rewardLine": "Посмотреть 1 рекламу → +25 кредитов",
     "remainingToday": "{{n}}/{{max}} использовано сегодня",
     "watchAd": "Смотреть рекламу",

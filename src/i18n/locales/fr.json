@@ -554,7 +554,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "À quoi servent les crédits ?",
+    "explanation": "Les crédits servent à générer des supports d'étude, des exercices et des plans d'étude personnalisés."
   },
   "ranking": {
     "title": "Classement des Réussites",
@@ -762,6 +764,8 @@
   "rewardShop": {
     "title": "Boutique de crédits",
     "subtitle": "Gagnez des crédits en regardant de courtes pubs.",
+    "pageTitle": "Boutique de crédits — Learn Buddy",
+    "pageDescription": "Gagnez des crédits en regardant de courtes pubs sur Learn Buddy.",
     "rewardLine": "Regardez 1 pub → +25 crédits",
     "remainingToday": "{{n}}/{{max}} utilisés aujourd'hui",
     "watchAd": "Regarder la pub",

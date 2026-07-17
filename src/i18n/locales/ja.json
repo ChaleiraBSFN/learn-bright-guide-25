@@ -554,7 +554,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "クレジットの用途は？",
+    "explanation": "クレジットは学習資料、演習問題、パーソナライズされた学習計画を生成するために使用されます。"
   },
   "ranking": {
     "title": "実績ランキング",
@@ -762,6 +764,8 @@
   "rewardShop": {
     "title": "クレジットショップ",
     "subtitle": "短い広告を見てクレジットを獲得。",
+    "pageTitle": "クレジットショップ — Learn Buddy",
+    "pageDescription": "Learn Buddyで短い広告を見てクレジットを獲得。",
     "rewardLine": "1つの広告を視聴 → +25 クレジット",
     "remainingToday": "本日 {{n}}/{{max}} 視聴済み",
     "watchAd": "広告を見る",

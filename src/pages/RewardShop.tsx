@@ -1,33 +1,29 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { AdSenseSlot } from '@/components/AdSenseSlot';
+import { FloatingActions } from '@/components/FloatingActions';
+import { SEO } from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-
 import { toast } from 'sonner';
-import { Coins, Play, Gift, Loader2 } from 'lucide-react';
+import { ArrowLeft, Coins, Gift, Loader2, Play } from 'lucide-react';
 
 const AD_DURATION_SECONDS = 20;
 const DAILY_LIMIT = 3;
 
-interface Props {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export const RewardShopModal = ({ open, onOpenChange }: Props) => {
+export default function RewardShop() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [phase, setPhase] = useState<'idle' | 'watching' | 'claiming'>('idle');
   const [progress, setProgress] = useState(0);
   const [usedToday, setUsedToday] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!open || !user) return;
-    // count last 24h
+    if (!user) return;
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
     supabase
       .from('ad_rewards')
@@ -35,7 +31,7 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
       .eq('user_id', user.id)
       .gte('watched_at', since)
       .then(({ count }) => setUsedToday(count ?? 0));
-  }, [open, user]);
+  }, [user]);
 
   useEffect(() => {
     if (phase !== 'watching') return;
@@ -73,9 +69,7 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
       } else if (result?.error === 'too_fast') {
         toast.error(t('rewardShop.waitFullAd', 'Aguarde o anúncio terminar para receber os créditos.'));
       } else if (result?.success) {
-        toast.success(
-          t('rewardShop.gained', '+{{n}} créditos!', { n: result.credits_granted }),
-        );
+        toast.success(t('rewardShop.gained', '+{{n}} créditos!', { n: result.credits_granted }));
         setUsedToday(result.used_today ?? null);
         if (typeof result.credits_remaining === 'number') {
           window.dispatchEvent(new CustomEvent('credits_changed', { detail: { newTotal: result.credits_remaining } }));
@@ -92,41 +86,62 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
   };
 
   const canWatch = user && (usedToday === null || usedToday < DAILY_LIMIT);
-  const remaining = usedToday === null ? DAILY_LIMIT : Math.max(0, DAILY_LIMIT - usedToday);
 
   return (
-    <Dialog open={open} onOpenChange={(v) => phase === 'idle' && onOpenChange(v)}>
-      <DialogContent
-        className={`w-[calc(100vw-2rem)] sm:max-w-lg max-h-[85vh] overflow-y-auto overflow-x-hidden p-5 sm:p-6 ${phase !== 'idle' ? '[&>button]:hidden' : ''}`}
-        onPointerDownOutside={(e) => phase !== 'idle' && e.preventDefault()}
-        onEscapeKeyDown={(e) => phase !== 'idle' && e.preventDefault()}
-        onInteractOutside={(e) => phase !== 'idle' && e.preventDefault()}
-      >
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Gift className="h-5 w-5 text-primary" />
-            {t('rewardShop.title', 'Mercadinho de créditos')}
-          </DialogTitle>
-          <DialogDescription>
-            {t('rewardShop.subtitle', 'Ganhe créditos assistindo anúncios rápidos.')}
-          </DialogDescription>
-        </DialogHeader>
+    <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title={t('rewardShop.pageTitle', 'Mercadinho de créditos — Learn Buddy')}
+        description={t('rewardShop.pageDescription', 'Ganhe créditos assistindo anúncios rápidos no Learn Buddy.')}
+        path="/reward-shop"
+      />
+      <FloatingActions />
 
+      <header className="sticky top-0 z-30 border-b-2 border-foreground/15 bg-background/80 backdrop-blur-xl">
+        <div className="max-w-3xl mx-auto px-3 sm:px-4 py-3 flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/')} aria-label={t('header.back', 'Voltar')}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <div className="h-9 w-9 rounded-xl border-2 border-foreground/15 bg-amber-500/10 flex items-center justify-center shadow-sm">
+              <Gift className="h-5 w-5 text-amber-500" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="font-display text-base sm:text-lg font-bold leading-tight truncate">
+                {t('rewardShop.title', 'Mercadinho de créditos')}
+              </h1>
+              <p className="text-[11px] text-muted-foreground leading-tight truncate">
+                {t('rewardShop.subtitle', 'Ganhe créditos assistindo anúncios rápidos.')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-3xl">
         {!user ? (
-          <div className="py-8 text-center text-muted-foreground">
-            {t('rewardShop.needLogin', 'Faça login para ganhar créditos.')}
+          <div className="rounded-2xl border-2 border-foreground/10 bg-card p-8 text-center">
+            <Coins className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h2 className="text-xl font-bold mb-2">{t('rewardShop.needLogin', 'Faça login para ganhar créditos.')}</h2>
+            <Button onClick={() => navigate('/auth')} className="mt-4">
+              {t('auth.signIn', 'Entrar')}
+            </Button>
           </div>
         ) : (
-          <div className="space-y-4">
-            <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                <div className="flex items-start gap-2 min-w-0">
-                  <Coins className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                  <span className="font-bold break-words leading-tight">
-                    {t('rewardShop.rewardLine', 'Assista 1 anúncio → +25 créditos')}
-                  </span>
+          <div className="space-y-6">
+            <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-5 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <div className="flex items-start gap-3 min-w-0">
+                  <Coins className="h-6 w-6 text-primary shrink-0 mt-0.5" />
+                  <div>
+                    <h2 className="font-bold text-lg break-words leading-tight">
+                      {t('rewardShop.rewardLine', 'Assista 1 anúncio → +25 créditos')}
+                    </h2>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {t('rewardShop.limitInfo', 'Limite de {{max}} anúncios por dia.', { max: DAILY_LIMIT })}
+                    </p>
+                  </div>
                 </div>
-                <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium shrink-0 self-start sm:self-center">
+                <span className="text-xs px-3 py-1.5 rounded-full bg-primary/10 text-primary font-medium shrink-0 self-start sm:self-center">
                   {t('rewardShop.remainingToday', '{{n}} de {{max}} usados hoje', { n: usedToday ?? 0, max: DAILY_LIMIT })}
                 </span>
               </div>
@@ -142,7 +157,7 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
               )}
 
               {phase === 'claiming' && (
-                <div className="flex items-center justify-center py-6 gap-2 text-muted-foreground">
+                <div className="flex items-center justify-center py-8 gap-2 text-muted-foreground">
                   <Loader2 className="h-5 w-5 animate-spin" />
                   {t('rewardShop.granting', 'Adicionando créditos…')}
                 </div>
@@ -152,7 +167,7 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
                 <Button
                   onClick={() => canWatch && setPhase('watching')}
                   disabled={!canWatch}
-                  className="w-full gap-2 h-auto min-h-[48px] py-2.5 whitespace-normal break-words"
+                  className="w-full gap-2 h-auto min-h-[52px] py-3 whitespace-normal break-words"
                   size="lg"
                 >
                   <Play className="h-4 w-4 shrink-0" />
@@ -163,12 +178,18 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
               )}
             </div>
 
-            <p className="text-xs text-center text-muted-foreground">
-              {t('rewardShop.limitInfo', 'Limite de {{max}} anúncios por dia.', { max: DAILY_LIMIT })}
-            </p>
+            <div className="rounded-2xl border-2 border-foreground/10 bg-card p-5">
+              <h3 className="font-bold mb-2 flex items-center gap-2">
+                <Coins className="h-4 w-4 text-amber-500" />
+                {t('credits.whatFor', 'Para que servem os créditos?')}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t('credits.explanation', 'Créditos são usados para gerar materiais de estudo, exercícios e planos de estudo personalizados.')}
+              </p>
+            </div>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </main>
+    </div>
   );
-};
+}

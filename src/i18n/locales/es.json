@@ -548,7 +548,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "¿Para qué sirven los créditos?",
+    "explanation": "Los créditos se usan para generar materiales de estudio, ejercicios y planes de estudio personalizados."
   },
   "ranking": {
     "title": "Ranking de Logros",
@@ -756,6 +758,8 @@
   "rewardShop": {
     "title": "Tienda de créditos",
     "subtitle": "Gana créditos viendo anuncios rápidos.",
+    "pageTitle": "Tienda de créditos — Learn Buddy",
+    "pageDescription": "Gana créditos viendo anuncios rápidos en Learn Buddy.",
     "rewardLine": "Mira 1 anuncio → +25 créditos",
     "remainingToday": "{{n}} de {{max}} usados hoy",
     "watchAd": "Ver anuncio",

@@ -554,7 +554,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "A cosa servono i crediti?",
+    "explanation": "I crediti servono a generare materiali di studio, esercizi e piani di studio personalizzati."
   },
   "ranking": {
     "title": "Classifica Traguardi",
@@ -762,6 +764,8 @@
   "rewardShop": {
     "title": "Negozio di crediti",
     "subtitle": "Guadagna crediti guardando brevi annunci.",
+    "pageTitle": "Negozio di crediti — Learn Buddy",
+    "pageDescription": "Guadagna crediti guardando brevi annunci su Learn Buddy.",
     "rewardLine": "Guarda 1 annuncio → +25 crediti",
     "remainingToday": "{{n}}/{{max}} usati oggi",
     "watchAd": "Guarda annuncio",
