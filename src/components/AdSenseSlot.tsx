@@ -35,11 +35,15 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
 
   useEffect(() => {
     if (!hasAdsense) return;
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-      console.warn('AdSense push failed', e);
-    }
+    let attempts = 0;
+    const tryPush = () => {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        if (attempts++ < 10) setTimeout(tryPush, 500);
+      }
+    };
+    tryPush();
   }, [hasAdsense]);
 
   const ad = useMemo(() => LEARN_BUDDY_ADS[index], [index]);
