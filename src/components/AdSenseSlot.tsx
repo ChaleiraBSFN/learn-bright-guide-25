@@ -4,8 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
  * Ad slot showing rotating Learn Buddy promo videos.
  * When ADSENSE_CLIENT/SLOT are filled, real AdSense display ads render instead.
  */
-export const ADSENSE_CLIENT = ''; // ex: 'ca-pub-1234567890'
-export const ADSENSE_SLOT = '';   // ex: '1234567890'
+export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
+export const ADSENSE_SLOT = ''; // preencha após criar o bloco no AdSense
 
 declare global {
   interface Window {
