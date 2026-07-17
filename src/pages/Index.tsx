@@ -33,6 +33,7 @@ const FeatureCarousel = lazy(() => import("@/components/FeatureCarousel").then((
 const PromoBanners = lazy(() => import("@/components/PromoBanners").then((m) => ({ default: m.PromoBanners })));
 const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").then((m) => ({ default: m.EngineNoticeBanner })));
 const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
+const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({ default: m.AdSenseSlot })));
 
 const pageVariants = {
   initial: { opacity: 1, y: 8, scale: 0.99 },
