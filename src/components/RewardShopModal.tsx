@@ -152,7 +152,7 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
                 <Button
                   onClick={() => canWatch && setPhase('watching')}
                   disabled={!canWatch}
-                  className="w-full gap-2 whitespace-normal break-words"
+                  className="w-full gap-2 h-auto min-h-[48px] py-2.5 whitespace-normal break-words"
                   size="lg"
                 >
                   <Play className="h-4 w-4 shrink-0" />
