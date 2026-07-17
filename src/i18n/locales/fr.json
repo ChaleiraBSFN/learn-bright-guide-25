@@ -762,6 +762,8 @@
   "rewardShop": {
     "title": "Boutique de crédits",
     "subtitle": "Gagnez des crédits en regardant de courtes pubs.",
+    "pageTitle": "Boutique de crédits — Learn Buddy",
+    "pageDescription": "Gagnez des crédits en regardant de courtes pubs sur Learn Buddy.",
     "rewardLine": "Regardez 1 pub → +25 crédits",
     "remainingToday": "{{n}}/{{max}} utilisés aujourd'hui",
     "watchAd": "Regarder la pub",

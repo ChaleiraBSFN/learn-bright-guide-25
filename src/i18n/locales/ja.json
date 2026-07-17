@@ -762,6 +762,8 @@
   "rewardShop": {
     "title": "クレジットショップ",
     "subtitle": "短い広告を見てクレジットを獲得。",
+    "pageTitle": "クレジットショップ — Learn Buddy",
+    "pageDescription": "Learn Buddyで短い広告を見てクレジットを獲得。",
     "rewardLine": "1つの広告を視聴 → +25 クレジット",
     "remainingToday": "本日 {{n}}/{{max}} 視聴済み",
     "watchAd": "広告を見る",
