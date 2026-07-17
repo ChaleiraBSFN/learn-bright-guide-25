@@ -772,7 +772,8 @@
     "limitInfo": "每日限 {{max}} 个广告。",
     "needLogin": "登录后获取积分。",
     "tapForMore": "点击获取更多!",
-    "waitFullAd": "请等待广告结束后再领取积分。"
+    "waitFullAd": "请等待广告结束后再领取积分。",
+    "openShop": "打开积分商店"
   },
   "sectionGate": {
     "title": "开发中",

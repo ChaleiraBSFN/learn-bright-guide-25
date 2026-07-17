@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Ad slot showing rotating Learn Buddy promo videos.
@@ -51,6 +52,7 @@ const ensureAdsenseScript = () =>
   });
 
 export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
+  const { t } = useTranslation();
   const insRef = useRef<HTMLModElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pushedRef = useRef(false);
@@ -134,6 +136,10 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
     setIndex((i) => (i + 1) % LEARN_BUDDY_ADS.length);
   };
 
+  const openRewardShop = () => {
+    window.dispatchEvent(new CustomEvent('open_reward_shop', { bubbles: true }));
+  };
+
   const promoFallback = (
     <div
       className={`relative aspect-video w-full overflow-hidden rounded-xl border-2 border-primary/30 bg-foreground ${className}`}
@@ -153,10 +159,21 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
         Anúncio
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/90 to-transparent p-3">
-        <div className="mb-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground/70">
-          {ad.tag}
+        <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="mb-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground/70">
+              {ad.tag}
+            </div>
+            <div className="text-sm font-bold text-primary-foreground">{ad.title}</div>
+          </div>
+          <button
+            type="button"
+            onClick={openRewardShop}
+            className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          >
+            {t('rewardShop.openShop', 'Abrir mercadinho')}
+          </button>
         </div>
-        <div className="text-sm font-bold text-primary-foreground">{ad.title}</div>
       </div>
     </div>
   );

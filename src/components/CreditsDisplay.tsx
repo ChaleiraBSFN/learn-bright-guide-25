@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCredits } from '@/hooks/useCredits';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,6 +15,12 @@ export const CreditsDisplay = () => {
   const navigate = useNavigate();
   const [shopOpen, setShopOpen] = useState(false);
   const shopGate = useUnderDevGate('shop');
+
+  useEffect(() => {
+    const onOpenShop = () => shopGate.guard(() => setShopOpen(true))();
+    window.addEventListener('open_reward_shop', onOpenShop);
+    return () => window.removeEventListener('open_reward_shop', onOpenShop);
+  }, [shopGate]);
 
   if (loading) {
     return (

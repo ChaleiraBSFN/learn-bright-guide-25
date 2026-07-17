@@ -52,6 +52,13 @@ export const FloatingActions = () => {
     return () => window.removeEventListener('lb_generating_changed', onGen);
   }, []);
 
+  // Open reward shop from banner CTAs
+  useEffect(() => {
+    const onOpenShop = () => shopGate.guard(() => setShowShop(true))();
+    window.addEventListener('open_reward_shop', onOpenShop);
+    return () => window.removeEventListener('open_reward_shop', onOpenShop);
+  }, [shopGate]);
+
 
   useEffect(() => {
     const checkSettings = () => {

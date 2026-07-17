@@ -766,7 +766,8 @@
     "limitInfo": "Límite de {{max}} anuncios por día.",
     "needLogin": "Inicia sesión para ganar créditos.",
     "tapForMore": "¡Toca para ganar más!",
-    "waitFullAd": "Espera a que termine el anuncio para recibir los créditos."
+    "waitFullAd": "Espera a que termine el anuncio para recibir los créditos.",
+    "openShop": "Abrir tienda de créditos"
   },
   "sectionGate": {
     "title": "En desarrollo",
