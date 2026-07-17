@@ -567,7 +567,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "What are credits for?",
+    "explanation": "Credits are used to generate study materials, exercises, and personalized study plans."
   },
   "ranking": {
     "title": "Achievement Ranking",

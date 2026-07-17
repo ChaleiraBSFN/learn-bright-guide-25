@@ -554,7 +554,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "Для чего нужны кредиты?",
+    "explanation": "Кредиты используются для создания учебных материалов, упражнений и персонализированных планов обучения."
   },
   "ranking": {
     "title": "Рейтинг достижений",

@@ -548,7 +548,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "¿Para qué sirven los créditos?",
+    "explanation": "Los créditos se usan para generar materiales de estudio, ejercicios y planes de estudio personalizados."
   },
   "ranking": {
     "title": "Ranking de Logros",

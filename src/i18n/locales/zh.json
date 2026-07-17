@@ -554,7 +554,9 @@
     "noCredits": "No credits",
     "signupForMore": "Create an account to get more credits!",
     "earnMore": "Complete trail challenges to earn more credits!",
-    "label": "Credits"
+    "label": "Credits",
+    "whatFor": "积分有什么用？",
+    "explanation": "积分用于生成学习材料、练习题和个性化学习计划。"
   },
   "ranking": {
     "title": "成就排行榜",
