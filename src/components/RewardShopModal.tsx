@@ -152,10 +152,10 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
                 <Button
                   onClick={() => canWatch && setPhase('watching')}
                   disabled={!canWatch}
-                  className="w-full gap-2"
+                  className="w-full gap-2 whitespace-normal break-words"
                   size="lg"
                 >
-                  <Play className="h-4 w-4" />
+                  <Play className="h-4 w-4 shrink-0" />
                   {canWatch
                     ? t('rewardShop.watchAd', 'Assistir anúncio')
                     : t('rewardShop.limitReached', 'Volte amanhã!')}
