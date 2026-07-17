@@ -119,21 +119,21 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
         ) : (
           <div className="space-y-4">
             <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Coins className="h-5 w-5 text-primary" />
-                  <span className="font-bold">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                <div className="flex items-start gap-2 min-w-0">
+                  <Coins className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <span className="font-bold break-words leading-tight">
                     {t('rewardShop.rewardLine', 'Assista 1 anúncio → +25 créditos')}
                   </span>
                 </div>
-                <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                  {t('rewardShop.remainingToday', '{{n}}/{{max}} hoje', { n: remaining, max: DAILY_LIMIT })}
+                <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium shrink-0 self-start sm:self-center">
+                  {t('rewardShop.remainingToday', '{{n}} de {{max}} usados hoje', { n: usedToday ?? 0, max: DAILY_LIMIT })}
                 </span>
               </div>
 
               {phase === 'watching' && (
                 <div className="space-y-3">
-                  <AdSenseSlot />
+                  <AdSenseSlot className="max-w-full" />
                   <Progress value={progress} className="h-2" />
                   <p className="text-xs text-center text-muted-foreground">
                     {t('rewardShop.watching', 'Aguarde o anúncio terminar…')} {Math.ceil(AD_DURATION_SECONDS * (1 - progress / 100))}s
