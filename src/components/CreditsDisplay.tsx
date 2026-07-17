@@ -16,6 +16,12 @@ export const CreditsDisplay = () => {
   const [shopOpen, setShopOpen] = useState(false);
   const shopGate = useUnderDevGate('shop');
 
+  useEffect(() => {
+    const onOpenShop = () => shopGate.guard(() => setShopOpen(true))();
+    window.addEventListener('open_reward_shop', onOpenShop);
+    return () => window.removeEventListener('open_reward_shop', onOpenShop);
+  }, [shopGate]);
+
   if (loading) {
     return (
       <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-xs">
