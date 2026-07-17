@@ -53,9 +53,10 @@ const ensureAdsenseScript = () =>
     document.head.appendChild(script);
   });
 
-export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
+export const AdSenseSlot = ({ className = '', hideCta = false }: { className?: string; hideCta?: boolean }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
 
   const insRef = useRef<HTMLModElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -171,13 +172,15 @@ export const AdSenseSlot = ({ className = '' }: { className?: string }) => {
             </div>
             <div className="text-sm font-bold text-primary-foreground">{ad.title}</div>
           </div>
-          <button
-            type="button"
-            onClick={openRewardShop}
-            className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-          >
-            {t('rewardShop.openShop', 'Abrir mercadinho')}
-          </button>
+          {!hideCta && (
+            <button
+              type="button"
+              onClick={openRewardShop}
+              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            >
+              {t('rewardShop.openShop', 'Abrir mercadinho')}
+            </button>
+          )}
         </div>
       </div>
     </div>
