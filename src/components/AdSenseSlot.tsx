@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
  * When ADSENSE_CLIENT/SLOT are filled, real AdSense display ads render instead.
  */
 export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
-export const ADSENSE_SLOT = ''; // preencha após criar o bloco no AdSense
+export const ADSENSE_SLOT = '7188987191';
 
 declare global {
   interface Window {
