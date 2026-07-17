@@ -778,7 +778,7 @@
     "title": "Mercadinho de créditos",
     "subtitle": "Ganhe créditos assistindo anúncios rápidos.",
     "rewardLine": "Assista 1 anúncio → +25 créditos",
-    "remainingToday": "{{n}}/{{max}} hoje",
+    "remainingToday": "{{n}} de {{max}} usados hoje",
     "watchAd": "Assistir anúncio",
     "watching": "Aguarde o anúncio terminar…",
     "granting": "Adicionando créditos…",

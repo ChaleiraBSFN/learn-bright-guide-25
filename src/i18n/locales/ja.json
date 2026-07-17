@@ -763,7 +763,7 @@
     "title": "クレジットショップ",
     "subtitle": "短い広告を見てクレジットを獲得。",
     "rewardLine": "1つの広告を視聴 → +25 クレジット",
-    "remainingToday": "本日 {{n}}/{{max}}",
+    "remainingToday": "本日 {{n}}/{{max}} 視聴済み",
     "watchAd": "広告を見る",
     "watching": "広告が終わるまでお待ちください…",
     "granting": "クレジットを追加中…",

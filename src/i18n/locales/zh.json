@@ -763,7 +763,7 @@
     "title": "积分商店",
     "subtitle": "观看短广告获取积分。",
     "rewardLine": "观看1个广告 → +25 积分",
-    "remainingToday": "今日 {{n}}/{{max}}",
+    "remainingToday": "今日已用 {{n}}/{{max}}",
     "watchAd": "观看广告",
     "watching": "请等待广告结束…",
     "granting": "正在添加积分…",

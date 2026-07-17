@@ -757,7 +757,7 @@
     "title": "Tienda de créditos",
     "subtitle": "Gana créditos viendo anuncios rápidos.",
     "rewardLine": "Mira 1 anuncio → +25 créditos",
-    "remainingToday": "{{n}}/{{max}} hoy",
+    "remainingToday": "{{n}} de {{max}} usados hoy",
     "watchAd": "Ver anuncio",
     "watching": "Espera a que termine el anuncio…",
     "granting": "Añadiendo créditos…",
