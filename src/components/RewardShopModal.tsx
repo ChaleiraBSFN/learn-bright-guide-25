@@ -97,7 +97,7 @@ export const RewardShopModal = ({ open, onOpenChange }: Props) => {
   return (
     <Dialog open={open} onOpenChange={(v) => phase === 'idle' && onOpenChange(v)}>
       <DialogContent
-        className={`max-w-lg ${phase !== 'idle' ? '[&>button]:hidden' : ''}`}
+        className={`w-[calc(100vw-2rem)] sm:max-w-lg max-h-[85vh] overflow-y-auto p-5 sm:p-6 ${phase !== 'idle' ? '[&>button]:hidden' : ''}`}
         onPointerDownOutside={(e) => phase !== 'idle' && e.preventDefault()}
         onEscapeKeyDown={(e) => phase !== 'idle' && e.preventDefault()}
         onInteractOutside={(e) => phase !== 'idle' && e.preventDefault()}
