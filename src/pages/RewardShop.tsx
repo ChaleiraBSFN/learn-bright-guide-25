@@ -47,7 +47,7 @@ export default function RewardShop() {
       }
     }, 200);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [phase]);
 
   const claim = async () => {

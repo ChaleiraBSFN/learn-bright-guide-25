@@ -120,7 +120,7 @@ const Index = () => {
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const { hasCredits, useCredit } = useCredits();
+  const { hasCredits, consumeCredit } = useCredits();
   const [isTranslating, setIsTranslating] = useState(false);
   const contentLanguageRef = useRef(i18n.language);
 
@@ -290,7 +290,7 @@ const Index = () => {
       // Set content first (renders behind overlay), then play finish animation
       setStudyContent(content);
       contentLanguageRef.current = i18n.language;
-      await useCredit();
+      await consumeCredit();
       saveToHistory("study", data.tema, data.nivel, content);
 
       // Start image generation IN PARALLEL with the finishing animation,
@@ -389,7 +389,7 @@ const Index = () => {
       // Set content first (renders behind overlay), then play finish animation
       setExerciseContent(content);
       contentLanguageRef.current = i18n.language;
-      await useCredit();
+      await consumeCredit();
       saveToHistory("exercise", data.tema, data.nivel, content, { quantidade: data.quantidade, dificuldade: data.dificuldade });
 
       toast({
@@ -467,7 +467,7 @@ const Index = () => {
       }
 
       setPlanContent(content);
-      await useCredit();
+      await consumeCredit();
       saveToHistory("study", data.tema, data.nivel, content, { kind: "plan", dias: data.dias });
 
       toast({ title: t('planForm.success'), description: t('planForm.successDesc') });

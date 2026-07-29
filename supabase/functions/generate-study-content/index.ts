@@ -34,7 +34,7 @@ function fixMathNotation(text: string): string {
   if (!text || typeof text !== 'string') return text;
   let out = text;
   out = out.replace(/\$\$([\s\S]+?)\$\$/g, '$1');
-  out = out.replace(/\$([^\$\n]+?)\$/g, '$1');
+  out = out.replace(/\$([^$\n]+?)\$/g, '$1');
   out = out.replace(/\\\(([\s\S]+?)\\\)/g, '($1)');
   out = out.replace(/\\\[([\s\S]+?)\\\]/g, '($1)');
   out = out.replace(/\\cdot/g, '·').replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\pm/g, '±');

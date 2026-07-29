@@ -159,7 +159,7 @@ const ChatBuddy = () => {
     }
     // clear nav state so refresh doesn't replay it
     if (initial) navigate(location.pathname, { replace: true, state: null });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   useEffect(() => {

@@ -39,7 +39,7 @@ function fixMathNotation(text: string): string {
   let out = text;
   // Remove blocos LaTeX: $$...$$ e $...$ (mantém o conteúdo)
   out = out.replace(/\$\$([\s\S]+?)\$\$/g, '$1');
-  out = out.replace(/\$([^\$\n]+?)\$/g, '$1');
+  out = out.replace(/\$([^$\n]+?)\$/g, '$1');
   // \(...\) e \[...\] → mantém conteúdo
   out = out.replace(/\\\(([\s\S]+?)\\\)/g, '($1)');
   out = out.replace(/\\\[([\s\S]+?)\\\]/g, '($1)');
