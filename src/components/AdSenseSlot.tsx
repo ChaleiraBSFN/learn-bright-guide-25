@@ -53,7 +53,11 @@ const ensureAdsenseScript = () =>
     document.head.appendChild(script);
   });
 
-export const AdSenseSlot = ({ className = '', hideCta = false }: { className?: string; hideCta?: boolean }) => {
+export const AdSenseSlot = ({
+  className = '',
+  hideCta = false,
+  variant = 'card',
+}: { className?: string; hideCta?: boolean; variant?: 'card' | 'compact' }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
