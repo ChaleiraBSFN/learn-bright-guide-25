@@ -150,7 +150,39 @@ export const AdSenseSlot = ({
   };
 
 
-  const promoFallback = (
+  const compactFallback = (
+    <div
+      className={`flex w-full items-center gap-3 overflow-hidden rounded-xl border-2 border-primary/25 bg-card p-2 ${className}`}
+    >
+      <video
+        key={ad.src}
+        src={ad.src}
+        autoPlay
+        muted
+        playsInline
+        onEnded={handleEnded}
+        className="h-16 w-28 shrink-0 rounded-lg object-cover"
+        preload="metadata"
+      />
+      <div className="min-w-0 flex-1">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          {t('rewardShop.adLabel', 'Anúncio')} · {ad.tag}
+        </div>
+        <div className="truncate text-sm font-bold text-foreground">{ad.title}</div>
+      </div>
+      {!hideCta && (
+        <button
+          type="button"
+          onClick={openRewardShop}
+          className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        >
+          {t('rewardShop.openShop', 'Abrir mercadinho')}
+        </button>
+      )}
+    </div>
+  );
+
+  const promoFallback = variant === 'compact' ? compactFallback : (
     <div
       className={`relative aspect-video w-full overflow-hidden rounded-xl border-2 border-primary/30 bg-foreground ${className}`}
     >
