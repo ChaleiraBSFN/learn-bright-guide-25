@@ -4,6 +4,7 @@ import { Download, Film, PlayCircle } from 'lucide-react';
 import { FloatingActions } from '@/components/FloatingActions';
 import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
+import { AdSenseSlot } from '@/components/AdSenseSlot';
 
 const downloadFile = async (url: string, filename: string) => {
   try {
@@ -77,6 +78,10 @@ export default function Downloads() {
               </Button>
             </div>
           ))}
+        </div>
+
+        <div className="mt-8">
+          <AdSenseSlot />
         </div>
 
         <p className="mt-6 text-sm text-muted-foreground text-center">
