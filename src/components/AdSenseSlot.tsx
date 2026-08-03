@@ -234,7 +234,7 @@ export const AdSenseSlot = ({
         className={`adsbygoogle block w-full transition-opacity duration-300 ${
           adState === 'filled' ? 'opacity-100' : 'pointer-events-none opacity-0 absolute inset-0'
         }`}
-        style={{ display: 'block', minHeight: 250 }}
+        style={{ display: 'block', minHeight: variant === 'compact' ? 90 : 250 }}
         data-ad-client={ADSENSE_CLIENT}
         data-ad-slot={ADSENSE_SLOT}
         data-ad-format="auto"
