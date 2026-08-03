@@ -6,6 +6,7 @@ import { ArrowLeft, Send, Loader2, Sparkles, Trash2, ImagePlus, X, Copy, Check }
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SEO } from "@/components/SEO";
+import { AdSenseSlot } from "@/components/AdSenseSlot";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -378,6 +379,9 @@ const ChatBuddy = () => {
                     {s}
                   </button>
                 ))}
+              </div>
+              <div className="max-w-xl mx-auto pt-4">
+                <AdSenseSlot variant="compact" />
               </div>
             </div>
           )}

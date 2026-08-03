@@ -497,9 +497,66 @@ const Index = () => {
   const showingResult = studyContent || exerciseContent || planContent;
   const viewKey = showingResult ? (studyContent ? "study-result" : planContent ? "plan-result" : "exercise-result") : "form";
 
+  // SEO dinâmico: resultados de estudo viram páginas ricas e indexáveis
+  const seoProps = (() => {
+    const clean = (s: string) => s.replace(/\s+/g, " ").trim();
+    const cut = (s: string, n = 155) => (s.length > n ? `${clean(s).slice(0, n - 1)}…` : clean(s));
+
+    if (studyContent && currentTema) {
+      const resumo = clean(studyContent.resumo?.conteudo || studyContent.objetivo?.conteudo || "");
+      const topics = (studyContent.demonstracoes?.passos || []).map((p) => p.titulo).filter(Boolean);
+      const description = cut(
+        resumo || `Resumo completo, exemplos práticos, exercícios e mapa mental sobre ${currentTema}.`
+      );
+      return {
+        title: `${clean(currentTema)} — Resumo, Exemplos e Exercícios | Studdy Buddy`,
+        description,
+        path: "/",
+        type: "article",
+        keywords: [currentTema, "resumo", "exercícios resolvidos", "mapa mental", "estudar com IA", "Studdy Buddy", ...topics.slice(0, 5)].join(", "),
+        jsonLd: {
+          "@context": "https://schema.org",
+          "@type": "LearningResource",
+          name: `${clean(currentTema)} — material de estudo`,
+          description,
+          inLanguage: "pt-BR",
+          learningResourceType: ["Resumo", "Exercícios", "Mapa mental"],
+          educationalLevel: currentNivel || "medio",
+          about: { "@type": "Thing", name: clean(currentTema) },
+          teaches: topics.slice(0, 8),
+          isAccessibleForFree: true,
+          publisher: { "@type": "Organization", name: "Studdy Buddy", url: "https://studdybuddy.com.br" },
+          hasPart: (studyContent.exercicios?.lista || []).slice(0, 5).map((ex) => ({
+            "@type": "Question",
+            name: clean(ex.pergunta),
+            acceptedAnswer: { "@type": "Answer", text: cut(ex.resposta || ex.explicacao || "", 300) },
+          })),
+        } as Record<string, unknown>,
+      };
+    }
+
+    if (planContent && currentPlanTema) {
+      return {
+        title: `Plano de estudos de ${clean(currentPlanTema)} | Studdy Buddy`,
+        description: cut(`Cronograma de estudos personalizado e gratuito sobre ${currentPlanTema}, com metas diárias, tarefas e checkpoints.`),
+        path: "/",
+        type: "article",
+        keywords: `${currentPlanTema}, plano de estudos, cronograma, rotina de estudo, Studdy Buddy`,
+      };
+    }
+
+    return {
+      title: "Learn Buddy – Estude com IA grátis",
+      description:
+        "Plataforma 100% gratuita para estudar com IA: resumos, exercícios corrigidos, mapas mentais e plano de estudos personalizado.",
+      path: "/",
+    };
+  })();
+
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <SEO title="Learn Buddy – Estude com IA grátis" description="Plataforma 100% gratuita para estudar com IA: resumos, exercícios corrigidos, mapas mentais e plano de estudos personalizado." path="/" />
+      <SEO {...seoProps} />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">

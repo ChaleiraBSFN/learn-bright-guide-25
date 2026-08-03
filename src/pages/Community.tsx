@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { SEO } from '@/components/SEO';
+import { AdSenseSlot } from '@/components/AdSenseSlot';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR, enUS, es, fr, de, it, ja, zhCN, ru } from 'date-fns/locale';
 
@@ -189,6 +190,7 @@ export default function Community() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+        <AdSenseSlot variant="compact" />
         {!user && (
           <Card className="p-4 border-2 border-dashed text-center">
             <p className="text-sm text-muted-foreground mb-3">{t('community.loginPrompt')}</p>
