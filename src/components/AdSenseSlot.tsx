@@ -137,7 +137,7 @@ export const AdSenseSlot = ({
       window.clearTimeout(fallbackTimer);
       observer.disconnect();
     };
-  }, [hasAdsense, adState]);
+  }, [hasAdsense]);
 
   const ad = useMemo(() => LEARN_BUDDY_ADS[index], [index]);
 
