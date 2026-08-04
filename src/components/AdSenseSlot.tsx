@@ -11,7 +11,12 @@ export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
 export const ADSENSE_SLOT = '7188987191';
 const ADSENSE_SCRIPT_ID = 'learn-buddy-adsense-script';
 const ADSENSE_FALLBACK_DELAY_MS = 3500;
-const ADSENSE_ALLOWED_HOSTS = ['studdybuddy.com.br', 'www.studdybuddy.com.br', 'learn-bright-guide-25.lovable.app'];
+const ADSENSE_ALLOWED_HOSTS = [
+  'studdybuddy.com.br',
+  'www.studdybuddy.com.br',
+  'learn-bright-guide-25.lovable.app',
+  'id-preview--9687ee74-66ca-4d7e-ac8e-7257bce45838.lovable.app',
+];
 
 declare global {
   interface Window {
