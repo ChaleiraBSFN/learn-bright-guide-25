@@ -182,8 +182,9 @@ serve(async (req) => {
     geminiKeys.sort(() => Math.random() - 0.5);
 
     const models = hasImage
-      ? ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
-      : ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash"];
+      ? ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
+      : ["gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-1.5-flash"];
+
 
     // Try keys/models until one starts streaming successfully (returns 200 and first chunk)
     let upstream: Response | null = null;
