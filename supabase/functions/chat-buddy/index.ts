@@ -102,7 +102,7 @@ async function streamGemini(model: string, contents: any[], systemInstruction: s
         systemInstruction: { parts: [{ text: systemInstruction }] },
         contents,
         safetySettings,
-        generationConfig: { temperature: 0.85, maxOutputTokens: 4096 },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1600, topP: 0.9 },
       }),
       signal,
     }
