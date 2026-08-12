@@ -232,8 +232,10 @@ const ChatBuddy = () => {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let acc = "";
-      let raf = 0;
+      let lastFlush = 0;
+      let timer: number | undefined;
       const flush = () => {
+        lastFlush = performance.now();
         setMessages(curr => {
           const copy = [...curr];
           const last = copy[copy.length - 1];
@@ -243,20 +245,24 @@ const ChatBuddy = () => {
           return copy;
         });
       };
+      const scheduleFlush = () => {
+        if (timer) return;
+        const wait = Math.max(0, 90 - (performance.now() - lastFlush));
+        timer = window.setTimeout(() => {
+          timer = undefined;
+          flush();
+        }, wait);
+      };
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         acc += decoder.decode(value, { stream: true });
-        if (!raf) {
-          raf = requestAnimationFrame(() => {
-            raf = 0;
-            flush();
-          });
-        }
+        scheduleFlush();
       }
       acc += decoder.decode();
-      if (raf) cancelAnimationFrame(raf);
+      if (timer) clearTimeout(timer);
       flush();
+
       if (!acc.trim()) throw new Error(t("chatBuddy.error", "Falha ao responder."));
 
       // Save / update the conversation in the study history (logged users)
