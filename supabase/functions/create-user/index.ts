@@ -65,13 +65,22 @@ serve(async (req) => {
       });
     }
 
-    // Create user with admin API (email must be confirmed by the user)
-    const { data: userData, error } = await supabaseAdmin.auth.admin.createUser({
+    // Standard signup flow: Supabase sends a confirmation email and the account
+    // is not auto-confirmed (no email ownership bypass).
+    const origin = req.headers.get("origin") || undefined;
+    const supabasePublic = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+    );
+    const { data: userData, error } = await supabasePublic.auth.signUp({
       email,
       password,
-      email_confirm: false,
-      user_metadata: data || {},
+      options: {
+        data: data || {},
+        emailRedirectTo: origin ? `${origin}/` : undefined,
+      },
     });
+
 
 
     if (error) {
