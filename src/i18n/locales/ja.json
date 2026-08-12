@@ -157,7 +157,7 @@
     "forgotPassword": "パスワードを忘れた？",
     "enterEmailFirst": "まずメールアドレスを入力してください",
     "invalidEmail": "無効なメール",
-    "passwordMinLength": "6文字以上",
+    "passwordMinLength": "8文字以上",
     "passwordRequired": "必須",
     "passwordMinLengthError": "別のパスワードを試してください。",
     "passwordSuggestionTitle": "💡 ヒント",

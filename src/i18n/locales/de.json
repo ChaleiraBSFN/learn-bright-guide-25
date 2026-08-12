@@ -157,7 +157,7 @@
     "forgotPassword": "Passwort vergessen?",
     "enterEmailFirst": "Geben Sie zuerst Ihre E-Mail oben ein",
     "invalidEmail": "Ungültige E-Mail",
-    "passwordMinLength": "Mindestens 6 Zeichen",
+    "passwordMinLength": "Mindestens 8 Zeichen",
     "passwordRequired": "Erforderlich",
     "passwordMinLengthError": "Versuchen Sie ein anderes.",
     "passwordSuggestionTitle": "💡 Tipp",

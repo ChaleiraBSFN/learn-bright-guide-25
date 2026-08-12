@@ -170,7 +170,7 @@
     "resetLinkInfo": "O link abrirá uma página do Learn Buddy onde você poderá digitar seu email cadastrado e sua nova senha.",
     "enterEmailFirst": "Digite seu email acima primeiro",
     "invalidEmail": "Email inválido",
-    "passwordMinLength": "Senha deve ter pelo menos 6 caracteres",
+    "passwordMinLength": "Senha deve ter pelo menos 8 caracteres",
     "passwordRequired": "Senha é obrigatória",
     "passwordMinLengthError": "Tente outra senha.",
     "passwordSuggestionTitle": "💡 Dica",

@@ -157,7 +157,7 @@
     "forgotPassword": "Забыли пароль?",
     "enterEmailFirst": "Сначала введите ваш email выше",
     "invalidEmail": "Неверный email",
-    "passwordMinLength": "Минимум 6 символов",
+    "passwordMinLength": "Минимум 8 символов",
     "passwordRequired": "Обязательно",
     "passwordMinLengthError": "Попробуйте другой.",
     "passwordSuggestionTitle": "💡 Совет",
