@@ -71,8 +71,9 @@ const Auth = () => {
 
   const signupSchema = z.object({
     email: z.string().email(t('auth.invalidEmail')),
-    password: z.string().min(1, t('auth.passwordRequired')),
-    confirmPassword: z.string().min(1, t('auth.passwordRequired')),
+    password: z.string().min(8, t('auth.passwordMinLength')).max(128),
+    confirmPassword: z.string().min(8, t('auth.passwordMinLength')),
+
     firstName: z.string().min(1, t('auth.firstNameMinLength')),
     lastName: z.string().min(1, t('auth.lastNameMinLength')),
     displayName: z.string().min(1, t('auth.nameMinLength')).max(50, t('auth.nameMaxLength')),

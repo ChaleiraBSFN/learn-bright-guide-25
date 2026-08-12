@@ -58,20 +58,21 @@ serve(async (req) => {
       });
     }
 
-    if (typeof password !== 'string' || password.length < 1 || password.length > 128) {
-      return new Response(JSON.stringify({ error: "Erro ao criar conta. Verifique os dados e tente novamente." }), {
+    if (typeof password !== 'string' || password.length < 8 || password.length > 128) {
+      return new Response(JSON.stringify({ error: "A senha deve ter pelo menos 8 caracteres." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Create user with admin API (bypasses password strength checks)
+    // Create user with admin API (email must be confirmed by the user)
     const { data: userData, error } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
-      email_confirm: true,
+      email_confirm: false,
       user_metadata: data || {},
     });
+
 
     if (error) {
       // Generic error to prevent email enumeration
