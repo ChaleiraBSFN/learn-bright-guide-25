@@ -40,11 +40,30 @@ serve(async (req) => {
 
     const user = userData.user;
     if (!user?.email) throw new Error("User not authenticated or email not available");
-    logStep("User authenticated", { userId: user.id, email: user.email });
+    logStep("User authenticated", { userId: user.id });
+
+    // Per-user rate limiting to prevent mail flooding
+    const serviceClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+    const { data: allowed } = await serviceClient.rpc("check_rate_limit", {
+      _user_id: user.id,
+      _endpoint: "notify-support-request",
+      _max_requests: 5,
+      _window_minutes: 60,
+    });
+    if (allowed === false) {
+      return new Response(JSON.stringify({ error: "Muitas solicitações. Tente novamente mais tarde." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Parse request body
     const { message, messageId } = await req.json();
-    logStep("Request data", { messageId, messagePreview: message?.substring(0, 50) });
+    logStep("Request data", { messageId });
+
 
     // Initialize Resend
     const resend = new Resend(resendKey);

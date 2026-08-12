@@ -157,7 +157,7 @@
     "forgotPassword": "忘记密码？",
     "enterEmailFirst": "请先在上方输入您的邮箱",
     "invalidEmail": "无效邮箱",
-    "passwordMinLength": "至少6个字符",
+    "passwordMinLength": "至少8个字符",
     "passwordRequired": "必填",
     "passwordMinLengthError": "请尝试其他密码。",
     "passwordSuggestionTitle": "💡 提示",

@@ -157,7 +157,7 @@
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "enterEmailFirst": "Ingresa tu correo arriba primero",
     "invalidEmail": "Correo inválido",
-    "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+    "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
     "passwordRequired": "La contraseña es obligatoria",
     "passwordMinLengthError": "Prueba otra contraseña.",
     "passwordSuggestionTitle": "💡 Consejo",

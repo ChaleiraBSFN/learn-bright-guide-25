@@ -157,7 +157,7 @@
     "forgotPassword": "Mot de passe oublié ?",
     "enterEmailFirst": "Entrez d'abord votre e-mail ci-dessus",
     "invalidEmail": "E-mail invalide",
-    "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+    "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères",
     "passwordRequired": "Le mot de passe est requis",
     "passwordMinLengthError": "Essayez un autre mot de passe.",
     "passwordSuggestionTitle": "💡 Conseil",

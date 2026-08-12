@@ -170,7 +170,7 @@
     "resetLinkInfo": "The link will open a Learn Buddy page where you can enter your registered email and your new password.",
     "enterEmailFirst": "Enter your email above first",
     "invalidEmail": "Invalid email",
-    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordMinLength": "Password must be at least 8 characters",
     "passwordRequired": "Password is required",
     "passwordMinLengthError": "Try another password.",
     "passwordSuggestionTitle": "💡 Tip",

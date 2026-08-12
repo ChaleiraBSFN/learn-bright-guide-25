@@ -437,13 +437,11 @@ function CreatePostDialog({ open, onClose, onCreated }: { open: boolean; onClose
           setSubmitting(false);
           return;
         }
-
-        const ext = imageFile.name.split('.').pop() || 'jpg';
-        const path = `${user.id}/${Date.now()}.${ext}`;
-        const { error: upErr } = await supabase.storage.from('community-images').upload(path, imageFile, { contentType: imageFile.type, upsert: false });
-        if (upErr) { toast.error(t('community.errUpload')); setSubmitting(false); return; }
-        imageUrl = supabase.storage.from('community-images').getPublicUrl(path).data.publicUrl;
+        if (!modData?.imageUrl) { toast.error(t('community.errUpload')); setSubmitting(false); return; }
+        // Upload is performed server-side after moderation passes.
+        imageUrl = modData.imageUrl as string;
       }
+
 
       const { error } = await supabase.from('community_posts').insert({
         user_id: user.id, type, title: title.trim(),

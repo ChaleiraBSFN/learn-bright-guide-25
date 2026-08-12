@@ -110,9 +110,33 @@ Mark as SAFE (safe: true) for: study materials, exercises, notebooks, books, cla
       parsed = { safe: false, reason: "Could not analyze image" };
     }
 
-    return new Response(JSON.stringify({ safe: !!parsed.safe, reason: parsed.reason || "" }), {
+    const isSafe = !!parsed.safe;
+    if (!isSafe) {
+      return new Response(JSON.stringify({ safe: false, reason: parsed.reason || "" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Server-side upload: only images that passed moderation reach the bucket.
+    const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+    const ext = (mimeType.split("/")[1] || "jpg").replace(/[^a-z0-9]/gi, "").slice(0, 5) || "jpg";
+    const path = `${user.id}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+    const { error: upErr } = await serviceClient.storage
+      .from("community-images")
+      .upload(path, bytes, { contentType: mimeType, upsert: false });
+    if (upErr) {
+      console.error("upload error:", upErr.message);
+      return new Response(JSON.stringify({ error: "Upload failed" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const imageUrl = serviceClient.storage.from("community-images").getPublicUrl(path).data.publicUrl;
+
+    return new Response(JSON.stringify({ safe: true, reason: "", imageUrl }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
+
   } catch (e) {
     console.error("moderate error:", e);
     return new Response(JSON.stringify({ error: "Internal error" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
