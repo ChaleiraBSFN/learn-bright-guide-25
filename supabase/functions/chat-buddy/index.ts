@@ -102,7 +102,13 @@ async function streamGemini(model: string, contents: any[], systemInstruction: s
         systemInstruction: { parts: [{ text: systemInstruction }] },
         contents,
         safetySettings,
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1600, topP: 0.9 },
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1600,
+          topP: 0.9,
+          // Disable "thinking" on 2.5 models — it adds several seconds of latency
+          ...(model.startsWith("gemini-2.5") ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+        },
       }),
       signal,
     }
