@@ -1,82 +1,35 @@
-# Plano: Anúncios recompensados + Admin toggle de seções
+# Plano: corrigir a exibição dos anúncios AdSense
 
-## Parte 1 — Sistema de anúncios (Google AdSense)
+## Diagnóstico confirmado
 
-### Fluxo do usuário
-1. Novo ícone flutuante "mercadinho" (`ShoppingBag`) abaixo da trilha de progresso, ao lado dos outros FABs.
-2. Clique abre modal **RewardShopModal** com card "Ganhe 25 créditos assistindo um anúncio" mostrando contador diário (X/3 usados).
-3. Ao clicar "Assistir anúncio":
-   - Carrega slot AdSense (display/video) num container do modal.
-   - Timer de 20s obrigatório (barra de progresso, botão bloqueado).
-   - Ao completar, chama edge function `claim-ad-reward` → valida limite diário → adiciona 25 créditos.
-4. Toast "+25 créditos!" e modal fecha.
+- O site publicado carrega corretamente o script do AdSense com o publisher `ca-pub-3378474598402206`.
+- O `ads.txt` está público e contém o mesmo publisher.
+- A requisição de anúncio chega ao Google com resposta HTTP 200, mas o Google marca o resultado como `unfilled` — não entregou uma campanha para essa impressão.
+- Na página inicial sem resultados, o bloco manual `7188987191` não é montado. O único elemento detectado é criado pelos anúncios automáticos, fica com tamanho `0 × 0` e termina como `unfilled`.
+- Os blocos manuais atuais aparecem apenas em telas condicionais, como histórico, resultados gerados, comunidade, chat vazio, downloads e mercadinho.
 
-### Backend
-**Nova tabela `ad_rewards`** (registra cada anúncio assistido, usado como limite diário):
-```
-id, user_id, watched_at (timestamptz default now()), credits_granted int default 25
-```
-+ RLS: usuário vê os seus; service_role tudo. GRANTs padrão.
+## Alterações
 
-**Edge function `claim-ad-reward`**:
-- Valida JWT (auth do usuário).
-- Conta linhas em `ad_rewards` do user nas últimas 24h.
-- Se `>= 3` → 429 "Limite diário atingido".
-- Insere linha + chama `add_credits(_user_id, 25)`.
-- Retorna `{ credits_remaining, used_today, limit: 3 }`.
-- Rate limit anti-abuso: exige mínimo de 18s desde a última chamada do mesmo user.
+1. **Adicionar um bloco manual elegível na página inicial**
+   - Exibir uma unidade responsiva em uma posição estável abaixo da área principal de estudo, sem interromper formulário ou navegação.
+   - Manter o vídeo promocional atual apenas como fallback quando o Google confirmar que não preencheu a impressão.
 
-### AdSense
-- Adicionar `<script async src="pagead2.googlesyndication.com/...client=ca-pub-XXX">` no `index.html`.
-- Componente `<AdSenseSlot slotId="..." />` que faz `(adsbygoogle=window.adsbygoogle||[]).push({})`.
-- **Pedirei o Publisher ID (`ca-pub-...`) e o Ad Slot ID** no chat depois de aprovar o plano — são valores públicos que vão direto no código.
-- Enquanto o AdSense não aprovar a conta, o slot mostra placeholder mas o timer/recompensa já funcionam (permite testar).
+2. **Tornar o componente AdSense mais confiável**
+   - Reservar largura e altura válidas antes de solicitar o anúncio, evitando requisições com formato `0x0`.
+   - Solicitar o anúncio somente depois que o container estiver montado, visível e com largura mensurável.
+   - Garantir uma única chamada ao AdSense por montagem, inclusive durante navegação interna da SPA.
+   - Detectar corretamente `filled` e `unfilled`, mostrando o anúncio real no primeiro caso e o fallback no segundo.
+   - Preservar os formatos normal e compacto e o comportamento responsivo em celular e desktop.
 
-## Parte 2 — Admin toggle de seções ("Em desenvolvimento")
+3. **Revisar os pontos existentes**
+   - Confirmar que comunidade, Chat Buddy, downloads, histórico, resultados e mercadinho entregam ao Google containers com dimensões válidas.
+   - Não adicionar anúncios extras nem alterar o sistema de recompensa.
 
-### Nova tabela `section_flags`
-```
-id, section_key text unique, enabled bool default true,
-title text, message text, cta_label text, cta_url text,
-updated_at, updated_by uuid
-```
-+ RLS: `SELECT` público (authenticated + anon), `UPDATE/INSERT` só admin. GRANTs.
+4. **Validação**
+   - Verificar no navegador as requisições, o `data-ad-client`, o `data-ad-slot`, as dimensões e o status final de cada bloco.
+   - Testar página inicial e uma rota com anúncio compacto em desktop e mobile.
+   - Confirmar que bloqueadores ou falta de inventário não quebram o layout e acionam o fallback.
 
-Seed inicial com todas as seções principais:
-`ranking`, `trail`, `study_groups`, `community`, `history`, `shop`, `carousel`, `promo_banners`, `engine_status`, `subscription`, `pix`, `password_recovery`, `demo_examples`, `exercises`, `study_plan`, `image_ocr`.
+## Limite externo
 
-### Componente `<SectionGate sectionKey="ranking">{children}</SectionGate>`
-- Assina realtime na tabela.
-- Se `enabled=true` → renderiza children.
-- Se `false` → renderiza card "Em desenvolvimento" com `title`, `message` e botão que abre `cta_url` (interno via router ou externo).
-- Fallback default se a linha não existir: `enabled=true` (não quebra nada).
-
-### Painel admin — nova aba "Seções"
-- Tabela editável (uma linha por section_key).
-- Toggle enabled + inputs title/message/cta_label/cta_url.
-- Botão "Salvar" faz update via `supabase.from('section_flags').update(...)`.
-- Preview em tempo real da mensagem "em desenvolvimento".
-
-### Aplicação nas telas
-Envolver componentes/rotas existentes com `<SectionGate>`:
-- `RankingPage`, `TrailPage`, `StudyGroupsPage`, `CommunityPage`, `HistoryPage`, `FeatureCarousel`, banners, etc.
-- Uso mínimo-invasivo: um wrapper por seção principal.
-
-## Parte 3 — i18n
-Todas as strings novas (modal do mercadinho, tela "em desenvolvimento", painel admin de seções) traduzidas nos 9 idiomas conforme a regra do projeto.
-
-## Ordem de execução
-1. Migração: `ad_rewards` + `section_flags` + seed.
-2. Edge function `claim-ad-reward`.
-3. `SectionGate` + wrapper das seções.
-4. Aba admin "Seções".
-5. FAB "mercadinho" + `RewardShopModal` + `AdSenseSlot`.
-6. Script AdSense no `index.html` (após você me passar o publisher ID).
-7. Traduções.
-
-## Detalhes técnicos
-- AdSense **não paga rewarded video oficialmente**; usaremos display ads dentro do modal com timer de 20s. É a estratégia usual em sites web para monetizar sem violar políticas. Alternativas (Adsterra rewarded, AdMob via Capacitor) podem ser plugadas depois trocando só o componente `<AdSenseSlot>`.
-- Limite 3/dia é enforced no server (edge function), não confia no client.
-- `SectionGate` usa realtime channel, então quando você desativa no admin todos os usuários veem a mudança em ~1s sem reload.
-
-Confirma que posso seguir? Se sim, já me passa (ou depois) o **Publisher ID do AdSense** (`ca-pub-...`) — sem ele deixo o placeholder ativo.
+Esta correção fará todos os espaços manuais serem enviados corretamente e permanecerem elegíveis. Ela não consegue obrigar o Google a preencher uma impressão: se o status continuar `unfilled` depois disso, a causa restante estará na entrega/inventário da conta AdSense, e não na integração do site.
