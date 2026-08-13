@@ -85,6 +85,7 @@ export const AdSenseSlot = ({
     let attempts = 0;
     let fallbackTimer: number | undefined;
     let retryTimer: number | undefined;
+    let isNearViewport = false;
 
     const updateFromAdStatus = () => {
       const status = insRef.current?.getAttribute('data-ad-status');
@@ -109,7 +110,7 @@ export const AdSenseSlot = ({
 
       const containerWidth = containerRef.current?.getBoundingClientRect().width ?? 0;
       const isVisible = containerRef.current?.getClientRects().length;
-      if (!isVisible || containerWidth < ADSENSE_MIN_WIDTH) return;
+      if (!isNearViewport || !isVisible || containerWidth < ADSENSE_MIN_WIDTH) return;
 
       try {
         await ensureAdsenseScript();
@@ -144,12 +145,12 @@ export const AdSenseSlot = ({
 
     const intersectionObserver = new IntersectionObserver(
       (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) void tryPush();
+        isNearViewport = entries.some((entry) => entry.isIntersecting);
+        if (isNearViewport) void tryPush();
       },
       { rootMargin: '200px 0px' },
     );
     if (containerRef.current) intersectionObserver.observe(containerRef.current);
-    void tryPush();
 
     return () => {
       isCancelled = true;
