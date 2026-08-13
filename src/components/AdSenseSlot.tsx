@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 
 /**
@@ -10,7 +11,8 @@ import { useNavigate } from 'react-router-dom';
 export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
 export const ADSENSE_SLOT = '7188987191';
 const ADSENSE_SCRIPT_ID = 'learn-buddy-adsense-script';
-const ADSENSE_FALLBACK_DELAY_MS = 3500;
+const ADSENSE_FALLBACK_DELAY_MS = 8000;
+const ADSENSE_MIN_WIDTH = 250;
 const ADSENSE_ALLOWED_HOSTS = [
   'studdybuddy.com.br',
   'www.studdybuddy.com.br',
@@ -66,7 +68,7 @@ export const AdSenseSlot = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const insRef = useRef<HTMLModElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pushedRef = useRef(false);
@@ -81,6 +83,9 @@ export const AdSenseSlot = ({
     if (!hasAdsense) return;
     let isCancelled = false;
     let attempts = 0;
+    let fallbackTimer: number | undefined;
+    let retryTimer: number | undefined;
+    let isNearViewport = false;
 
     const updateFromAdStatus = () => {
       const status = insRef.current?.getAttribute('data-ad-status');
@@ -92,15 +97,6 @@ export const AdSenseSlot = ({
       }
     };
 
-    const fallbackTimer = window.setTimeout(() => {
-      if (!isCancelled && adState !== 'filled') {
-        updateFromAdStatus();
-        if (insRef.current?.getAttribute('data-ad-status') !== 'filled') {
-          setAdState('fallback');
-        }
-      }
-    }, ADSENSE_FALLBACK_DELAY_MS);
-
     const observer = new MutationObserver(updateFromAdStatus);
     if (insRef.current) {
       observer.observe(insRef.current, {
@@ -110,7 +106,11 @@ export const AdSenseSlot = ({
     }
 
     const tryPush = async () => {
-      if (isCancelled) return;
+      if (isCancelled || pushedRef.current) return;
+
+      const containerWidth = containerRef.current?.getBoundingClientRect().width ?? 0;
+      const isVisible = containerRef.current?.getClientRects().length;
+      if (!isNearViewport || !isVisible || containerWidth < ADSENSE_MIN_WIDTH) return;
 
       try {
         await ensureAdsenseScript();
@@ -118,6 +118,11 @@ export const AdSenseSlot = ({
         (window.adsbygoogle = window.adsbygoogle || []).push({});
         pushedRef.current = true;
         window.setTimeout(updateFromAdStatus, 800);
+        fallbackTimer = window.setTimeout(() => {
+          if (!isCancelled && insRef.current?.getAttribute('data-ad-status') !== 'filled') {
+            setAdState('fallback');
+          }
+        }, ADSENSE_FALLBACK_DELAY_MS);
       } catch (e) {
         const message = e instanceof Error ? e.message : '';
 
@@ -128,19 +133,32 @@ export const AdSenseSlot = ({
         }
 
         if (attempts++ < 10) {
-          window.setTimeout(tryPush, 500);
+          retryTimer = window.setTimeout(tryPush, 500);
         } else {
           setAdState('fallback');
         }
       }
     };
 
-    tryPush();
+    const resizeObserver = new ResizeObserver(() => void tryPush());
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
+
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        isNearViewport = entries.some((entry) => entry.isIntersecting);
+        if (isNearViewport) void tryPush();
+      },
+      { rootMargin: '200px 0px' },
+    );
+    if (containerRef.current) intersectionObserver.observe(containerRef.current);
 
     return () => {
       isCancelled = true;
-      window.clearTimeout(fallbackTimer);
+      if (fallbackTimer) window.clearTimeout(fallbackTimer);
+      if (retryTimer) window.clearTimeout(retryTimer);
       observer.disconnect();
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
     };
   }, [hasAdsense]);
 
@@ -176,13 +194,14 @@ export const AdSenseSlot = ({
         <div className="truncate text-sm font-bold text-foreground">{ad.title}</div>
       </div>
       {!hideCta && (
-        <button
+        <Button
           type="button"
+          size="sm"
           onClick={openRewardShop}
-          className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="h-auto shrink-0 px-3 py-1.5 text-xs"
         >
           {t('rewardShop.openShop', 'Abrir mercadinho')}
-        </button>
+        </Button>
       )}
     </div>
   );
@@ -203,7 +222,7 @@ export const AdSenseSlot = ({
         preload="auto"
       />
       <div className="absolute right-2 top-2 rounded-full bg-background/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground backdrop-blur-sm">
-        Anúncio
+        {t('rewardShop.adLabel', 'Anúncio')}
       </div>
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/90 to-transparent p-3">
         <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -214,13 +233,14 @@ export const AdSenseSlot = ({
             <div className="text-sm font-bold text-primary-foreground">{ad.title}</div>
           </div>
           {!hideCta && (
-            <button
+            <Button
               type="button"
+              size="sm"
               onClick={openRewardShop}
-              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="h-auto shrink-0 px-3 py-1.5 text-xs"
             >
               {t('rewardShop.openShop', 'Abrir mercadinho')}
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -232,12 +252,17 @@ export const AdSenseSlot = ({
   }
 
   return (
-    <div className={`relative w-full overflow-hidden rounded-xl ${className}`}>
-      {adState !== 'filled' && <div className="relative z-10">{promoFallback}</div>}
+    <div
+      ref={containerRef}
+      className={`relative w-full min-w-0 overflow-hidden rounded-xl bg-muted/20 ${
+        variant === 'compact' ? 'min-h-[90px]' : 'min-h-[250px]'
+      } ${className}`}
+    >
+      {adState === 'fallback' && <div className="relative z-10">{promoFallback}</div>}
       <ins
         ref={insRef}
-        className={`adsbygoogle block w-full transition-opacity duration-300 ${
-          adState === 'filled' ? 'opacity-100' : 'pointer-events-none opacity-0 absolute inset-0'
+        className={`adsbygoogle w-full transition-opacity duration-300 ${
+          adState === 'fallback' ? 'hidden' : 'block opacity-100'
         }`}
         style={{ display: 'block', minHeight: variant === 'compact' ? 90 : 250 }}
         data-ad-client={ADSENSE_CLIENT}

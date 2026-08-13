@@ -704,16 +704,16 @@ const Index = () => {
                             setExerciseContent(content);
                           }}
                         />
-                        <div className="mt-6">
-                          <Suspense fallback={null}>
-                            <AdSenseSlot />
-                          </Suspense>
-                        </div>
                       </Suspense>
                     )}
                   </motion.div>
                 </AnimatePresence>
               </Tabs>
+              <div className="pt-2">
+                <Suspense fallback={<div className="min-h-[90px] rounded-xl bg-muted/20" />}>
+                  <AdSenseSlot variant="compact" />
+                </Suspense>
+              </div>
             </motion.div>
           ) : studyContent ? (
             <motion.div
