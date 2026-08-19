@@ -922,6 +922,15 @@ const Index = () => {
         )}
       </AnimatePresence>
 
+      {/* Learn Buddy Footer Ad */}
+      <section className="w-full px-4 py-6">
+        <div className="container mx-auto max-w-4xl">
+          <Suspense fallback={null}>
+            <AdSenseSlot variant="card" />
+          </Suspense>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-border bg-muted/30 py-6 mt-12">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground space-y-2">
