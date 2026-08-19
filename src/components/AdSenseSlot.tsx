@@ -90,6 +90,7 @@ export const AdSenseSlot = ({
     let cycleTimer: number | undefined;
     let isNearViewport = false;
     pushedRef.current = false;
+    if (cycle > 0) setAdState('loading');
 
     const scheduleRetryCycle = () => {
       if (cycleTimer || cycle >= ADSENSE_MAX_RETRIES) return;
