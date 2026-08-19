@@ -619,7 +619,7 @@
     "s3L3": "Das Kredit- und Gamification-System zu verwalten (Fortschrittspfad, Rangliste).",
     "s3L4": "Die Teilnahme an Lerngruppen zu ermöglichen (nur mit Ihrer Zustimmung).",
     "s3L5": "Die Qualität der KI-Antworten basierend auf dem Lernkontext zu verbessern.",
-    "s3Outro": "Wir verkaufen Ihre Daten niemals an Dritte. Wir verwenden Ihre Daten niemals für gezielte Werbung.",
+    "s3Outro": "Wir verkaufen Ihre personenbezogenen Daten niemals. Wir zeigen Google-AdSense-Anzeigen, um die Plattform kostenlos zu halten; im Cookie-Hinweis wählen Sie zwischen personalisierten und nicht personalisierten Anzeigen.",
     "s4Title": "4. Künstliche Intelligenz und Datenverarbeitung",
     "s4Body": "Learn Buddy nutzt die Google Gemini API, um Bildungsinhalte zu generieren. Wenn Sie ein Thema, eine Übung oder ein Bild einreichen, verarbeiten wir diese Informationen über Googles sichere Server. Die an die KI gesendeten Daten werden:",
     "s4L1": "In Echtzeit verarbeitet, um Bildungsantworten zu generieren.",
@@ -627,7 +627,7 @@
     "s4L3": "Über verschlüsselte Verbindungen (TLS/SSL) übertragen.",
     "s4Outro": "Zur OCR-Analyse gesendete Bilder werden in Text konvertiert und unmittelbar nach der Verarbeitung verworfen.",
     "s5Title": "5. Cookies und Ähnliche Technologien",
-    "s5Body": "Learn Buddy verwendet localStorage und essentielle Cookies, um Ihre Login-Sitzung, Spracheinstellungen und App-Konfiguration zu erhalten. Wir verwenden keine Tracking-Cookies von Drittanbietern, Conversion-Pixel oder Verhaltensanalyse-Tools.",
+    "s5Body": "Wir verwenden localStorage und essenzielle Cookies für Sitzung, Sprache und Einstellungen. Zusätzlich verwenden Google und seine Partner Cookies (z. B. das DoubleClick-Cookie), um Anzeigen basierend auf früheren Besuchen dieser und anderer Websites auszuliefern. Sie können personalisierte Werbung unter google.com/settings/ads deaktivieren, Drittanbieter-Cookies unter www.aboutads.info/choices verwalten und Ihre Auswahl jederzeit im Cookie-Hinweis ändern.",
     "s6Title": "6. Kinder und Jugendliche",
     "s6Body": "Learn Buddy richtet sich an Schüler aller Altersgruppen. Kinder unter 13 Jahren müssen die App unter Aufsicht eines gesetzlichen Vormunds nutzen. Wir sammeln nicht absichtlich personenbezogene Daten von Kindern ohne elterliche Zustimmung. Wenn Sie ein Erziehungsberechtigter sind und feststellen, dass Ihr Kind uns personenbezogene Daten zur Verfügung gestellt hat, kontaktieren Sie uns für die sofortige Entfernung.",
     "s7Title": "7. Datensicherheit",
@@ -660,7 +660,10 @@
     "s12Web": "Webseite:",
     "s12Email": "E-Mail:",
     "footer": "Durch die Nutzung von Learn Buddy stimmen Sie den Bestimmungen dieser Datenschutzrichtlinie zu. Wenn Sie nicht zustimmen, nutzen Sie die App bitte nicht.",
-    "backHome": "Zurück zur Startseite"
+    "backHome": "Zurück zur Startseite",
+    "s9L4": "Google AdSense: für Anzeigenauslieferung und Messung gemäß der Datenschutzerklärung von Google (policies.google.com/technologies/partner-sites).",
+    "adsTitle": "13. Werbung (Google AdSense)",
+    "adsBody": "Wir sind eine werbefinanzierte Website. Google verwendet als Drittanbieter Cookies, um Anzeigen auf dieser Website zu schalten. Anzeigen sind stets mit „Anzeige“ gekennzeichnet und wir fordern niemals zum Klicken auf. Kredit-Belohnungen gibt es nur für eigene Learn-Buddy-Promoinhalte, niemals für das Ansehen oder Anklicken von Google-Anzeigen."
   },
   "prime": {
     "banner": "⚡ Prime-Modus AKTIV — Aufgaben 60 % leichter!",
@@ -797,5 +800,12 @@
     "enableAll": "Alle aktivieren",
     "disableAll": "Alle deaktivieren",
     "saved": "Gespeichert!"
+  },
+  "cookies": {
+    "title": "Cookies und Werbung",
+    "body": "Wir verwenden essenzielle Cookies und – mit Ihrer Zustimmung – Google-AdSense-Cookies, um Anzeigen zu zeigen, die die Plattform kostenlos halten.",
+    "privacyLink": "Datenschutzerklärung",
+    "accept": "Personalisierte Anzeigen akzeptieren",
+    "reject": "Nur nicht personalisierte Anzeigen"
   }
 }

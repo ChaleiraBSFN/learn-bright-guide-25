@@ -619,7 +619,7 @@
     "s3L3": "管理积分和游戏化系统（进度路径、排名）。",
     "s3L4": "允许参与学习小组（仅在您同意的情况下）。",
     "s3L5": "根据学习上下文提高 AI 响应质量。",
-    "s3Outro": "我们绝不向第三方出售您的数据。我们绝不将您的数据用于定向广告。",
+    "s3Outro": "我们绝不出售您的个人数据。我们展示 Google AdSense 广告以保持平台免费；您可在 Cookie 提示中选择个性化或非个性化广告。",
     "s4Title": "4. 人工智能和数据处理",
     "s4Body": "Learn Buddy 使用 Google Gemini API 生成教育内容。当您提交主题、练习或图像时，我们通过 Google 的安全服务器处理这些信息。发送给 AI 的数据：",
     "s4L1": "实时处理以生成教育响应。",
@@ -627,7 +627,7 @@
     "s4L3": "通过加密连接（TLS/SSL）传输。",
     "s4Outro": "发送用于 OCR 分析的图像将转换为文本，并在处理后立即丢弃。",
     "s5Title": "5. Cookie 和类似技术",
-    "s5Body": "Learn Buddy 使用 localStorage 和必要的 cookie 来维护您的登录会话、语言偏好和应用设置。我们不使用第三方跟踪 cookie、转换像素或行为分析工具。",
+    "s5Body": "我们使用 localStorage 和必要 Cookie 来保存会话、语言和偏好设置。此外，Google 及其合作伙伴会使用 Cookie（如 DoubleClick Cookie）根据您先前访问本网站和其他网站的记录投放广告。您可在 google.com/settings/ads 停用个性化广告，在 www.aboutads.info/choices 管理第三方 Cookie，并随时在网站的 Cookie 提示中更改选择。",
     "s6Title": "6. 儿童和青少年",
     "s6Body": "Learn Buddy 面向所有年龄段的学生。13 岁以下儿童必须在法定监护人的监督下使用本应用。未经父母同意，我们不会有意收集儿童的个人数据。如果您是监护人并发现您的孩子向我们提供了个人数据，请联系我们立即删除。",
     "s7Title": "7. 数据安全",
@@ -660,7 +660,10 @@
     "s12Web": "网站：",
     "s12Email": "电子邮件：",
     "footer": "通过使用 Learn Buddy，您同意本隐私政策的条款。如果您不同意，请不要使用本应用。",
-    "backHome": "返回首页"
+    "backHome": "返回首页",
+    "s9L4": "Google AdSense：用于广告投放与衡量，遵循 Google 隐私权政策（policies.google.com/technologies/partner-sites）。",
+    "adsTitle": "13. 广告（Google AdSense）",
+    "adsBody": "本站由广告支持。作为第三方供应商，Google 使用 Cookie 在本站投放广告。广告始终标注“广告”，我们绝不要求您点击广告。积分奖励仅针对 Learn Buddy 自有的推广内容发放，绝不针对观看或点击 Google 广告。"
   },
   "prime": {
     "banner": "⚡ Prime 模式已启动 — 挑战难度降低 60%！",
@@ -797,5 +800,12 @@
     "enableAll": "全部启用",
     "disableAll": "全部禁用",
     "saved": "已保存!"
+  },
+  "cookies": {
+    "title": "Cookie 与广告",
+    "body": "我们使用必要 Cookie，并在您同意后使用 Google AdSense Cookie 展示广告，以保持平台免费。",
+    "privacyLink": "隐私政策",
+    "accept": "接受个性化广告",
+    "reject": "仅非个性化广告"
   }
 }

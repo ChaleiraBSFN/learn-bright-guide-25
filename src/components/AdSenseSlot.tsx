@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { AD_CONSENT_EVENT, applyAdConsent, getAdConsent } from '@/lib/adConsent';
 
 
 /**
@@ -65,7 +66,8 @@ export const AdSenseSlot = ({
   className = '',
   hideCta = false,
   variant = 'card',
-}: { className?: string; hideCta?: boolean; variant?: 'card' | 'compact' }) => {
+  houseOnly = false,
+}: { className?: string; hideCta?: boolean; variant?: 'card' | 'compact'; houseOnly?: boolean }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -76,10 +78,21 @@ export const AdSenseSlot = ({
   const [index, setIndex] = useState(() => Math.floor(Math.random() * LEARN_BUDDY_ADS.length));
   const [adState, setAdState] = useState<'loading' | 'filled' | 'fallback'>('loading');
   const [cycle, setCycle] = useState(0);
+  const [consent, setConsent] = useState(() => getAdConsent());
+
+  useEffect(() => {
+    const onChange = () => setConsent(getAdConsent());
+    window.addEventListener(AD_CONSENT_EVENT, onChange);
+    return () => window.removeEventListener(AD_CONSENT_EVENT, onChange);
+  }, []);
 
   const canRequestAdsense =
     typeof window !== 'undefined' && ADSENSE_ALLOWED_HOSTS.includes(window.location.hostname);
-  const hasAdsense = Boolean(ADSENSE_CLIENT && ADSENSE_SLOT && canRequestAdsense);
+  // AdSense policy: never request ads where the user is rewarded for viewing them,
+  // and never before the user has made a cookie/ads consent choice.
+  const hasAdsense = Boolean(
+    ADSENSE_CLIENT && ADSENSE_SLOT && canRequestAdsense && !houseOnly && consent !== null,
+  );
 
   useEffect(() => {
     if (!hasAdsense) return;
@@ -126,6 +139,7 @@ export const AdSenseSlot = ({
       if (!isNearViewport || !isVisible || containerWidth < 120) return;
 
       try {
+        applyAdConsent();
         await ensureAdsenseScript();
         if (isCancelled || pushedRef.current) return;
         (window.adsbygoogle = window.adsbygoogle || []).push({});
