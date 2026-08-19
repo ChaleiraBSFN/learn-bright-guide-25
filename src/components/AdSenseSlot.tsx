@@ -11,8 +11,9 @@ import { Button } from '@/components/ui/button';
 export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
 export const ADSENSE_SLOT = '7188987191';
 const ADSENSE_SCRIPT_ID = 'learn-buddy-adsense-script';
-const ADSENSE_FALLBACK_DELAY_MS = 8000;
-const ADSENSE_MIN_WIDTH = 250;
+const ADSENSE_FALLBACK_DELAY_MS = 6000;
+const ADSENSE_RETRY_DELAY_MS = 20000;
+const ADSENSE_MAX_RETRIES = 3;
 const ADSENSE_ALLOWED_HOSTS = [
   'studdybuddy.com.br',
   'www.studdybuddy.com.br',
