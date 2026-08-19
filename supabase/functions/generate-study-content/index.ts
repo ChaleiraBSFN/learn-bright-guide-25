@@ -403,13 +403,18 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
       console.log('[Cache] MISS', cacheKey.slice(0, 12));
     }
 
-    for (const key of geminiKeys) {
-      const result = await callGeminiDirect(prompt, key, maxTokens, temperature, imagemBase64);
-      content = result.text;
-      lastStatus = result.lastStatus;
-      if (content) break;
-      console.log(`[StudyContent] Key failed (status ${lastStatus}), rotating...`);
-    }
+    const poolResult = await callGeminiPool({
+      models: GEMINI_MODELS,
+      keys: geminiKeys,
+      prompt,
+      maxTokens,
+      temperature,
+      imagemBase64,
+      label: "StudyContent",
+    });
+    content = poolResult.text;
+    lastStatus = poolResult.lastStatus;
+
 
     if (!content) {
       if (lastStatus === 429) {
