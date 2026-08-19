@@ -275,6 +275,7 @@ export const AdSenseSlot = ({
     >
       {adState === 'fallback' && <div className="relative z-10">{promoFallback}</div>}
       <ins
+        key={cycle}
         ref={insRef}
         className={`adsbygoogle w-full transition-opacity duration-300 ${
           adState === 'fallback' ? 'hidden' : 'block opacity-100'
