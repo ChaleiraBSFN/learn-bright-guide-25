@@ -11,8 +11,9 @@ import { Button } from '@/components/ui/button';
 export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
 export const ADSENSE_SLOT = '7188987191';
 const ADSENSE_SCRIPT_ID = 'learn-buddy-adsense-script';
-const ADSENSE_FALLBACK_DELAY_MS = 8000;
-const ADSENSE_MIN_WIDTH = 250;
+const ADSENSE_FALLBACK_DELAY_MS = 6000;
+const ADSENSE_RETRY_DELAY_MS = 20000;
+const ADSENSE_MAX_RETRIES = 3;
 const ADSENSE_ALLOWED_HOSTS = [
   'studdybuddy.com.br',
   'www.studdybuddy.com.br',
@@ -74,6 +75,7 @@ export const AdSenseSlot = ({
   const pushedRef = useRef(false);
   const [index, setIndex] = useState(() => Math.floor(Math.random() * LEARN_BUDDY_ADS.length));
   const [adState, setAdState] = useState<'loading' | 'filled' | 'fallback'>('loading');
+  const [cycle, setCycle] = useState(0);
 
   const canRequestAdsense =
     typeof window !== 'undefined' && ADSENSE_ALLOWED_HOSTS.includes(window.location.hostname);
@@ -85,7 +87,17 @@ export const AdSenseSlot = ({
     let attempts = 0;
     let fallbackTimer: number | undefined;
     let retryTimer: number | undefined;
+    let cycleTimer: number | undefined;
     let isNearViewport = false;
+    pushedRef.current = false;
+    if (cycle > 0) setAdState('loading');
+
+    const scheduleRetryCycle = () => {
+      if (cycleTimer || cycle >= ADSENSE_MAX_RETRIES) return;
+      cycleTimer = window.setTimeout(() => {
+        if (!isCancelled) setCycle((c) => c + 1);
+      }, ADSENSE_RETRY_DELAY_MS);
+    };
 
     const updateFromAdStatus = () => {
       const status = insRef.current?.getAttribute('data-ad-status');
@@ -94,6 +106,7 @@ export const AdSenseSlot = ({
         setAdState('filled');
       } else if (status === 'unfilled') {
         setAdState('fallback');
+        scheduleRetryCycle();
       }
     };
 
@@ -110,7 +123,7 @@ export const AdSenseSlot = ({
 
       const containerWidth = containerRef.current?.getBoundingClientRect().width ?? 0;
       const isVisible = containerRef.current?.getClientRects().length;
-      if (!isNearViewport || !isVisible || containerWidth < ADSENSE_MIN_WIDTH) return;
+      if (!isNearViewport || !isVisible || containerWidth < 120) return;
 
       try {
         await ensureAdsenseScript();
@@ -121,6 +134,7 @@ export const AdSenseSlot = ({
         fallbackTimer = window.setTimeout(() => {
           if (!isCancelled && insRef.current?.getAttribute('data-ad-status') !== 'filled') {
             setAdState('fallback');
+            scheduleRetryCycle();
           }
         }, ADSENSE_FALLBACK_DELAY_MS);
       } catch (e) {
@@ -148,7 +162,7 @@ export const AdSenseSlot = ({
         isNearViewport = entries.some((entry) => entry.isIntersecting);
         if (isNearViewport) void tryPush();
       },
-      { rootMargin: '200px 0px' },
+      { rootMargin: '400px 0px' },
     );
     if (containerRef.current) intersectionObserver.observe(containerRef.current);
 
@@ -156,11 +170,13 @@ export const AdSenseSlot = ({
       isCancelled = true;
       if (fallbackTimer) window.clearTimeout(fallbackTimer);
       if (retryTimer) window.clearTimeout(retryTimer);
+      if (cycleTimer) window.clearTimeout(cycleTimer);
       observer.disconnect();
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
     };
-  }, [hasAdsense]);
+  }, [hasAdsense, cycle]);
+
 
   const ad = useMemo(() => LEARN_BUDDY_ADS[index], [index]);
 
@@ -260,6 +276,7 @@ export const AdSenseSlot = ({
     >
       {adState === 'fallback' && <div className="relative z-10">{promoFallback}</div>}
       <ins
+        key={cycle}
         ref={insRef}
         className={`adsbygoogle w-full transition-opacity duration-300 ${
           adState === 'fallback' ? 'hidden' : 'block opacity-100'
