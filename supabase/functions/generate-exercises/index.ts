@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { callGeminiPool, getGeminiKeys } from "../_shared/gemini-pool.ts";
+
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -31,66 +33,8 @@ const languageMap: Record<string, string> = {
   de: "Deutsch", it: "Italiano", ja: "日本語", zh: "中文", ru: "Русский",
 };
 
-async function callGeminiDirect(prompt: string, apiKey: string, maxTokens: number, imagemBase64?: string | null): Promise<string | null> {
-  const models = ["gemini-2.5-flash-lite", "gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-1.5-pro"];
-  for (const model of models) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try {
-        console.log(`[Gemini] Trying ${model} (attempt ${attempt + 1})...`);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 90000);
-        const parts: any[] = [{ text: prompt }];
+const GEMINI_MODELS = ["gemini-2.5-flash-lite", "gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-flash", "gemini-1.5-pro"];
 
-        if (imagemBase64) {
-          let mimeType = "image/jpeg";
-          let data = imagemBase64;
-          
-          if (imagemBase64.startsWith("data:")) {
-            const matches = imagemBase64.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
-            if (matches && matches.length === 3) {
-              mimeType = matches[1];
-              data = matches[2];
-            }
-          }
-          
-          parts.push({
-            inlineData: {
-              mimeType,
-              data: data,
-            }
-          });
-        }
-
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [{ role: "user", parts }],
-              generationConfig: { temperature: 0.7, maxOutputTokens: maxTokens, responseMimeType: "application/json" },
-            }),
-            signal: controller.signal,
-          }
-        );
-        clearTimeout(timeoutId);
-        if (response.ok) {
-          const data = await response.json();
-          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) { console.log(`[Gemini] Success with ${model}`); return text; }
-        }
-        if (response.status === 429) { console.log(`[Gemini] ${model} rate limited, next...`); break; }
-        if (response.status >= 500) { console.log(`[Gemini] ${model} server error, retrying...`); continue; }
-        break;
-      } catch (e: any) {
-        console.error(`[Gemini] ${model}:`, e.message);
-        if (e.name === 'AbortError' && attempt === 0) continue;
-        break;
-      }
-    }
-  }
-  return null;
-}
 
 // No Lovable AI fallback - only free Gemini models
 
@@ -292,24 +236,21 @@ OUTPUT FORMATTING (MANDATORY — clean readable text, no garbage symbols):
 
 Rules: Vary difficulty within the calibration. ONLY JSON output.`;
 
-    const geminiKeys = [
-      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
-    ].filter(Boolean) as string[];
-    geminiKeys.sort(() => Math.random() - 0.5);
-    let content: string | null = null;
+    const geminiKeys = getGeminiKeys();
 
     // Scale output tokens with quantity (~700 tokens per exercise, +1500 overhead, capped at 32k)
     const dynamicMaxTokens = Math.min(32000, 1500 + quantidade * 700);
 
-    for (const key of geminiKeys) {
-      content = await callGeminiDirect(prompt, key, dynamicMaxTokens, imagemBase64);
-      if (content) break;
-      console.log(`[Exercises] Key failed, rotating...`);
-    }
+    const { text: content } = await callGeminiPool({
+      models: GEMINI_MODELS,
+      keys: geminiKeys,
+      prompt,
+      maxTokens: dynamicMaxTokens,
+      temperature: 0.7,
+      imagemBase64,
+      label: "Exercises",
+    });
+
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
