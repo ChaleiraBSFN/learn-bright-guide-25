@@ -619,7 +619,7 @@
     "s3L3": "Gérer le système de crédits et de gamification (parcours de progression, classement).",
     "s3L4": "Permettre la participation à des groupes d'étude (uniquement avec votre consentement).",
     "s3L5": "Améliorer la qualité des réponses de l'IA en fonction du contexte d'étude.",
-    "s3Outro": "Nous ne vendons jamais vos données à des tiers. Nous n'utilisons jamais vos données pour de la publicité ciblée.",
+    "s3Outro": "Nous ne vendons jamais vos données personnelles. Nous affichons des annonces Google AdSense pour garder la plateforme gratuite ; vous choisissez entre annonces personnalisées ou non dans l'avis relatif aux cookies.",
     "s4Title": "4. Intelligence Artificielle et Traitement des Données",
     "s4Body": "Learn Buddy utilise l'API Google Gemini pour générer du contenu éducatif. Lorsque vous soumettez un sujet, un exercice ou une image, nous traitons ces informations via les serveurs sécurisés de Google. Les données envoyées à l'IA sont :",
     "s4L1": "Traitées en temps réel pour générer des réponses éducatives.",
@@ -627,7 +627,7 @@
     "s4L3": "Transmises via des connexions chiffrées (TLS/SSL).",
     "s4Outro": "Les images envoyées pour analyse OCR sont converties en texte et immédiatement supprimées après traitement.",
     "s5Title": "5. Cookies et Technologies Similaires",
-    "s5Body": "Learn Buddy utilise localStorage et des cookies essentiels pour maintenir votre session de connexion, vos préférences de langue et les paramètres de l'application. Nous n'utilisons pas de cookies de suivi tiers, de pixels de conversion ou d'outils d'analyse comportementale.",
+    "s5Body": "Nous utilisons le localStorage et des cookies essentiels pour la session, la langue et les préférences. De plus, Google et ses partenaires utilisent des cookies (comme le cookie DoubleClick) pour diffuser des annonces en fonction de vos visites précédentes sur ce site et d'autres sites. Vous pouvez désactiver la publicité personnalisée sur google.com/settings/ads, gérer les cookies tiers sur www.aboutads.info/choices et modifier votre choix à tout moment dans l'avis relatif aux cookies.",
     "s6Title": "6. Enfants et Adolescents",
     "s6Body": "Learn Buddy s'adresse aux étudiants de tous âges. Les enfants de moins de 13 ans doivent utiliser l'application sous la supervision d'un tuteur légal. Nous ne collectons pas intentionnellement de données personnelles d'enfants sans le consentement parental. Si vous êtes tuteur et découvrez que votre enfant nous a fourni des données personnelles, contactez-nous pour leur suppression immédiate.",
     "s7Title": "7. Sécurité des Données",
@@ -660,7 +660,10 @@
     "s12Web": "Site web :",
     "s12Email": "E-mail :",
     "footer": "En utilisant Learn Buddy, vous acceptez les termes de cette Politique de Confidentialité. Si vous n'acceptez pas, veuillez ne pas utiliser l'application.",
-    "backHome": "Retour à l'Accueil"
+    "backHome": "Retour à l'Accueil",
+    "s9L4": "Google AdSense : pour la diffusion et la mesure des annonces, selon la politique de confidentialité de Google (policies.google.com/technologies/partner-sites).",
+    "adsTitle": "13. Publicité (Google AdSense)",
+    "adsBody": "Notre site est financé par la publicité. Google, en tant que fournisseur tiers, utilise des cookies pour diffuser des annonces sur ce site. Les annonces portent toujours la mention « Annonce » et nous ne vous demandons jamais de cliquer dessus. Les récompenses en crédits sont accordées uniquement pour les contenus promotionnels de Learn Buddy, jamais pour la vue ou le clic sur une annonce Google."
   },
   "prime": {
     "banner": "⚡ Mode Prime ACTIF — défis 60 % plus faciles !",
@@ -797,5 +800,12 @@
     "enableAll": "Tout activer",
     "disableAll": "Tout désactiver",
     "saved": "Enregistré !"
+  },
+  "cookies": {
+    "title": "Cookies et publicités",
+    "body": "Nous utilisons des cookies essentiels et, avec votre accord, des cookies Google AdSense pour afficher des annonces qui gardent la plateforme gratuite.",
+    "privacyLink": "Politique de confidentialité",
+    "accept": "Accepter les annonces personnalisées",
+    "reject": "Annonces non personnalisées uniquement"
   }
 }

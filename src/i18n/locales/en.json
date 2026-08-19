@@ -632,7 +632,7 @@
     "s3L3": "Manage the credit and gamification system (progress trail, ranking).",
     "s3L4": "Allow participation in study groups (only with your consent).",
     "s3L5": "Improve the quality of AI responses based on study context.",
-    "s3Outro": "We never sell your data to third parties. We never use your data for targeted advertising.",
+    "s3Outro": "We never sell your personal data. We display Google AdSense ads to keep the platform free; you choose between personalized and non-personalized ads in the cookie notice.",
     "s4Title": "4. Artificial Intelligence and Data Processing",
     "s4Body": "Learn Buddy uses the Google Gemini API to generate educational content. When you submit a topic, exercise or image, we process this information through Google's secure servers. The data sent to the AI is:",
     "s4L1": "Processed in real time to generate educational responses.",
@@ -640,7 +640,7 @@
     "s4L3": "Transmitted via encrypted connections (TLS/SSL).",
     "s4Outro": "Images sent for OCR analysis are converted to text and immediately discarded after processing.",
     "s5Title": "5. Cookies and Similar Technologies",
-    "s5Body": "Learn Buddy uses localStorage and essential cookies to maintain your login session, language preferences and app settings. We do not use third-party tracking cookies, conversion pixels or behavioral analytics tools.",
+    "s5Body": "We use localStorage and essential cookies for session, language and preferences. In addition, Google and its partners use cookies (such as the DoubleClick cookie) to serve ads based on prior visits to this and other websites. You can opt out of personalized advertising at google.com/settings/ads, manage third-party cookies at www.aboutads.info/choices, and change your choice at any time in the site's cookie notice.",
     "s6Title": "6. Children and Teens",
     "s6Body": "Learn Buddy is intended for students of all ages. Children under 13 must use the app under the supervision of a legal guardian. We do not intentionally collect personal data from children without parental consent. If you are a guardian and discover that your child has provided us with personal data, contact us for immediate removal.",
     "s7Title": "7. Data Security",
@@ -673,7 +673,10 @@
     "s12Web": "Website:",
     "s12Email": "Email:",
     "footer": "By using Learn Buddy, you agree to the terms of this Privacy Policy. If you do not agree, please do not use the app.",
-    "backHome": "Back to Home"
+    "backHome": "Back to Home",
+    "s9L4": "Google AdSense: for ad serving and measurement, under Google's privacy policy (policies.google.com/technologies/partner-sites).",
+    "adsTitle": "13. Advertising (Google AdSense)",
+    "adsBody": "We are an ad-supported site. Google, as a third-party vendor, uses cookies to serve ads on this site. Ads are always labeled \"Ad\" and we never ask you to click them. Credit rewards are granted only for Learn Buddy's own promotional content, never for viewing or clicking Google ads."
   },
   "prime": {
     "banner": "⚡ Prime mode ACTIVE — challenges 60% easier!",
@@ -810,5 +813,12 @@
     "enableAll": "Enable all",
     "disableAll": "Disable all",
     "saved": "Saved!"
+  },
+  "cookies": {
+    "title": "Cookies and ads",
+    "body": "We use essential cookies and, with your permission, Google AdSense cookies to show ads that keep the platform free.",
+    "privacyLink": "Privacy Policy",
+    "accept": "Accept personalized ads",
+    "reject": "Non-personalized ads only"
   }
 }
