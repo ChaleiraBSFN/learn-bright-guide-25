@@ -292,24 +292,21 @@ OUTPUT FORMATTING (MANDATORY — clean readable text, no garbage symbols):
 
 Rules: Vary difficulty within the calibration. ONLY JSON output.`;
 
-    const geminiKeys = [
-      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
-    ].filter(Boolean) as string[];
-    geminiKeys.sort(() => Math.random() - 0.5);
-    let content: string | null = null;
+    const geminiKeys = getGeminiKeys();
 
     // Scale output tokens with quantity (~700 tokens per exercise, +1500 overhead, capped at 32k)
     const dynamicMaxTokens = Math.min(32000, 1500 + quantidade * 700);
 
-    for (const key of geminiKeys) {
-      content = await callGeminiDirect(prompt, key, dynamicMaxTokens, imagemBase64);
-      if (content) break;
-      console.log(`[Exercises] Key failed, rotating...`);
-    }
+    const { text: content } = await callGeminiPool({
+      models: GEMINI_MODELS,
+      keys: geminiKeys,
+      prompt,
+      maxTokens: dynamicMaxTokens,
+      temperature: 0.7,
+      imagemBase64,
+      label: "Exercises",
+    });
+
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Serviço indisponível." }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
