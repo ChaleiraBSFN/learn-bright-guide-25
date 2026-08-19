@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,20 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
   const [nivel, setNivel] = useState("");
   const [duvidas, setDuvidas] = useState("");
   const [imagemBase64, setImagemBase64] = useState<string | undefined>();
+  const temaRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
+
+  // Abre já com o cursor no campo de tema (estilo ChatGPT mobile)
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const el = temaRef.current;
+      if (!el) return;
+      el.focus({ preventScroll: true });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 250);
+    return () => window.clearTimeout(id);
+  }, []);
+
 
   const niveis = [
     { value: "fundamental1", label: t('form.levelFundamental1') },
@@ -57,6 +70,9 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         </Label>
         <Input
           id="tema"
+          ref={temaRef}
+          autoFocus
+
           placeholder={hasImage ? "Opcional — deixe em branco para análise automática" : t('form.topicPlaceholder')}
           value={tema}
           onChange={(e) => setTema(e.target.value)}
