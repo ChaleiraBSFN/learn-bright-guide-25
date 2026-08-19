@@ -41,8 +41,18 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      // Consentimento: sem escolha explícita por anúncios personalizados,
+      // solicitamos apenas anúncios NÃO personalizados (GDPR/LGPD + política do Google).
+      window.adsbygoogle = window.adsbygoogle || [];
+      try {
+        if (localStorage.getItem("lb-ad-consent") !== "personalized") {
+          window.adsbygoogle.requestNonPersonalizedAds = 1;
+        }
+      } catch (e) {
+        window.adsbygoogle.requestNonPersonalizedAds = 1;
+      }
       // Habilita os Auto Ads (anúncios automáticos) do AdSense nesta página
-      (window.adsbygoogle = window.adsbygoogle || []).push({
+      window.adsbygoogle.push({
         google_ad_client: "ca-pub-3378474598402206",
         enable_page_level_ads: true,
         overlays: { bottom: true }
