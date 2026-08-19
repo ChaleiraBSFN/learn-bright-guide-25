@@ -70,6 +70,9 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
         </Label>
         <Input
           id="tema"
+          ref={temaRef}
+          autoFocus
+
           placeholder={hasImage ? "Opcional — deixe em branco para análise automática" : t('form.topicPlaceholder')}
           value={tema}
           onChange={(e) => setTema(e.target.value)}
