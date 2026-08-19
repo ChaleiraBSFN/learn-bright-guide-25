@@ -14,9 +14,10 @@ export default function Privacy() {
     { title: "s6Title", body: "s6Body" },
     { title: "s7Title", intro: "s7Intro", items: ["s7L1", "s7L2", "s7L3", "s7L4", "s7L5"] },
     { title: "s8Title", intro: "s8Intro", items: ["s8L1", "s8L2", "s8L3", "s8L4", "s8L5"], outro: "s8Outro" },
-    { title: "s9Title", intro: "s9Intro", items: ["s9L1", "s9L2", "s9L3"] },
+    { title: "s9Title", intro: "s9Intro", items: ["s9L1", "s9L2", "s9L3", "s9L4"] },
     { title: "s10Title", body: "s10Body" },
     { title: "s11Title", body: "s11Body" },
+    { title: "adsTitle", body: "adsBody" },
   ];
 
   return (
