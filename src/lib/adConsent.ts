@@ -23,8 +23,8 @@ export const setAdConsent = (consent: AdConsent) => {
   }
 
   if (consent === 'basic') {
-    (window.adsbygoogle = window.adsbygoogle || []) as AdsQueue;
-    (window.adsbygoogle as AdsQueue).requestNonPersonalizedAds = 1;
+    const queue = (window.adsbygoogle = window.adsbygoogle || []) as AdsQueue;
+    queue.requestNonPersonalizedAds = 1;
   }
 
   window.dispatchEvent(new CustomEvent(AD_CONSENT_EVENT, { detail: consent }));
@@ -34,8 +34,8 @@ export const setAdConsent = (consent: AdConsent) => {
 export const applyAdConsent = () => {
   if (typeof window === 'undefined') return;
   if (getAdConsent() !== 'personalized') {
-    (window.adsbygoogle = window.adsbygoogle || []) as AdsQueue;
-    (window.adsbygoogle as AdsQueue).requestNonPersonalizedAds = 1;
+    const queue = (window.adsbygoogle = window.adsbygoogle || []) as AdsQueue;
+    queue.requestNonPersonalizedAds = 1;
   }
 };
 
