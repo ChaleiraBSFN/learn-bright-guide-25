@@ -375,16 +375,10 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     
     const maxTokens = isPremium ? 9000 : 6000;
 
-    const geminiKeys = [
-      Deno.env.get("GOOGLE_GEMINI_API_KEY"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_2"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
-      Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
-    ].filter(Boolean) as string[];
-    geminiKeys.sort(() => Math.random() - 0.5);
+    const geminiKeys = getGeminiKeys();
     let content: string | null = null;
     let lastStatus = 0;
+
 
     // === CACHE LOOKUP (24h) — só quando não houve imagem ===
     let cacheKey: string | null = null;
