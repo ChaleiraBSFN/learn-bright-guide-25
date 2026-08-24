@@ -261,6 +261,9 @@ export const PromoBanners = () => {
               <div className="flex-1 min-w-0">
                 <p className={`font-display text-sm md:text-base font-bold ${s.text}`}>{text.title}</p>
                 <p className="text-xs md:text-sm text-foreground/80 mt-0.5">{text.description}</p>
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-accent">
+                  Buddy: geração prioritária, créditos mensais e ferramentas premium
+                </p>
               </div>
               <div className="hidden sm:flex shrink-0 items-center gap-2">
                 <div className={`flex items-center gap-1 rounded-full ${s.cta} px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-colors max-w-[160px] text-center leading-tight whitespace-normal break-words`}>
