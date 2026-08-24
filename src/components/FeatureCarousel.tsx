@@ -546,6 +546,11 @@ function FeatureCard({
           </p>
         </div>
 
+        <div className="flex items-center gap-1 rounded-full bg-accent/15 px-2 py-1 text-[10px] font-bold text-accent">
+          <Crown className="h-3 w-3 shrink-0" />
+          <span className="truncate">Buddy: mais rápido, sem anúncios</span>
+        </div>
+
         <div
           className={`relative inline-flex items-center gap-1 text-xs font-semibold ${feature.color} group-hover:gap-2 transition-all duration-200 uppercase tracking-wider`}
         >
