@@ -88,12 +88,15 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <AuthProvider>
-        <TooltipProvider>
-          <AppContent />
-        </TooltipProvider>
+        <SubscriptionProvider>
+          <TooltipProvider>
+            <AppContent />
+          </TooltipProvider>
+        </SubscriptionProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
+
 
 export default App;
