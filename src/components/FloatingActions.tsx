@@ -19,7 +19,7 @@ import { RewardShopModal } from '@/components/RewardShopModal';
 export const FloatingActions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
+  
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
   const isMobile = useIsMobile();
   const [showTrail, setShowTrail] = useState(false);
