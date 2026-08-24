@@ -107,6 +107,7 @@ const getSettings = (): PlatformSettings => {
 };
 
 const Index = () => {
+  const deferredReady = useDeferredMount();
   const [isLoading, setIsLoading] = useState(false);
   const [isFinishingStudy, setIsFinishingStudy] = useState(false);
   const [studyContent, setStudyContent] = useState<StudyContent | null>(null);
