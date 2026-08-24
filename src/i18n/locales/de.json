@@ -598,7 +598,10 @@
     "alreadyEarned": "Du hast bereits verdient",
     "defaultObjective": "Nutze die App weiter, um diesen Erfolg freizuschalten.",
     "createAccount": "Erstelle ein Konto",
-    "loginToSave": "Melde dich an, um deinen Fortschritt zu speichern!"
+    "loginToSave": "Melde dich an, um deinen Fortschritt zu speichern!",
+    "buddyOnly": "Exklusive Buddy-Herausforderung",
+    "buddyOnlyHint": "Abonniere den Buddy-Plan, um die Premium-Herausforderungen freizuschalten.",
+    "buddyOnlyShort": "Nur Buddy"
   },
   "privacy": {
     "title": "Datenschutzrichtlinie",
@@ -816,7 +819,14 @@
       "flashcardsDesc": "Frage-und-Antwort-Karten",
       "summaryDesc": "Kernpunkte in wenigen Punkten",
       "quizDesc": "Fragen mit sofortiger Auswertung",
-      "topicRequired": "Gib ein Thema ein, um zu starten"
+      "topicRequired": "Gib ein Thema ein, um zu starten",
+      "cardsTitle": "Deine Lernkarten",
+      "flippedLabel": "gesehen",
+      "card": "Karte",
+      "tapFlip": "Zum Umdrehen tippen",
+      "tapBack": "Tippen, um die Frage zu sehen",
+      "revealAll": "Alle Antworten zeigen",
+      "resetCards": "Neu starten"
     },
     "customizeLink": "App-Farben anpassen"
   }

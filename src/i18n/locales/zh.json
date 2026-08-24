@@ -598,7 +598,10 @@
     "alreadyEarned": "你已获得",
     "defaultObjective": "继续使用应用来解锁此成就。",
     "createAccount": "创建账户",
-    "loginToSave": "登录以保存进度！"
+    "loginToSave": "登录以保存进度！",
+    "buddyOnly": "Buddy 专属挑战",
+    "buddyOnlyHint": "订阅 Buddy 方案即可解锁高级挑战。",
+    "buddyOnlyShort": "仅 Buddy"
   },
   "privacy": {
     "title": "隐私政策",
@@ -816,7 +819,14 @@
       "flashcardsDesc": "问答卡片",
       "summaryDesc": "几条要点总结",
       "quizDesc": "即时批改的题目",
-      "topicRequired": "请输入主题以开始"
+      "topicRequired": "请输入主题以开始",
+      "cardsTitle": "你的记忆卡",
+      "flippedLabel": "已看",
+      "card": "卡片",
+      "tapFlip": "点击翻面",
+      "tapBack": "点击查看问题",
+      "revealAll": "显示所有答案",
+      "resetCards": "重新开始"
     },
     "customizeLink": "自定义应用配色"
   }

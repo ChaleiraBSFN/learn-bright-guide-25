@@ -592,7 +592,10 @@
     "alreadyEarned": "Ya ganaste",
     "defaultObjective": "Sigue usando la app para desbloquear este logro.",
     "createAccount": "Crea una cuenta",
-    "loginToSave": "¡Inicia sesión para guardar tu progreso!"
+    "loginToSave": "¡Inicia sesión para guardar tu progreso!",
+    "buddyOnly": "Desafío exclusivo Buddy",
+    "buddyOnlyHint": "Suscríbete al plan Buddy para desbloquear los desafíos premium.",
+    "buddyOnlyShort": "Solo Buddy"
   },
   "privacy": {
     "title": "Política de Privacidad",
@@ -810,7 +813,14 @@
       "flashcardsDesc": "Tarjetas de pregunta y respuesta",
       "summaryDesc": "Puntos clave en pocos ítems",
       "quizDesc": "Preguntas corregidas al instante",
-      "topicRequired": "Escribe un tema para empezar"
+      "topicRequired": "Escribe un tema para empezar",
+      "cardsTitle": "Tus flashcards",
+      "flippedLabel": "vistas",
+      "card": "Tarjeta",
+      "tapFlip": "Toca para girar",
+      "tapBack": "Toca para ver la pregunta",
+      "revealAll": "Ver todas las respuestas",
+      "resetCards": "Reiniciar"
     },
     "customizeLink": "Personalizar colores de la app"
   }

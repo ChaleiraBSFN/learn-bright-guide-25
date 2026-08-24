@@ -598,7 +598,10 @@
     "alreadyEarned": "既に獲得済み",
     "defaultObjective": "アプリを使い続けてこの実績を解除しましょう。",
     "createAccount": "アカウントを作成",
-    "loginToSave": "ログインして進捗を保存しましょう！"
+    "loginToSave": "ログインして進捗を保存しましょう！",
+    "buddyOnly": "Buddy限定チャレンジ",
+    "buddyOnlyHint": "Buddyプランに登録するとプレミアムチャレンジが解放されます。",
+    "buddyOnlyShort": "Buddy限定"
   },
   "privacy": {
     "title": "プライバシーポリシー",
@@ -816,7 +819,14 @@
       "flashcardsDesc": "質問と回答のカード",
       "summaryDesc": "要点を数項目で",
       "quizDesc": "即時採点される問題",
-      "topicRequired": "テーマを入力してください"
+      "topicRequired": "テーマを入力してください",
+      "cardsTitle": "フラッシュカード",
+      "flippedLabel": "確認済み",
+      "card": "カード",
+      "tapFlip": "タップで裏返す",
+      "tapBack": "タップで問題を見る",
+      "revealAll": "すべての答えを表示",
+      "resetCards": "やり直す"
     },
     "customizeLink": "アプリの色をカスタマイズ"
   }
