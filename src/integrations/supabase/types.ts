@@ -902,6 +902,7 @@ export type Database = {
         Args: { _amount: number; _user_id: string }
         Returns: number
       }
+      admin_set_test_buddy: { Args: { _enable: boolean }; Returns: boolean }
       approve_feature_purchase: {
         Args: { _purchase_id: string }
         Returns: {
@@ -1081,6 +1082,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_test_buddy: { Args: { _user_id: string }; Returns: boolean }
       is_buddy: { Args: { _user_id: string }; Returns: boolean }
       is_group_admin: {
         Args: { _group_id: string; _user_id: string }
