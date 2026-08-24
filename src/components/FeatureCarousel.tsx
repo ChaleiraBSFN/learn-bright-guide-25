@@ -142,7 +142,8 @@ const exemplosLabels: Record<string, string> = {
 };
 
 export function FeatureCarousel() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const lang = i18n.language || 'pt-BR';
   const [paused, setPaused] = useState(false);
   const [active, setActive] = useState<Feature | null>(null);
