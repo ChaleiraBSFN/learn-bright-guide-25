@@ -92,7 +92,9 @@ const Buddy = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
+        path="/buddy"
         title={t('buddy.seoTitle', 'Plano Buddy — Learn Buddy Premium')}
+
         description={t(
           'buddy.seoDesc',
           'Assine o plano Buddy do Learn Buddy: geração prioritária, créditos mensais, flashcards, resumos, quizzes e experiência sem anúncios.',
