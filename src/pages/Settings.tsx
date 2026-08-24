@@ -136,8 +136,46 @@ const Settings = () => {
                 </p>
               </button>
             </div>
+
+            <div className="mt-6 border-t border-border pt-5">
+              <div className="mb-3 flex items-center gap-2">
+                <Crown className="h-4 w-4 text-accent" />
+                <span className="text-sm font-bold text-foreground">
+                  {t('settings.accentTitle', 'Paleta de cores (Buddy)')}
+                </span>
+              </div>
+              <p className="mb-3 text-xs text-muted-foreground">
+                {isBuddy
+                  ? t('settings.accentDesc', 'Personalize as cores principais das suas páginas.')
+                  : t('settings.accentLocked', 'Exclusivo do plano Buddy. Assine para desbloquear.')}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {ACCENT_PRESETS.map((preset) => (
+                  <button
+                    key={preset.key}
+                    type="button"
+                    disabled={!isBuddy}
+                    onClick={() => setAccent(preset.key)}
+                    aria-label={preset.label}
+                    className={`flex items-center gap-2 rounded-full border-2 px-3 py-1.5 text-xs font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
+                      accent === preset.key ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/40'
+                    }`}
+                  >
+                    <span className="h-3 w-3 rounded-full" style={{ background: preset.swatch }} />
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+              {!isBuddy && (
+                <Button variant="outline" size="sm" className="mt-3" onClick={() => navigate('/buddy')}>
+                  {t('plans.upgradeCta', 'Quero ser Buddy')}
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
+
+
 
 
         <Card className="mb-4">
