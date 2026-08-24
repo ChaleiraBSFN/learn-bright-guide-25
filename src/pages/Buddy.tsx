@@ -19,8 +19,18 @@ const Buddy = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [params] = useSearchParams();
-  const { isBuddy, loading, subscriptionEnd, cancelAtPeriodEnd, refresh, startCheckout, openPortal } =
-    useSubscription();
+  const {
+    isBuddy,
+    loading,
+    subscriptionEnd,
+    cancelAtPeriodEnd,
+    refresh,
+    startCheckout,
+    prefetchCheckout,
+    getCheckoutUrlSync,
+    openPortal,
+  } = useSubscription();
+
   const [busy, setBusy] = useState(false);
   const [stats, setStats] = useState<{ total: number; studies: number; exercises: number; plans: number } | null>(null);
   const { isAdmin } = useAdmin();
