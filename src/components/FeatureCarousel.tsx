@@ -173,11 +173,25 @@ export function FeatureCarousel() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const { data: translations, isLoading: isTranslating } = useQuery({
+  const cachedTranslations = useMemo(() => {
+    if (lang === 'pt-BR' || rows.length === 0) return undefined;
+    const cache = readTranslationCache();
+    const result: Record<string, CarouselTranslation> = {};
+    for (const r of rows) {
+      const key = `${r.id}:${r.title}:${r.description}:${r.detail}:${(r.examples || []).join('§')}`;
+      const cached = cache[lang]?.[key];
+      if (cached) result[r.id] = cached;
+    }
+    return Object.keys(result).length === rows.length ? result : undefined;
+  }, [rows, lang]);
+
+  const { data: translations } = useQuery({
     queryKey: ['carousel-translations', lang, rows.map(r => `${r.id}:${r.title}`).join('|')],
     enabled: rows.length > 0 && lang !== 'pt-BR',
     staleTime: 60 * 60 * 1000,
+    initialData: cachedTranslations,
     queryFn: async () => {
+
       const cache = readTranslationCache();
       const result: Record<string, CarouselTranslation> = {};
       const toTranslate: CarouselItemRow[] = [];
