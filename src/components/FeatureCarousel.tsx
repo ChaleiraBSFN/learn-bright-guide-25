@@ -529,12 +529,21 @@ function FeatureCard({
   ctaLabel: string;
   onOpen: () => void;
 }) {
+  const navigate = useNavigate();
+  const handleActivate = () => {
+    if (feature.route) {
+      navigate(feature.route);
+    } else {
+      onOpen();
+    }
+  };
+
   return (
     <motion.div
-      onClick={onOpen}
+      onClick={handleActivate}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen()}
+      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handleActivate()}
       className={`relative flex-shrink-0 w-[180px] sm:w-[200px] md:w-[220px] rounded-2xl border-2 ${feature.borderColor} bg-card overflow-hidden group cursor-pointer shadow-md hover:shadow-2xl transition-shadow duration-300`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
@@ -571,11 +580,6 @@ function FeatureCard({
           <p className="text-sm sm:text-[0.95rem] text-muted-foreground leading-snug line-clamp-3">
             {feature.description}
           </p>
-        </div>
-
-        <div className="flex items-center gap-1 rounded-full bg-accent/15 px-2 py-1 text-[10px] font-bold text-accent">
-          <Crown className="h-3 w-3 shrink-0" />
-          <span className="truncate">Buddy: mais rápido, sem anúncios</span>
         </div>
 
         <div
