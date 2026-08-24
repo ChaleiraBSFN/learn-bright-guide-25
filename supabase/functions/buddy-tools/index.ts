@@ -15,9 +15,9 @@ const MODELS = [
 
 const PROMPTS: Record<Tool, (topic: string, lang: string) => string> = {
   flashcards: (topic, lang) =>
-    `Crie 10 flashcards de estudo sobre "${topic}". Responda SOMENTE em ${lang}.
-Retorne JSON: {"cards":[{"front":"pergunta curta","back":"resposta clara e completa em no máximo 3 frases"}]}
-Nunca inclua código, markdown ou jargão desnecessário.`,
+    `Crie 8 flashcards de estudo sobre "${topic}". Responda SOMENTE em ${lang}.
+Retorne JSON: {"cards":[{"emoji":"1 emoji relevante","tag":"subtema curto (1-3 palavras)","front":"❓ pergunta curta","back":"resposta clara em no máximo 2 frases","tip":"💡 dica de memorização curta"}]}
+Regras: emojis variados (🧠 ⚡ 🔍 💡 📊 🕰️ 🌍 ➗ 🧪 📖), linguagem simples, ordem do mais fácil para o mais difícil. Sem código e sem markdown.`,
   summary: (topic, lang) =>
     `Crie um resumo de estudo objetivo, organizado em tópicos, sobre "${topic}". Responda SOMENTE em ${lang}.
 Retorne JSON: {"title":"🎯 título com 1 emoji","bullets":["📌 tópico curto: explicação de 1-2 frases"],"keyTerms":[{"term":"📖 termo","definition":"definição curta"}],"conclusion":"✅ parágrafo final curto"}
@@ -108,12 +108,12 @@ Deno.serve(async (req) => {
       models: MODELS,
       keys: getGeminiKeys(),
       prompt: PROMPTS[tool](topic, lang),
-      maxTokens: 4096,
-      temperature: 0.5,
+      maxTokens: 3072,
+      temperature: 0.45,
       jsonMode: true,
       timeoutMs: 90_000,
       label: `buddy-${tool}`,
-      race: 3,
+      race: 4,
     });
 
     if (!result.text) {
