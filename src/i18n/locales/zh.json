@@ -817,6 +817,7 @@
       "summaryDesc": "几条要点总结",
       "quizDesc": "即时批改的题目",
       "topicRequired": "请输入主题以开始"
-    }
+    },
+    "customizeLink": "自定义应用配色"
   }
 }
