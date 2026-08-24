@@ -223,8 +223,11 @@ export const BuddyTools = () => {
                 })}
               </div>
               {answers[qi] !== undefined && q.explanation && (
-                <p className="mt-3 text-xs text-muted-foreground">{q.explanation}</p>
+                <p className="mt-3 whitespace-pre-line text-xs leading-relaxed text-muted-foreground">
+                  {q.explanation.replace(/\s*•\s*/g, '\n• ').trim()}
+                </p>
               )}
+
             </div>
           ))}
         </div>
