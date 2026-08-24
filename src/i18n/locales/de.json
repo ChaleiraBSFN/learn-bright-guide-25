@@ -83,7 +83,12 @@
     "topic": "Thema",
     "freeVersion": "Kostenlos",
     "subscribeForComplete": "Premium für vollständige Inhalte",
-    "contentNotLoaded": "Ladefehler."
+    "contentNotLoaded": "Ladefehler.",
+    "imageAnalysis": "Bildanalyse",
+    "extractedConcepts": "Identifizierte Konzepte",
+    "solvedExercises": "Gelöste Übungen aus dem Bild",
+    "solution": "Lösung",
+    "explanation": "Erklärung"
   },
   "sections": {
     "objective": "Ziel",
@@ -112,7 +117,11 @@
     "showLess": "Weniger anzeigen",
     "showMore": "Alle Tage anzeigen",
     "daysCount": "Tage",
-    "clickHere": "Hier klicken"
+    "clickHere": "Hier klicken",
+    "illustrativeImages": "Illustrative Bilder",
+    "imagesGoogleHint": "Sehen Sie sich echte Bilder zum Thema direkt in der Google-Suche an.",
+    "searchGoogleImages": "Auf Google Bilder suchen",
+    "searchGoogle": "Auf Google suchen"
   },
   "premium": {
     "unlock": "Premium abonnieren",
@@ -202,7 +211,8 @@
     "resetEmailSentDesc": "Wir haben einen Wiederherstellungslink an Ihre E-Mail gesendet.",
     "checkSpamTitle": "⚠️ Überprüfen Sie Ihren Spam-Ordner",
     "checkSpamDesc": "Die E-Mail kann im Spam-Ordner landen. Überprüfen Sie diesen, wenn Sie sie nicht finden.",
-    "resetLinkInfo": "Der Link öffnet eine Learn Buddy-Seite, auf der Sie Ihre E-Mail und Ihr neues Passwort eingeben können."
+    "resetLinkInfo": "Der Link öffnet eine Learn Buddy-Seite, auf der Sie Ihre E-Mail und Ihr neues Passwort eingeben können.",
+    "signIn": "Anmelden"
   },
   "subscribe": {
     "youArePremium": "Sie sind Premium! 🎉",
@@ -547,7 +557,17 @@
     "confirmEmailToReset": "Confirm your email to verify your identity.",
     "confirmYourEmail": "Enter your registered email",
     "emailVerifyNote": "Enter the same email you registered with to confirm it is you.",
-    "emailMismatch": "The email does not match the registered email."
+    "emailMismatch": "The email does not match the registered email.",
+    "verifyingLink": "Link wird überprüft...",
+    "appearance": "Erscheinungsbild",
+    "appearanceDesc": "Wählen Sie das Website-Design für ein angenehmeres Erlebnis.",
+    "themeDark": "Dunkel",
+    "themeDarkDesc": "Empfohlen. Reduziert die Augenbelastung.",
+    "themeLight": "Hell",
+    "themeLightDesc": "Gut beleuchtete Umgebungen.",
+    "accentTitle": "Farbpalette (Buddy)",
+    "accentDesc": "Passen Sie die Hauptfarben Ihrer Seiten an.",
+    "accentLocked": "Exklusiv für den Buddy-Plan. Abonnieren Sie, um freizuschalten."
   },
   "credits": {
     "remaining": "{{count}} credits remaining",
@@ -826,8 +846,119 @@
       "tapFlip": "Zum Umdrehen tippen",
       "tapBack": "Tippen, um die Frage zu sehen",
       "revealAll": "Alle Antworten zeigen",
-      "resetCards": "Neu starten"
+      "resetCards": "Neu starten",
+      "error": "Wir konnten jetzt nichts generieren",
+      "errorHint": "Versuche es in ein paar Sekunden erneut.",
+      "flashcards": "Karteikarten",
+      "summary": "Intelligente Zusammenfassung",
+      "quiz": "Quiz",
+      "placeholder": "Ex.: Französische Revolution, quadratische Funktionen...",
+      "clear": "Löschen",
+      "answer": "Antwort",
+      "question": "Frage"
     },
-    "customizeLink": "App-Farben anpassen"
+    "customizeLink": "App-Farben anpassen",
+    "menuItem": "Buddy-Plan",
+    "b5Title": "Premium-Tools",
+    "b5Desc": "Lernkarten, Zusammenfassungen, Quiz und Analysen.",
+    "b6Title": "Werbefrei",
+    "b6Desc": "Lerne ohne Unterbrechungen.",
+    "seoTitle": "Buddy-Plan — Learn Buddy Premium",
+    "seoDesc": "Abonniere den Buddy-Plan von Learn Buddy: Prioritätsgenerierung, monatliche Credits, Lernkarten, Zusammenfassungen, Quiz und werbefreies Erlebnis.",
+    "title": "Buddy-Plan",
+    "activeTitle": "Du bist Buddy 🎉",
+    "ctaTitle": "Peppe dein Studium auf",
+    "renewsOn": "Erneuert am {{date}}",
+    "activeDesc": "Aktives Abonnement.",
+    "ctaDesc": "Kündige jederzeit direkt im Stripe-Portal.",
+    "cancelScheduled": "Dein Abonnement endet am Ende des aktuellen Zeitraums.",
+    "manage": "Abonnement verwalten",
+    "subscribe": "Buddy-Plan abonnieren",
+    "refresh": "Status aktualisieren",
+    "testTitle": "Testmodus (nur CEO/Admin)",
+    "testDesc": "Aktiviere Premium für 30 Tage für dein Konto, ohne Bezahlung, um alles zu testen.",
+    "testActive": "Test-Premium in diesem Konto aktiv.",
+    "testInactive": "Test-Premium deaktiviert.",
+    "toolsTitle": "Buddy-Lernwerkzeuge",
+    "toolsDesc": "Erstelle Lernkarten, Zusammenfassungen und Quiz zu jedem Thema.",
+    "locked": "Abonniere den Buddy-Plan, um Premium-Tools freizuschalten.",
+    "analyticsTitle": "Deine Lernstatistiken",
+    "analyticsDesc": "Verfolge dein Lerntempo.",
+    "statTotal": "Gesamt",
+    "statStudies": "Studien",
+    "statExercises": "Übungen",
+    "statPlans": "Pläne",
+    "testError": "Testmodus konnte nicht geändert werden",
+    "testOn": "Test-Premium aktiviert",
+    "testOff": "Test-Premium deaktiviert",
+    "welcomeTitle": "Willkommen bei Buddy!",
+    "welcomeDesc": "Ihre Mitgliedschaft wird bestätigt.",
+    "checkoutError": "Zahlung konnte nicht geöffnet werden",
+    "checkoutErrorHint": "Versuchen Sie es in Kürze erneut.",
+    "portalError": "Verwaltung konnte nicht geöffnet werden",
+    "b1Title": "Priorisierte Generierung",
+    "b1Desc": "Ihre Studien kommen an die Spitze der Warteschlange.",
+    "b2Title": "30 Credits pro Monat",
+    "b2Desc": "Automatisch jeden Zyklus aufgeladen.",
+    "b3Title": "Exklusive Herausforderungen",
+    "b3Desc": "Buddy-Erfolge auf dem Fortschrittspfad.",
+    "b4Title": "Erweiterte Personalisierung",
+    "b4Desc": "Zusätzliche Paletten und Themen auf Ihren Seiten."
+  },
+  "plans": {
+    "buddyTitle": "Plano Buddy",
+    "buddySubtitle": "Studiere schneller, mit Premium-Tools und ohne Werbung.",
+    "buddy": {
+      "item1": "Priorisierte, viel schnellere Generierung",
+      "item2": "30 zusätzliche Credits jeden Monat",
+      "item5": "Karteikarten, Zusammenfassungen, Quiz und Analysen",
+      "item6": "Werbefreies Erlebnis",
+      "item3": "Exklusive Herausforderungen auf dem Pfad",
+      "item4": "Erweiterte Anpassung von Thema und Layout"
+    },
+    "free": {
+      "item1": "Generierung von Studien, Übungen und Plänen",
+      "item2": "Grundlegende tägliche und wöchentliche Credits",
+      "item3": "Fortschrittspfad und Rangliste",
+      "item4": "Standard-Generierungsgeschwindigkeit"
+    },
+    "title": "Learn Buddy Pläne",
+    "freeTitle": "Free Plan",
+    "freeSubtitle": "Alles, was du brauchst, um noch heute mit dem Lernen zu beginnen.",
+    "buddyPrice": "R$ {{price}}/Monat",
+    "manageBuddy": "Verwalte meinen Buddy-Plan",
+    "upgradeCta": "Ich möchte Buddy werden"
+  },
+  "common": {
+    "showActions": "Aktionen anzeigen",
+    "hideActions": "Aktionen ausblenden",
+    "error": "Fehler",
+    "back": "Zurück",
+    "save": "Speichern"
+  },
+  "chatBuddy": {
+    "tooltip": "Chatte mit Learn Buddy",
+    "imgTooBigTitle": "Bild zu groß",
+    "imgTooBig": "Max. 15 MB pro Bild.",
+    "imgFail": "Bild konnte nicht gelesen werden.",
+    "error": "Antwort fehlgeschlagen.",
+    "errorTitle": "Fehler",
+    "title": "Chat Buddy",
+    "subtitle": "Ihr KI-Tutor — fragen Sie alles ✨",
+    "clear": "Konversation löschen",
+    "heroTitle": "Hallo! Wobei kann ich helfen?",
+    "heroDesc": "Fragen Sie nach Themen, bitten Sie um Übungen, Hilfe bei Code, Lernpläne oder senden Sie ein Foto einer Übung.",
+    "s1": "Erklären Sie mir die Photosynthese auf einfache Weise",
+    "s2": "Erstellen Sie einen 7-Tage-Lernplan für Mathematik",
+    "s3": "Schreiben Sie eine Python-Funktion zum Sortieren einer Liste",
+    "s4": "Geben Sie mir 3 Übungen zur quadratischen Gleichung",
+    "addImage": "Bild anhängen",
+    "placeholder": "Fragen Sie alles…",
+    "disclaimer": "Powered by Gemini · kann Fehler machen, überprüfen Sie wichtige Informationen."
+  },
+  "generating": {
+    "studyDone": "Fertig! 🎉",
+    "exerciseDone": "Fertig! 🎉",
+    "complexityHint": "Dies kann einige Sekunden dauern, da komplexe Inhalte, Bilder, Diagramme und personalisierte Details generiert werden. Manchmal können Bilder nicht generiert werden, wenn das Anforderungs-Limit überschritten wird."
   }
 }

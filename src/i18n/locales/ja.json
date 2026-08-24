@@ -83,7 +83,12 @@
     "topic": "テーマ",
     "freeVersion": "無料版",
     "subscribeForComplete": "プレミアムで完全版を取得",
-    "contentNotLoaded": "読み込みエラー。"
+    "contentNotLoaded": "読み込みエラー。",
+    "imageAnalysis": "画像分析",
+    "extractedConcepts": "抽出された概念",
+    "solvedExercises": "画像から解決された演習",
+    "solution": "解決策",
+    "explanation": "説明"
   },
   "sections": {
     "objective": "目標",
@@ -112,7 +117,11 @@
     "showLess": "折りたたむ",
     "showMore": "すべての日を表示",
     "daysCount": "日",
-    "clickHere": "ここをクリック"
+    "clickHere": "ここをクリック",
+    "illustrativeImages": "説明画像",
+    "imagesGoogleHint": "Google検索でテーマに関する実際の画像をご覧ください。",
+    "searchGoogleImages": "Google画像検索",
+    "searchGoogle": "Google検索"
   },
   "premium": {
     "unlock": "プレミアム登録",
@@ -202,7 +211,8 @@
     "resetEmailSentDesc": "回復リンクをメールに送信しました。",
     "checkSpamTitle": "⚠️ 迷惑メールフォルダを確認してください",
     "checkSpamDesc": "メールが迷惑メールフォルダに入る場合があります。受信トレイに見つからない場合は確認してください。",
-    "resetLinkInfo": "リンクをクリックすると、Learn Buddyのページが開き、メールアドレスと新しいパスワードを入力できます。"
+    "resetLinkInfo": "リンクをクリックすると、Learn Buddyのページが開き、メールアドレスと新しいパスワードを入力できます。",
+    "signIn": "サインイン"
   },
   "subscribe": {
     "youArePremium": "プレミアムです！🎉",
@@ -547,7 +557,17 @@
     "confirmEmailToReset": "Confirm your email to verify your identity.",
     "confirmYourEmail": "Enter your registered email",
     "emailVerifyNote": "Enter the same email you registered with to confirm it is you.",
-    "emailMismatch": "The email does not match the registered email."
+    "emailMismatch": "The email does not match the registered email.",
+    "verifyingLink": "リンクを確認中...",
+    "appearance": "外観",
+    "appearanceDesc": "より快適な体験のためにサイトのテーマを選択してください。",
+    "themeDark": "ダーク",
+    "themeDarkDesc": "推奨。目の疲れを軽減します。",
+    "themeLight": "ライト",
+    "themeLightDesc": "明るい環境向け。",
+    "accentTitle": "カラーパレット (Buddy)",
+    "accentDesc": "ページのメインカラーをカスタマイズしてください。",
+    "accentLocked": "Buddyプラン限定。購読してロックを解除してください。"
   },
   "credits": {
     "remaining": "{{count}} credits remaining",
@@ -826,8 +846,119 @@
       "tapFlip": "タップで裏返す",
       "tapBack": "タップで問題を見る",
       "revealAll": "すべての答えを表示",
-      "resetCards": "やり直す"
+      "resetCards": "やり直す",
+      "quiz": "クイズ",
+      "placeholder": "例：フランス革命、二次関数...",
+      "clear": "クリア",
+      "answer": "回答",
+      "question": "質問",
+      "error": "現在生成できません",
+      "errorHint": "数秒後にもう一度お試しください。",
+      "flashcards": "フラッシュカード",
+      "summary": "スマート要約"
     },
-    "customizeLink": "アプリの色をカスタマイズ"
+    "customizeLink": "アプリの色をカスタマイズ",
+    "b5Title": "プレミアムツール",
+    "b5Desc": "フラッシュカード、要約、クイズ、分析。",
+    "b6Title": "広告なし",
+    "b6Desc": "中断なく学習できます。",
+    "seoTitle": "Buddyプラン — Learn Buddy Premium",
+    "seoDesc": "Learn BuddyのBuddyプランに登録してください：優先生成、月間クレジット、フラッシュカード、要約、クイズ、広告なしの体験。",
+    "title": "Buddyプラン",
+    "activeTitle": "あなたはBuddyです 🎉",
+    "ctaTitle": "学習を強化しましょう",
+    "renewsOn": "{{date}}に更新",
+    "activeDesc": "アクティブなサブスクリプション。",
+    "ctaDesc": "いつでもキャンセルできます。Stripeポータルから直接。",
+    "cancelScheduled": "現在の期間の終わりにサブスクリプションが終了します。",
+    "manage": "サブスクリプションを管理",
+    "subscribe": "Buddyプランに登録",
+    "refresh": "ステータスを更新",
+    "testTitle": "テストモード（CEO/管理者のみ）",
+    "testDesc": "すべてをテストするために、支払いなしで30日間アカウントでプレミアムを有効にします。",
+    "testActive": "このアカウントでテストプレミアムがアクティブです。",
+    "testInactive": "テストプレミアムは無効です。",
+    "toolsTitle": "Buddy学習ツール",
+    "toolsDesc": "あらゆるトピックに関するフラッシュカード、要約、クイズを生成します。",
+    "locked": "プレミアムツールを解除するにはBuddyプランに登録してください。",
+    "analyticsTitle": "学習統計",
+    "analyticsDesc": "学習ペースを追跡します。",
+    "statTotal": "合計",
+    "statStudies": "学習",
+    "statExercises": "演習",
+    "statPlans": "プラン",
+    "testError": "テストモードを変更できませんでした",
+    "testOn": "テストプレミアムが有効になりました",
+    "testOff": "テストプレミアムが無効になりました",
+    "welcomeTitle": "Buddyへようこそ！",
+    "welcomeDesc": "サブスクリプションが確認されています。",
+    "checkoutError": "支払いを開始できませんでした",
+    "checkoutErrorHint": "しばらくしてからもう一度お試しください。",
+    "portalError": "管理画面を開けませんでした",
+    "b1Title": "優先生成",
+    "b1Desc": "あなたの学習がキューの先頭になります。",
+    "b2Title": "毎月30クレジット",
+    "b2Desc": "各サイクルで自動的に再チャージされます。",
+    "b3Title": "限定チャレンジ",
+    "b3Desc": "進捗トラックでのBuddyの成果。",
+    "b4Title": "高度なカスタマイズ",
+    "b4Desc": "あなたのページに追加のパレットとテーマ。",
+    "menuItem": "Buddyプラン"
+  },
+  "common": {
+    "back": "戻る",
+    "showActions": "アクションを表示",
+    "hideActions": "アクションを折りたたむ",
+    "error": "エラー",
+    "save": "保存"
+  },
+  "plans": {
+    "buddyTitle": "プランバディ",
+    "buddySubtitle": "プレミアムツールと広告なしで、より速く学習しましょう。",
+    "buddy": {
+      "item1": "優先生成、はるかに高速",
+      "item2": "毎月30クレジット追加",
+      "item5": "フラッシュカード、要約、クイズ、分析",
+      "item6": "広告なしのエクスペリエンス",
+      "item3": "トラックでの限定チャレンジ",
+      "item4": "高度なテーマとレイアウトのカスタマイズ"
+    },
+    "free": {
+      "item1": "学習、演習、計画の生成",
+      "item2": "基本的なデイリーおよびウィークリークレジット",
+      "item3": "進捗トラックとランキング",
+      "item4": "標準生成速度"
+    },
+    "title": "Learn Buddyプラン",
+    "freeTitle": "無料プラン",
+    "freeSubtitle": "今日から学習を始めるために必要なすべて。",
+    "buddyPrice": "{{price}}円/月",
+    "manageBuddy": "Buddyプランを管理",
+    "upgradeCta": "Buddyになりたい"
+  },
+  "chatBuddy": {
+    "tooltip": "Learn Buddyとチャット",
+    "imgTooBigTitle": "画像が大きすぎます",
+    "imgTooBig": "画像1枚につき最大15MBです。",
+    "imgFail": "画像を読み取れませんでした。",
+    "error": "応答に失敗しました。",
+    "errorTitle": "エラー",
+    "title": "チャットバディ",
+    "subtitle": "あなたのAIチューター — 何でも質問してください ✨",
+    "clear": "会話をクリア",
+    "heroTitle": "こんにちは！何かお手伝いできますか？",
+    "heroDesc": "科目について質問したり、演習を依頼したり、コードのヘルプ、学習計画、または演習の写真を送ったりしてください。",
+    "s1": "光合成について簡単に説明してください",
+    "s2": "数学の7日間学習計画を作成してください",
+    "s3": "リストをソートするPython関数を書いてください",
+    "s4": "二次方程式に関する演習を3つ教えてください",
+    "addImage": "画像を添付",
+    "placeholder": "何でも質問してください…",
+    "disclaimer": "Geminiを搭載 · 間違いを犯す可能性があります。重要な情報は確認してください。"
+  },
+  "generating": {
+    "studyDone": "完了！ 🎉",
+    "exerciseDone": "完了！ 🎉",
+    "complexityHint": "複雑なコンテンツ、画像、図、カスタムの詳細の生成には数秒かかる場合があります。リクエスト制限を超えた場合、画像が生成されないことがあります。"
   }
 }

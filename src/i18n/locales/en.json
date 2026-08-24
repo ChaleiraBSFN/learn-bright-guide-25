@@ -84,7 +84,12 @@
     "topic": "Topic",
     "freeVersion": "Free version",
     "subscribeForComplete": "Subscribe to Premium for complete content",
-    "contentNotLoaded": "Content could not be loaded correctly."
+    "contentNotLoaded": "Content could not be loaded correctly.",
+    "imageAnalysis": "Image Analysis",
+    "extractedConcepts": "Identified Concepts",
+    "solvedExercises": "Exercises Solved from Image",
+    "solution": "Solution",
+    "explanation": "Explanation"
   },
   "sections": {
     "objective": "Objective",
@@ -115,7 +120,11 @@
     "daysCount": "days",
     "generating": "Generating...",
     "generateNow": "Practice now",
-    "clickHere": "Click here"
+    "clickHere": "Click here",
+    "illustrativeImages": "Illustrative Images",
+    "imagesGoogleHint": "See real images about the topic directly in Google Search.",
+    "searchGoogleImages": "Search on Google Images",
+    "searchGoogle": "Search on Google"
   },
   "premium": {
     "unlock": "Subscribe Premium",
@@ -205,7 +214,8 @@
     "welcome": "Welcome!",
     "loginSuccess": "Login successful.",
     "accountCreated": "Account created!",
-    "accountCreatedSuccess": "Your account has been created successfully."
+    "accountCreatedSuccess": "Your account has been created successfully.",
+    "signIn": "Sign in"
   },
   "subscribe": {
     "youArePremium": "You're Premium! 🎉",
@@ -550,7 +560,17 @@
     "confirmEmailToReset": "Confirm your email to verify your identity.",
     "confirmYourEmail": "Enter your registered email",
     "emailVerifyNote": "Enter the same email you registered with to confirm it's you.",
-    "emailMismatch": "The email does not match the registered email."
+    "emailMismatch": "The email does not match the registered email.",
+    "verifyingLink": "Verifying link...",
+    "appearance": "Appearance",
+    "appearanceDesc": "Choose the site theme for a more comfortable experience.",
+    "themeDark": "Dark",
+    "themeDarkDesc": "Recommended. Reduces eye strain.",
+    "themeLight": "Light",
+    "themeLightDesc": "Well-lit environments.",
+    "accentTitle": "Color palette (Buddy)",
+    "accentDesc": "Customize the main colors of your pages.",
+    "accentLocked": "Exclusive to the Buddy plan. Subscribe to unlock."
   },
   "generating": {
     "studyTitle": "Generating study material",
@@ -560,7 +580,10 @@
     "tipStudy3": "Building mind map and study plan...",
     "tipExercise1": "Analyzing topic and level...",
     "tipExercise2": "Creating varied questions...",
-    "tipExercise3": "Preparing answer keys and explanations..."
+    "tipExercise3": "Preparing answer keys and explanations...",
+    "studyDone": "Done! 🎉",
+    "exerciseDone": "Done! 🎉",
+    "complexityHint": "This may take a few seconds due to the generation of complex content, images, diagrams, and personalized details. Sometimes images may not be generated if the request limit is exceeded."
   },
   "credits": {
     "remaining": "{{count}} credits remaining",
@@ -839,8 +862,114 @@
       "tapFlip": "Tap to flip",
       "tapBack": "Tap to see the question",
       "revealAll": "Reveal all answers",
-      "resetCards": "Start over"
+      "resetCards": "Start over",
+      "error": "We couldn't generate it now",
+      "errorHint": "Try again in a few seconds.",
+      "flashcards": "Flashcards",
+      "summary": "Smart summary",
+      "quiz": "Quiz",
+      "placeholder": "Ex.: French Revolution, quadratic functions...",
+      "clear": "Clear",
+      "answer": "Answer",
+      "question": "Question"
     },
-    "customizeLink": "Customize app colors"
+    "customizeLink": "Customize app colors",
+    "menuItem": "Buddy Plan",
+    "testError": "Could not change test mode",
+    "testOn": "Test Premium activated",
+    "testOff": "Test Premium deactivated",
+    "welcomeTitle": "Welcome to Buddy!",
+    "welcomeDesc": "Your subscription is being confirmed.",
+    "checkoutError": "Could not open checkout",
+    "checkoutErrorHint": "Try again in a moment.",
+    "portalError": "Could not open management",
+    "b1Title": "Priority generation",
+    "b1Desc": "Your studies enter the front of the line.",
+    "b2Title": "30 credits per month",
+    "b2Desc": "Automatically recharged each cycle.",
+    "b3Title": "Exclusive challenges",
+    "b3Desc": "Buddy achievements on the progress track.",
+    "b4Title": "Advanced customization",
+    "b4Desc": "Extra palettes and themes on your pages.",
+    "b5Title": "Premium tools",
+    "b5Desc": "Flashcards, summaries, quizzes, and analytics.",
+    "b6Title": "No ads",
+    "b6Desc": "Study without interruptions.",
+    "seoTitle": "Buddy Plan — Learn Buddy Premium",
+    "seoDesc": "Subscribe to Learn Buddy's Buddy plan: priority generation, monthly credits, flashcards, summaries, quizzes, and an ad-free experience.",
+    "title": "Buddy Plan",
+    "activeTitle": "You are Buddy 🎉",
+    "ctaTitle": "Boost your studies",
+    "renewsOn": "Renews on {{date}}",
+    "activeDesc": "Active subscription.",
+    "ctaDesc": "Cancel anytime, directly in the Stripe portal.",
+    "cancelScheduled": "Your subscription will end at the end of the current period.",
+    "manage": "Manage subscription",
+    "subscribe": "Subscribe to the Buddy plan",
+    "refresh": "Refresh status",
+    "testTitle": "Test mode (CEO/admin only)",
+    "testDesc": "Activate Premium on your account for 30 days, without payment, to test everything.",
+    "testActive": "Test Premium active on this account.",
+    "testInactive": "Test Premium deactivated.",
+    "toolsTitle": "Buddy study tools",
+    "toolsDesc": "Generate flashcards, summaries, and quizzes on any topic.",
+    "locked": "Subscribe to the Buddy plan to unlock premium tools.",
+    "analyticsTitle": "Your study statistics",
+    "analyticsDesc": "Track your learning pace.",
+    "statTotal": "Total",
+    "statStudies": "Studies",
+    "statExercises": "Exercises",
+    "statPlans": "Plans"
+  },
+  "plans": {
+    "buddyTitle": "Buddy Plan",
+    "buddySubtitle": "Study faster, with premium tools and no ads.",
+    "buddy": {
+      "item1": "Priority generation, much faster",
+      "item2": "30 extra credits every month",
+      "item5": "Flashcards, summaries, quizzes, and analytics",
+      "item6": "Ad-free experience",
+      "item3": "Exclusive challenges on the track",
+      "item4": "Advanced theme and layout customization"
+    },
+    "free": {
+      "item1": "Generation of studies, exercises, and plans",
+      "item2": "Basic daily and weekly credits",
+      "item3": "Progress track and ranking",
+      "item4": "Standard generation speed"
+    },
+    "title": "Learn Buddy Plans",
+    "freeTitle": "Free Plan",
+    "freeSubtitle": "Everything you need to start studying today.",
+    "buddyPrice": "R$ {{price}}/month",
+    "manageBuddy": "Manage my Buddy plan",
+    "upgradeCta": "I want to be a Buddy"
+  },
+  "common": {
+    "showActions": "Show actions",
+    "hideActions": "Collapse actions",
+    "error": "Error",
+    "back": "Back",
+    "save": "Save"
+  },
+  "chatBuddy": {
+    "tooltip": "Chat with Learn Buddy",
+    "imgTooBigTitle": "Image too large",
+    "imgTooBig": "Max 15MB per image.",
+    "imgFail": "Could not read image.",
+    "error": "Failed to respond.",
+    "errorTitle": "Error",
+    "title": "Chat Buddy",
+    "subtitle": "Your AI tutor — ask anything ✨",
+    "clear": "Clear conversation",
+    "heroTitle": "Hello! How can I help?",
+    "heroDesc": "Ask about subjects, request exercises, help with code, study plans, or send a photo of an exercise.",
+    "s1": "Explain photosynthesis to me in a simple way",
+    "s2": "Create a 7-day study plan for math",
+    "s3": "Write a Python function to sort a list",
+    "s4": "Give me 3 exercises on quadratic equations",
+    "addImage": "Attach image",
+    "placeholder": "Ask anything…",
+    "disclaimer": "Powered by Gemini · may make mistakes, verify important information."
   }
 }
