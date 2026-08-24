@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, LogOut, Loader2, Shield, BarChart3, Camera, MessageCircle, Settings, Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { User, LogOut, Loader2, Shield, BarChart3, Camera, MessageCircle, Settings, Crown } from 'lucide-react';
+
 import { AIInfoDialog } from '@/components/AIInfoDialog';
 import { ImageCropDialog } from '@/components/ImageCropDialog';
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ export const UserMenu = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { theme, toggleTheme } = useTheme();
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
 
@@ -118,10 +118,11 @@ export const UserMenu = () => {
             <Settings className="h-4 w-4 mr-2" />
             {t('settings.title')}
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); toggleTheme(); }}>
-            {theme === 'dark' ? <Sun className="h-4 w-4 mr-2 text-accent" /> : <Moon className="h-4 w-4 mr-2 text-primary" />}
-            {theme === 'dark' ? t('settings.themeLight', 'Tema claro') : t('settings.themeDark', 'Tema escuro')}
+          <DropdownMenuItem onClick={() => navigate('/buddy')}>
+            <Crown className="h-4 w-4 mr-2 text-amber-500" />
+            {t('buddy.menuItem', 'Plano Buddy')}
           </DropdownMenuItem>
+
           <AIInfoDialog />
           {isAdmin && (
             <>

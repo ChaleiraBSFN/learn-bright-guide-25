@@ -692,34 +692,46 @@ export type Database = {
       subscriptions: {
         Row: {
           created_at: string
+          credits_period: string | null
           expires_at: string | null
           id: string
           pix_payment_proof: string | null
           plan_type: string
+          price_id: string | null
           starts_at: string | null
           status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          credits_period?: string | null
           expires_at?: string | null
           id?: string
           pix_payment_proof?: string | null
           plan_type?: string
+          price_id?: string | null
           starts_at?: string | null
           status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          credits_period?: string | null
           expires_at?: string | null
           id?: string
           pix_payment_proof?: string | null
           plan_type?: string
+          price_id?: string | null
           starts_at?: string | null
           status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -916,12 +928,16 @@ export type Database = {
         Args: { _subscription_id: string }
         Returns: {
           created_at: string
+          credits_period: string | null
           expires_at: string | null
           id: string
           pix_payment_proof: string | null
           plan_type: string
+          price_id: string | null
           starts_at: string | null
           status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
           updated_at: string
           user_id: string
         }
@@ -948,12 +964,16 @@ export type Database = {
         Args: never
         Returns: {
           created_at: string
+          credits_period: string | null
           expires_at: string | null
           id: string
           pix_payment_proof: string | null
           plan_type: string
+          price_id: string | null
           starts_at: string | null
           status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
           updated_at: string
           user_id: string
         }
@@ -1046,6 +1066,10 @@ export type Database = {
         Args: { _achievement_id: number; _user_id: string }
         Returns: undefined
       }
+      grant_buddy_monthly_credits: {
+        Args: { _amount?: number; _period: string; _user_id: string }
+        Returns: number
+      }
       has_feature_access: {
         Args: { _feature_type: string; _study_topic: string; _user_id: string }
         Returns: boolean
@@ -1057,6 +1081,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_buddy: { Args: { _user_id: string }; Returns: boolean }
       is_group_admin: {
         Args: { _group_id: string; _user_id: string }
         Returns: boolean
@@ -1064,6 +1089,17 @@ export type Database = {
       is_group_member: {
         Args: { _group_id: string; _user_id: string }
         Returns: boolean
+      }
+      sync_buddy_subscription: {
+        Args: {
+          _expires_at: string
+          _price_id?: string
+          _status: string
+          _stripe_customer_id?: string
+          _stripe_subscription_id?: string
+          _user_id: string
+        }
+        Returns: undefined
       }
       track_site_visit: {
         Args: {
