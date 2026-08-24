@@ -4,14 +4,9 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 const BUDDY_PRICE_ID = "price_1U81rtE1geDw4HorwUkDFTUa";
 
-// Preço por moeda (valor na menor unidade da moeda).
-const CURRENCY_PRICES: Record<string, number> = {
-  brl: 590,
-  usd: 199,
-  eur: 179,
-  jpy: 300, // moeda sem centavos
-  cny: 1490,
-};
+// Moedas com preço configurado em currency_options do price no Stripe.
+const SUPPORTED_CURRENCIES = ["brl", "usd", "eur", "jpy", "cny"];
+
 
 
 Deno.serve(async (req) => {
