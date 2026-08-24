@@ -1,6 +1,8 @@
-import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { getPlanPrice } from '@/lib/currency';
 
 export const BUDDY_PRICE_BRL = 5.9;
 
@@ -11,10 +13,13 @@ interface SubscriptionState {
   cancelAtPeriodEnd: boolean;
   refresh: () => Promise<void>;
   startCheckout: () => Promise<string | null>;
+  prefetchCheckout: () => void;
+  getCheckoutUrlSync: () => string | null;
   openPortal: () => Promise<string | null>;
 }
 
 const SubscriptionContext = createContext<SubscriptionState | undefined>(undefined);
+
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
