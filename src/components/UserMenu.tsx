@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, LogOut, Loader2, Shield, BarChart3, Camera, MessageCircle, Settings, Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { User, LogOut, Loader2, Shield, BarChart3, Camera, MessageCircle, Settings, Crown } from 'lucide-react';
+
 import { AIInfoDialog } from '@/components/AIInfoDialog';
 import { ImageCropDialog } from '@/components/ImageCropDialog';
 import { useNavigate } from 'react-router-dom';
