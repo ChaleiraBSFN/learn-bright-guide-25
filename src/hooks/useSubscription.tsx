@@ -79,7 +79,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       if (entry?.url) return Promise.resolve(entry.url);
       if (entry?.promise) return entry.promise;
       const promise = supabase.functions
-        .invoke('create-checkout', { body: { currency: cur } })
+        .invoke('create-checkout', { body: { currency: cur, lang: i18n.language } })
         .then(({ data, error }) => {
           const url = !error && data?.url ? (data.url as string) : null;
           checkoutCache.current[cur] = { url, promise: null };
