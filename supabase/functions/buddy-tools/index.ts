@@ -19,13 +19,14 @@ const PROMPTS: Record<Tool, (topic: string, lang: string) => string> = {
 Retorne JSON: {"cards":[{"front":"pergunta curta","back":"resposta clara e completa em no máximo 3 frases"}]}
 Nunca inclua código, markdown ou jargão desnecessário.`,
   summary: (topic, lang) =>
-    `Crie um resumo de estudo objetivo sobre "${topic}". Responda SOMENTE em ${lang}.
-Retorne JSON: {"title":"título","bullets":["ponto essencial"],"keyTerms":[{"term":"termo","definition":"definição curta"}],"conclusion":"parágrafo final curto"}
-Use linguagem simples, 6 a 10 bullets, sem código e sem markdown.`,
+    `Crie um resumo de estudo objetivo, organizado em tópicos, sobre "${topic}". Responda SOMENTE em ${lang}.
+Retorne JSON: {"title":"🎯 título com 1 emoji","bullets":["📌 tópico curto: explicação de 1-2 frases"],"keyTerms":[{"term":"📖 termo","definition":"definição curta"}],"conclusion":"✅ parágrafo final curto"}
+Regras: cada bullet DEVE começar com um emoji relevante e variado (📌 🧠 ⚡ 🔍 💡 📊 🕰️ 🌍 ➗ 🧪), 6 a 10 bullets, linguagem simples, sem código e sem markdown.`,
   quiz: (topic, lang) =>
     `Crie um quiz de 8 perguntas de múltipla escolha sobre "${topic}". Responda SOMENTE em ${lang}.
-Retorne JSON: {"questions":[{"question":"enunciado","options":["a","b","c","d"],"correctIndex":0,"explanation":"por que está correta"}]}
-Sem código, sem markdown.`,
+Retorne JSON: {"questions":[{"question":"❓ enunciado","options":["a","b","c","d"],"correctIndex":0,"explanation":"💡 por que está correta, em tópicos curtos separados por • "}]}
+Regras: cada pergunta começa com um emoji relevante, a explicação usa 2 ou 3 tópicos curtos iniciados por "• " e pode ter emojis. Sem código, sem markdown.`,
+
 };
 
 const extractJson = (raw: string) => {

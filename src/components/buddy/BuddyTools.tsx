@@ -176,9 +176,10 @@ export const BuddyTools = () => {
           {summary.title && <h3 className="mb-3 text-lg font-bold text-foreground">{summary.title}</h3>}
           <ul className="mb-4 space-y-2">
             {(summary.bullets ?? []).map((b, i) => (
-              <li key={i} className="text-sm text-foreground">• {b}</li>
+              <li key={i} className="text-sm leading-relaxed text-foreground">{b}</li>
             ))}
           </ul>
+
           {(summary.keyTerms ?? []).length > 0 && (
             <div className="mb-4 space-y-1">
               {(summary.keyTerms ?? []).map((k, i) => (
@@ -222,8 +223,11 @@ export const BuddyTools = () => {
                 })}
               </div>
               {answers[qi] !== undefined && q.explanation && (
-                <p className="mt-3 text-xs text-muted-foreground">{q.explanation}</p>
+                <p className="mt-3 whitespace-pre-line text-xs leading-relaxed text-muted-foreground">
+                  {q.explanation.replace(/\s*•\s*/g, '\n• ').trim()}
+                </p>
               )}
+
             </div>
           ))}
         </div>
