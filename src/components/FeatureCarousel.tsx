@@ -396,12 +396,6 @@ export function FeatureCarousel() {
 
   return (
     <>
-      {isTranslating && lang !== 'pt-BR' && (
-        <div className="flex items-center justify-center gap-1.5 pb-1 text-xs text-foreground/60">
-          <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
-          <span>{loadingLabels[lang] || loadingLabels['en']}</span>
-        </div>
-      )}
       <div
         className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden"
         onMouseEnter={() => setPaused(true)}
