@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Sun, Moon, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Coins } from 'lucide-react';
+import { Download, Map, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Coins, Crown } from 'lucide-react';
 
-import { useTheme } from '@/hooks/useTheme';
+
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { StudyGroups } from '@/components/StudyGroups';
@@ -116,23 +116,6 @@ export const FloatingActions = () => {
           </Button>
 
 
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label={theme === 'dark' ? t('settings.themeLight', 'Tema claro') : t('settings.themeDark', 'Tema escuro')}
-              className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]"
-            >
-              {theme === 'dark' ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4 text-primary" />}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="left">
-            {theme === 'dark' ? t('settings.themeLight', 'Tema claro') : t('settings.themeDark', 'Tema escuro')}
-          </TooltipContent>
-        </Tooltip>
 
 
         {/* Fullscreen (desktop only) */}
