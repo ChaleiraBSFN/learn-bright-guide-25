@@ -68,11 +68,49 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     return () => window.clearInterval(id);
   }, [user, refresh]);
 
-  const startCheckout = useCallback(async () => {
-    const { data, error } = await supabase.functions.invoke('create-checkout');
-    if (error || !data?.url) return null;
-    return data.url as string;
-  }, []);
+  // Pré-carrega a sessão de checkout para o clique abrir instantaneamente.
+  const checkoutCache = useRef<Record<string, { url: string | null; promise: Promise<string | null> | null }>>({});
+  const { i18n } = useTranslation();
+  const currency = getPlanPrice(i18n.language).currency;
+
+  const requestCheckout = useCallback(
+    (cur: string) => {
+      const entry = checkoutCache.current[cur];
+      if (entry?.url) return Promise.resolve(entry.url);
+      if (entry?.promise) return entry.promise;
+      const promise = supabase.functions
+        .invoke('create-checkout', { body: { currency: cur } })
+        .then(({ data, error }) => {
+          const url = !error && data?.url ? (data.url as string) : null;
+          checkoutCache.current[cur] = { url, promise: null };
+          return url;
+        })
+        .catch(() => {
+          checkoutCache.current[cur] = { url: null, promise: null };
+          return null;
+        });
+      checkoutCache.current[cur] = { url: null, promise };
+      return promise;
+    },
+    [],
+  );
+
+  const startCheckout = useCallback(() => requestCheckout(currency), [requestCheckout, currency]);
+
+  const prefetchCheckout = useCallback(() => {
+    if (!user) return;
+    void requestCheckout(currency);
+  }, [user, requestCheckout, currency]);
+
+  const getCheckoutUrlSync = useCallback(
+    () => checkoutCache.current[currency]?.url ?? null,
+    [currency],
+  );
+
+  // Invalida o cache quando a moeda muda (troca de idioma).
+  useEffect(() => {
+    if (user) void requestCheckout(currency);
+  }, [currency, user, requestCheckout]);
 
   const openPortal = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke('customer-portal');
@@ -82,7 +120,17 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <SubscriptionContext.Provider
-      value={{ isBuddy, loading, subscriptionEnd, cancelAtPeriodEnd, refresh, startCheckout, openPortal }}
+      value={{
+        isBuddy,
+        loading,
+        subscriptionEnd,
+        cancelAtPeriodEnd,
+        refresh,
+        startCheckout,
+        prefetchCheckout,
+        getCheckoutUrlSync,
+        openPortal,
+      }}
     >
       {children}
     </SubscriptionContext.Provider>
@@ -100,6 +148,9 @@ export const useSubscription = (): SubscriptionState => {
     cancelAtPeriodEnd: false,
     refresh: async () => {},
     startCheckout: async () => null,
+    prefetchCheckout: () => {},
+    getCheckoutUrlSync: () => null,
     openPortal: async () => null,
   };
 };
+
