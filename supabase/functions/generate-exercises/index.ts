@@ -249,6 +249,7 @@ Rules: Vary difficulty within the calibration. ONLY JSON output.`;
       temperature: 0.7,
       imagemBase64,
       label: "Exercises",
+      race: isPremium ? 3 : 1,
     });
 
 
