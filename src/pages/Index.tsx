@@ -34,6 +34,8 @@ const PromoBanners = lazy(() => import("@/components/PromoBanners").then((m) => 
 const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").then((m) => ({ default: m.EngineNoticeBanner })));
 const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
 const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({ default: m.AdSenseSlot })));
+const PlanComparison = lazy(() => import("@/components/PlanComparison").then((m) => ({ default: m.PlanComparison })));
+
 
 const pageVariants = {
   initial: { opacity: 0, y: 6 },
