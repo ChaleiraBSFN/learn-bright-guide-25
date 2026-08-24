@@ -172,11 +172,24 @@ export const PromoBanners = () => {
     return (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
   }, [banners]);
 
-  const { data: translations, isLoading: isTranslating } = useQuery({
+  const cachedTranslations = useMemo(() => {
+    if (lang === 'pt-BR') return undefined;
+    const cache = readTranslationCache();
+    const result: Record<string, { title: string; description: string; cta_label: string }> = {};
+    for (const b of visible) {
+      const cached = cache[lang]?.[`${b.id}:${b.title}:${b.description}:${b.cta_label}`];
+      if (cached) result[b.id] = cached;
+    }
+    return Object.keys(result).length === visible.length && visible.length > 0 ? result : undefined;
+  }, [visible, lang]);
+
+  const { data: translations } = useQuery({
     queryKey: ['promo-banners-translations', lang, visible.map(b => `${b.id}:${b.title}:${b.description}:${b.cta_label}`).join('|')],
     enabled: visible.length > 0 && lang !== 'pt-BR',
     staleTime: 60 * 60 * 1000,
+    initialData: cachedTranslations,
     queryFn: async () => {
+
       const cache = readTranslationCache();
       const result: Record<string, { title: string; description: string; cta_label: string }> = {};
       const toTranslate: Array<{ id: string; title: string; description: string; cta_label: string }> = [];
