@@ -807,5 +807,17 @@
     "privacyLink": "Informativa sulla privacy",
     "accept": "Accetta annunci personalizzati",
     "reject": "Solo annunci non personalizzati"
+  },
+  "buddy": {
+    "tools": {
+      "step1": "1. Cosa vuoi creare?",
+      "step2": "2. Su quale argomento?",
+      "generate": "Genera",
+      "flashcardsDesc": "Schede domanda e risposta",
+      "summaryDesc": "Punti chiave in pochi elementi",
+      "quizDesc": "Domande corrette subito",
+      "topicRequired": "Scrivi un argomento per iniziare"
+    },
+    "customizeLink": "Personalizza i colori dell'app"
   }
 }

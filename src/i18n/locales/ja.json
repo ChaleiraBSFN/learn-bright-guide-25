@@ -807,5 +807,17 @@
     "privacyLink": "プライバシーポリシー",
     "accept": "パーソナライズ広告を許可",
     "reject": "非パーソナライズ広告のみ"
+  },
+  "buddy": {
+    "tools": {
+      "step1": "1. 何を作りますか？",
+      "step2": "2. どのテーマですか？",
+      "generate": "生成",
+      "flashcardsDesc": "質問と回答のカード",
+      "summaryDesc": "要点を数項目で",
+      "quizDesc": "即時採点される問題",
+      "topicRequired": "テーマを入力してください"
+    },
+    "customizeLink": "アプリの色をカスタマイズ"
   }
 }

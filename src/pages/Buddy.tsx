@@ -261,26 +261,24 @@ const Buddy = () => {
               <CardDescription>{t('buddy.analyticsDesc', 'Acompanhe seu ritmo de aprendizagem.')}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {[
                   { label: t('buddy.statTotal', 'Total'), value: stats?.total ?? 0 },
                   { label: t('buddy.statStudies', 'Estudos'), value: stats?.studies ?? 0 },
                   { label: t('buddy.statExercises', 'Exercícios'), value: stats?.exercises ?? 0 },
                   { label: t('buddy.statPlans', 'Planos'), value: stats?.plans ?? 0 },
                 ].map((s) => (
-                  <div key={s.label} className="rounded-xl border-2 border-foreground/10 p-3 text-center">
-                    <p className="text-2xl font-bold text-foreground">{s.value}</p>
+                  <div key={s.label} className="rounded-lg bg-muted/40 p-3 text-center">
+                    <p className="text-xl font-bold text-foreground">{s.value}</p>
                     <p className="text-xs text-muted-foreground">{s.label}</p>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-xs text-muted-foreground">
-                {t('buddy.customizeHint', 'Personalize as cores do app em Configurações → Aparência.')}{' '}
-                <Link to="/settings" className="text-primary hover:underline">
-                  {t('settings.title', 'Configurações')}
-                </Link>
-              </p>
+              <Link to="/settings" className="mt-3 inline-block text-xs text-primary hover:underline">
+                {t('buddy.customizeLink', 'Personalizar cores do app')}
+              </Link>
             </CardContent>
+
           </Card>
         )}
       </main>

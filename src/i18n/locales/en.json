@@ -820,5 +820,17 @@
     "privacyLink": "Privacy Policy",
     "accept": "Accept personalized ads",
     "reject": "Non-personalized ads only"
+  },
+  "buddy": {
+    "tools": {
+      "step1": "1. What do you want to create?",
+      "step2": "2. About which topic?",
+      "generate": "Generate",
+      "flashcardsDesc": "Question and answer cards",
+      "summaryDesc": "Key points in a few items",
+      "quizDesc": "Questions graded instantly",
+      "topicRequired": "Type a topic to start"
+    },
+    "customizeLink": "Customize app colors"
   }
 }

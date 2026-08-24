@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Layers, FileText, ListChecks, RotateCcw } from 'lucide-react';
+import { Loader2, Layers, FileText, ListChecks, RotateCcw, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +29,9 @@ export const BuddyTools = () => {
   const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null);
   const [answers, setAnswers] = useState<Record<number, number>>({});
 
+  const hasResult = Boolean(cards || summary || quiz);
+  const canGenerate = topic.trim().length >= 2;
+
   const reset = () => {
     setCards(null);
     setSummary(null);
@@ -37,17 +40,13 @@ export const BuddyTools = () => {
     setAnswers({});
   };
 
-  const run = async (selected: Tool) => {
-    if (topic.trim().length < 2) {
-      toast({ title: t('buddy.tools.topicRequired', 'Digite um tema para começar'), variant: 'destructive' });
-      return;
-    }
-    setTool(selected);
+  const run = async () => {
+    if (!canGenerate) return;
     setLoading(true);
     reset();
 
     const { data, error } = await supabase.functions.invoke('buddy-tools', {
-      body: { tool: selected, topic: topic.trim(), language: i18n.language },
+      body: { tool, topic: topic.trim(), language: i18n.language },
     });
     setLoading(false);
 
@@ -60,51 +59,98 @@ export const BuddyTools = () => {
       return;
     }
 
-    if (selected === 'flashcards') setCards(data.data?.cards ?? []);
-    if (selected === 'summary') setSummary(data.data ?? {});
-    if (selected === 'quiz') setQuiz(data.data?.questions ?? []);
+    if (tool === 'flashcards') setCards(data.data?.cards ?? []);
+    if (tool === 'summary') setSummary(data.data ?? {});
+    if (tool === 'quiz') setQuiz(data.data?.questions ?? []);
   };
 
-  const tools: { key: Tool; label: string; icon: typeof Layers }[] = [
-    { key: 'flashcards', label: t('buddy.tools.flashcards', 'Flashcards'), icon: Layers },
-    { key: 'summary', label: t('buddy.tools.summary', 'Resumo inteligente'), icon: FileText },
-    { key: 'quiz', label: t('buddy.tools.quiz', 'Quiz'), icon: ListChecks },
+  const tools: { key: Tool; label: string; desc: string; icon: typeof Layers }[] = [
+    {
+      key: 'flashcards',
+      label: t('buddy.tools.flashcards', 'Flashcards'),
+      desc: t('buddy.tools.flashcardsDesc', 'Cartões de pergunta e resposta'),
+      icon: Layers,
+    },
+    {
+      key: 'summary',
+      label: t('buddy.tools.summary', 'Resumo inteligente'),
+      desc: t('buddy.tools.summaryDesc', 'Pontos-chave em poucos itens'),
+      icon: FileText,
+    },
+    {
+      key: 'quiz',
+      label: t('buddy.tools.quiz', 'Quiz'),
+      desc: t('buddy.tools.quizDesc', 'Perguntas com correção na hora'),
+      icon: ListChecks,
+    },
   ];
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Input
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          placeholder={t('buddy.tools.placeholder', 'Ex.: Revolução Francesa, funções quadráticas...')}
-          className="flex-1"
-        />
-        {cards || summary || quiz ? (
-          <Button variant="outline" onClick={reset} className="shrink-0">
-            <RotateCcw className="mr-2 h-4 w-4" />
-            {t('buddy.tools.clear', 'Limpar')}
-          </Button>
-        ) : null}
+      {/* Step 1 — choose what to create */}
+      <div className="space-y-2">
+        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          {t('buddy.tools.step1', '1. O que você quer criar?')}
+        </p>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {tools.map(({ key, label, desc, icon: Icon }) => {
+            const active = tool === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setTool(key)}
+                aria-pressed={active}
+                className={`rounded-xl border-2 p-3 text-left transition-colors ${
+                  active
+                    ? 'border-primary bg-primary/10'
+                    : 'border-foreground/10 hover:border-primary/50'
+                }`}
+              >
+                <Icon className={`mb-1 h-4 w-4 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                <p className="text-sm font-bold text-foreground">{label}</p>
+                <p className="text-xs text-muted-foreground">{desc}</p>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-3">
-        {tools.map(({ key, label, icon: Icon }) => (
-          <Button
-            key={key}
-            variant={tool === key ? 'default' : 'outline'}
-            disabled={loading}
-            onClick={() => void run(key)}
-            className="justify-start"
-          >
-            {loading && tool === key ? (
+      {/* Step 2 — topic + generate */}
+      <div className="space-y-2">
+        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          {t('buddy.tools.step2', '2. Sobre qual tema?')}
+        </p>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Input
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') void run();
+            }}
+            placeholder={t('buddy.tools.placeholder', 'Ex.: Revolução Francesa, funções quadráticas...')}
+            className="flex-1"
+          />
+          <Button onClick={() => void run()} disabled={loading || !canGenerate} className="shrink-0">
+            {loading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              <Icon className="mr-2 h-4 w-4" />
+              <Sparkles className="mr-2 h-4 w-4" />
             )}
-            {label}
+            {t('buddy.tools.generate', 'Gerar')}
           </Button>
-        ))}
+          {hasResult && (
+            <Button variant="ghost" onClick={reset} className="shrink-0">
+              <RotateCcw className="mr-2 h-4 w-4" />
+              {t('buddy.tools.clear', 'Limpar')}
+            </Button>
+          )}
+        </div>
+        {!canGenerate && (
+          <p className="text-xs text-muted-foreground">
+            {t('buddy.tools.topicRequired', 'Digite um tema para começar')}
+          </p>
+        )}
       </div>
 
       {cards && cards.length > 0 && (
