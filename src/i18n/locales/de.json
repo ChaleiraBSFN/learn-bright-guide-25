@@ -807,5 +807,16 @@
     "privacyLink": "Datenschutzerklärung",
     "accept": "Personalisierte Anzeigen akzeptieren",
     "reject": "Nur nicht personalisierte Anzeigen"
+  },
+  "buddy": {
+    "tools": {
+      "step1": "1. Was möchtest du erstellen?",
+      "step2": "2. Zu welchem Thema?",
+      "generate": "Erstellen",
+      "flashcardsDesc": "Frage-und-Antwort-Karten",
+      "summaryDesc": "Kernpunkte in wenigen Punkten",
+      "quizDesc": "Fragen mit sofortiger Auswertung",
+      "topicRequired": "Gib ein Thema ein, um zu starten"
+    }
   }
 }

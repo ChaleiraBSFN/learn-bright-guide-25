@@ -807,5 +807,16 @@
     "privacyLink": "隐私政策",
     "accept": "接受个性化广告",
     "reject": "仅非个性化广告"
+  },
+  "buddy": {
+    "tools": {
+      "step1": "1. 你想创建什么？",
+      "step2": "2. 关于哪个主题？",
+      "generate": "生成",
+      "flashcardsDesc": "问答卡片",
+      "summaryDesc": "几条要点总结",
+      "quizDesc": "即时批改的题目",
+      "topicRequired": "请输入主题以开始"
+    }
   }
 }

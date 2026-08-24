@@ -801,5 +801,16 @@
     "privacyLink": "Política de Privacidad",
     "accept": "Aceptar anuncios personalizados",
     "reject": "Solo anuncios no personalizados"
+  },
+  "buddy": {
+    "tools": {
+      "step1": "1. ¿Qué quieres crear?",
+      "step2": "2. ¿Sobre qué tema?",
+      "generate": "Generar",
+      "flashcardsDesc": "Tarjetas de pregunta y respuesta",
+      "summaryDesc": "Puntos clave en pocos ítems",
+      "quizDesc": "Preguntas corregidas al instante",
+      "topicRequired": "Escribe un tema para empezar"
+    }
   }
 }
