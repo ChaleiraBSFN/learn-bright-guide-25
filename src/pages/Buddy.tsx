@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { SEO } from '@/components/SEO';
 import { BuddyTools } from '@/components/buddy/BuddyTools';
 import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
+import { Switch } from '@/components/ui/switch';
 import { useSubscription, BUDDY_PRICE_BRL } from '@/hooks/useSubscription';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,6 +23,35 @@ const Buddy = () => {
     useSubscription();
   const [busy, setBusy] = useState(false);
   const [stats, setStats] = useState<{ total: number; studies: number; exercises: number; plans: number } | null>(null);
+  const { isAdmin } = useAdmin();
+  const [testBuddy, setTestBuddy] = useState(false);
+  const [testBusy, setTestBusy] = useState(false);
+
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+    const load = async () => {
+      const { data } = await supabase.rpc('has_test_buddy', { _user_id: user.id });
+      setTestBuddy(data === true);
+    };
+    void load();
+  }, [user, isAdmin]);
+
+  const handleTestBuddy = async (enable: boolean) => {
+    setTestBusy(true);
+    const { data, error } = await supabase.rpc('admin_set_test_buddy', { _enable: enable });
+    setTestBusy(false);
+    if (error) {
+      toast({ title: t('buddy.testError', 'Não foi possível alterar o modo de teste'), variant: 'destructive' });
+      return;
+    }
+    setTestBuddy(data === true);
+    await refresh();
+    toast({
+      title: data === true
+        ? t('buddy.testOn', 'Premium de teste ativado')
+        : t('buddy.testOff', 'Premium de teste desativado'),
+    });
+  };
 
   useEffect(() => {
     if (params.get('checkout') === 'success') {
@@ -175,6 +206,32 @@ const Buddy = () => {
             </div>
           </CardContent>
         </Card>
+
+        {isAdmin && (
+          <Card className="border-2 border-primary/40">
+            <CardHeader>
+              <CardTitle className="text-base">
+                {t('buddy.testTitle', 'Modo de teste (somente CEO/admin)')}
+              </CardTitle>
+              <CardDescription>
+                {t('buddy.testDesc', 'Ative o Premium na sua conta por 30 dias, sem pagamento, para testar tudo.')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex items-center justify-between gap-4">
+              <p className="text-sm text-muted-foreground">
+                {testBuddy
+                  ? t('buddy.testActive', 'Premium de teste ativo nesta conta.')
+                  : t('buddy.testInactive', 'Premium de teste desativado.')}
+              </p>
+              <Switch
+                checked={testBuddy}
+                disabled={testBusy}
+                onCheckedChange={(v) => void handleTestBuddy(v)}
+                aria-label={t('buddy.testTitle', 'Modo de teste (somente CEO/admin)')}
+              />
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardHeader>

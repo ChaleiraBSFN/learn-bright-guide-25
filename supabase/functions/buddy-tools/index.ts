@@ -105,6 +105,7 @@ Deno.serve(async (req) => {
       jsonMode: true,
       timeoutMs: 90_000,
       label: `buddy-${tool}`,
+      race: 3,
     });
 
     if (!result.text) {

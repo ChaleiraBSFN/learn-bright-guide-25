@@ -30,6 +30,24 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
+    // Admin test premium: activated from the app by an admin, no Stripe involved.
+    const { data: testBuddy } = await admin.rpc("has_test_buddy", { _user_id: user.id });
+    if (testBuddy === true) {
+      const { data: row } = await admin
+        .from("subscriptions")
+        .select("expires_at")
+        .eq("user_id", user.id)
+        .eq("plan_type", "buddy")
+        .maybeSingle();
+      return json({
+        subscribed: true,
+        plan: "buddy",
+        test_mode: true,
+        subscription_end: row?.expires_at ?? null,
+        cancel_at_period_end: false,
+      });
+    }
+
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) return json({ subscribed: false, plan: "free" });
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });

@@ -115,6 +115,7 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization');
     let userId: string | null = null;
+    let isPremium = false;
     const serviceClient = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
 
     if (authHeader?.startsWith('Bearer ')) {
@@ -123,7 +124,11 @@ serve(async (req) => {
         { global: { headers: { Authorization: authHeader } } }
       );
       const { data: { user: authUser }, error: authError } = await supabaseClient.auth.getUser();
-      if (!authError && authUser) userId = authUser.id;
+      if (!authError && authUser) {
+        userId = authUser.id;
+        const { data: buddy } = await serviceClient.rpc('is_buddy', { _user_id: authUser.id });
+        isPremium = buddy === true;
+      }
     }
 
     const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
@@ -132,7 +137,8 @@ serve(async (req) => {
       || req.headers.get('user-agent')
       || 'unknown';
     const rateLimitId = userId || await toAnonUuid(`anon_${clientIp}`);
-    const maxRequests = userId ? 180 : 900;
+    const maxRequests = isPremium ? 240 : (userId ? 180 : 900);
+
     const { data: isAllowed } = await serviceClient.rpc('check_rate_limit', {
       _user_id: rateLimitId, _endpoint: 'generate-exercises', _max_requests: maxRequests, _window_minutes: 1,
     });
@@ -249,6 +255,7 @@ Rules: Vary difficulty within the calibration. ONLY JSON output.`;
       temperature: 0.7,
       imagemBase64,
       label: "Exercises",
+      race: isPremium ? 3 : 1,
     });
 
 
