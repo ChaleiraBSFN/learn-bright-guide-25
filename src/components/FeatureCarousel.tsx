@@ -228,21 +228,40 @@ export function FeatureCarousel() {
   });
 
   const features: Feature[] = useMemo(() => {
-    return rows.map((r) => {
-      const theme = THEME_MAP[r.color_theme] || THEME_MAP.primary;
-      const Icon = ICON_MAP[r.icon] || Sparkles;
-      const tr = lang !== 'pt-BR' ? translations?.[r.id] : undefined;
-      return {
-        id: r.item_key,
-        icon: Icon,
-        ...theme,
-        title: tr?.title ?? r.title,
-        description: tr?.description ?? r.description,
-        detail: tr?.detail ?? r.detail,
-        examples: tr?.examples ?? (r.examples || []),
-      };
-    });
-  }, [rows, translations, lang]);
+    const premiumFeature: Feature = {
+      id: 'buddy-premium',
+      icon: Crown,
+      ...THEME_MAP.amber,
+      title: t('plans.buddyTitle', 'Plano Buddy'),
+      description: t('plans.buddySubtitle', 'Estude mais rápido, com ferramentas premium e sem anúncios.'),
+      detail: t('plans.buddySubtitle', 'Estude mais rápido, com ferramentas premium e sem anúncios.'),
+      examples: [
+        t('plans.buddy.item1', 'Geração prioritária, bem mais rápida'),
+        t('plans.buddy.item2', '30 créditos extras todo mês'),
+        t('plans.buddy.item5', 'Flashcards, resumos, quizzes e analytics'),
+        t('plans.buddy.item6', 'Experiência sem anúncios'),
+      ],
+      route: '/buddy',
+    };
+
+    return [
+      premiumFeature,
+      ...rows.map((r) => {
+        const theme = THEME_MAP[r.color_theme] || THEME_MAP.primary;
+        const Icon = ICON_MAP[r.icon] || Sparkles;
+        const tr = lang !== 'pt-BR' ? translations?.[r.id] : undefined;
+        return {
+          id: r.item_key,
+          icon: Icon,
+          ...theme,
+          title: tr?.title ?? r.title,
+          description: tr?.description ?? r.description,
+          detail: tr?.detail ?? r.detail,
+          examples: tr?.examples ?? (r.examples || []),
+        };
+      }),
+    ];
+  }, [rows, translations, lang, t]);
 
   const items = useMemo(
     () => (features.length ? [...features, ...features, ...features] : []),
