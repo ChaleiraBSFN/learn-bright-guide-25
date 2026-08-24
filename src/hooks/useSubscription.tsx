@@ -107,10 +107,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     [currency],
   );
 
-  // Invalida o cache quando a moeda muda (troca de idioma).
   useEffect(() => {
-    if (user) void requestCheckout(currency);
-  }, [currency, user, requestCheckout]);
+    if (user && !isBuddy && !loading) void requestCheckout(currency);
+  }, [currency, user, isBuddy, loading, requestCheckout]);
+
 
   const openPortal = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke('customer-portal');
