@@ -9,12 +9,13 @@ import { BuddyTools } from '@/components/buddy/BuddyTools';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Switch } from '@/components/ui/switch';
-import { useSubscription, BUDDY_PRICE_BRL } from '@/hooks/useSubscription';
+import { useSubscription } from '@/hooks/useSubscription';
+import { formatPlanPrice } from '@/lib/currency';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 const Buddy = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -176,9 +177,7 @@ const Buddy = () => {
                   : t('buddy.ctaTitle', 'Turbine seus estudos')}
               </span>
               <span className="text-base font-bold text-accent">
-                {t('plans.buddyPrice', 'R$ {{price}}/mês', {
-                  price: BUDDY_PRICE_BRL.toFixed(2).replace('.', ','),
-                })}
+                {t('plans.buddyPrice', '{{price}}/mês', { price: formatPlanPrice(i18n.language) })}
               </span>
             </CardTitle>
             <CardDescription>
