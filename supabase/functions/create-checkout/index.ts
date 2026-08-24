@@ -7,6 +7,12 @@ const BUDDY_PRICE_ID = "price_1U81rtE1geDw4HorwUkDFTUa";
 // Moedas com preço configurado em currency_options do price no Stripe.
 const SUPPORTED_CURRENCIES = ["brl", "usd", "eur", "jpy", "cny"];
 
+// Idioma da página de pagamento do Stripe.
+const STRIPE_LOCALES: Record<string, string> = {
+  "pt-br": "pt-BR", pt: "pt-BR", en: "en", es: "es", fr: "fr",
+  de: "de", it: "it", ja: "ja", zh: "zh", ru: "ru",
+};
+
 
 
 Deno.serve(async (req) => {
@@ -43,10 +49,14 @@ Deno.serve(async (req) => {
     const origin = req.headers.get("origin") || "https://studdybuddy.com.br";
 
     let currency = "brl";
+    let locale: string | undefined;
     try {
       const body = await req.json();
       const requested = String(body?.currency ?? "").toLowerCase();
       if (SUPPORTED_CURRENCIES.includes(requested)) currency = requested;
+      const lang = String(body?.lang ?? "").toLowerCase();
+      const stripeLocale = STRIPE_LOCALES[lang] ?? STRIPE_LOCALES[lang.split("-")[0]];
+      if (stripeLocale) locale = stripeLocale;
     } catch {
       // sem corpo: mantém BRL
     }
@@ -58,6 +68,7 @@ Deno.serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: BUDDY_PRICE_ID, quantity: 1 }],
       currency,
+      locale: locale as Stripe.Checkout.SessionCreateParams.Locale | undefined,
       adaptive_pricing: { enabled: false },
       mode: "subscription",
       allow_promotion_codes: true,
