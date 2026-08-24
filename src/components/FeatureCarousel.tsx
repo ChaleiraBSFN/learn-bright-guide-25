@@ -3,7 +3,7 @@ import { motion, useMotionValue, animate, useTransform } from "framer-motion";
 import {
   BookOpen, Brain, Dumbbell, ChevronRight, ChevronLeft, Sparkles, CheckCircle2,
   Cpu, Map, Trophy, Users, Coins, HeartHandshake, MessageSquare,
-  Heart, Star, Zap, Megaphone, Loader2,
+  Heart, Star, Zap, Megaphone, Loader2, Crown,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
