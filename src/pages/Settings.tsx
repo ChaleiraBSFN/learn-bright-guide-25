@@ -9,8 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Mail, Lock, User, Loader2, Eye, EyeOff, Sun, Moon, Palette } from 'lucide-react';
+import { ArrowLeft, Mail, Lock, User, Loader2, Eye, EyeOff, Sun, Moon, Palette, Crown } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
+import { useAccent, ACCENT_PRESETS } from '@/hooks/useAccent';
+import { useSubscription } from '@/hooks/useSubscription';
 import { SEO } from '@/components/SEO';
 
 const Settings = () => {
@@ -20,6 +22,9 @@ const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
+  const { accent, setAccent } = useAccent();
+  const { isBuddy } = useSubscription();
+
 
   const [displayName, setDisplayName] = useState(profile?.display_name || '');
   const [newEmail, setNewEmail] = useState('');
