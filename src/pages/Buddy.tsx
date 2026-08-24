@@ -83,6 +83,12 @@ const Buddy = () => {
       navigate('/auth');
       return;
     }
+    // URL já pré-carregada: abre na hora, sem espera.
+    const cached = getCheckoutUrlSync();
+    if (cached) {
+      window.open(cached, '_blank');
+      return;
+    }
     setBusy(true);
     const url = await startCheckout();
     setBusy(false);
@@ -96,6 +102,7 @@ const Buddy = () => {
     }
     window.open(url, '_blank');
   };
+
 
   const handlePortal = async () => {
     setBusy(true);
