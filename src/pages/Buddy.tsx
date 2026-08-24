@@ -38,6 +38,11 @@ const Buddy = () => {
   const [testBusy, setTestBusy] = useState(false);
 
   useEffect(() => {
+    if (!isBuddy) prefetchCheckout();
+  }, [isBuddy, prefetchCheckout]);
+
+
+  useEffect(() => {
     if (!user || !isAdmin) return;
     const load = async () => {
       const { data } = await supabase.rpc('has_test_buddy', { _user_id: user.id });
