@@ -41,6 +41,11 @@ export interface GeminiCallOptions {
   jsonMode?: boolean;
   timeoutMs?: number;
   label?: string;
+  /**
+   * Premium priority: number of key/model pairs to call in parallel.
+   * The first successful answer wins, cutting perceived latency a lot.
+   */
+  race?: number;
 }
 
 export interface GeminiCallResult {
@@ -80,6 +85,7 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
     jsonMode = true,
     timeoutMs = 90_000,
     label = "Gemini",
+    race = 1,
   } = opts;
 
   if (keys.length === 0) return { text: null, lastStatus: 0 };
@@ -97,6 +103,50 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
 
   // Rotate the starting key so concurrent invocations don't all hammer key #1.
   const start = cursor++ % keys.length;
+
+  const single = async (key: string, model: string): Promise<GeminiCallResult> => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        { method: "POST", headers: { "Content-Type": "application/json" }, body, signal: controller.signal },
+      );
+      clearTimeout(timeoutId);
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return { text, lastStatus: 200 };
+        return { text: null, lastStatus: 200 };
+      }
+      if (response.status === 429 || response.status === 403) markCooling(key, model);
+      return { text: null, lastStatus: response.status };
+    } catch (e: any) {
+      clearTimeout(timeoutId);
+      console.error(`[${label}] race ${model}:`, e?.message);
+      return { text: null, lastStatus: 0 };
+    }
+  };
+
+  // Priority mode: fire several fast key/model pairs at once, first answer wins.
+  if (race > 1 && keys.length > 0) {
+    const pairs: Array<{ key: string; model: string }> = [];
+    const fastModels = models.slice(0, 2);
+    for (let i = 0; i < race; i++) {
+      const model = fastModels[i % fastModels.length];
+      const key = keys[(start + i) % keys.length];
+      if (!isCooling(key, model)) pairs.push({ key, model });
+    }
+    if (pairs.length > 0) {
+      const results = await Promise.all(pairs.map((p) => single(p.key, p.model)));
+      const win = results.find((r) => r.text);
+      if (win) {
+        console.log(`[${label}] priority race hit (${pairs.length} parallel)`);
+        return win;
+      }
+      lastStatus = results[results.length - 1]?.lastStatus ?? 0;
+    }
+  }
 
   for (const model of models) {
     // Two passes: first only "fresh" keys, then any key (cooldown may be stale).
