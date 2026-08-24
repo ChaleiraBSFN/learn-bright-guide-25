@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, useMotionValue, animate, useTransform } from "framer-motion";
 import {
   BookOpen, Brain, Dumbbell, ChevronRight, ChevronLeft, Sparkles, CheckCircle2,
@@ -60,6 +61,11 @@ const THEME_MAP: Record<string, { color: string; bgGradient: string; borderColor
     bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
     borderColor: "border-rose-700 dark:border-rose-500/30",
   },
+  amber: {
+    color: "text-amber-500",
+    bgGradient: "from-amber-500/10 via-orange-500/5 to-transparent",
+    borderColor: "border-amber-700 dark:border-amber-500/30",
+  },
 };
 
 interface CarouselItemRow {
@@ -85,6 +91,7 @@ interface Feature {
   description: string;
   detail: string;
   examples: string[];
+  route?: string;
 }
 
 const TRANSLATION_CACHE_KEY = 'lb_carousel_translations_v1';
@@ -135,7 +142,8 @@ const exemplosLabels: Record<string, string> = {
 };
 
 export function FeatureCarousel() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const lang = i18n.language || 'pt-BR';
   const [paused, setPaused] = useState(false);
   const [active, setActive] = useState<Feature | null>(null);
@@ -220,21 +228,40 @@ export function FeatureCarousel() {
   });
 
   const features: Feature[] = useMemo(() => {
-    return rows.map((r) => {
-      const theme = THEME_MAP[r.color_theme] || THEME_MAP.primary;
-      const Icon = ICON_MAP[r.icon] || Sparkles;
-      const tr = lang !== 'pt-BR' ? translations?.[r.id] : undefined;
-      return {
-        id: r.item_key,
-        icon: Icon,
-        ...theme,
-        title: tr?.title ?? r.title,
-        description: tr?.description ?? r.description,
-        detail: tr?.detail ?? r.detail,
-        examples: tr?.examples ?? (r.examples || []),
-      };
-    });
-  }, [rows, translations, lang]);
+    const premiumFeature: Feature = {
+      id: 'buddy-premium',
+      icon: Crown,
+      ...THEME_MAP.amber,
+      title: t('plans.buddyTitle', 'Plano Buddy'),
+      description: t('plans.buddySubtitle', 'Estude mais rápido, com ferramentas premium e sem anúncios.'),
+      detail: t('plans.buddySubtitle', 'Estude mais rápido, com ferramentas premium e sem anúncios.'),
+      examples: [
+        t('plans.buddy.item1', 'Geração prioritária, bem mais rápida'),
+        t('plans.buddy.item2', '30 créditos extras todo mês'),
+        t('plans.buddy.item5', 'Flashcards, resumos, quizzes e analytics'),
+        t('plans.buddy.item6', 'Experiência sem anúncios'),
+      ],
+      route: '/buddy',
+    };
+
+    return [
+      premiumFeature,
+      ...rows.map((r) => {
+        const theme = THEME_MAP[r.color_theme] || THEME_MAP.primary;
+        const Icon = ICON_MAP[r.icon] || Sparkles;
+        const tr = lang !== 'pt-BR' ? translations?.[r.id] : undefined;
+        return {
+          id: r.item_key,
+          icon: Icon,
+          ...theme,
+          title: tr?.title ?? r.title,
+          description: tr?.description ?? r.description,
+          detail: tr?.detail ?? r.detail,
+          examples: tr?.examples ?? (r.examples || []),
+        };
+      }),
+    ];
+  }, [rows, translations, lang, t]);
 
   const items = useMemo(
     () => (features.length ? [...features, ...features, ...features] : []),
@@ -502,12 +529,21 @@ function FeatureCard({
   ctaLabel: string;
   onOpen: () => void;
 }) {
+  const navigate = useNavigate();
+  const handleActivate = () => {
+    if (feature.route) {
+      navigate(feature.route);
+    } else {
+      onOpen();
+    }
+  };
+
   return (
     <motion.div
-      onClick={onOpen}
+      onClick={handleActivate}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen()}
+      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handleActivate()}
       className={`relative flex-shrink-0 w-[180px] sm:w-[200px] md:w-[220px] rounded-2xl border-2 ${feature.borderColor} bg-card overflow-hidden group cursor-pointer shadow-md hover:shadow-2xl transition-shadow duration-300`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
@@ -544,11 +580,6 @@ function FeatureCard({
           <p className="text-sm sm:text-[0.95rem] text-muted-foreground leading-snug line-clamp-3">
             {feature.description}
           </p>
-        </div>
-
-        <div className="flex items-center gap-1 rounded-full bg-accent/15 px-2 py-1 text-[10px] font-bold text-accent">
-          <Crown className="h-3 w-3 shrink-0" />
-          <span className="truncate">Buddy: mais rápido, sem anúncios</span>
         </div>
 
         <div
