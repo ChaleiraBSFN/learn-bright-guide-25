@@ -128,23 +128,47 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
     }
   };
 
-  // Priority mode: fire several fast key/model pairs at once, first answer wins.
+  // Priority mode: fire several fast key/model pairs at once and return the FIRST
+  // successful answer without waiting for the slower ones to settle.
   if (race > 1 && keys.length > 0) {
     const pairs: Array<{ key: string; model: string }> = [];
-    const fastModels = models.slice(0, 2);
+    const fastModels = models.slice(0, 3);
     for (let i = 0; i < race; i++) {
       const model = fastModels[i % fastModels.length];
       const key = keys[(start + i) % keys.length];
       if (!isCooling(key, model)) pairs.push({ key, model });
     }
     if (pairs.length > 0) {
-      const results = await Promise.all(pairs.map((p) => single(p.key, p.model)));
-      const win = results.find((r) => r.text);
-      if (win) {
-        console.log(`[${label}] priority race hit (${pairs.length} parallel)`);
-        return win;
+      const started = Date.now();
+      const winner = await new Promise<GeminiCallResult | null>((resolve) => {
+        let pending = pairs.length;
+        let settled = false;
+        for (const p of pairs) {
+          single(p.key, p.model)
+            .then((r) => {
+              if (r.text && !settled) {
+                settled = true;
+                resolve(r);
+                return;
+              }
+              if (r.lastStatus) lastStatus = r.lastStatus;
+              if (--pending === 0 && !settled) {
+                settled = true;
+                resolve(null);
+              }
+            })
+            .catch(() => {
+              if (--pending === 0 && !settled) {
+                settled = true;
+                resolve(null);
+              }
+            });
+        }
+      });
+      if (winner) {
+        console.log(`[${label}] priority race hit in ${Date.now() - started}ms (${pairs.length} parallel)`);
+        return winner;
       }
-      lastStatus = results[results.length - 1]?.lastStatus ?? 0;
     }
   }
 
