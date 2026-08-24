@@ -925,7 +925,7 @@
     "title": "学习伙伴计划",
     "freeTitle": "免费计划",
     "freeSubtitle": "今天开始学习所需的一切。",
-    "buddyPrice": "{{price}} 元/月",
+    "buddyPrice": "{{price}}/月",
     "manageBuddy": "管理我的 Buddy 计划",
     "upgradeCta": "我想成为 Buddy"
   },

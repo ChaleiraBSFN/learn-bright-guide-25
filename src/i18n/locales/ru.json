@@ -952,7 +952,7 @@
     "title": "Планы Learn Buddy",
     "freeTitle": "Бесплатный план",
     "freeSubtitle": "Все, что вам нужно, чтобы начать учиться сегодня.",
-    "buddyPrice": "R$ {{price}}/месяц",
+    "buddyPrice": "{{price}}/мес",
     "manageBuddy": "Управлять моим планом Buddy",
     "upgradeCta": "Хочу стать Buddy"
   },

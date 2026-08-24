@@ -932,7 +932,7 @@
     "title": "Learn Buddyプラン",
     "freeTitle": "無料プラン",
     "freeSubtitle": "今日から学習を始めるために必要なすべて。",
-    "buddyPrice": "{{price}}円/月",
+    "buddyPrice": "{{price}}/月",
     "manageBuddy": "Buddyプランを管理",
     "upgradeCta": "Buddyになりたい"
   },

@@ -941,7 +941,7 @@
     "title": "Planos Learn Buddy",
     "freeTitle": "Plano Free",
     "freeSubtitle": "Tudo o que você precisa para começar a estudar hoje.",
-    "buddyPrice": "R$ {{price}}/mês",
+    "buddyPrice": "{{price}}/mês",
     "manageBuddy": "Gerenciar meu plano Buddy",
     "upgradeCta": "Quero ser Buddy"
   },

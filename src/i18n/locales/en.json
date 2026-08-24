@@ -941,7 +941,7 @@
     "title": "Learn Buddy Plans",
     "freeTitle": "Free Plan",
     "freeSubtitle": "Everything you need to start studying today.",
-    "buddyPrice": "R$ {{price}}/month",
+    "buddyPrice": "{{price}}/month",
     "manageBuddy": "Manage my Buddy plan",
     "upgradeCta": "I want to be a Buddy"
   },
