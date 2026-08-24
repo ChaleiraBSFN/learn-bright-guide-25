@@ -91,6 +91,7 @@ interface Feature {
   description: string;
   detail: string;
   examples: string[];
+  route?: string;
 }
 
 const TRANSLATION_CACHE_KEY = 'lb_carousel_translations_v1';
