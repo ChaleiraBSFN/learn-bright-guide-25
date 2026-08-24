@@ -64,6 +64,21 @@ interface WebImage {
   descricao: string;
 }
 
+/** Mounts heavy, below-the-fold widgets only after the page is interactive. */
+const useDeferredMount = () => {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const idle = (window as any).requestIdleCallback as undefined | ((cb: () => void, o?: any) => number);
+    if (idle) {
+      const id = idle(() => setReady(true), { timeout: 1500 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(() => setReady(true), 600);
+    return () => window.clearTimeout(timer);
+  }, []);
+  return ready;
+};
+
 interface PlatformSettings {
   exercisesEnabled: boolean;
   studyGenEnabled: boolean;
@@ -593,9 +608,11 @@ const Index = () => {
               </AnimatePresence>
               <CreditsDisplay />
               <LanguageSelector />
-              <Suspense fallback={null}>
-                <SupportChat />
-              </Suspense>
+              {deferredReady && (
+                <Suspense fallback={null}>
+                  <SupportChat />
+                </Suspense>
+              )}
               <UserMenu />
             </div>
           </div>
@@ -603,9 +620,11 @@ const Index = () => {
       </header>
 
       {/* Floating Actions - Study Groups & Install */}
-      <Suspense fallback={null}>
-        <FloatingActions />
-      </Suspense>
+      {deferredReady && (
+        <Suspense fallback={null}>
+          <FloatingActions />
+        </Suspense>
+      )}
 
       <main className="container mx-auto px-4 py-8 md:py-12">
         <AnimatePresence mode="wait">
@@ -625,7 +644,7 @@ const Index = () => {
               <Suspense fallback={null}><EngineNoticeBanner /></Suspense>
 
               {/* Promo Banners (admin-managed) */}
-              <Suspense fallback={null}><PromoBanners /></Suspense>
+              {deferredReady && <Suspense fallback={null}><PromoBanners /></Suspense>}
 
 
               {/* Hero Section */}
@@ -644,7 +663,11 @@ const Index = () => {
               </div>
 
               {/* Feature Banner Carousel */}
-              <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-muted" />}><FeatureCarousel /></Suspense>
+              {deferredReady ? (
+                <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-muted" />}><FeatureCarousel /></Suspense>
+              ) : (
+                <div className="h-32 rounded-xl bg-muted/40" />
+              )}
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -713,9 +736,11 @@ const Index = () => {
                 </AnimatePresence>
               </Tabs>
               <div className="pt-4">
-                <Suspense fallback={<div className="min-h-[200px] rounded-xl bg-muted/20" />}>
-                  <PlanComparison />
-                </Suspense>
+                {deferredReady && (
+                  <Suspense fallback={<div className="min-h-[200px] rounded-xl bg-muted/20" />}>
+                    <PlanComparison />
+                  </Suspense>
+                )}
               </div>
 
             </motion.div>
@@ -914,9 +939,11 @@ const Index = () => {
       {/* Learn Buddy Footer Ad */}
       <section className="w-full px-4 py-6">
         <div className="container mx-auto max-w-4xl">
-          <Suspense fallback={null}>
-            <AdSenseSlot variant="card" />
-          </Suspense>
+          {deferredReady && (
+            <Suspense fallback={null}>
+              <AdSenseSlot variant="card" />
+            </Suspense>
+          )}
         </div>
       </section>
 
