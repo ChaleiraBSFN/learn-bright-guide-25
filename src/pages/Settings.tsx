@@ -9,8 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Mail, Lock, User, Loader2, Eye, EyeOff, Sun, Moon, Palette } from 'lucide-react';
+import { ArrowLeft, Mail, Lock, User, Loader2, Eye, EyeOff, Sun, Moon, Palette, Crown } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
+import { useAccent, ACCENT_PRESETS } from '@/hooks/useAccent';
+import { useSubscription } from '@/hooks/useSubscription';
 import { SEO } from '@/components/SEO';
 
 const Settings = () => {
@@ -20,6 +22,9 @@ const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
+  const { accent, setAccent } = useAccent();
+  const { isBuddy } = useSubscription();
+
 
   const [displayName, setDisplayName] = useState(profile?.display_name || '');
   const [newEmail, setNewEmail] = useState('');
@@ -136,8 +141,46 @@ const Settings = () => {
                 </p>
               </button>
             </div>
+
+            <div className="mt-6 border-t border-border pt-5">
+              <div className="mb-3 flex items-center gap-2">
+                <Crown className="h-4 w-4 text-accent" />
+                <span className="text-sm font-bold text-foreground">
+                  {t('settings.accentTitle', 'Paleta de cores (Buddy)')}
+                </span>
+              </div>
+              <p className="mb-3 text-xs text-muted-foreground">
+                {isBuddy
+                  ? t('settings.accentDesc', 'Personalize as cores principais das suas páginas.')
+                  : t('settings.accentLocked', 'Exclusivo do plano Buddy. Assine para desbloquear.')}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {ACCENT_PRESETS.map((preset) => (
+                  <button
+                    key={preset.key}
+                    type="button"
+                    disabled={!isBuddy}
+                    onClick={() => setAccent(preset.key)}
+                    aria-label={preset.label}
+                    className={`flex items-center gap-2 rounded-full border-2 px-3 py-1.5 text-xs font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
+                      accent === preset.key ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/40'
+                    }`}
+                  >
+                    <span className="h-3 w-3 rounded-full" style={{ background: preset.swatch }} />
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+              {!isBuddy && (
+                <Button variant="outline" size="sm" className="mt-3" onClick={() => navigate('/buddy')}>
+                  {t('plans.upgradeCta', 'Quero ser Buddy')}
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
+
+
 
 
         <Card className="mb-4">

@@ -8,6 +8,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { SubscriptionProvider } from "@/hooks/useSubscription";
+
 import Index from "./pages/Index";
 
 import { useTimeTracker } from "@/hooks/useAchievements";
@@ -35,6 +37,8 @@ const ChatBuddy = lazy(() => import("./pages/ChatBuddy"));
 const RewardShop = lazy(() => import("./pages/RewardShop"));
 const CarouselBannersAdmin = lazy(() => import("./pages/CarouselBannersAdmin"));
 const SectionFlagsAdmin = lazy(() => import("./pages/SectionFlagsAdmin"));
+const Buddy = lazy(() => import("./pages/Buddy"));
+
 
 const AppContent = () => {
   useTimeTracker();
@@ -69,6 +73,8 @@ const AppContent = () => {
             <Route path="/reward-shop" element={<RewardShop />} />
             <Route path="/carousel-banners" element={<CarouselBannersAdmin />} />
             <Route path="/section-flags" element={<SectionFlagsAdmin />} />
+            <Route path="/buddy" element={<Buddy />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
@@ -82,12 +88,15 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <AuthProvider>
-        <TooltipProvider>
-          <AppContent />
-        </TooltipProvider>
+        <SubscriptionProvider>
+          <TooltipProvider>
+            <AppContent />
+          </TooltipProvider>
+        </SubscriptionProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
+
 
 export default App;

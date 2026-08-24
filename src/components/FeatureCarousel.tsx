@@ -3,7 +3,7 @@ import { motion, useMotionValue, animate, useTransform } from "framer-motion";
 import {
   BookOpen, Brain, Dumbbell, ChevronRight, ChevronLeft, Sparkles, CheckCircle2,
   Cpu, Map, Trophy, Users, Coins, HeartHandshake, MessageSquare,
-  Heart, Star, Zap, Megaphone, Loader2,
+  Heart, Star, Zap, Megaphone, Loader2, Crown,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -544,6 +544,11 @@ function FeatureCard({
           <p className="text-sm sm:text-[0.95rem] text-muted-foreground leading-snug line-clamp-3">
             {feature.description}
           </p>
+        </div>
+
+        <div className="flex items-center gap-1 rounded-full bg-accent/15 px-2 py-1 text-[10px] font-bold text-accent">
+          <Crown className="h-3 w-3 shrink-0" />
+          <span className="truncate">Buddy: mais rápido, sem anúncios</span>
         </div>
 
         <div

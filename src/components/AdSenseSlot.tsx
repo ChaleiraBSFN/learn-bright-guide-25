@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { useEffect, useRef, useState } from 'react';
 import { AD_CONSENT_EVENT, applyAdConsent, getAdConsent } from '@/lib/adConsent';
-
+import { useSubscription } from '@/hooks/useSubscription';
 
 /**
- * Ad slot showing rotating Learn Buddy promo videos.
- * When ADSENSE_CLIENT/SLOT are filled, real AdSense display ads render instead.
+ * Google AdSense display slot.
+ * Renders nothing when ads can't/shouldn't be requested (no consent, rewarded
+ * context, Buddy subscriber, or unfilled inventory).
  */
 export const ADSENSE_CLIENT = 'ca-pub-3378474598402206';
 export const ADSENSE_SLOT = '7188987191';
@@ -27,19 +25,6 @@ declare global {
     adsbygoogle?: unknown[];
   }
 }
-
-const LEARN_BUDDY_ADS = [
-  {
-    src: '/learn-buddy-trailer.mp4',
-    tag: 'Learn Buddy',
-    title: 'Sua IA de estudos, em segundos',
-  },
-  {
-    src: '/learn-buddy-demo.mp4',
-    tag: 'Demonstração',
-    title: 'Veja como funciona na prática',
-  },
-];
 
 const ensureAdsenseScript = () =>
   new Promise<void>((resolve, reject) => {
@@ -64,18 +49,14 @@ const ensureAdsenseScript = () =>
 
 export const AdSenseSlot = ({
   className = '',
-  hideCta = false,
   variant = 'card',
   houseOnly = false,
 }: { className?: string; hideCta?: boolean; variant?: 'card' | 'compact'; houseOnly?: boolean }) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { isBuddy } = useSubscription();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const insRef = useRef<HTMLModElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
   const pushedRef = useRef(false);
-  const [index, setIndex] = useState(() => Math.floor(Math.random() * LEARN_BUDDY_ADS.length));
   const [adState, setAdState] = useState<'loading' | 'filled' | 'fallback'>('loading');
   const [cycle, setCycle] = useState(0);
   const [consent, setConsent] = useState(() => getAdConsent());
@@ -89,9 +70,9 @@ export const AdSenseSlot = ({
   const canRequestAdsense =
     typeof window !== 'undefined' && ADSENSE_ALLOWED_HOSTS.includes(window.location.hostname);
   // AdSense policy: never request ads where the user is rewarded for viewing them,
-  // and never before the user has made a cookie/ads consent choice.
+  // never before the user has made a cookie/ads consent choice, and never for Buddy members.
   const hasAdsense = Boolean(
-    ADSENSE_CLIENT && ADSENSE_SLOT && canRequestAdsense && !houseOnly && consent !== null,
+    ADSENSE_CLIENT && ADSENSE_SLOT && canRequestAdsense && !houseOnly && !isBuddy && consent !== null,
   );
 
   useEffect(() => {
@@ -191,110 +172,21 @@ export const AdSenseSlot = ({
     };
   }, [hasAdsense, cycle]);
 
-
-  const ad = useMemo(() => LEARN_BUDDY_ADS[index], [index]);
-
-  const handleEnded = () => {
-    setIndex((i) => (i + 1) % LEARN_BUDDY_ADS.length);
-  };
-
-  const openRewardShop = () => {
-    navigate('/reward-shop');
-  };
-
-
-  const compactFallback = (
-    <div
-      className={`flex w-full items-center gap-3 overflow-hidden rounded-xl border-2 border-primary/25 bg-card p-2 ${className}`}
-    >
-      <video
-        key={ad.src}
-        src={ad.src}
-        autoPlay
-        muted
-        playsInline
-        onEnded={handleEnded}
-        className="h-16 w-28 shrink-0 rounded-lg object-cover"
-        preload="metadata"
-      />
-      <div className="min-w-0 flex-1">
-        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          {t('rewardShop.adLabel', 'Anúncio')} · {ad.tag}
-        </div>
-        <div className="truncate text-sm font-bold text-foreground">{ad.title}</div>
-      </div>
-      {!hideCta && (
-        <Button
-          type="button"
-          size="sm"
-          onClick={openRewardShop}
-          className="h-auto shrink-0 px-3 py-1.5 text-xs"
-        >
-          {t('rewardShop.openShop', 'Abrir mercadinho')}
-        </Button>
-      )}
-    </div>
-  );
-
-  const promoFallback = variant === 'compact' ? compactFallback : (
-    <div
-      className={`relative aspect-video w-full overflow-hidden rounded-xl border-2 border-primary/30 bg-foreground ${className}`}
-    >
-      <video
-        ref={videoRef}
-        key={ad.src}
-        src={ad.src}
-        autoPlay
-        muted
-        playsInline
-        onEnded={handleEnded}
-        className="h-full w-full object-cover"
-        preload="auto"
-      />
-      <div className="absolute right-2 top-2 rounded-full bg-background/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground backdrop-blur-sm">
-        {t('rewardShop.adLabel', 'Anúncio')}
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/90 to-transparent p-3">
-        <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <div className="mb-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground/70">
-              {ad.tag}
-            </div>
-            <div className="text-sm font-bold text-primary-foreground">{ad.title}</div>
-          </div>
-          {!hideCta && (
-            <Button
-              type="button"
-              size="sm"
-              onClick={openRewardShop}
-              className="h-auto shrink-0 px-3 py-1.5 text-xs"
-            >
-              {t('rewardShop.openShop', 'Abrir mercadinho')}
-            </Button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-
-  if (!hasAdsense) {
-    return promoFallback;
+  if (!hasAdsense || adState === 'fallback') {
+    return null;
   }
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full min-w-0 overflow-hidden rounded-xl bg-muted/20 ${
+      className={`relative w-full min-w-0 overflow-hidden rounded-xl ${
         variant === 'compact' ? 'min-h-[90px]' : 'min-h-[250px]'
       } ${className}`}
     >
-      {adState === 'fallback' && <div className="relative z-10">{promoFallback}</div>}
       <ins
         key={cycle}
         ref={insRef}
-        className={`adsbygoogle w-full transition-opacity duration-300 ${
-          adState === 'fallback' ? 'hidden' : 'block opacity-100'
-        }`}
+        className="adsbygoogle block w-full"
         style={{ display: 'block', minHeight: variant === 'compact' ? 90 : 250 }}
         data-ad-client={ADSENSE_CLIENT}
         data-ad-slot={ADSENSE_SLOT}
