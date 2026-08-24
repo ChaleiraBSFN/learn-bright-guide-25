@@ -84,7 +84,12 @@
     "topic": "Tema",
     "freeVersion": "Versão gratuita",
     "subscribeForComplete": "Assine o Premium para conteúdo completo",
-    "contentNotLoaded": "O conteúdo não pôde ser carregado corretamente."
+    "contentNotLoaded": "O conteúdo não pôde ser carregado corretamente.",
+    "imageAnalysis": "Análise da Imagem",
+    "extractedConcepts": "Conceitos Identificados",
+    "solvedExercises": "Exercícios Resolvidos da Imagem",
+    "solution": "Resolução",
+    "explanation": "Explicação"
   },
   "sections": {
     "objective": "Objetivo",
@@ -115,7 +120,11 @@
     "daysCount": "dias",
     "generating": "Gerando...",
     "generateNow": "Praticar agora",
-    "clickHere": "Clique aqui"
+    "clickHere": "Clique aqui",
+    "illustrativeImages": "Imagens Ilustrativas",
+    "imagesGoogleHint": "Veja imagens reais sobre o tema diretamente na busca do Google.",
+    "searchGoogleImages": "Buscar no Google Imagens",
+    "searchGoogle": "Buscar no Google"
   },
   "premium": {
     "unlock": "Assinar Premium",
@@ -205,7 +214,8 @@
     "welcome": "Bem-vindo!",
     "loginSuccess": "Login realizado com sucesso.",
     "accountCreated": "Conta criada!",
-    "accountCreatedSuccess": "Sua conta foi criada com sucesso."
+    "accountCreatedSuccess": "Sua conta foi criada com sucesso.",
+    "signIn": "Entrar"
   },
   "subscribe": {
     "youArePremium": "Você é Premium! 🎉",
@@ -523,7 +533,8 @@
     "tipExercise2": "Criando questões variadas...",
     "tipExercise3": "Preparando gabaritos e explicações...",
     "studyDone": "Pronto! 🎉",
-    "exerciseDone": "Pronto! 🎉"
+    "exerciseDone": "Pronto! 🎉",
+    "complexityHint": "Pode demorar alguns segundos devido à geração de conteúdos complexos, imagens, diagramas e detalhes personalizados. Às vezes as imagens podem não ser geradas caso o limite de requisições seja excedido."
   },
   "settings": {
     "title": "Configurações",
@@ -562,7 +573,17 @@
     "confirmEmailToReset": "Confirme seu email para verificar sua identidade.",
     "confirmYourEmail": "Digite seu email cadastrado",
     "emailVerifyNote": "Digite o mesmo email cadastrado para confirmar que é você.",
-    "emailMismatch": "O email não corresponde ao email cadastrado."
+    "emailMismatch": "O email não corresponde ao email cadastrado.",
+    "verifyingLink": "Verificando link...",
+    "appearance": "Aparência",
+    "appearanceDesc": "Escolha o tema do site para uma experiência mais confortável.",
+    "themeDark": "Escuro",
+    "themeDarkDesc": "Recomendado. Reduz o cansaço visual.",
+    "themeLight": "Claro",
+    "themeLightDesc": "Ambientes bem iluminados.",
+    "accentTitle": "Paleta de cores (Buddy)",
+    "accentDesc": "Personalize as cores principais das suas páginas.",
+    "accentLocked": "Exclusivo do plano Buddy. Assine para desbloquear."
   },
   "ranking": {
     "title": "Ranking de Conquistas",
@@ -841,8 +862,114 @@
       "tapFlip": "Toque para virar",
       "tapBack": "Toque para ver a pergunta",
       "revealAll": "Ver todas as respostas",
-      "resetCards": "Recomeçar"
+      "resetCards": "Recomeçar",
+      "error": "Não conseguimos gerar agora",
+      "errorHint": "Tente novamente em alguns segundos.",
+      "flashcards": "Flashcards",
+      "summary": "Resumo inteligente",
+      "quiz": "Quiz",
+      "placeholder": "Ex.: Revolução Francesa, funções quadráticas...",
+      "clear": "Limpar",
+      "answer": "Resposta",
+      "question": "Pergunta"
     },
-    "customizeLink": "Personalizar cores do app"
+    "customizeLink": "Personalizar cores do app",
+    "menuItem": "Plano Buddy",
+    "testError": "Não foi possível alterar o modo de teste",
+    "testOn": "Premium de teste ativado",
+    "testOff": "Premium de teste desativado",
+    "welcomeTitle": "Bem-vindo ao Buddy!",
+    "welcomeDesc": "Sua assinatura está sendo confirmada.",
+    "checkoutError": "Não foi possível abrir o pagamento",
+    "checkoutErrorHint": "Tente novamente em instantes.",
+    "portalError": "Não foi possível abrir o gerenciamento",
+    "b1Title": "Geração prioritária",
+    "b1Desc": "Seus estudos entram na frente da fila.",
+    "b2Title": "30 créditos por mês",
+    "b2Desc": "Recarregados automaticamente a cada ciclo.",
+    "b3Title": "Desafios exclusivos",
+    "b3Desc": "Conquistas Buddy na trilha de progresso.",
+    "b4Title": "Personalização avançada",
+    "b4Desc": "Paletas e temas extras nas suas páginas.",
+    "b5Title": "Ferramentas premium",
+    "b5Desc": "Flashcards, resumos, quizzes e analytics.",
+    "b6Title": "Sem anúncios",
+    "b6Desc": "Estude sem interrupções.",
+    "seoTitle": "Plano Buddy — Learn Buddy Premium",
+    "seoDesc": "Assine o plano Buddy do Learn Buddy: geração prioritária, créditos mensais, flashcards, resumos, quizzes e experiência sem anúncios.",
+    "title": "Plano Buddy",
+    "activeTitle": "Você é Buddy 🎉",
+    "ctaTitle": "Turbine seus estudos",
+    "renewsOn": "Renova em {{date}}",
+    "activeDesc": "Assinatura ativa.",
+    "ctaDesc": "Cancele quando quiser, direto no portal do Stripe.",
+    "cancelScheduled": "Sua assinatura será encerrada no fim do período atual.",
+    "manage": "Gerenciar assinatura",
+    "subscribe": "Assinar o plano Buddy",
+    "refresh": "Atualizar status",
+    "testTitle": "Modo de teste (somente CEO/admin)",
+    "testDesc": "Ative o Premium na sua conta por 30 dias, sem pagamento, para testar tudo.",
+    "testActive": "Premium de teste ativo nesta conta.",
+    "testInactive": "Premium de teste desativado.",
+    "toolsTitle": "Ferramentas de estudo Buddy",
+    "toolsDesc": "Gere flashcards, resumos e quizzes sobre qualquer tema.",
+    "locked": "Assine o plano Buddy para liberar as ferramentas premium.",
+    "analyticsTitle": "Suas estatísticas de estudo",
+    "analyticsDesc": "Acompanhe seu ritmo de aprendizagem.",
+    "statTotal": "Total",
+    "statStudies": "Estudos",
+    "statExercises": "Exercícios",
+    "statPlans": "Planos"
+  },
+  "plans": {
+    "buddyTitle": "Plano Buddy",
+    "buddySubtitle": "Estude mais rápido, com ferramentas premium e sem anúncios.",
+    "buddy": {
+      "item1": "Geração prioritária, bem mais rápida",
+      "item2": "30 créditos extras todo mês",
+      "item5": "Flashcards, resumos, quizzes e analytics",
+      "item6": "Experiência sem anúncios",
+      "item3": "Desafios exclusivos na trilha",
+      "item4": "Personalização avançada de tema e layout"
+    },
+    "free": {
+      "item1": "Geração de estudos, exercícios e planos",
+      "item2": "Créditos diários e semanais básicos",
+      "item3": "Trilha de progresso e ranking",
+      "item4": "Velocidade de geração padrão"
+    },
+    "title": "Planos Learn Buddy",
+    "freeTitle": "Plano Free",
+    "freeSubtitle": "Tudo o que você precisa para começar a estudar hoje.",
+    "buddyPrice": "{{price}}/mês",
+    "manageBuddy": "Gerenciar meu plano Buddy",
+    "upgradeCta": "Quero ser Buddy"
+  },
+  "common": {
+    "showActions": "Mostrar ações",
+    "hideActions": "Recolher ações",
+    "error": "Erro",
+    "back": "Voltar",
+    "save": "Salvar"
+  },
+  "chatBuddy": {
+    "tooltip": "Chat com Learn Buddy",
+    "imgTooBigTitle": "Imagem muito grande",
+    "imgTooBig": "Máx 15MB por imagem.",
+    "imgFail": "Não foi possível ler a imagem.",
+    "error": "Falha ao responder.",
+    "errorTitle": "Erro",
+    "title": "Chat Buddy",
+    "subtitle": "Seu tutor IA — pergunte qualquer coisa ✨",
+    "clear": "Limpar conversa",
+    "heroTitle": "Olá! Em que posso ajudar?",
+    "heroDesc": "Pergunte sobre matérias, peça exercícios, ajuda com código, roteiros de estudo, ou envie uma foto de um exercício.",
+    "s1": "Me explique fotossíntese de forma simples",
+    "s2": "Crie um plano de estudo de 7 dias para matemática",
+    "s3": "Escreva uma função em Python para ordenar lista",
+    "s4": "Me dê 3 exercícios sobre equação do 2º grau",
+    "addImage": "Anexar imagem",
+    "placeholder": "Pergunte qualquer coisa…",
+    "disclaimer": "Powered by Gemini · pode cometer erros, verifique informações importantes."
   }
 }

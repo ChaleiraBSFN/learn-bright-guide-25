@@ -4,6 +4,16 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
 const BUDDY_PRICE_ID = "price_1U81rtE1geDw4HorwUkDFTUa";
 
+// Preço por moeda (valor na menor unidade da moeda).
+const CURRENCY_PRICES: Record<string, number> = {
+  brl: 590,
+  usd: 199,
+  eur: 179,
+  jpy: 300, // moeda sem centavos
+  cny: 1490,
+};
+
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -37,17 +47,39 @@ Deno.serve(async (req) => {
 
     const origin = req.headers.get("origin") || "https://studdybuddy.com.br";
 
+    let currency = "brl";
+    try {
+      const body = await req.json();
+      const requested = String(body?.currency ?? "").toLowerCase();
+      if (CURRENCY_PRICES[requested]) currency = requested;
+    } catch {
+      // sem corpo: mantém BRL
+    }
+
+    const lineItem = currency === "brl"
+      ? { price: BUDDY_PRICE_ID, quantity: 1 }
+      : {
+        quantity: 1,
+        price_data: {
+          currency,
+          unit_amount: CURRENCY_PRICES[currency],
+          recurring: { interval: "month" as const },
+          product_data: { name: "Learn Buddy — Plano Buddy" },
+        },
+      };
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: [{ price: BUDDY_PRICE_ID, quantity: 1 }],
+      line_items: [lineItem],
       mode: "subscription",
       allow_promotion_codes: true,
       success_url: `${origin}/buddy?checkout=success`,
       cancel_url: `${origin}/buddy?checkout=cancel`,
     });
 
-    return json({ url: session.url });
+    return json({ url: session.url, currency });
+
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     console.error("[create-checkout] error", message);

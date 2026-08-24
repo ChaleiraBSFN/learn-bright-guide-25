@@ -83,7 +83,12 @@
     "topic": "Sujet",
     "freeVersion": "Version gratuite",
     "subscribeForComplete": "Abonnez-vous au Premium pour le contenu complet",
-    "contentNotLoaded": "Le contenu n'a pas pu être chargé correctement."
+    "contentNotLoaded": "Le contenu n'a pas pu être chargé correctement.",
+    "imageAnalysis": "Analyse d'image",
+    "extractedConcepts": "Concepts identifiés",
+    "solvedExercises": "Exercices résolus de l'image",
+    "solution": "Solution",
+    "explanation": "Explication"
   },
   "sections": {
     "objective": "Objectif",
@@ -112,7 +117,11 @@
     "showLess": "Afficher moins",
     "showMore": "Voir tous les jours",
     "daysCount": "jours",
-    "clickHere": "Cliquez ici"
+    "clickHere": "Cliquez ici",
+    "illustrativeImages": "Images illustratives",
+    "imagesGoogleHint": "Voir de vraies images sur le sujet directement dans la recherche Google.",
+    "searchGoogleImages": "Rechercher sur Google Images",
+    "searchGoogle": "Rechercher sur Google"
   },
   "premium": {
     "unlock": "S'abonner Premium",
@@ -202,7 +211,8 @@
     "resetEmailSentDesc": "Nous avons envoyé un lien de récupération à votre e-mail.",
     "checkSpamTitle": "⚠️ Vérifiez votre dossier Spam/Courrier indésirable",
     "checkSpamDesc": "L'e-mail peut atterrir dans votre dossier spam. Vérifiez-le si vous ne le trouvez pas.",
-    "resetLinkInfo": "Le lien ouvrira une page Learn Buddy où vous pourrez entrer votre e-mail et votre nouveau mot de passe."
+    "resetLinkInfo": "Le lien ouvrira une page Learn Buddy où vous pourrez entrer votre e-mail et votre nouveau mot de passe.",
+    "signIn": "Se connecter"
   },
   "subscribe": {
     "youArePremium": "Vous êtes Premium ! 🎉",
@@ -547,7 +557,17 @@
     "confirmEmailToReset": "Confirm your email to verify your identity.",
     "confirmYourEmail": "Enter your registered email",
     "emailVerifyNote": "Enter the same email you registered with to confirm it is you.",
-    "emailMismatch": "The email does not match the registered email."
+    "emailMismatch": "The email does not match the registered email.",
+    "verifyingLink": "Vérification du lien...",
+    "appearance": "Apparence",
+    "appearanceDesc": "Choisissez le thème du site pour une expérience plus confortable.",
+    "themeDark": "Sombre",
+    "themeDarkDesc": "Recommandé. Réduit la fatigue oculaire.",
+    "themeLight": "Clair",
+    "themeLightDesc": "Environnements bien éclairés.",
+    "accentTitle": "Palette de couleurs (Buddy)",
+    "accentDesc": "Personnalisez les couleurs principales de vos pages.",
+    "accentLocked": "Exclusif du plan Buddy. Abonnez-vous pour débloquer."
   },
   "credits": {
     "remaining": "{{count}} credits remaining",
@@ -826,8 +846,119 @@
       "tapFlip": "Touchez pour retourner",
       "tapBack": "Touchez pour voir la question",
       "revealAll": "Voir toutes les réponses",
-      "resetCards": "Recommencer"
+      "resetCards": "Recommencer",
+      "quiz": "Quiz",
+      "placeholder": "Ex.: Révolution française, fonctions quadratiques...",
+      "clear": "Effacer",
+      "answer": "Réponse",
+      "question": "Question",
+      "error": "Nous n'avons pas pu générer pour le moment",
+      "errorHint": "Réessayez dans quelques secondes.",
+      "flashcards": "Flashcards",
+      "summary": "Résumé intelligent"
     },
-    "customizeLink": "Personnaliser les couleurs de l'app"
+    "customizeLink": "Personnaliser les couleurs de l'app",
+    "testError": "Impossible de modifier le mode de test",
+    "testOn": "Premium de test activé",
+    "testOff": "Premium de test désactivé",
+    "welcomeTitle": "Bienvenue chez Buddy !",
+    "welcomeDesc": "Votre abonnement est en cours de confirmation.",
+    "checkoutError": "Impossible d'ouvrir le paiement",
+    "checkoutErrorHint": "Réessayez dans un instant.",
+    "portalError": "Impossible d'ouvrir la gestion",
+    "b1Title": "Génération prioritaire",
+    "b1Desc": "Vos études passent en tête de file.",
+    "b2Title": "30 crédits par mois",
+    "b2Desc": "Rechargés automatiquement à chaque cycle.",
+    "b3Title": "Défis exclusifs",
+    "b3Desc": "Réalisations Buddy sur la voie du progrès.",
+    "b4Title": "Personnalisation avancée",
+    "b4Desc": "Palettes et thèmes supplémentaires sur vos pages.",
+    "menuItem": "Plan Buddy",
+    "b5Title": "Outils premium",
+    "b5Desc": "Flashcards, résumés, quiz et analyses.",
+    "b6Title": "Sans publicité",
+    "b6Desc": "Étudiez sans interruptions.",
+    "seoTitle": "Plan Buddy — Learn Buddy Premium",
+    "seoDesc": "Abonnez-vous au plan Buddy de Learn Buddy : génération prioritaire, crédits mensuels, flashcards, résumés, quiz et expérience sans publicité.",
+    "title": "Plan Buddy",
+    "activeTitle": "Vous êtes Buddy 🎉",
+    "ctaTitle": "Boostez vos études",
+    "renewsOn": "Renouvelle le {{date}}",
+    "activeDesc": "Abonnement actif.",
+    "ctaDesc": "Annulez à tout moment, directement sur le portail Stripe.",
+    "cancelScheduled": "Votre abonnement prendra fin à la fin de la période actuelle.",
+    "manage": "Gérer l'abonnement",
+    "subscribe": "S'abonner au plan Buddy",
+    "refresh": "Actualiser le statut",
+    "testTitle": "Mode test (CEO/admin uniquement)",
+    "testDesc": "Activez le Premium sur votre compte pendant 30 jours, sans paiement, pour tout tester.",
+    "testActive": "Premium de test actif sur ce compte.",
+    "testInactive": "Premium de test désactivé.",
+    "toolsTitle": "Outils d'étude Buddy",
+    "toolsDesc": "Générez des flashcards, des résumés et des quiz sur n'importe quel sujet.",
+    "locked": "Abonnez-vous au plan Buddy pour débloquer les outils premium.",
+    "analyticsTitle": "Vos statistiques d'étude",
+    "analyticsDesc": "Suivez votre rythme d'apprentissage.",
+    "statTotal": "Total",
+    "statStudies": "Études",
+    "statExercises": "Exercices",
+    "statPlans": "Plans"
+  },
+  "chatBuddy": {
+    "imgTooBigTitle": "Image trop grande",
+    "imgTooBig": "Max 15 Mo par image.",
+    "imgFail": "Impossible de lire l'image.",
+    "error": "Échec de la réponse.",
+    "errorTitle": "Erreur",
+    "title": "Chat Buddy",
+    "subtitle": "Votre tuteur IA — demandez n'importe quoi ✨",
+    "clear": "Effacer la conversation",
+    "heroTitle": "Bonjour ! Comment puis-je vous aider ?",
+    "heroDesc": "Posez des questions sur des sujets, demandez des exercices, de l'aide pour du code, des plans d'étude, ou envoyez une photo d'un devoir.",
+    "s1": "Expliquez-moi la photosynthèse simplement",
+    "s2": "Créez un plan d'étude de 7 jours pour les mathématiques",
+    "s3": "Écrivez une fonction Python pour trier une liste",
+    "s4": "Donnez-moi 3 exercices sur les équations du second degré",
+    "addImage": "Joindre une image",
+    "placeholder": "Demandez n'importe quoi…",
+    "disclaimer": "Propulsé par Gemini · peut faire des erreurs, vérifiez les informations importantes.",
+    "tooltip": "Chat avec Learn Buddy"
+  },
+  "common": {
+    "save": "Sauvegarder",
+    "showActions": "Afficher les actions",
+    "hideActions": "Masquer les actions",
+    "error": "Erreur",
+    "back": "Retour"
+  },
+  "plans": {
+    "buddyTitle": "Buddy d'Apprentissage",
+    "buddySubtitle": "Étudiez plus vite, avec des outils premium et sans publicité.",
+    "buddy": {
+      "item1": "Génération prioritaire, beaucoup plus rapide",
+      "item2": "30 crédits supplémentaires chaque mois",
+      "item5": "Flashcards, résumés, quiz et analyses",
+      "item6": "Expérience sans publicité",
+      "item3": "Défis exclusifs sur la piste",
+      "item4": "Personnalisation avancée du thème et de la mise en page"
+    },
+    "free": {
+      "item1": "Génération d'études, d'exercices et de plans",
+      "item2": "Crédits quotidiens et hebdomadaires de base",
+      "item3": "Piste de progression et classement",
+      "item4": "Vitesse de génération standard"
+    },
+    "title": "Plans Learn Buddy",
+    "freeTitle": "Plan Gratuit",
+    "freeSubtitle": "Tout ce dont vous avez besoin pour commencer à étudier aujourd'hui.",
+    "buddyPrice": "{{price}}/mois",
+    "manageBuddy": "Gérer mon plan Buddy",
+    "upgradeCta": "Je veux être Buddy"
+  },
+  "generating": {
+    "studyDone": "Terminé ! 🎉",
+    "exerciseDone": "Terminé ! 🎉",
+    "complexityHint": "Cela peut prendre quelques secondes en raison de la génération de contenus complexes, d'images, de diagrammes et de détails personnalisés. Parfois, les images peuvent ne pas être générées si la limite de requêtes est dépassée."
   }
 }

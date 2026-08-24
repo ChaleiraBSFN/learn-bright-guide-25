@@ -83,7 +83,12 @@
     "topic": "主题",
     "freeVersion": "免费版",
     "subscribeForComplete": "订阅高级版获取完整内容",
-    "contentNotLoaded": "加载错误。"
+    "contentNotLoaded": "加载错误。",
+    "imageAnalysis": "图像分析",
+    "extractedConcepts": "识别出的概念",
+    "solvedExercises": "图像中的已解决练习",
+    "solution": "解决方案",
+    "explanation": "解释"
   },
   "sections": {
     "objective": "目标",
@@ -112,7 +117,11 @@
     "showLess": "收起",
     "showMore": "查看所有天数",
     "daysCount": "天",
-    "clickHere": "点击这里"
+    "clickHere": "点击这里",
+    "illustrativeImages": "插图",
+    "imagesGoogleHint": "直接在Google搜索中查看有关该主题的真实图片。",
+    "searchGoogleImages": "在Google图片中搜索",
+    "searchGoogle": "在Google中搜索"
   },
   "premium": {
     "unlock": "订阅高级版",
@@ -202,7 +211,8 @@
     "resetEmailSentDesc": "我们已将恢复链接发送到您的邮箱。",
     "checkSpamTitle": "⚠️ 请检查您的垃圾邮件文件夹",
     "checkSpamDesc": "邮件可能会落入垃圾邮件文件夹。如果在收件箱中找不到，请检查垃圾邮件。",
-    "resetLinkInfo": "链接将打开Learn Buddy页面，您可以在其中输入注册邮箱和新密码。"
+    "resetLinkInfo": "链接将打开Learn Buddy页面，您可以在其中输入注册邮箱和新密码。",
+    "signIn": "登录"
   },
   "subscribe": {
     "youArePremium": "您是高级用户！🎉",
@@ -547,7 +557,17 @@
     "confirmEmailToReset": "Confirm your email to verify your identity.",
     "confirmYourEmail": "Enter your registered email",
     "emailVerifyNote": "Enter the same email you registered with to confirm it is you.",
-    "emailMismatch": "The email does not match the registered email."
+    "emailMismatch": "The email does not match the registered email.",
+    "verifyingLink": "正在验证链接…",
+    "appearance": "外观",
+    "appearanceDesc": "选择网站主题以获得更舒适的体验。",
+    "themeDark": "黑暗",
+    "themeDarkDesc": "推荐。减少视觉疲劳。",
+    "themeLight": "明亮",
+    "themeLightDesc": "光线充足的环境。",
+    "accentTitle": "（伙伴）配色方案",
+    "accentDesc": "自定义页面的主色调。",
+    "accentLocked": "Buddy 计划专属。订阅即可解锁。"
   },
   "credits": {
     "remaining": "{{count}} credits remaining",
@@ -826,8 +846,119 @@
       "tapFlip": "点击翻面",
       "tapBack": "点击查看问题",
       "revealAll": "显示所有答案",
-      "resetCards": "重新开始"
+      "resetCards": "重新开始",
+      "quiz": "测验",
+      "placeholder": "例如：法国大革命，二次函数...",
+      "clear": "清除",
+      "answer": "答案",
+      "question": "问题",
+      "error": "我们现在无法生成",
+      "errorHint": "请稍后再试。",
+      "flashcards": "抽认卡",
+      "summary": "智能摘要"
     },
-    "customizeLink": "自定义应用配色"
+    "customizeLink": "自定义应用配色",
+    "testError": "无法更改测试模式",
+    "testOn": "测试高级版已激活",
+    "testOff": "测试高级版已禁用",
+    "welcomeTitle": "欢迎来到Buddy！",
+    "welcomeDesc": "您的订阅正在确认中。",
+    "checkoutError": "无法打开付款",
+    "checkoutErrorHint": "请稍后再试。",
+    "portalError": "无法打开管理",
+    "b1Title": "优先生成",
+    "b1Desc": "您的学习将优先处理。",
+    "b2Title": "每月30个积分",
+    "b2Desc": "每个周期自动充值。",
+    "b3Title": "独家挑战",
+    "b3Desc": "进度跟踪中的Buddy成就。",
+    "b4Title": "高级定制",
+    "b4Desc": "页面上的额外调色板和主题。",
+    "menuItem": "Buddy 计划",
+    "b5Title": "Buddy 高级功能",
+    "b5Desc": "抽认卡、摘要、测验和分析。",
+    "b6Title": "无广告",
+    "b6Desc": "无干扰地学习。",
+    "seoTitle": "Buddy 套餐 — Learn Buddy 高级版",
+    "seoDesc": "订阅 Learn Buddy 的 Buddy 套餐：优先生成、每月积分、抽认卡、摘要、测验和无广告体验。",
+    "title": "Buddy 套餐",
+    "activeTitle": "您是 Buddy 🎉",
+    "ctaTitle": "提升您的学习",
+    "renewsOn": "将于 {{date}} 续订",
+    "activeDesc": "订阅已激活。",
+    "ctaDesc": "您可以随时在 Stripe 门户直接取消。",
+    "cancelScheduled": "您的订阅将在当前周期结束后终止。",
+    "manage": "管理订阅",
+    "subscribe": "订阅 Buddy 套餐",
+    "refresh": "刷新状态",
+    "testTitle": "测试模式（仅限 CEO/管理员）",
+    "testDesc": "为您的账户激活高级功能 30 天，无需付款，用于测试所有功能。",
+    "testActive": "此账户已激活测试高级功能。",
+    "testInactive": "测试高级功能已禁用。",
+    "toolsTitle": "Buddy 学习工具",
+    "toolsDesc": "就任何主题生成抽认卡、摘要和测验。",
+    "locked": "订阅 Buddy 套餐以解锁高级工具。",
+    "analyticsTitle": "您的学习统计数据",
+    "analyticsDesc": "跟踪您的学习进度。",
+    "statTotal": "总计",
+    "statStudies": "学习",
+    "statExercises": "练习",
+    "statPlans": "套餐"
+  },
+  "plans": {
+    "buddyTitle": "Buddy 计划",
+    "buddySubtitle": "学习更快，拥有高级工具且无广告。",
+    "buddy": {
+      "item1": "优先生成，速度更快",
+      "item2": "每月额外 30 个积分",
+      "item5": "抽认卡、摘要、测验和分析",
+      "item6": "无广告体验",
+      "item3": "进度跟踪中的独家挑战",
+      "item4": "高级主题和布局自定义"
+    },
+    "free": {
+      "item1": "生成学习内容、练习和计划",
+      "item2": "基本每日和每周积分",
+      "item3": "进度跟踪和排名",
+      "item4": "标准生成速度"
+    },
+    "title": "学习伙伴计划",
+    "freeTitle": "免费计划",
+    "freeSubtitle": "今天开始学习所需的一切。",
+    "buddyPrice": "{{price}}/月",
+    "manageBuddy": "管理我的 Buddy 计划",
+    "upgradeCta": "我想成为 Buddy"
+  },
+  "common": {
+    "showActions": "显示操作",
+    "hideActions": "收起操作",
+    "error": "错误",
+    "back": "返回",
+    "save": "保存"
+  },
+  "chatBuddy": {
+    "tooltip": "与学习伙伴聊天",
+    "imgTooBigTitle": "图片太大",
+    "imgTooBig": "每张图片最多 15MB。",
+    "imgFail": "无法读取图片。",
+    "error": "响应失败。",
+    "errorTitle": "错误",
+    "title": "聊天伙伴",
+    "subtitle": "您的 AI 导师 — 问任何问题 ✨",
+    "clear": "清除对话",
+    "heroTitle": "你好！有什么可以帮您的吗？",
+    "heroDesc": "询问科目、请求练习题、代码帮助、学习计划，或发送练习题的照片。",
+    "s1": "请简单解释一下光合作用",
+    "s2": "制定一个为期 7 天的数学学习计划",
+    "s3": "写一个 Python 函数来排序列表",
+    "s4": "给我 3 道关于二次方程的练习题",
+    "addImage": "附加图片",
+    "placeholder": "问任何问题…",
+    "disclaimer": "由 Gemini 提供支持 · 可能会出错，请核实重要信息。"
+  },
+  "generating": {
+    "studyDone": "完成！🎉",
+    "exerciseDone": "完成！🎉",
+    "complexityHint": "由于生成复杂内容、图像、图表和个性化详细信息，可能需要几秒钟。有时如果超出请求限制，图像可能无法生成。"
   }
 }

@@ -9,23 +9,39 @@ import { BuddyTools } from '@/components/buddy/BuddyTools';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Switch } from '@/components/ui/switch';
-import { useSubscription, BUDDY_PRICE_BRL } from '@/hooks/useSubscription';
+import { useSubscription } from '@/hooks/useSubscription';
+import { formatPlanPrice } from '@/lib/currency';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 const Buddy = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [params] = useSearchParams();
-  const { isBuddy, loading, subscriptionEnd, cancelAtPeriodEnd, refresh, startCheckout, openPortal } =
-    useSubscription();
+  const {
+    isBuddy,
+    loading,
+    subscriptionEnd,
+    cancelAtPeriodEnd,
+    refresh,
+    startCheckout,
+    prefetchCheckout,
+    getCheckoutUrlSync,
+    openPortal,
+  } = useSubscription();
+
   const [busy, setBusy] = useState(false);
   const [stats, setStats] = useState<{ total: number; studies: number; exercises: number; plans: number } | null>(null);
   const { isAdmin } = useAdmin();
   const [testBuddy, setTestBuddy] = useState(false);
   const [testBusy, setTestBusy] = useState(false);
+
+  useEffect(() => {
+    if (!isBuddy) prefetchCheckout();
+  }, [isBuddy, prefetchCheckout]);
+
 
   useEffect(() => {
     if (!user || !isAdmin) return;
@@ -83,6 +99,12 @@ const Buddy = () => {
       navigate('/auth');
       return;
     }
+    // URL já pré-carregada: abre na hora, sem espera.
+    const cached = getCheckoutUrlSync();
+    if (cached) {
+      window.open(cached, '_blank');
+      return;
+    }
     setBusy(true);
     const url = await startCheckout();
     setBusy(false);
@@ -96,6 +118,7 @@ const Buddy = () => {
     }
     window.open(url, '_blank');
   };
+
 
   const handlePortal = async () => {
     setBusy(true);
@@ -154,9 +177,7 @@ const Buddy = () => {
                   : t('buddy.ctaTitle', 'Turbine seus estudos')}
               </span>
               <span className="text-base font-bold text-accent">
-                {t('plans.buddyPrice', 'R$ {{price}}/mês', {
-                  price: BUDDY_PRICE_BRL.toFixed(2).replace('.', ','),
-                })}
+                {t('plans.buddyPrice', '{{price}}/mês', { price: formatPlanPrice(i18n.language) })}
               </span>
             </CardTitle>
             <CardDescription>

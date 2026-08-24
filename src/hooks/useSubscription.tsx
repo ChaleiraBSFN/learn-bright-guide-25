@@ -1,6 +1,8 @@
-import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { getPlanPrice } from '@/lib/currency';
 
 export const BUDDY_PRICE_BRL = 5.9;
 
@@ -11,10 +13,13 @@ interface SubscriptionState {
   cancelAtPeriodEnd: boolean;
   refresh: () => Promise<void>;
   startCheckout: () => Promise<string | null>;
+  prefetchCheckout: () => void;
+  getCheckoutUrlSync: () => string | null;
   openPortal: () => Promise<string | null>;
 }
 
 const SubscriptionContext = createContext<SubscriptionState | undefined>(undefined);
+
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
@@ -63,11 +68,49 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     return () => window.clearInterval(id);
   }, [user, refresh]);
 
-  const startCheckout = useCallback(async () => {
-    const { data, error } = await supabase.functions.invoke('create-checkout');
-    if (error || !data?.url) return null;
-    return data.url as string;
-  }, []);
+  // Pré-carrega a sessão de checkout para o clique abrir instantaneamente.
+  const checkoutCache = useRef<Record<string, { url: string | null; promise: Promise<string | null> | null }>>({});
+  const { i18n } = useTranslation();
+  const currency = getPlanPrice(i18n.language).currency;
+
+  const requestCheckout = useCallback(
+    (cur: string) => {
+      const entry = checkoutCache.current[cur];
+      if (entry?.url) return Promise.resolve(entry.url);
+      if (entry?.promise) return entry.promise;
+      const promise = supabase.functions
+        .invoke('create-checkout', { body: { currency: cur } })
+        .then(({ data, error }) => {
+          const url = !error && data?.url ? (data.url as string) : null;
+          checkoutCache.current[cur] = { url, promise: null };
+          return url;
+        })
+        .catch(() => {
+          checkoutCache.current[cur] = { url: null, promise: null };
+          return null;
+        });
+      checkoutCache.current[cur] = { url: null, promise };
+      return promise;
+    },
+    [],
+  );
+
+  const startCheckout = useCallback(() => requestCheckout(currency), [requestCheckout, currency]);
+
+  const prefetchCheckout = useCallback(() => {
+    if (!user) return;
+    void requestCheckout(currency);
+  }, [user, requestCheckout, currency]);
+
+  const getCheckoutUrlSync = useCallback(
+    () => checkoutCache.current[currency]?.url ?? null,
+    [currency],
+  );
+
+  useEffect(() => {
+    if (user && !isBuddy && !loading) void requestCheckout(currency);
+  }, [currency, user, isBuddy, loading, requestCheckout]);
+
 
   const openPortal = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke('customer-portal');
@@ -77,7 +120,17 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <SubscriptionContext.Provider
-      value={{ isBuddy, loading, subscriptionEnd, cancelAtPeriodEnd, refresh, startCheckout, openPortal }}
+      value={{
+        isBuddy,
+        loading,
+        subscriptionEnd,
+        cancelAtPeriodEnd,
+        refresh,
+        startCheckout,
+        prefetchCheckout,
+        getCheckoutUrlSync,
+        openPortal,
+      }}
     >
       {children}
     </SubscriptionContext.Provider>
@@ -95,6 +148,9 @@ export const useSubscription = (): SubscriptionState => {
     cancelAtPeriodEnd: false,
     refresh: async () => {},
     startCheckout: async () => null,
+    prefetchCheckout: () => {},
+    getCheckoutUrlSync: () => null,
     openPortal: async () => null,
   };
 };
+

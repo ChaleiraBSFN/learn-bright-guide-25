@@ -172,11 +172,24 @@ export const PromoBanners = () => {
     return (banners || []).filter(b => isWithinSchedule(b, now) && withinCaps(b, now, imps));
   }, [banners]);
 
-  const { data: translations, isLoading: isTranslating } = useQuery({
+  const cachedTranslations = useMemo(() => {
+    if (lang === 'pt-BR') return undefined;
+    const cache = readTranslationCache();
+    const result: Record<string, { title: string; description: string; cta_label: string }> = {};
+    for (const b of visible) {
+      const cached = cache[lang]?.[`${b.id}:${b.title}:${b.description}:${b.cta_label}`];
+      if (cached) result[b.id] = cached;
+    }
+    return Object.keys(result).length === visible.length && visible.length > 0 ? result : undefined;
+  }, [visible, lang]);
+
+  const { data: translations } = useQuery({
     queryKey: ['promo-banners-translations', lang, visible.map(b => `${b.id}:${b.title}:${b.description}:${b.cta_label}`).join('|')],
     enabled: visible.length > 0 && lang !== 'pt-BR',
     staleTime: 60 * 60 * 1000,
+    initialData: cachedTranslations,
     queryFn: async () => {
+
       const cache = readTranslationCache();
       const result: Record<string, { title: string; description: string; cta_label: string }> = {};
       const toTranslate: Array<{ id: string; title: string; description: string; cta_label: string }> = [];
@@ -231,12 +244,6 @@ export const PromoBanners = () => {
 
   return (
     <div className="space-y-2">
-      {isTranslating && (
-        <div className="flex items-center justify-center gap-1.5 pb-1 text-xs text-foreground/60">
-          <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
-          <span>{loadingLabels[lang] || loadingLabels['en']}</span>
-        </div>
-      )}
       {visible.map((b) => {
         const Icon = iconMap[b.icon] || Users;
         const s = variantStyles[b.variant] || variantStyles.violet;

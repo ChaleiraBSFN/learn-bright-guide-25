@@ -2,10 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Check, Crown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useSubscription, BUDDY_PRICE_BRL } from '@/hooks/useSubscription';
+import { useSubscription } from '@/hooks/useSubscription';
+import { formatPlanPrice } from '@/lib/currency';
 
 export const PlanComparison = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { isBuddy } = useSubscription();
 
@@ -56,9 +57,7 @@ export const PlanComparison = () => {
             <h3 className="text-base font-bold text-foreground">{t('plans.buddyTitle', 'Plano Buddy')}</h3>
           </div>
           <span className="rounded-full bg-accent/20 px-2 py-0.5 text-[11px] font-bold text-accent-foreground">
-            {t('plans.buddyPrice', 'R$ {{price}}/mês', {
-              price: BUDDY_PRICE_BRL.toFixed(2).replace('.', ','),
-            })}
+            {t('plans.buddyPrice', '{{price}}/mês', { price: formatPlanPrice(i18n.language) })}
           </span>
         </div>
         <p className="mb-4 text-xs text-muted-foreground">

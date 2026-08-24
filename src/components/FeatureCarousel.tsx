@@ -173,11 +173,25 @@ export function FeatureCarousel() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const { data: translations, isLoading: isTranslating } = useQuery({
+  const cachedTranslations = useMemo(() => {
+    if (lang === 'pt-BR' || rows.length === 0) return undefined;
+    const cache = readTranslationCache();
+    const result: Record<string, CarouselTranslation> = {};
+    for (const r of rows) {
+      const key = `${r.id}:${r.title}:${r.description}:${r.detail}:${(r.examples || []).join('§')}`;
+      const cached = cache[lang]?.[key];
+      if (cached) result[r.id] = cached;
+    }
+    return Object.keys(result).length === rows.length ? result : undefined;
+  }, [rows, lang]);
+
+  const { data: translations } = useQuery({
     queryKey: ['carousel-translations', lang, rows.map(r => `${r.id}:${r.title}`).join('|')],
     enabled: rows.length > 0 && lang !== 'pt-BR',
     staleTime: 60 * 60 * 1000,
+    initialData: cachedTranslations,
     queryFn: async () => {
+
       const cache = readTranslationCache();
       const result: Record<string, CarouselTranslation> = {};
       const toTranslate: CarouselItemRow[] = [];
@@ -396,12 +410,6 @@ export function FeatureCarousel() {
 
   return (
     <>
-      {isTranslating && lang !== 'pt-BR' && (
-        <div className="flex items-center justify-center gap-1.5 pb-1 text-xs text-foreground/60">
-          <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
-          <span>{loadingLabels[lang] || loadingLabels['en']}</span>
-        </div>
-      )}
       <div
         className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden"
         onMouseEnter={() => setPaused(true)}
