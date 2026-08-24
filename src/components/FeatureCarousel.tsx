@@ -61,6 +61,11 @@ const THEME_MAP: Record<string, { color: string; bgGradient: string; borderColor
     bgGradient: "from-rose-500/10 via-pink-500/5 to-transparent",
     borderColor: "border-rose-700 dark:border-rose-500/30",
   },
+  amber: {
+    color: "text-amber-500",
+    bgGradient: "from-amber-500/10 via-orange-500/5 to-transparent",
+    borderColor: "border-amber-700 dark:border-amber-500/30",
+  },
 };
 
 interface CarouselItemRow {
