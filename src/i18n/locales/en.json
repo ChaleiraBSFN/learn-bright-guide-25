@@ -611,7 +611,10 @@
     "alreadyEarned": "You already earned",
     "defaultObjective": "Keep using the app to unlock this achievement.",
     "createAccount": "Create an account",
-    "loginToSave": "Log in to save your progress!"
+    "loginToSave": "Log in to save your progress!",
+    "buddyOnly": "Buddy-only challenge",
+    "buddyOnlyHint": "Subscribe to the Buddy plan to unlock the premium trail challenges.",
+    "buddyOnlyShort": "Buddy only"
   },
   "privacy": {
     "title": "Privacy Policy",
@@ -829,7 +832,14 @@
       "flashcardsDesc": "Question and answer cards",
       "summaryDesc": "Key points in a few items",
       "quizDesc": "Questions graded instantly",
-      "topicRequired": "Type a topic to start"
+      "topicRequired": "Type a topic to start",
+      "cardsTitle": "Your flashcards",
+      "flippedLabel": "seen",
+      "card": "Card",
+      "tapFlip": "Tap to flip",
+      "tapBack": "Tap to see the question",
+      "revealAll": "Reveal all answers",
+      "resetCards": "Start over"
     },
     "customizeLink": "Customize app colors"
   }

@@ -44,6 +44,8 @@ export interface TrailNodeDef {
   timeRequiredMinutes?: number;
   triggerType?: 'generate_study' | 'generate_quiz' | 'quiz_score' | 'time_focused' | 'none';
   triggerRequirement?: number;
+  /** Buddy (premium) exclusive challenge. */
+  buddyOnly?: boolean;
 }
 
 type TrailBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents'> & {
@@ -165,7 +167,17 @@ const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
   });
 };
 
-export const defaultTrailNodes: TrailNodeDef[] = createTrailNodes(trailBlueprints);
+// Buddy (premium) exclusive challenges — side branches off the main trail.
+const premiumTrailNodes: TrailNodeDef[] = [
+  { id: 101, title: '👑 Flashcards Buddy', type: 'legendary', creditReward: 8, iconName: 'Crown', x: 1120, y: 200, parents: [7], objective: '👑 Exclusivo Buddy: gere seu primeiro conjunto de flashcards nas ferramentas premium.', triggerType: 'none', buddyOnly: true },
+  { id: 102, title: '⚡ Resumo Relâmpago', type: 'legendary', creditReward: 10, iconName: 'Zap', x: 1160, y: 520, parents: [14], objective: '⚡ Exclusivo Buddy: use o resumo inteligente para condensar um tema difícil.', triggerType: 'none', buddyOnly: true },
+  { id: 103, title: '🧠 Quiz Premium', type: 'legendary', creditReward: 12, iconName: 'Brain', x: 1180, y: 860, parents: [21], objective: '🧠 Exclusivo Buddy: monte um quiz com a IA premium e acerte a maioria.', triggerType: 'none', buddyOnly: true },
+  { id: 104, title: '🚀 Turbo de Estudos', type: 'legendary', creditReward: 14, iconName: 'Rocket', x: 1200, y: 1180, parents: [28], objective: '🚀 Exclusivo Buddy: gere 20 estudos usando a fila prioritária.', triggerType: 'generate_study', triggerRequirement: 20, buddyOnly: true },
+  { id: 105, title: '💎 Colecionador Buddy', type: 'legendary', creditReward: 18, iconName: 'Gem', x: 1180, y: 1440, parents: [35], objective: '💎 Exclusivo Buddy: crie 20 listas de exercícios com prioridade premium.', triggerType: 'generate_quiz', triggerRequirement: 20, buddyOnly: true },
+  { id: 106, title: '🏆 Lenda Buddy', type: 'legendary', creditReward: 30, iconName: 'Trophy', x: 1100, y: 1650, parents: [42], objective: '🏆 Exclusivo Buddy: conclua toda a jornada premium e vire lenda Buddy.', triggerType: 'none', buddyOnly: true },
+];
+
+export const defaultTrailNodes: TrailNodeDef[] = [...createTrailNodes(trailBlueprints), ...premiumTrailNodes];
 
 const defaultNodeMap = new Map(defaultTrailNodes.map((node) => [node.id, node]));
 
@@ -192,6 +204,7 @@ const sanitizeTrailNode = (rawNode: Partial<TrailNodeDef>, index: number): Trail
     triggerType: isTriggerType(rawNode.triggerType) ? rawNode.triggerType : fallback.triggerType,
     triggerRequirement: Number.isFinite(safeTriggerRequirement) ? safeTriggerRequirement : fallback.triggerRequirement,
     timeRequiredMinutes: Number.isFinite(safeTime) ? safeTime : fallback.timeRequiredMinutes,
+    buddyOnly: typeof rawNode.buddyOnly === 'boolean' ? rawNode.buddyOnly : fallback.buddyOnly,
   };
 };
 
@@ -202,6 +215,11 @@ const normalizeStoredNodes = (storedNodes: TrailNodeDef[]) => {
   sourceNodes.forEach((node, index) => {
     const sanitized = sanitizeTrailNode(node, index);
     uniqueNodes.set(sanitized.id, sanitized);
+  });
+
+  // Always keep the premium (Buddy) branch available, even for older saved trails.
+  premiumTrailNodes.forEach((node) => {
+    if (!uniqueNodes.has(node.id)) uniqueNodes.set(node.id, node);
   });
 
   return sortTrailNodes(Array.from(uniqueNodes.values()));
@@ -419,8 +437,15 @@ export const useAchievements = () => {
 
     const completedSet = new Set(await loadUserCompletedAchievements(user.id));
 
+    let isBuddyUser = false;
+    try {
+      const { data } = await supabase.rpc('is_buddy', { _user_id: user.id });
+      isBuddyUser = Boolean(data);
+    } catch { /* treat as free user */ }
+
     const unlockNode = async (node: TrailNodeDef) => {
       if (completedSet.has(node.id)) return false;
+      if (node.buddyOnly && !isBuddyUser) return false;
       if (node.parents.length > 0 && !node.parents.every((parentId) => completedSet.has(parentId))) return false;
 
       try {

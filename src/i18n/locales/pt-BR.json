@@ -604,7 +604,10 @@
     "alreadyEarned": "Você já ganhou",
     "defaultObjective": "Continue usando o app para desbloquear essa conquista.",
     "createAccount": "Crie uma conta",
-    "loginToSave": "Faça login para salvar seu progresso!"
+    "loginToSave": "Faça login para salvar seu progresso!",
+    "buddyOnly": "Desafio exclusivo Buddy",
+    "buddyOnlyHint": "Assine o Plano Buddy para desbloquear os desafios premium da trilha.",
+    "buddyOnlyShort": "Só Buddy"
   },
   "credits": {
     "remaining": "{{count}} créditos restantes",
@@ -831,7 +834,14 @@
       "flashcardsDesc": "Cartões de pergunta e resposta",
       "summaryDesc": "Pontos-chave em poucos itens",
       "quizDesc": "Perguntas com correção na hora",
-      "topicRequired": "Digite um tema para começar"
+      "topicRequired": "Digite um tema para começar",
+      "cardsTitle": "Seus flashcards",
+      "flippedLabel": "vistos",
+      "card": "Card",
+      "tapFlip": "Toque para virar",
+      "tapBack": "Toque para ver a pergunta",
+      "revealAll": "Ver todas as respostas",
+      "resetCards": "Recomeçar"
     },
     "customizeLink": "Personalizar cores do app"
   }

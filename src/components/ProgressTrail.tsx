@@ -5,9 +5,11 @@ import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Lock, Coins, Info, BookOpen, CheckCircle2 } from 'lucide-react';
+import { Lock, Coins, Info, BookOpen, CheckCircle2, Crown } from 'lucide-react';
 import { getRankForAchievements, getRankDisplayName } from '@/lib/ranks';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useSubscription } from '@/hooks/useSubscription';
 import { useCredits } from '@/hooks/useCredits';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -45,6 +47,8 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
   const { credits } = useCredits();
   const { toast } = useToast();
   const { nodes: trailNodes } = useAchievementData();
+  const { isBuddy } = useSubscription();
+  const navigate = useNavigate();
 
   const [completedIds, setCompletedIds] = useState<number[]>([]);
   const [translatedNodes, setTranslatedNodes] = useState<Record<string, Record<number, { title: string; objective: string }>>>({});
@@ -162,6 +166,16 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
   }, [open, user]);
 
   const handleNodeClick = (node: TrailNodeDef, isCompleted: boolean, isLocked: boolean) => {
+    if (node.buddyOnly && !isBuddy) {
+      toast({
+        title: `👑 ${t('trail.buddyOnly', 'Desafio exclusivo Buddy')}`,
+        description: t('trail.buddyOnlyHint', 'Assine o Plano Buddy para desbloquear os desafios premium da trilha.'),
+        duration: 6000,
+      });
+      onClose();
+      navigate('/buddy');
+      return;
+    }
     if (!user) {
       toast({ title: t('trail.createAccount', 'Crie uma conta'), description: t('trail.loginToSave', 'Faça login para salvar seu progresso!'), variant: 'destructive' });
       return;
@@ -274,14 +288,15 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             {trailNodes.map((node, index) => {
               const Icon = availableIcons[node.iconName] || availableIcons.BookOpen;
               const isCompleted = completedSet.has(node.id);
-              const isLocked = node.parents.length > 0 && !node.parents.every((parentId) => completedSet.has(parentId));
+              const premiumLocked = Boolean(node.buddyOnly) && !isBuddy;
+              const isLocked = premiumLocked || (node.parents.length > 0 && !node.parents.every((parentId) => completedSet.has(parentId)));
               const isNext = !isCompleted && !isLocked;
 
               return (
                 <div key={node.id} className="absolute" style={{ left: node.x, top: node.y }}>
                   <motion.button
                     onClick={() => handleNodeClick(node, isCompleted, isLocked)}
-                    whileHover={!isLocked ? { scale: 1.08, y: -2 } : {}}
+                    whileHover={!isLocked || premiumLocked ? { scale: 1.08, y: -2 } : {}}
                     whileTap={!isLocked ? { scale: 0.95 } : {}}
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -290,6 +305,8 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                   >
                     <div
                       className={`relative flex h-14 w-14 items-center justify-center rounded-full border-[3px] shadow-lg transition-all duration-300 ${
+                        node.buddyOnly ? 'ring-2 ring-accent ring-offset-2 ring-offset-background ' : ''
+                      }${
                         isCompleted
                           ? `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_18px_hsl(var(--primary)/0.28)]`
                           : isLocked
@@ -298,6 +315,12 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                       }`}
                     >
                       {isLocked && !isCompleted ? <Lock className="h-5 w-5" /> : <Icon className="h-5 w-5 text-primary-foreground" />}
+
+                      {node.buddyOnly && !isCompleted && (
+                        <span className="absolute -left-1 -top-1 rounded-full border-2 border-background bg-accent p-0.5 shadow-sm">
+                          <Crown className="h-3 w-3 text-accent-foreground" />
+                        </span>
+                      )}
 
                       {isCompleted && (
                         <span className="absolute -right-1 -top-1 rounded-full border-2 border-background bg-primary p-0.5 shadow-sm">
@@ -312,8 +335,14 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                       <span className="rounded-md bg-background/90 px-2 py-1 text-[10px] font-semibold leading-tight text-foreground shadow-sm ring-1 ring-border/60 backdrop-blur-sm">
                         {getNodeText(node).title}
                       </span>
-                      <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : isLocked ? 'text-red-500' : 'text-green-500'}`}>
-                        {isCompleted ? `✓ ${t('trail.done', 'Feito')}` : isLocked ? `🔒 ${t('trail.locked', 'Bloqueado')}` : `⏳ ${t('trail.inProgress', 'Em andamento')}`}
+                      <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : premiumLocked ? 'text-accent' : isLocked ? 'text-red-500' : 'text-green-500'}`}>
+                        {isCompleted
+                          ? `✓ ${t('trail.done', 'Feito')}`
+                          : premiumLocked
+                            ? `👑 ${t('trail.buddyOnlyShort', 'Só Buddy')}`
+                            : isLocked
+                              ? `🔒 ${t('trail.locked', 'Bloqueado')}`
+                              : `⏳ ${t('trail.inProgress', 'Em andamento')}`}
                       </span>
                       {(() => {
                         const nodeRank = getRankForAchievements(node.id);

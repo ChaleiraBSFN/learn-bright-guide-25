@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 
 type Tool = 'flashcards' | 'summary' | 'quiz';
 
-interface Flashcard { front: string; back: string }
+interface Flashcard { front: string; back: string; emoji?: string; tag?: string; tip?: string }
 interface SummaryData {
   title?: string;
   bullets?: string[];
@@ -67,19 +67,19 @@ export const BuddyTools = () => {
   const tools: { key: Tool; label: string; desc: string; icon: typeof Layers }[] = [
     {
       key: 'flashcards',
-      label: t('buddy.tools.flashcards', 'Flashcards'),
+      label: `🃏 ${t('buddy.tools.flashcards', 'Flashcards')}`,
       desc: t('buddy.tools.flashcardsDesc', 'Cartões de pergunta e resposta'),
       icon: Layers,
     },
     {
       key: 'summary',
-      label: t('buddy.tools.summary', 'Resumo inteligente'),
+      label: `📝 ${t('buddy.tools.summary', 'Resumo inteligente')}`,
       desc: t('buddy.tools.summaryDesc', 'Pontos-chave em poucos itens'),
       icon: FileText,
     },
     {
       key: 'quiz',
-      label: t('buddy.tools.quiz', 'Quiz'),
+      label: `🧠 ${t('buddy.tools.quiz', 'Quiz')}`,
       desc: t('buddy.tools.quizDesc', 'Perguntas com correção na hora'),
       icon: ListChecks,
     },
@@ -154,20 +154,62 @@ export const BuddyTools = () => {
       </div>
 
       {cards && cards.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {cards.map((card, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setFlipped((p) => ({ ...p, [i]: !p[i] }))}
-              className="min-h-24 rounded-xl border-2 border-foreground/15 bg-card p-4 text-left transition-colors hover:border-primary"
-            >
-              <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                {flipped[i] ? t('buddy.tools.answer', 'Resposta') : t('buddy.tools.question', 'Pergunta')}
-              </div>
-              <p className="text-sm font-medium text-foreground">{flipped[i] ? card.back : card.front}</p>
-            </button>
-          ))}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              🃏 {t('buddy.tools.cardsTitle', 'Seus flashcards')}
+            </p>
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-bold text-primary">
+              {Object.values(flipped).filter(Boolean).length}/{cards.length} {t('buddy.tools.flippedLabel', 'vistos')}
+            </span>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {cards.map((card, i) => {
+              const isFlipped = Boolean(flipped[i]);
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setFlipped((p) => ({ ...p, [i]: !p[i] }))}
+                  className={`flex min-h-32 flex-col rounded-xl border-2 p-4 text-left transition-all ${
+                    isFlipped ? 'border-primary bg-primary/5' : 'border-foreground/15 bg-card hover:border-primary/60'
+                  }`}
+                >
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                      <span className="text-base leading-none">{card.emoji || '🃏'}</span>
+                      {card.tag || `${t('buddy.tools.card', 'Card')} ${i + 1}`}
+                    </span>
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${isFlipped ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                      {isFlipped ? `✅ ${t('buddy.tools.answer', 'Resposta')}` : `❓ ${t('buddy.tools.question', 'Pergunta')}`}
+                    </span>
+                  </div>
+
+                  <p className="text-sm font-medium leading-relaxed text-foreground">
+                    {isFlipped ? card.back : card.front}
+                  </p>
+
+                  {isFlipped && card.tip && (
+                    <p className="mt-2 rounded-lg bg-accent/10 px-2 py-1.5 text-xs text-foreground">{card.tip}</p>
+                  )}
+
+                  <span className="mt-auto pt-2 text-[10px] text-muted-foreground">
+                    👆 {isFlipped ? t('buddy.tools.tapBack', 'Toque para ver a pergunta') : t('buddy.tools.tapFlip', 'Toque para virar')}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={() => setFlipped(Object.fromEntries(cards.map((_, i) => [i, true])))}>
+              👀 {t('buddy.tools.revealAll', 'Ver todas as respostas')}
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setFlipped({})}>
+              🔄 {t('buddy.tools.resetCards', 'Recomeçar')}
+            </Button>
+          </div>
         </div>
       )}
 
