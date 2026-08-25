@@ -171,7 +171,7 @@ const Buddy = () => {
   const benefits = [
     { icon: Zap, title: t('buddy.b1Title', 'Geração prioritária'), desc: t('buddy.b1Desc', 'Seus estudos entram na frente da fila.') },
     { icon: Coins, title: t('buddy.b2Title', '30 créditos por mês'), desc: t('buddy.b2Desc', 'Recarregados automaticamente a cada ciclo.') },
-    { icon: Trophy, title: t('buddy.b3Title', 'Desafios exclusivos'), desc: t('buddy.b3Desc', 'Conquistas Buddy na trilha de progresso.') },
+    { icon: Trophy, title: t('buddy.b3Title', '40 desafios exclusivos'), desc: t('buddy.b3Desc', 'Trilha Buddy completa com 40 conquistas premium só para assinantes.') },
     { icon: Palette, title: t('buddy.b4Title', 'Personalização avançada'), desc: t('buddy.b4Desc', 'Paletas e temas extras nas suas páginas.') },
     { icon: Sparkles, title: t('buddy.b5Title', 'Ferramentas premium'), desc: t('buddy.b5Desc', 'Flashcards, resumos, quizzes e analytics.') },
     { icon: BellOff, title: t('buddy.b6Title', 'Sem anúncios'), desc: t('buddy.b6Desc', 'Estude sem interrupções.') },
