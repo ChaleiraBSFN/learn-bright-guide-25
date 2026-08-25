@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { ArrowLeft, Crown, Loader2, Zap, Coins, Trophy, Palette, Sparkles, BellOff } from 'lucide-react';
+import { ArrowLeft, Crown, Loader2, Zap, Coins, Trophy, Palette, Sparkles, BellOff, RefreshCw, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { SEO } from '@/components/SEO';
 import { BuddyTools } from '@/components/buddy/BuddyTools';
 import { useAuth } from '@/hooks/useAuth';
