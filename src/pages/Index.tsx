@@ -250,6 +250,30 @@ const Index = () => {
     setWebImages([]);
   }, []);
 
+  /**
+   * Waits until the result container is actually mounted in the DOM and its
+   * children are painted. This guarantees the overlay only fades away once
+   * the generated content is visible behind it.
+   */
+  const waitForContentPaint = (ref: React.RefObject<HTMLElement | null>, timeout = 3000) => {
+    return new Promise<void>((resolve) => {
+      const start = Date.now();
+      const check = () => {
+        const el = ref.current;
+        if (el && el.children.length > 0) {
+          // Double rAF ensures the browser has painted the content.
+          requestAnimationFrame(() => requestAnimationFrame(resolve));
+          return;
+        }
+        if (Date.now() - start > timeout) {
+          resolve();
+          return;
+        }
+        requestAnimationFrame(check);
+      };
+      check();
+    });
+  };
 
   const handleSubmit = async (data: StudyFormData) => {
     if (!hasCredits) {
