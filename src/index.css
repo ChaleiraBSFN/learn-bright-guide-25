@@ -40,7 +40,13 @@
     --input: 222 47% 25%;
     --ring: 217 91% 40%;
 
+    /* Verde-água premium (Plano Buddy) */
+    --buddy: 172 82% 40%;
+    --buddy-foreground: 0 0% 100%;
+    --buddy-soft: 172 70% 92%;
+
     --radius: 0.75rem;
+
 
     /* Custom tokens */
     --gradient-primary: linear-gradient(135deg, hsl(217 91% 40%), hsl(217 91% 55%));
@@ -103,6 +109,11 @@
     --border: 217 33% 17%;
     --input: 217 33% 17%;
     --ring: 217 91% 60%;
+
+    --buddy: 172 76% 52%;
+    --buddy-foreground: 222 47% 6%;
+    --buddy-soft: 172 40% 18%;
+
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

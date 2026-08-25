@@ -621,7 +621,11 @@
     "loginToSave": "Connectez-vous pour sauvegarder votre progression !",
     "buddyOnly": "Défi exclusif Buddy",
     "buddyOnlyHint": "Abonnez-vous au plan Buddy pour débloquer les défis premium.",
-    "buddyOnlyShort": "Buddy seulement"
+    "buddyOnlyShort": "Buddy seulement",
+    "tabClassic": "Parcours classique",
+    "tabPremium": "Parcours Buddy",
+    "unlockPremium": "Débloquer le parcours Buddy",
+    "completedPlural": "terminés"
   },
   "privacy": {
     "title": "Politique de Confidentialité",

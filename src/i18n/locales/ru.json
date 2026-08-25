@@ -621,7 +621,11 @@
     "loginToSave": "Войдите, чтобы сохранить прогресс!",
     "buddyOnly": "Эксклюзивное испытание Buddy",
     "buddyOnlyHint": "Оформите план Buddy, чтобы открыть премиум-испытания.",
-    "buddyOnlyShort": "Только Buddy"
+    "buddyOnlyShort": "Только Buddy",
+    "tabClassic": "Классический путь",
+    "tabPremium": "Путь Buddy",
+    "unlockPremium": "Разблокировать путь Buddy",
+    "completedPlural": "выполнено"
   },
   "privacy": {
     "title": "Политика Конфиденциальности",

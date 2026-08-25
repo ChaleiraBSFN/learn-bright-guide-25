@@ -621,7 +621,11 @@
     "loginToSave": "Melde dich an, um deinen Fortschritt zu speichern!",
     "buddyOnly": "Exklusive Buddy-Herausforderung",
     "buddyOnlyHint": "Abonniere den Buddy-Plan, um die Premium-Herausforderungen freizuschalten.",
-    "buddyOnlyShort": "Nur Buddy"
+    "buddyOnlyShort": "Nur Buddy",
+    "tabClassic": "Klassischer Pfad",
+    "tabPremium": "Buddy-Pfad",
+    "unlockPremium": "Buddy-Pfad freischalten",
+    "completedPlural": "abgeschlossen"
   },
   "privacy": {
     "title": "Datenschutzrichtlinie",

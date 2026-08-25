@@ -44,6 +44,12 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        buddy: {
+          DEFAULT: "hsl(var(--buddy))",
+          foreground: "hsl(var(--buddy-foreground))",
+          soft: "hsl(var(--buddy-soft))",
+        },
+
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
