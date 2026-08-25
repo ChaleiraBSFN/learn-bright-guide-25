@@ -26,8 +26,13 @@ export function GeneratingOverlay({ type, isFinishing }: GeneratingOverlayProps)
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden animate-fade-in bg-background/90 backdrop-blur-[2px] transition-opacity duration-200"
-      style={{ opacity: isFinishing ? 0 : 1, willChange: "opacity" }}
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-background/90 backdrop-blur-[2px] transition-all duration-500 ease-out"
+      style={{
+        opacity: isFinishing ? 0 : 1,
+        transform: isFinishing ? "scale(1.02)" : "scale(1)",
+        willChange: "opacity, transform",
+        pointerEvents: isFinishing ? "none" : "auto",
+      }}
     >
       <div className="flex flex-col items-center gap-6 px-6">
         <div className="relative flex h-24 w-24 items-center justify-center">
