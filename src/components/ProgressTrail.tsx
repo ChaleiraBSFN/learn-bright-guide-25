@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Lock, Coins, Info, BookOpen, CheckCircle2, Crown } from 'lucide-react';
+import { Lock, Coins, Info, BookOpen, CheckCircle2, Crown, Sparkles, X, Gift } from 'lucide-react';
 import { getRankForAchievements, getRankDisplayName } from '@/lib/ranks';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -52,7 +54,9 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
   const [completedIds, setCompletedIds] = useState<number[]>([]);
   const [translatedNodes, setTranslatedNodes] = useState<Record<string, Record<number, { title: string; objective: string }>>>({});
-  const [translatingLang, setTranslatingLang] = useState<string | null>(null);
+  const [, setTranslatingLang] = useState<string | null>(null);
+  const [tab, setTab] = useState<'classic' | 'premium'>('classic');
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const currentLang = i18n.language;
 
@@ -94,14 +98,18 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
   const getNodeText = useCallback((node: TrailNodeDef) => {
     const lang = currentLang;
     if (lang === 'pt-BR' || lang === 'pt') return { title: node.title, objective: node.objective || '' };
-    const t = translatedNodes[lang]?.[node.id];
-    return t || { title: node.title, objective: node.objective || '' };
+    const translated = translatedNodes[lang]?.[node.id];
+    return translated || { title: node.title, objective: node.objective || '' };
   }, [currentLang, translatedNodes]);
 
+  const classicNodes = useMemo(() => trailNodes.filter((node) => !node.buddyOnly), [trailNodes]);
+  const premiumNodes = useMemo(() => trailNodes.filter((node) => node.buddyOnly), [trailNodes]);
+  const activeNodes = tab === 'premium' ? premiumNodes : classicNodes;
+
   const completedSet = useMemo(() => new Set(completedIds), [completedIds]);
-  const completedCount = useMemo(() => trailNodes.filter((node) => completedSet.has(node.id)).length, [trailNodes, completedSet]);
-  const mapWidth = Math.max(...trailNodes.map((node) => node.x), 0) + 240;
-  const mapHeight = Math.max(...trailNodes.map((node) => node.y), 0) + 280;
+  const completedCount = useMemo(() => activeNodes.filter((node) => completedSet.has(node.id)).length, [activeNodes, completedSet]);
+  const mapWidth = Math.max(...activeNodes.map((node) => node.x), 0) + 240;
+  const mapHeight = Math.max(...activeNodes.map((node) => node.y), 0) + 280;
 
   useEffect(() => {
     const loadProgress = async () => {
@@ -120,10 +128,6 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') loadProgress();
-    };
-
-    const handleTrailNodesUpdated = () => {
-      loadProgress();
     };
 
     if (open) loadProgress();
@@ -146,7 +150,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
 
     window.addEventListener('achievement_unlocked', loadProgress);
     window.addEventListener('achievements_updated', loadProgress);
-    window.addEventListener('trail_nodes_updated', handleTrailNodesUpdated);
+    window.addEventListener('trail_nodes_updated', loadProgress);
     window.addEventListener('storage', loadProgress);
     window.addEventListener('focus', loadProgress);
     window.addEventListener('online', loadProgress);
@@ -156,7 +160,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
       window.clearInterval(interval);
       window.removeEventListener('achievement_unlocked', loadProgress);
       window.removeEventListener('achievements_updated', loadProgress);
-      window.removeEventListener('trail_nodes_updated', handleTrailNodesUpdated);
+      window.removeEventListener('trail_nodes_updated', loadProgress);
       window.removeEventListener('storage', loadProgress);
       window.removeEventListener('focus', loadProgress);
       window.removeEventListener('online', loadProgress);
@@ -165,36 +169,29 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
     };
   }, [open, user]);
 
-  const handleNodeClick = (node: TrailNodeDef, isCompleted: boolean, isLocked: boolean) => {
-    if (node.buddyOnly && !isBuddy) {
-      toast({
-        title: `👑 ${t('trail.buddyOnly', 'Desafio exclusivo Buddy')}`,
-        description: t('trail.buddyOnlyHint', 'Assine o Plano Buddy para desbloquear os desafios premium da trilha.'),
-        duration: 6000,
-      });
-      onClose();
-      navigate('/buddy');
-      return;
-    }
+  useEffect(() => {
+    if (!open) setSelectedId(null);
+  }, [open]);
+
+  const isNodeLocked = useCallback((node: TrailNodeDef) => {
+    if (node.buddyOnly && !isBuddy) return true;
+    return node.parents.length > 0 && !node.parents.every((parentId) => completedSet.has(parentId));
+  }, [completedSet, isBuddy]);
+
+  const handleNodeClick = (node: TrailNodeDef) => {
+    setSelectedId((prev) => (prev === node.id ? null : node.id));
     if (!user) {
-      toast({ title: t('trail.createAccount', 'Crie uma conta'), description: t('trail.loginToSave', 'Faça login para salvar seu progresso!'), variant: 'destructive' });
-      return;
+      toast({
+        title: t('trail.createAccount', 'Crie uma conta'),
+        description: t('trail.loginToSave', 'Faça login para salvar seu progresso!'),
+      });
     }
-
-    const { title: nodeTitle, objective: nodeObjective } = getNodeText(node);
-    const statusText = isCompleted ? `✅ ${t('trail.completed', 'Concluído')}` : isLocked ? `🔒 ${t('trail.locked', 'Bloqueado')}` : `🔓 ${t('trail.inProgress', 'Em andamento')}`;
-    const objective = nodeObjective || t('trail.defaultObjective', 'Continue usando o app para desbloquear essa conquista.');
-
-    toast({
-      title: `${nodeTitle} — ${statusText}`,
-      description: isCompleted
-        ? `${objective}\n\n🎉 ${t('trail.alreadyEarned', 'Você já ganhou')} +${node.creditReward} ${t('credits.label', 'créditos')}!`
-        : `📋 ${objective}\n\n🎁 ${t('trail.reward', 'Recompensa')}: +${node.creditReward} ${t('credits.label', 'créditos')}.`,
-      duration: 7000,
-    });
   };
 
-  const progressPercent = trailNodes.length > 0 ? (completedCount / trailNodes.length) * 100 : 0;
+  const progressPercent = activeNodes.length > 0 ? (completedCount / activeNodes.length) * 100 : 0;
+  const selectedNode = useMemo(() => activeNodes.find((node) => node.id === selectedId) || null, [activeNodes, selectedId]);
+  const isPremiumTab = tab === 'premium';
+  const premiumBlocked = isPremiumTab && !isBuddy;
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
@@ -202,7 +199,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
         <DialogHeader className="z-10 border-b border-border bg-background/95 px-4 py-3 backdrop-blur-sm">
           <DialogTitle className="flex items-center justify-between gap-3 text-base">
             <span className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
+              {isPremiumTab ? <Crown className="h-5 w-5 text-buddy" /> : <BookOpen className="h-5 w-5 text-primary" />}
               {t('trail.title', 'Trilha de Conquistas')}
             </span>
             <Badge variant="outline" className="gap-1 text-xs font-bold">
@@ -214,28 +211,69 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             {t('trail.description', 'Sua trilha de conquistas e progresso')}
           </DialogDescription>
 
+          <Tabs value={tab} onValueChange={(value) => { setTab(value as 'classic' | 'premium'); setSelectedId(null); }} className="mt-2">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="classic" className="gap-1.5 text-xs">
+                <BookOpen className="h-3.5 w-3.5" />
+                {t('trail.tabClassic', 'Trilha clássica')}
+              </TabsTrigger>
+              <TabsTrigger
+                value="premium"
+                className="gap-1.5 text-xs data-[state=active]:bg-buddy data-[state=active]:text-buddy-foreground"
+              >
+                <Crown className="h-3.5 w-3.5" />
+                {t('trail.tabPremium', 'Trilha Buddy')}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="classic" />
+            <TabsContent value="premium" />
+          </Tabs>
+
           <div className="mt-2 space-y-1">
             <div className="flex justify-between text-[11px] text-muted-foreground">
-              <span>{completedCount}/{trailNodes.length} completas</span>
+              <span>{completedCount}/{activeNodes.length} {t('trail.completedPlural', 'completas')}</span>
               <span>{Math.round(progressPercent)}%</span>
             </div>
-            <Progress value={progressPercent} className="h-1.5" />
+            <Progress
+              value={progressPercent}
+              className={`h-1.5 ${isPremiumTab ? '[&>div]:bg-buddy' : ''}`}
+            />
           </div>
         </DialogHeader>
 
-        <div className="relative min-h-[460px] flex-1 overflow-auto bg-muted/20">
+        <div className={`relative min-h-[460px] flex-1 overflow-auto ${isPremiumTab ? 'bg-buddy/5' : 'bg-muted/20'}`}>
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              backgroundImage: 'radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px)',
+              backgroundImage: `radial-gradient(circle, hsl(var(${isPremiumTab ? '--buddy' : '--border'})) 1px, transparent 1px)`,
               backgroundSize: '26px 26px',
-              opacity: 0.28,
+              opacity: isPremiumTab ? 0.18 : 0.28,
             }}
           />
 
           {!user && (
             <div className="absolute left-1/2 top-3 z-20 w-[88%] max-w-sm -translate-x-1/2 rounded-lg border border-accent/30 bg-background/90 p-2.5 text-center text-xs text-foreground shadow-sm">
               <Info className="mr-1 inline h-3.5 w-3.5 text-primary" /> {t('trail.loginToSave', 'Faça login para salvar progresso!')}
+            </div>
+          )}
+
+          {premiumBlocked && (
+            <div className="absolute left-1/2 top-3 z-20 w-[92%] max-w-md -translate-x-1/2 rounded-xl border-2 border-buddy/50 bg-background/95 p-3 text-center shadow-lg backdrop-blur-sm">
+              <p className="flex items-center justify-center gap-1.5 text-xs font-bold text-buddy">
+                <Sparkles className="h-4 w-4" />
+                {t('trail.buddyOnly', 'Desafio exclusivo Buddy')}
+              </p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                {t('trail.buddyOnlyHint', 'Assine o Plano Buddy para desbloquear os desafios premium da trilha.')}
+              </p>
+              <Button
+                size="sm"
+                className="mt-2 h-8 bg-buddy text-buddy-foreground hover:bg-buddy/90"
+                onClick={() => { onClose(); navigate('/buddy'); }}
+              >
+                <Crown className="mr-1 h-3.5 w-3.5" />
+                {t('trail.unlockPremium', 'Desbloquear trilha Buddy')}
+              </Button>
             </div>
           )}
 
@@ -251,91 +289,139 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                 </filter>
               </defs>
 
-              {/* Layer 1: All road backgrounds in one group to avoid overlap artifacts */}
+              {/* Layer 1: road backgrounds */}
               <g>
-                {trailNodes.flatMap((node) =>
+                {activeNodes.flatMap((node) =>
                   node.parents.map((parentId) => {
-                    const parent = trailNodes.find((item) => item.id === parentId);
+                    const parent = activeNodes.find((item) => item.id === parentId);
                     if (!parent) return null;
-                    return <path key={`road-${parent.id}-${node.id}`} d={buildPath(parent, node)} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={34} stroke="hsl(220, 60%, 20%)" />;
+                    return (
+                      <path
+                        key={`road-${parent.id}-${node.id}`}
+                        d={buildPath(parent, node)}
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={34}
+                        stroke={isPremiumTab ? 'hsl(var(--buddy) / 0.22)' : 'hsl(220, 60%, 20%)'}
+                      />
+                    );
                   }),
                 )}
               </g>
 
-              {/* Layer 2: Glow for unlocked segments */}
+              {/* Layer 2: glow for completed segments */}
               <g>
-                {trailNodes.flatMap((node) =>
+                {activeNodes.flatMap((node) =>
                   node.parents.map((parentId) => {
-                    const parent = trailNodes.find((item) => item.id === parentId);
+                    const parent = activeNodes.find((item) => item.id === parentId);
                     if (!parent || !completedSet.has(parent.id)) return null;
-                    return <path key={`glow-${parent.id}-${node.id}`} d={buildPath(parent, node)} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={36} stroke="hsl(var(--primary) / 0.15)" filter="url(#trail-glow)" />;
+                    return (
+                      <path
+                        key={`glow-${parent.id}-${node.id}`}
+                        d={buildPath(parent, node)}
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={36}
+                        stroke={isPremiumTab ? 'hsl(var(--buddy) / 0.35)' : 'hsl(var(--primary) / 0.15)'}
+                        filter="url(#trail-glow)"
+                      />
+                    );
                   }),
                 )}
               </g>
 
-              {/* Layer 3: Dashed center line */}
+              {/* Layer 3: animated dashed center line */}
               <g>
-                {trailNodes.flatMap((node) =>
+                {activeNodes.flatMap((node) =>
                   node.parents.map((parentId) => {
-                    const parent = trailNodes.find((item) => item.id === parentId);
+                    const parent = activeNodes.find((item) => item.id === parentId);
                     if (!parent) return null;
-                    return <path key={`dash-${parent.id}-${node.id}`} d={buildPath(parent, node)} fill="none" strokeLinecap="round" strokeWidth={2} strokeDasharray="10,8" stroke="hsl(220, 50%, 30%)" />;
+                    return (
+                      <path
+                        key={`dash-${parent.id}-${node.id}`}
+                        d={buildPath(parent, node)}
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeWidth={isPremiumTab ? 3 : 2}
+                        strokeDasharray="10,8"
+                        stroke={isPremiumTab ? 'hsl(var(--buddy))' : 'hsl(220, 50%, 30%)'}
+                      >
+                        {isPremiumTab && (
+                          <animate attributeName="stroke-dashoffset" from="36" to="0" dur="1.6s" repeatCount="indefinite" />
+                        )}
+                      </path>
+                    );
                   }),
                 )}
               </g>
             </svg>
 
-            {trailNodes.map((node, index) => {
+            {activeNodes.map((node, index) => {
               const Icon = availableIcons[node.iconName] || availableIcons.BookOpen;
               const isCompleted = completedSet.has(node.id);
               const premiumLocked = Boolean(node.buddyOnly) && !isBuddy;
-              const isLocked = premiumLocked || (node.parents.length > 0 && !node.parents.every((parentId) => completedSet.has(parentId)));
+              const isLocked = isNodeLocked(node);
               const isNext = !isCompleted && !isLocked;
+              const isSelected = selectedId === node.id;
 
               return (
                 <div key={node.id} className="absolute" style={{ left: node.x, top: node.y }}>
                   <motion.button
-                    onClick={() => handleNodeClick(node, isCompleted, isLocked)}
-                    whileHover={!isLocked || premiumLocked ? { scale: 1.08, y: -2 } : {}}
-                    whileTap={!isLocked ? { scale: 0.95 } : {}}
+                    onClick={() => handleNodeClick(node)}
+                    whileHover={{ scale: 1.08, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.025, duration: 0.25 }}
+                    transition={{ delay: index * 0.02, duration: 0.25 }}
                     className="relative -translate-x-1/2 -translate-y-1/2 focus:outline-none"
                   >
                     <div
                       className={`relative flex h-14 w-14 items-center justify-center rounded-full border-[3px] shadow-lg transition-all duration-300 ${
-                        node.buddyOnly ? 'ring-2 ring-accent ring-offset-2 ring-offset-background ' : ''
+                        isSelected ? 'ring-4 ring-offset-2 ring-offset-background ' + (node.buddyOnly ? 'ring-buddy' : 'ring-primary') + ' ' : ''
                       }${
-                        isCompleted
-                          ? `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_18px_hsl(var(--primary)/0.28)]`
-                          : isLocked
-                            ? 'border-border bg-muted text-muted-foreground/60'
-                            : `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_22px_hsl(var(--primary)/0.34)]`
+                        node.buddyOnly
+                          ? isCompleted
+                            ? 'border-background bg-gradient-to-br from-buddy to-secondary shadow-[0_0_26px_hsl(var(--buddy)/0.55)]'
+                            : premiumLocked
+                              ? 'border-buddy/40 bg-buddy-soft text-buddy'
+                              : 'border-background bg-gradient-to-br from-buddy to-secondary shadow-[0_0_22px_hsl(var(--buddy)/0.45)]'
+                          : isCompleted
+                            ? `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_18px_hsl(var(--primary)/0.28)]`
+                            : isLocked
+                              ? 'border-border bg-muted text-muted-foreground/60'
+                              : `bg-gradient-to-br ${typeGradient[node.type]} border-background shadow-[0_0_22px_hsl(var(--primary)/0.34)]`
                       }`}
                     >
-                      {isLocked && !isCompleted ? <Lock className="h-5 w-5" /> : <Icon className="h-5 w-5 text-primary-foreground" />}
+                      {isLocked && !isCompleted ? (
+                        <Lock className="h-5 w-5" />
+                      ) : (
+                        <Icon className={`h-5 w-5 ${node.buddyOnly ? 'text-buddy-foreground' : 'text-primary-foreground'}`} />
+                      )}
 
                       {node.buddyOnly && !isCompleted && (
-                        <span className="absolute -left-1 -top-1 rounded-full border-2 border-background bg-accent p-0.5 shadow-sm">
-                          <Crown className="h-3 w-3 text-accent-foreground" />
+                        <span className="absolute -left-1 -top-1 rounded-full border-2 border-background bg-buddy p-0.5 shadow-sm">
+                          <Crown className="h-3 w-3 text-buddy-foreground" />
                         </span>
                       )}
 
                       {isCompleted && (
-                        <span className="absolute -right-1 -top-1 rounded-full border-2 border-background bg-primary p-0.5 shadow-sm">
-                          <CheckCircle2 className="h-3 w-3 text-primary-foreground" />
+                        <span className={`absolute -right-1 -top-1 rounded-full border-2 border-background p-0.5 shadow-sm ${node.buddyOnly ? 'bg-buddy' : 'bg-primary'}`}>
+                          <CheckCircle2 className={`h-3 w-3 ${node.buddyOnly ? 'text-buddy-foreground' : 'text-primary-foreground'}`} />
                         </span>
                       )}
 
-                      {isNext && <span className="absolute inset-0 rounded-full border-2 border-primary/40 animate-ping" />}
+                      {isNext && (
+                        <span className={`absolute inset-0 animate-ping rounded-full border-2 ${node.buddyOnly ? 'border-buddy/50' : 'border-primary/40'}`} />
+                      )}
                     </div>
 
                     <div className="absolute left-1/2 top-full mt-2 flex w-32 -translate-x-1/2 flex-col items-center gap-1 text-center">
                       <span className="rounded-md bg-background/90 px-2 py-1 text-[10px] font-semibold leading-tight text-foreground shadow-sm ring-1 ring-border/60 backdrop-blur-sm">
                         {getNodeText(node).title}
                       </span>
-                      <span className={`text-[10px] font-medium ${isCompleted ? 'text-primary' : premiumLocked ? 'text-accent' : isLocked ? 'text-red-500' : 'text-green-500'}`}>
+                      <span className={`text-[10px] font-medium ${isCompleted ? (node.buddyOnly ? 'text-buddy' : 'text-primary') : premiumLocked ? 'text-buddy' : isLocked ? 'text-red-500' : 'text-green-500'}`}>
                         {isCompleted
                           ? `✓ ${t('trail.done', 'Feito')}`
                           : premiumLocked
@@ -344,7 +430,7 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
                               ? `🔒 ${t('trail.locked', 'Bloqueado')}`
                               : `⏳ ${t('trail.inProgress', 'Em andamento')}`}
                       </span>
-                      {(() => {
+                      {!node.buddyOnly && (() => {
                         const nodeRank = getRankForAchievements(node.id);
                         const prevRank = node.id > 1 ? getRankForAchievements(node.id - 1) : null;
                         const isNewRank = !prevRank || nodeRank.key !== prevRank.key || nodeRank.subTier !== prevRank.subTier;
@@ -362,6 +448,55 @@ export const ProgressTrail = ({ open, onClose }: ProgressTrailProps) => {
             })}
           </div>
         </div>
+
+        {/* Interactive detail panel */}
+        <AnimatePresence>
+          {selectedNode && (
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 40, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className={`border-t px-4 py-3 ${selectedNode.buddyOnly ? 'border-buddy/40 bg-buddy/10' : 'border-border bg-muted/30'}`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1.5 text-sm font-bold">
+                    {selectedNode.buddyOnly && <Crown className="h-4 w-4 shrink-0 text-buddy" />}
+                    {getNodeText(selectedNode).title}
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {getNodeText(selectedNode).objective || t('trail.defaultObjective', 'Continue usando o app para desbloquear essa conquista.')}
+                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className={`gap-1 text-[10px] ${selectedNode.buddyOnly ? 'border-buddy/50 text-buddy' : ''}`}>
+                      <Gift className="h-3 w-3" /> +{selectedNode.creditReward} {t('credits.label', 'créditos')}
+                    </Badge>
+                    <Badge variant="outline" className="text-[10px]">
+                      {completedSet.has(selectedNode.id)
+                        ? `✅ ${t('trail.completed', 'Concluído')}`
+                        : isNodeLocked(selectedNode)
+                          ? `🔒 ${t('trail.locked', 'Bloqueado')}`
+                          : `⏳ ${t('trail.inProgress', 'Em andamento')}`}
+                    </Badge>
+                    {selectedNode.buddyOnly && !isBuddy && (
+                      <Button
+                        size="sm"
+                        className="h-7 bg-buddy text-buddy-foreground hover:bg-buddy/90"
+                        onClick={() => { onClose(); navigate('/buddy'); }}
+                      >
+                        {t('trail.unlockPremium', 'Desbloquear trilha Buddy')}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+                <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => setSelectedId(null)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </DialogContent>
     </Dialog>
   );
