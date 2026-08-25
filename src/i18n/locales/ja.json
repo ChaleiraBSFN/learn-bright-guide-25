@@ -892,8 +892,11 @@
     "testOff": "テストプレミアムが無効になりました",
     "welcomeTitle": "Buddyへようこそ！",
     "welcomeDesc": "サブスクリプションが確認されています。",
+    "paymentPendingTitle": "支払いが確認されました！",
+    "paymentPendingDesc": "Stripeでサブスクリプションを確認中です。数秒待つか、ページを再読み込みしてBuddyプランを有効化してください。",
+    "paymentPendingReload": "ページを再読み込み",
     "checkoutError": "支払いを開始できませんでした",
-    "checkoutErrorHint": "しばらくしてからもう一度お試しください。",
+    "checkoutErrorHint": "しばらくしてからもう一度お試しください。"
     "portalError": "管理画面を開けませんでした",
     "b1Title": "優先生成",
     "b1Desc": "あなたの学習がキューの先頭になります。",
