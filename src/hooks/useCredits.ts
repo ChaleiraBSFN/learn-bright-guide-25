@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 const ANON_CREDITS_KEY = 'learn_buddy_anon_credits';
 const ANON_MAX_CREDITS = 50;
-const AUTH_MAX_CREDITS = 100;
+const AUTH_MAX_CREDITS = 15;
 
 export const useCredits = () => {
   const { user } = useAuth();
