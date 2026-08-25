@@ -119,8 +119,13 @@ const Index = () => {
   const [exerciseContent, setExerciseContent] = useState<ExerciseContent | null>(null);
 
   const [isPlanLoading, setIsPlanLoading] = useState(false);
+  const [isFinishingPlan, setIsFinishingPlan] = useState(false);
   const [planContent, setPlanContent] = useState<StudyPlanContent | null>(null);
   const [currentPlanTema, setCurrentPlanTema] = useState("");
+
+  const studyResultRef = useRef<HTMLDivElement>(null);
+  const exerciseResultRef = useRef<HTMLDivElement>(null);
+  const planResultRef = useRef<HTMLDivElement>(null);
 
   const [settings, setSettings] = useState<PlatformSettings>(getSettings());
   const [activeTab, setActiveTab] = useState(() => {
@@ -245,6 +250,31 @@ const Index = () => {
     setWebImages([]);
   }, []);
 
+  /**
+   * Waits until the result container is actually mounted in the DOM and its
+   * children are painted. This guarantees the overlay only fades away once
+   * the generated content is visible behind it.
+   */
+  const waitForContentPaint = (ref: React.RefObject<HTMLElement | null>, timeout = 3000) => {
+    return new Promise<void>((resolve) => {
+      const start = Date.now();
+      const finish = () => resolve();
+      const check = () => {
+        const el = ref.current;
+        if (el && el.children.length > 0) {
+          // Double rAF ensures the browser has painted the content.
+          requestAnimationFrame(() => requestAnimationFrame(finish));
+          return;
+        }
+        if (Date.now() - start > timeout) {
+          resolve();
+          return;
+        }
+        requestAnimationFrame(check);
+      };
+      check();
+    });
+  };
 
   const handleSubmit = async (data: StudyFormData) => {
     if (!hasCredits) {
@@ -330,9 +360,13 @@ const Index = () => {
       // Keep the "generating" animation running while images load,
       // so the user never sees an empty/blank result behind the overlay.
       await imagesPromise;
-      // Then play the celebration "finishing" animation briefly.
+
+      // Only fade out after the StudyResult DOM is actually rendered and painted.
+      await waitForContentPaint(studyResultRef);
+
+      // Then play the celebration "finishing" animation smoothly.
       setIsFinishingStudy(true);
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 520));
     } catch (error) {
       console.error("Error generating study content:", error);
       const message = error instanceof Error
@@ -418,10 +452,13 @@ const Index = () => {
       // Trigger achievement
       checkAndUnlock('generate_quiz');
       
+      // Only fade out after the ExerciseResult DOM is actually rendered and painted.
+      await waitForContentPaint(exerciseResultRef);
+
       // Trigger finishing animation while content is already rendered behind
       setIsFinishingExercise(true);
-      await new Promise(resolve => setTimeout(resolve, 250));
-      
+      await new Promise(resolve => setTimeout(resolve, 520));
+
       fetchImages(data.tema, data.nivel);
     } catch (error) {
       console.error("Error generating exercises:", error);
@@ -489,6 +526,12 @@ const Index = () => {
       await consumeCredit();
       saveToHistory("study", data.tema, data.nivel, content, { kind: "plan", dias: data.dias });
 
+      // Only fade out after the StudyPlanSection DOM is actually rendered and painted.
+      await waitForContentPaint(planResultRef);
+
+      setIsFinishingPlan(true);
+      await new Promise(resolve => setTimeout(resolve, 520));
+
       toast({ title: t('planForm.success'), description: t('planForm.successDesc') });
       checkAndUnlock('generate_study');
     } catch (error) {
@@ -500,6 +543,7 @@ const Index = () => {
       setPlanContent(null);
     } finally {
       setIsPlanLoading(false);
+      setIsFinishingPlan(false);
     }
   };
 
@@ -747,6 +791,7 @@ const Index = () => {
             </motion.div>
           ) : studyContent ? (
             <motion.div
+              ref={studyResultRef}
               key="study-result"
               variants={pageVariants}
               initial="initial"
@@ -776,6 +821,7 @@ const Index = () => {
             </motion.div>
           ) : exerciseContent ? (
             <motion.div
+              ref={exerciseResultRef}
               key="exercise-result"
               variants={pageVariants}
               initial="initial"
@@ -794,6 +840,7 @@ const Index = () => {
             </motion.div>
           ) : planContent ? (
             <motion.div
+              ref={planResultRef}
               key="plan-result"
               variants={pageVariants}
               initial="initial"
@@ -832,7 +879,7 @@ const Index = () => {
       <AnimatePresence>
         {isPlanLoading && (
           <Suspense fallback={null}>
-            <GeneratingOverlay type="study" isFinishing={false} />
+            <GeneratingOverlay type="study" isFinishing={isFinishingPlan} />
           </Suspense>
         )}
       </AnimatePresence>
