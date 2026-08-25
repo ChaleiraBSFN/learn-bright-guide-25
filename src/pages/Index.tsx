@@ -542,6 +542,7 @@ const Index = () => {
       setPlanContent(null);
     } finally {
       setIsPlanLoading(false);
+      setIsFinishingPlan(false);
     }
   };
 
