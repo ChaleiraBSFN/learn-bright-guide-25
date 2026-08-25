@@ -220,10 +220,13 @@ const normalizeStoredNodes = (storedNodes: TrailNodeDef[]) => {
     uniqueNodes.set(sanitized.id, sanitized);
   });
 
-  // Always keep the premium (Buddy) branch available, even for older saved trails.
+  // Premium (Buddy) nodes live on their own separate map: always enforce the
+  // canonical layout so old saved trails can't corrupt their positions/links.
   premiumTrailNodes.forEach((node) => {
-    if (!uniqueNodes.has(node.id)) uniqueNodes.set(node.id, node);
+    const stored = uniqueNodes.get(node.id);
+    uniqueNodes.set(node.id, stored ? { ...stored, x: node.x, y: node.y, parents: node.parents, buddyOnly: true } : node);
   });
+
 
   return sortTrailNodes(Array.from(uniqueNodes.values()));
 };
