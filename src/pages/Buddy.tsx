@@ -105,10 +105,14 @@ const Buddy = () => {
       window.open(cached, '_blank');
       return;
     }
+    // Abre a aba imediatamente (no gesto do clique) para não ser bloqueada pelo
+    // navegador, e só depois aponta para o checkout quando a URL chegar.
+    const tab = window.open('', '_blank');
     setBusy(true);
     const url = await startCheckout();
     setBusy(false);
     if (!url) {
+      tab?.close();
       toast({
         title: t('buddy.checkoutError', 'Não foi possível abrir o pagamento'),
         description: t('buddy.checkoutErrorHint', 'Tente novamente em instantes.'),
@@ -116,7 +120,8 @@ const Buddy = () => {
       });
       return;
     }
-    window.open(url, '_blank');
+    if (tab && !tab.closed) tab.location.href = url;
+    else window.open(url, '_blank');
   };
 
 
