@@ -820,6 +820,7 @@ const Index = () => {
             </motion.div>
           ) : exerciseContent ? (
             <motion.div
+              ref={exerciseResultRef}
               key="exercise-result"
               variants={pageVariants}
               initial="initial"
