@@ -202,7 +202,32 @@ const Buddy = () => {
       </header>
 
       <main className="container mx-auto max-w-4xl space-y-6 px-4 py-6">
+        {paymentPending && !isBuddy && (
+          <Alert className="border-2 border-accent bg-accent/10">
+            <Clock className="h-4 w-4 text-accent" />
+            <AlertTitle>{t('buddy.paymentPendingTitle', 'Pagamento confirmado!')}</AlertTitle>
+            <AlertDescription className="flex flex-col gap-3">
+              <span>
+                {t(
+                  'buddy.paymentPendingDesc',
+                  'Estamos verificando sua assinatura com o Stripe. Aguarde alguns segundos ou recarregue a página para ativar o plano Buddy.',
+                )}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-fit gap-2"
+                onClick={() => window.location.reload()}
+              >
+                <RefreshCw className="h-4 w-4" />
+                {t('buddy.paymentPendingReload', 'Recarregar página')}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Card className="border-2 border-accent">
+
           <CardHeader>
             <CardTitle className="flex flex-wrap items-center justify-between gap-2">
               <span>
