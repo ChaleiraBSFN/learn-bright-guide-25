@@ -5,7 +5,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
@@ -43,6 +43,24 @@ const Buddy = lazy(() => import("./pages/Buddy"));
 const AppContent = () => {
   useTimeTracker();
   useVisitHeartbeat();
+
+  // Prefetch the heaviest routes once the browser is idle, so opening them is instant.
+  useEffect(() => {
+    const prefetch = () => {
+      import("./pages/ChatBuddy");
+      import("./pages/Community");
+      import("./pages/Buddy");
+      import("./pages/Settings");
+    };
+    const idle = (window as any).requestIdleCallback as undefined | ((cb: () => void, o?: any) => number);
+    if (idle) {
+      const id = idle(prefetch, { timeout: 3000 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(prefetch, 2000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
 
   return (
     <>

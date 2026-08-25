@@ -332,7 +332,7 @@ const Index = () => {
       await imagesPromise;
       // Then play the celebration "finishing" animation briefly.
       setIsFinishingStudy(true);
-      await new Promise(resolve => setTimeout(resolve, 1800));
+      await new Promise(resolve => setTimeout(resolve, 250));
     } catch (error) {
       console.error("Error generating study content:", error);
       const message = error instanceof Error
@@ -420,7 +420,7 @@ const Index = () => {
       
       // Trigger finishing animation while content is already rendered behind
       setIsFinishingExercise(true);
-      await new Promise(resolve => setTimeout(resolve, 2200));
+      await new Promise(resolve => setTimeout(resolve, 250));
       
       fetchImages(data.tema, data.nivel);
     } catch (error) {
