@@ -38,6 +38,8 @@ const Buddy = () => {
   const { isAdmin } = useAdmin();
   const [testBuddy, setTestBuddy] = useState(false);
   const [testBusy, setTestBusy] = useState(false);
+  const justPaid = params.get('checkout') === 'success';
+  const [paymentPending, setPaymentPending] = useState(justPaid);
 
   useEffect(() => {
     if (!isBuddy) prefetchCheckout();
