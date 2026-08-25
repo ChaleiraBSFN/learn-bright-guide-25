@@ -525,6 +525,12 @@ const Index = () => {
       await consumeCredit();
       saveToHistory("study", data.tema, data.nivel, content, { kind: "plan", dias: data.dias });
 
+      // Only fade out after the StudyPlanSection DOM is actually rendered and painted.
+      await waitForContentPaint(planResultRef);
+
+      setIsFinishingPlan(true);
+      await new Promise(resolve => setTimeout(resolve, 520));
+
       toast({ title: t('planForm.success'), description: t('planForm.successDesc') });
       checkAndUnlock('generate_study');
     } catch (error) {
