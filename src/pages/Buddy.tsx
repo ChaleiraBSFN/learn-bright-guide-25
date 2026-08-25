@@ -103,6 +103,11 @@ const Buddy = () => {
     };
   }, [refresh]);
 
+  // Esconde o aviso de verificação assim que a assinatura for confirmada.
+  useEffect(() => {
+    if (isBuddy && paymentPending) setPaymentPending(false);
+  }, [isBuddy, paymentPending]);
+
   useEffect(() => {
     if (!user || !isBuddy) return;
     const load = async () => {
