@@ -44,6 +44,24 @@ const AppContent = () => {
   useTimeTracker();
   useVisitHeartbeat();
 
+  // Prefetch the heaviest routes once the browser is idle, so opening them is instant.
+  useEffect(() => {
+    const prefetch = () => {
+      import("./pages/ChatBuddy");
+      import("./pages/Community");
+      import("./pages/Buddy");
+      import("./pages/Settings");
+    };
+    const idle = (window as any).requestIdleCallback as undefined | ((cb: () => void, o?: any) => number);
+    if (idle) {
+      const id = idle(prefetch, { timeout: 3000 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(prefetch, 2000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+
   return (
     <>
       <Toaster />
