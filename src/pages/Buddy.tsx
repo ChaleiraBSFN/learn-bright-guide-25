@@ -70,14 +70,35 @@ const Buddy = () => {
   };
 
   useEffect(() => {
-    if (params.get('checkout') === 'success') {
-      toast({
-        title: t('buddy.welcomeTitle', 'Bem-vindo ao Buddy!'),
-        description: t('buddy.welcomeDesc', 'Sua assinatura está sendo confirmada.'),
-      });
+    if (params.get('checkout') !== 'success') return;
+    toast({
+      title: t('buddy.welcomeTitle', 'Bem-vindo ao Buddy!'),
+      description: t('buddy.welcomeDesc', 'Sua assinatura está sendo confirmada.'),
+    });
+    // O Stripe pode levar alguns segundos para refletir a assinatura ativa:
+    // repetimos a verificação até confirmar.
+    let tries = 0;
+    void refresh();
+    const id = window.setInterval(() => {
+      tries += 1;
       void refresh();
-    }
+      if (tries >= 6) window.clearInterval(id);
+    }, 4000);
+    return () => window.clearInterval(id);
   }, [params, refresh, t, toast]);
+
+  // Ao voltar para a aba (após pagar em outra janela), revalida a assinatura.
+  useEffect(() => {
+    const onFocus = () => {
+      if (document.visibilityState === 'visible') void refresh();
+    };
+    document.addEventListener('visibilitychange', onFocus);
+    window.addEventListener('focus', onFocus);
+    return () => {
+      document.removeEventListener('visibilitychange', onFocus);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [refresh]);
 
   useEffect(() => {
     if (!user || !isBuddy) return;
@@ -105,10 +126,14 @@ const Buddy = () => {
       window.open(cached, '_blank');
       return;
     }
+    // Abre a aba imediatamente (no gesto do clique) para não ser bloqueada pelo
+    // navegador, e só depois aponta para o checkout quando a URL chegar.
+    const tab = window.open('', '_blank');
     setBusy(true);
     const url = await startCheckout();
     setBusy(false);
     if (!url) {
+      tab?.close();
       toast({
         title: t('buddy.checkoutError', 'Não foi possível abrir o pagamento'),
         description: t('buddy.checkoutErrorHint', 'Tente novamente em instantes.'),
@@ -116,7 +141,8 @@ const Buddy = () => {
       });
       return;
     }
-    window.open(url, '_blank');
+    if (tab && !tab.closed) tab.location.href = url;
+    else window.open(url, '_blank');
   };
 
 
