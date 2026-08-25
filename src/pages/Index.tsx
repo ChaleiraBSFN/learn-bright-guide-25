@@ -119,8 +119,13 @@ const Index = () => {
   const [exerciseContent, setExerciseContent] = useState<ExerciseContent | null>(null);
 
   const [isPlanLoading, setIsPlanLoading] = useState(false);
+  const [isFinishingPlan, setIsFinishingPlan] = useState(false);
   const [planContent, setPlanContent] = useState<StudyPlanContent | null>(null);
   const [currentPlanTema, setCurrentPlanTema] = useState("");
+
+  const studyResultRef = useRef<HTMLDivElement>(null);
+  const exerciseResultRef = useRef<HTMLDivElement>(null);
+  const planResultRef = useRef<HTMLDivElement>(null);
 
   const [settings, setSettings] = useState<PlatformSettings>(getSettings());
   const [activeTab, setActiveTab] = useState(() => {
