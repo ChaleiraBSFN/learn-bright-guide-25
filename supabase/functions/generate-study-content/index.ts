@@ -413,7 +413,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
       temperature,
       imagemBase64,
       label: "StudyContent",
-      race: isPremium ? 3 : 1,
+      race: isPremium ? 4 : 1,
     });
     content = poolResult.text;
     lastStatus = poolResult.lastStatus;
