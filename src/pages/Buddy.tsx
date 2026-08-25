@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { ArrowLeft, Crown, Loader2, Zap, Coins, Trophy, Palette, Sparkles, BellOff } from 'lucide-react';
+import { ArrowLeft, Crown, Loader2, Zap, Coins, Trophy, Palette, Sparkles, BellOff, RefreshCw, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { SEO } from '@/components/SEO';
 import { BuddyTools } from '@/components/buddy/BuddyTools';
 import { useAuth } from '@/hooks/useAuth';
@@ -37,6 +38,8 @@ const Buddy = () => {
   const { isAdmin } = useAdmin();
   const [testBuddy, setTestBuddy] = useState(false);
   const [testBusy, setTestBusy] = useState(false);
+  const justPaid = params.get('checkout') === 'success';
+  const [paymentPending, setPaymentPending] = useState(justPaid);
 
   useEffect(() => {
     if (!isBuddy) prefetchCheckout();
@@ -99,6 +102,11 @@ const Buddy = () => {
       window.removeEventListener('focus', onFocus);
     };
   }, [refresh]);
+
+  // Esconde o aviso de verificação assim que a assinatura for confirmada.
+  useEffect(() => {
+    if (isBuddy && paymentPending) setPaymentPending(false);
+  }, [isBuddy, paymentPending]);
 
   useEffect(() => {
     if (!user || !isBuddy) return;
@@ -194,7 +202,32 @@ const Buddy = () => {
       </header>
 
       <main className="container mx-auto max-w-4xl space-y-6 px-4 py-6">
+        {paymentPending && !isBuddy && (
+          <Alert className="border-2 border-accent bg-accent/10">
+            <Clock className="h-4 w-4 text-accent" />
+            <AlertTitle>{t('buddy.paymentPendingTitle', 'Pagamento confirmado!')}</AlertTitle>
+            <AlertDescription className="flex flex-col gap-3">
+              <span>
+                {t(
+                  'buddy.paymentPendingDesc',
+                  'Estamos verificando sua assinatura com o Stripe. Aguarde alguns segundos ou recarregue a página para ativar o plano Buddy.',
+                )}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-fit gap-2"
+                onClick={() => window.location.reload()}
+              >
+                <RefreshCw className="h-4 w-4" />
+                {t('buddy.paymentPendingReload', 'Recarregar página')}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Card className="border-2 border-accent">
+
           <CardHeader>
             <CardTitle className="flex flex-wrap items-center justify-between gap-2">
               <span>
