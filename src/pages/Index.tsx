@@ -451,10 +451,13 @@ const Index = () => {
       // Trigger achievement
       checkAndUnlock('generate_quiz');
       
+      // Only fade out after the ExerciseResult DOM is actually rendered and painted.
+      await waitForContentPaint(exerciseResultRef);
+
       // Trigger finishing animation while content is already rendered behind
       setIsFinishingExercise(true);
-      await new Promise(resolve => setTimeout(resolve, 250));
-      
+      await new Promise(resolve => setTimeout(resolve, 520));
+
       fetchImages(data.tema, data.nivel);
     } catch (error) {
       console.error("Error generating exercises:", error);
