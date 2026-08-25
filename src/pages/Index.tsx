@@ -839,6 +839,7 @@ const Index = () => {
             </motion.div>
           ) : planContent ? (
             <motion.div
+              ref={planResultRef}
               key="plan-result"
               variants={pageVariants}
               initial="initial"
