@@ -359,9 +359,13 @@ const Index = () => {
       // Keep the "generating" animation running while images load,
       // so the user never sees an empty/blank result behind the overlay.
       await imagesPromise;
-      // Then play the celebration "finishing" animation briefly.
+
+      // Only fade out after the StudyResult DOM is actually rendered and painted.
+      await waitForContentPaint(studyResultRef);
+
+      // Then play the celebration "finishing" animation smoothly.
       setIsFinishingStudy(true);
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 520));
     } catch (error) {
       console.error("Error generating study content:", error);
       const message = error instanceof Error
