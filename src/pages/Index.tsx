@@ -258,11 +258,12 @@ const Index = () => {
   const waitForContentPaint = (ref: React.RefObject<HTMLElement | null>, timeout = 3000) => {
     return new Promise<void>((resolve) => {
       const start = Date.now();
+      const finish = () => resolve();
       const check = () => {
         const el = ref.current;
         if (el && el.children.length > 0) {
           // Double rAF ensures the browser has painted the content.
-          requestAnimationFrame(() => requestAnimationFrame(resolve));
+          requestAnimationFrame(() => requestAnimationFrame(finish));
           return;
         }
         if (Date.now() - start > timeout) {
