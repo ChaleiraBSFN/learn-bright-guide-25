@@ -615,7 +615,11 @@
     "loginToSave": "¡Inicia sesión para guardar tu progreso!",
     "buddyOnly": "Desafío exclusivo Buddy",
     "buddyOnlyHint": "Suscríbete al plan Buddy para desbloquear los desafíos premium.",
-    "buddyOnlyShort": "Solo Buddy"
+    "buddyOnlyShort": "Solo Buddy",
+    "tabClassic": "Ruta clásica",
+    "tabPremium": "Ruta Buddy",
+    "unlockPremium": "Desbloquear la ruta Buddy",
+    "completedPlural": "completadas"
   },
   "privacy": {
     "title": "Política de Privacidad",

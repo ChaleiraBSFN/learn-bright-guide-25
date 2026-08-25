@@ -637,7 +637,11 @@
     "loginToSave": "Log in to save your progress!",
     "buddyOnly": "Buddy-only challenge",
     "buddyOnlyHint": "Subscribe to the Buddy plan to unlock the premium trail challenges.",
-    "buddyOnlyShort": "Buddy only"
+    "buddyOnlyShort": "Buddy only",
+    "tabClassic": "Classic trail",
+    "tabPremium": "Buddy trail",
+    "unlockPremium": "Unlock the Buddy trail",
+    "completedPlural": "completed"
   },
   "privacy": {
     "title": "Privacy Policy",

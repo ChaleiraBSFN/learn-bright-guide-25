@@ -628,7 +628,11 @@
     "loginToSave": "Faça login para salvar seu progresso!",
     "buddyOnly": "Desafio exclusivo Buddy",
     "buddyOnlyHint": "Assine o Plano Buddy para desbloquear os desafios premium da trilha.",
-    "buddyOnlyShort": "Só Buddy"
+    "buddyOnlyShort": "Só Buddy",
+    "tabClassic": "Trilha clássica",
+    "tabPremium": "Trilha Buddy",
+    "unlockPremium": "Desbloquear trilha Buddy",
+    "completedPlural": "completas"
   },
   "credits": {
     "remaining": "{{count}} créditos restantes",

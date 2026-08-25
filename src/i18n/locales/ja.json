@@ -621,7 +621,11 @@
     "loginToSave": "ログインして進捗を保存しましょう！",
     "buddyOnly": "Buddy限定チャレンジ",
     "buddyOnlyHint": "Buddyプランに登録するとプレミアムチャレンジが解放されます。",
-    "buddyOnlyShort": "Buddy限定"
+    "buddyOnlyShort": "Buddy限定",
+    "tabClassic": "クラシックトレイル",
+    "tabPremium": "Buddyトレイル",
+    "unlockPremium": "Buddyトレイルを解放",
+    "completedPlural": "完了"
   },
   "privacy": {
     "title": "プライバシーポリシー",

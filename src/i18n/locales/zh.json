@@ -621,7 +621,11 @@
     "loginToSave": "登录以保存进度！",
     "buddyOnly": "Buddy 专属挑战",
     "buddyOnlyHint": "订阅 Buddy 方案即可解锁高级挑战。",
-    "buddyOnlyShort": "仅 Buddy"
+    "buddyOnlyShort": "仅 Buddy",
+    "tabClassic": "经典路线",
+    "tabPremium": "Buddy 路线",
+    "unlockPremium": "解锁 Buddy 路线",
+    "completedPlural": "已完成"
   },
   "privacy": {
     "title": "隐私政策",
