@@ -70,14 +70,35 @@ const Buddy = () => {
   };
 
   useEffect(() => {
-    if (params.get('checkout') === 'success') {
-      toast({
-        title: t('buddy.welcomeTitle', 'Bem-vindo ao Buddy!'),
-        description: t('buddy.welcomeDesc', 'Sua assinatura está sendo confirmada.'),
-      });
+    if (params.get('checkout') !== 'success') return;
+    toast({
+      title: t('buddy.welcomeTitle', 'Bem-vindo ao Buddy!'),
+      description: t('buddy.welcomeDesc', 'Sua assinatura está sendo confirmada.'),
+    });
+    // O Stripe pode levar alguns segundos para refletir a assinatura ativa:
+    // repetimos a verificação até confirmar.
+    let tries = 0;
+    void refresh();
+    const id = window.setInterval(() => {
+      tries += 1;
       void refresh();
-    }
+      if (tries >= 6) window.clearInterval(id);
+    }, 4000);
+    return () => window.clearInterval(id);
   }, [params, refresh, t, toast]);
+
+  // Ao voltar para a aba (após pagar em outra janela), revalida a assinatura.
+  useEffect(() => {
+    const onFocus = () => {
+      if (document.visibilityState === 'visible') void refresh();
+    };
+    document.addEventListener('visibilitychange', onFocus);
+    window.addEventListener('focus', onFocus);
+    return () => {
+      document.removeEventListener('visibilitychange', onFocus);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [refresh]);
 
   useEffect(() => {
     if (!user || !isBuddy) return;
