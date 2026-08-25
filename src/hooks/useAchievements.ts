@@ -168,14 +168,70 @@ const createTrailNodes = (blueprints: TrailBlueprint[]): TrailNodeDef[] => {
 };
 
 // Buddy (premium) exclusive challenges — rendered in their own separate trail map.
-const premiumTrailNodes: TrailNodeDef[] = [
-  { id: 101, title: '👑 Flashcards Buddy', type: 'legendary', creditReward: 8, iconName: 'Crown', x: 160, y: 130, parents: [], objective: '👑 Exclusivo Buddy: gere seu primeiro conjunto de flashcards nas ferramentas premium.', triggerType: 'none', buddyOnly: true },
-  { id: 102, title: '⚡ Resumo Relâmpago', type: 'legendary', creditReward: 10, iconName: 'Zap', x: 420, y: 240, parents: [101], objective: '⚡ Exclusivo Buddy: use o resumo inteligente para condensar um tema difícil.', triggerType: 'none', buddyOnly: true },
-  { id: 103, title: '🧠 Quiz Premium', type: 'legendary', creditReward: 12, iconName: 'Brain', x: 680, y: 130, parents: [102], objective: '🧠 Exclusivo Buddy: monte um quiz com a IA premium e acerte a maioria.', triggerType: 'none', buddyOnly: true },
-  { id: 104, title: '🚀 Turbo de Estudos', type: 'legendary', creditReward: 14, iconName: 'Rocket', x: 900, y: 300, parents: [103], objective: '🚀 Exclusivo Buddy: gere 20 estudos usando a fila prioritária.', triggerType: 'generate_study', triggerRequirement: 20, buddyOnly: true },
-  { id: 105, title: '💎 Colecionador Buddy', type: 'legendary', creditReward: 18, iconName: 'Gem', x: 640, y: 430, parents: [104], objective: '💎 Exclusivo Buddy: crie 20 listas de exercícios com prioridade premium.', triggerType: 'generate_quiz', triggerRequirement: 20, buddyOnly: true },
-  { id: 106, title: '🏆 Lenda Buddy', type: 'legendary', creditReward: 30, iconName: 'Trophy', x: 340, y: 520, parents: [105], objective: '🏆 Exclusivo Buddy: conclua toda a jornada premium e vire lenda Buddy.', triggerType: 'none', buddyOnly: true },
+type PremiumBlueprint = Omit<TrailNodeDef, 'id' | 'x' | 'y' | 'parents' | 'buddyOnly'>;
+
+const premiumBlueprints: PremiumBlueprint[] = [
+  { title: '👑 Flashcards Buddy', type: 'legendary', creditReward: 8, iconName: 'Crown', objective: '👑 Exclusivo Buddy: gere seu primeiro conjunto de flashcards nas ferramentas premium.', triggerType: 'none' },
+  { title: '⚡ Resumo Relâmpago', type: 'legendary', creditReward: 10, iconName: 'Zap', objective: '⚡ Exclusivo Buddy: use o resumo inteligente para condensar um tema difícil.', triggerType: 'none' },
+  { title: '🧠 Quiz Premium', type: 'legendary', creditReward: 12, iconName: 'Brain', objective: '🧠 Exclusivo Buddy: monte um quiz com a IA premium e acerte a maioria.', triggerType: 'none' },
+  { title: '🚀 Turbo de Estudos', type: 'legendary', creditReward: 14, iconName: 'Rocket', objective: '🚀 Exclusivo Buddy: gere 20 estudos usando a fila prioritária.', triggerType: 'generate_study', triggerRequirement: 20 },
+  { title: '💎 Colecionador Buddy', type: 'legendary', creditReward: 18, iconName: 'Gem', objective: '💎 Exclusivo Buddy: crie 20 listas de exercícios com prioridade premium.', triggerType: 'generate_quiz', triggerRequirement: 20 },
+  { title: '🏆 Lenda Buddy', type: 'legendary', creditReward: 30, iconName: 'Trophy', objective: '🏆 Exclusivo Buddy: conclua a primeira etapa da jornada premium.', triggerType: 'none' },
+  { title: '📚 Maratona Premium', type: 'legendary', creditReward: 12, iconName: 'BookOpen', objective: '📚 Exclusivo Buddy: gere 30 estudos com a fila prioritária.', triggerType: 'generate_study', triggerRequirement: 30 },
+  { title: '🎯 Mira Certeira', type: 'legendary', creditReward: 14, iconName: 'Target', objective: '🎯 Exclusivo Buddy: acerte 80% ou mais em um quiz premium.', triggerType: 'quiz_score', triggerRequirement: 80 },
+  { title: '⏱️ Foco Buddy 30', type: 'legendary', creditReward: 12, iconName: 'Timer', objective: '⏱️ Exclusivo Buddy: acumule 30 minutos de estudo focado.', triggerType: 'time_focused', triggerRequirement: 30 },
+  { title: '🔥 Chama Premium', type: 'legendary', creditReward: 15, iconName: 'Flame', objective: '🔥 Exclusivo Buddy: mantenha o ritmo gerando 40 estudos no total.', triggerType: 'generate_study', triggerRequirement: 40 },
+  { title: '🧩 Mestre dos Quizzes', type: 'legendary', creditReward: 16, iconName: 'Puzzle', objective: '🧩 Exclusivo Buddy: crie 30 listas de exercícios premium.', triggerType: 'generate_quiz', triggerRequirement: 30 },
+  { title: '💡 Insight Buddy', type: 'legendary', creditReward: 14, iconName: 'Lightbulb', objective: '💡 Exclusivo Buddy: use o resumo inteligente em 5 temas diferentes.', triggerType: 'none' },
+  { title: '🛡️ Escudo do Saber', type: 'legendary', creditReward: 16, iconName: 'Shield', objective: '🛡️ Exclusivo Buddy: acerte 85% em um quiz avançado.', triggerType: 'quiz_score', triggerRequirement: 85 },
+  { title: '🌄 Amanhecer Buddy', type: 'legendary', creditReward: 12, iconName: 'Sunrise', objective: '🌄 Exclusivo Buddy: acumule 60 minutos de foco premium.', triggerType: 'time_focused', triggerRequirement: 60 },
+  { title: '📈 Escalada Premium', type: 'legendary', creditReward: 18, iconName: 'Mountain', objective: '📈 Exclusivo Buddy: gere 50 estudos com prioridade.', triggerType: 'generate_study', triggerRequirement: 50 },
+  { title: '🧭 Explorador Buddy', type: 'legendary', creditReward: 15, iconName: 'Compass', objective: '🧭 Exclusivo Buddy: explore 5 matérias diferentes com a IA premium.', triggerType: 'none' },
+  { title: '🎓 Aula Turbo', type: 'legendary', creditReward: 17, iconName: 'GraduationCap', objective: '🎓 Exclusivo Buddy: crie 40 listas de exercícios premium.', triggerType: 'generate_quiz', triggerRequirement: 40 },
+  { title: '⚙️ Motor Premium', type: 'legendary', creditReward: 18, iconName: 'Cpu', objective: '⚙️ Exclusivo Buddy: aproveite a geração acelerada em 60 estudos.', triggerType: 'generate_study', triggerRequirement: 60 },
+  { title: '🥇 Ouro Buddy', type: 'legendary', creditReward: 20, iconName: 'Medal', objective: '🥇 Exclusivo Buddy: acerte 90% em um quiz premium.', triggerType: 'quiz_score', triggerRequirement: 90 },
+  { title: '🕐 Foco Profundo', type: 'legendary', creditReward: 18, iconName: 'Clock', objective: '🕐 Exclusivo Buddy: acumule 120 minutos de estudo focado.', triggerType: 'time_focused', triggerRequirement: 120 },
+  { title: '✨ Toque Mágico', type: 'legendary', creditReward: 16, iconName: 'Sparkles', objective: '✨ Exclusivo Buddy: personalize o tema do app com as cores premium.', triggerType: 'none' },
+  { title: '📝 Escriba Buddy', type: 'legendary', creditReward: 18, iconName: 'PenTool', objective: '📝 Exclusivo Buddy: gere 50 listas de exercícios premium.', triggerType: 'generate_quiz', triggerRequirement: 50 },
+  { title: '🌍 Poliglota Buddy', type: 'legendary', creditReward: 16, iconName: 'Globe', objective: '🌍 Exclusivo Buddy: estude em 3 idiomas diferentes na plataforma.', triggerType: 'none' },
+  { title: '🔑 Chave Premium', type: 'legendary', creditReward: 20, iconName: 'Key', objective: '🔑 Exclusivo Buddy: gere 75 estudos com a fila prioritária.', triggerType: 'generate_study', triggerRequirement: 75 },
+  { title: '🎲 Sorte Buddy', type: 'legendary', creditReward: 18, iconName: 'Dice5', objective: '🎲 Exclusivo Buddy: complete um quiz surpresa com 75% de acerto.', triggerType: 'quiz_score', triggerRequirement: 75 },
+  { title: '🏔️ Cume do Foco', type: 'legendary', creditReward: 20, iconName: 'Flag', objective: '🏔️ Exclusivo Buddy: acumule 180 minutos de estudo focado.', triggerType: 'time_focused', triggerRequirement: 180 },
+  { title: '🧪 Laboratório Buddy', type: 'legendary', creditReward: 20, iconName: 'Wand2', objective: '🧪 Exclusivo Buddy: teste as três ferramentas premium no mesmo dia.', triggerType: 'none' },
+  { title: '📖 Biblioteca Viva', type: 'legendary', creditReward: 22, iconName: 'Library', objective: '📖 Exclusivo Buddy: gere 90 estudos no total.', triggerType: 'generate_study', triggerRequirement: 90 },
+  { title: '💬 Mentor Buddy', type: 'legendary', creditReward: 20, iconName: 'MessageCircle', objective: '💬 Exclusivo Buddy: use o Chat Buddy para aprofundar 10 temas.', triggerType: 'none' },
+  { title: '🥈 Prata Premium', type: 'legendary', creditReward: 22, iconName: 'Award', objective: '🥈 Exclusivo Buddy: crie 60 listas de exercícios premium.', triggerType: 'generate_quiz', triggerRequirement: 60 },
+  { title: '🎧 Ritmo de Estudo', type: 'legendary', creditReward: 20, iconName: 'Headphones', objective: '🎧 Exclusivo Buddy: acumule 240 minutos de foco.', triggerType: 'time_focused', triggerRequirement: 240 },
+  { title: '🚦 Alta Performance', type: 'legendary', creditReward: 24, iconName: 'BadgeCheck', objective: '🚦 Exclusivo Buddy: acerte 95% em um quiz premium.', triggerType: 'quiz_score', triggerRequirement: 95 },
+  { title: '🌟 Estrela Buddy', type: 'legendary', creditReward: 24, iconName: 'Star', objective: '🌟 Exclusivo Buddy: gere 110 estudos com prioridade premium.', triggerType: 'generate_study', triggerRequirement: 110 },
+  { title: '🧠 Cérebro Turbinado', type: 'legendary', creditReward: 25, iconName: 'Brain', objective: '🧠 Exclusivo Buddy: crie 80 listas de exercícios premium.', triggerType: 'generate_quiz', triggerRequirement: 80 },
+  { title: '⛓️ Corrente Infinita', type: 'legendary', creditReward: 26, iconName: 'Infinity', objective: '⛓️ Exclusivo Buddy: acumule 360 minutos de estudo focado.', triggerType: 'time_focused', triggerRequirement: 360 },
+  { title: '💠 Diamante Buddy', type: 'legendary', creditReward: 28, iconName: 'Diamond', objective: '💠 Exclusivo Buddy: gere 150 estudos com a fila prioritária.', triggerType: 'generate_study', triggerRequirement: 150 },
+  { title: '🎆 Festa Premium', type: 'legendary', creditReward: 28, iconName: 'PartyPopper', objective: '🎆 Exclusivo Buddy: complete 100 listas de exercícios premium.', triggerType: 'generate_quiz', triggerRequirement: 100 },
+  { title: '🔓 Guardião Buddy', type: 'legendary', creditReward: 30, iconName: 'Unlock', objective: '🔓 Exclusivo Buddy: acerte 100% em um quiz premium.', triggerType: 'quiz_score', triggerRequirement: 100 },
+  { title: '🪐 Órbita Buddy', type: 'legendary', creditReward: 32, iconName: 'Navigation', objective: '🪐 Exclusivo Buddy: acumule 480 minutos de foco premium.', triggerType: 'time_focused', triggerRequirement: 480 },
+  { title: '👑 Imortal Buddy', type: 'legendary', creditReward: 40, iconName: 'Crown', objective: '👑 Exclusivo Buddy: conclua toda a jornada premium e vire lenda eterna.', triggerType: 'none' },
 ];
+
+// S-curve (zig-zag) layout: 4 nodes per row, alternating direction.
+const PREMIUM_COLUMNS = [160, 420, 680, 900];
+const PREMIUM_ROW_HEIGHT = 190;
+
+const premiumTrailNodes: TrailNodeDef[] = premiumBlueprints.map((blueprint, index) => {
+  const row = Math.floor(index / PREMIUM_COLUMNS.length);
+  const col = index % PREMIUM_COLUMNS.length;
+  const x = row % 2 === 0 ? PREMIUM_COLUMNS[col] : PREMIUM_COLUMNS[PREMIUM_COLUMNS.length - 1 - col];
+  const y = 130 + row * PREMIUM_ROW_HEIGHT + (col % 2 === 0 ? 0 : 70);
+  return {
+    ...blueprint,
+    id: 101 + index,
+    x,
+    y,
+    parents: index === 0 ? [] : [100 + index],
+    buddyOnly: true,
+  };
+});
+
 
 export const premiumTrailNodeIds = premiumTrailNodes.map((node) => node.id);
 
