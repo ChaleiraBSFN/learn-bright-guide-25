@@ -790,6 +790,7 @@ const Index = () => {
             </motion.div>
           ) : studyContent ? (
             <motion.div
+              ref={studyResultRef}
               key="study-result"
               variants={pageVariants}
               initial="initial"
