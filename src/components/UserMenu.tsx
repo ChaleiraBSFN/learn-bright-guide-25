@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, LogOut, Loader2, Shield, BarChart3, Camera, MessageCircle, Settings, Crown } from 'lucide-react';
+import { User, LogOut, Loader2, Shield, BarChart3, Camera, MessageCircle, Settings, Crown, GraduationCap } from 'lucide-react';
 
 import { AIInfoDialog } from '@/components/AIInfoDialog';
 import { ImageCropDialog } from '@/components/ImageCropDialog';
@@ -117,6 +117,10 @@ export const UserMenu = () => {
           <DropdownMenuItem onClick={() => navigate('/settings')}>
             <Settings className="h-4 w-4 mr-2" />
             {t('settings.title')}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate('/classroom')}>
+            <GraduationCap className="h-4 w-4 mr-2 text-primary" />
+            {t('classroom.menuItem', 'Sala de Aula')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate('/buddy')}>
             <Crown className="h-4 w-4 mr-2 text-amber-500" />

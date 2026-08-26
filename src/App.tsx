@@ -42,6 +42,8 @@ const RewardShop = lazy(() => import("./pages/RewardShop"));
 const CarouselBannersAdmin = lazy(() => import("./pages/CarouselBannersAdmin"));
 const SectionFlagsAdmin = lazy(() => import("./pages/SectionFlagsAdmin"));
 const Buddy = lazy(() => import("./pages/Buddy"));
+const ClassroomPage = lazy(() => import("./pages/Classroom"));
+const ClassroomJoin = lazy(() => import("./pages/ClassroomJoin"));
 
 
 const AppContent = () => {
@@ -100,6 +102,10 @@ const AppContent = () => {
             <Route path="/carousel-banners" element={<CarouselBannersAdmin />} />
             <Route path="/section-flags" element={<SectionFlagsAdmin />} />
             <Route path="/buddy" element={<Buddy />} />
+            <Route path="/classroom" element={<ClassroomPage />} />
+            <Route path="/sala" element={<ClassroomJoin />} />
+            <Route path="/sala/:key" element={<ClassroomJoin />} />
+
 
             <Route path="*" element={<NotFound />} />
           </Routes>
