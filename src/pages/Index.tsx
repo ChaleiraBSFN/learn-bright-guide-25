@@ -752,7 +752,7 @@ const Index = () => {
                   >
                     {activeTab === "study" ? (
                       <div className="card-elevated p-6 md:p-8">
-                        <StudyForm onSubmit={handleSubmit} isLoading={isLoading} />
+                        <StudyForm onSubmit={handleSubmit} isLoading={isLoading} presetTema={presetTema} />
                       </div>
                     ) : activeTab === "exercises" ? (
                       <div className="card-elevated p-6 md:p-8">
