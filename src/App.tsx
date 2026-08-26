@@ -67,6 +67,8 @@ const AppContent = () => {
       <Toaster />
       <Sonner />
       <RateLimitBar />
+      <BuddyDonationNotifier />
+
       
       <BrowserRouter>
         <Suspense fallback={null}>
