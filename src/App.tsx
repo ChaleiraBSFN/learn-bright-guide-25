@@ -42,6 +42,8 @@ const RewardShop = lazy(() => import("./pages/RewardShop"));
 const CarouselBannersAdmin = lazy(() => import("./pages/CarouselBannersAdmin"));
 const SectionFlagsAdmin = lazy(() => import("./pages/SectionFlagsAdmin"));
 const Buddy = lazy(() => import("./pages/Buddy"));
+const ClassroomPage = lazy(() => import("./pages/Classroom"));
+const ClassroomJoin = lazy(() => import("./pages/ClassroomJoin"));
 
 
 const AppContent = () => {
