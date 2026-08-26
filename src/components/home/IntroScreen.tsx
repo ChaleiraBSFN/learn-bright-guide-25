@@ -109,9 +109,9 @@ export const IntroScreen = ({ onSubmitTopic, onExplore }: IntroScreenProps) => {
             <AnimatePresence>
               {menuOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                  initial={{ opacity: 0, y: -6, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.96 }}
                   transition={{ duration: 0.15 }}
                   className="liquid-glass absolute bottom-12 left-0 z-50 w-56 overflow-hidden rounded-2xl p-1.5 text-left"
                 >
