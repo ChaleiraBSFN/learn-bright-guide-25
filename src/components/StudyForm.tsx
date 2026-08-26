@@ -122,7 +122,7 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
           placeholder={t('form.doubtsPlaceholder')}
           value={duvidas}
           onChange={(e) => setDuvidas(e.target.value)}
-          className="bg-card/60 rounded-full h-12 px-5 backdrop-blur-xl"
+          className="bg-card/60 rounded-2xl px-5 py-3 backdrop-blur-xl"
         />
       </div>
 
@@ -132,7 +132,8 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
         type="submit"
         variant="hero"
         size="xl"
-        className="w-full"
+        className="w-full rounded-full"
+
         disabled={isLoading || (!hasImage && (!tema || !nivel))}
       >
         {isLoading ? (
