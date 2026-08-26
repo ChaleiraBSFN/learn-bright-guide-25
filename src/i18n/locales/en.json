@@ -1013,5 +1013,10 @@
   },
   "ads": {
     "label": "Ad"
+  },
+  "intro": {
+    "placeholder": "What do you want to learn today?",
+    "button": "Generate",
+    "explore": "Explore the home page"
   }
 }

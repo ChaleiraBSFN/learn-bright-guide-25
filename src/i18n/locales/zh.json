@@ -1002,5 +1002,10 @@
   },
   "ads": {
     "label": "广告"
+  },
+  "intro": {
+    "placeholder": "今天想学什么？",
+    "button": "生成",
+    "explore": "浏览主页"
   }
 }
