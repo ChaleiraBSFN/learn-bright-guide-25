@@ -58,6 +58,8 @@ export default function Community() {
   const [loading, setLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
   const [openCommentsFor, setOpenCommentsFor] = useState<string | null>(null);
+  const [donateFor, setDonateFor] = useState<CommunityPost | null>(null);
+
 
   const locale = LOCALES[i18n.language] || enUS;
   const timeAgo = (iso: string) => { try { return formatDistanceToNow(new Date(iso), { addSuffix: true, locale }); } catch { return ''; } };
