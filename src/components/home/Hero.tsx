@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
 
 interface HeroProps {
   onPickTopic: (topic: string) => void;
@@ -7,6 +8,7 @@ interface HeroProps {
 
 export const Hero = ({ onPickTopic }: HeroProps) => {
   const { t } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
 
   const chips = [
     t("home.chip1", "Fotossíntese"),
@@ -17,12 +19,25 @@ export const Hero = ({ onPickTopic }: HeroProps) => {
   ];
 
   return (
-    <section className="space-y-4 px-2 text-center">
-      <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary md:px-4 md:py-2 md:text-sm">
-        <Sparkles className="h-3 w-3 md:h-4 md:w-4" />
-        {t("hero.badge")}
+    <section className="relative isolate space-y-5 px-2 py-6 text-center md:py-10">
+      <div className="hero-aurora" aria-hidden="true" />
+
+      <div className="flex items-center justify-center gap-2">
+        <span className="liquid-glass-soft inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-primary md:px-4 md:text-sm">
+          <Sparkles className="h-3 w-3 md:h-4 md:w-4" />
+          {t("hero.badge")}
+        </span>
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? t("theme.light", "Tema claro") : t("theme.dark", "Tema escuro")}
+          className="liquid-glass-soft inline-flex h-9 w-9 items-center justify-center text-foreground"
+        >
+          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
       </div>
-      <h1 className="font-display text-2xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
+
+      <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl">
         {t("hero.title")} <span className="gradient-text">{t("hero.titleHighlight")}</span>
       </h1>
       <p className="mx-auto max-w-xl text-sm text-muted-foreground md:text-lg">{t("hero.description")}</p>
@@ -34,7 +49,7 @@ export const Hero = ({ onPickTopic }: HeroProps) => {
             key={chip}
             type="button"
             onClick={() => onPickTopic(chip)}
-            className="rounded-full border-2 border-border/60 bg-card px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
+            className="liquid-glass-soft px-3.5 py-1.5 text-xs font-semibold text-foreground hover:text-primary"
           >
             {chip}
           </button>

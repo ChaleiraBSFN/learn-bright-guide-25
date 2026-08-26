@@ -995,5 +995,9 @@
       "planSample": "Esempio: 30 giorni all'esame con obiettivi quotidiani e ripassi distribuiti.",
       "cta": "Prova ora"
     }
+  },
+  "theme": {
+    "light": "Tema chiaro",
+    "dark": "Tema scuro"
   }
 }

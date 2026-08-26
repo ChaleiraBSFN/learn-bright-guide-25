@@ -1006,5 +1006,9 @@
       "planSample": "Example: 30 days to the exam with daily goals and spaced reviews.",
       "cta": "Try it now"
     }
+  },
+  "theme": {
+    "light": "Light theme",
+    "dark": "Dark theme"
   }
 }

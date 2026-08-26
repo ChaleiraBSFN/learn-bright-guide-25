@@ -89,7 +89,7 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
           value={tema}
           onChange={(e) => setTema(e.target.value)}
           required={!hasImage}
-          className="bg-card"
+          className="bg-card/60 rounded-full h-12 px-5 backdrop-blur-xl"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
           {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
         </Label>
         <Select value={nivel} onValueChange={setNivel} required={!hasImage}>
-          <SelectTrigger id="nivel" className="bg-card h-12">
+          <SelectTrigger id="nivel" className="bg-card/60 h-12 rounded-full px-5 backdrop-blur-xl">
             <SelectValue placeholder={hasImage ? "Opcional" : t('form.selectLevel')} />
           </SelectTrigger>
           <SelectContent className="bg-popover z-50">
@@ -122,7 +122,7 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
           placeholder={t('form.doubtsPlaceholder')}
           value={duvidas}
           onChange={(e) => setDuvidas(e.target.value)}
-          className="bg-card"
+          className="bg-card/60 rounded-2xl px-5 py-3 backdrop-blur-xl"
         />
       </div>
 
@@ -132,7 +132,8 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
         type="submit"
         variant="hero"
         size="xl"
-        className="w-full"
+        className="w-full rounded-full"
+
         disabled={isLoading || (!hasImage && (!tema || !nivel))}
       >
         {isLoading ? (
