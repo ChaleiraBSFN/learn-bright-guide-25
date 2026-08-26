@@ -142,6 +142,7 @@ export type Database = {
       }
       community_buddies: {
         Row: {
+          amount: number
           author_id: string
           created_at: string
           donor_id: string
@@ -149,6 +150,7 @@ export type Database = {
           post_id: string
         }
         Insert: {
+          amount?: number
           author_id: string
           created_at?: string
           donor_id: string
@@ -156,6 +158,7 @@ export type Database = {
           post_id: string
         }
         Update: {
+          amount?: number
           author_id?: string
           created_at?: string
           donor_id?: string
@@ -985,7 +988,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
-      donate_buddy: { Args: { _post_id: string }; Returns: number }
+      donate_buddy: {
+        Args: { _amount?: number; _post_id: string }
+        Returns: number
+      }
       get_credits: { Args: { _user_id: string }; Returns: number }
       get_group_member_history: {
         Args: { _group_id: string }
