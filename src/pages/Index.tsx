@@ -646,7 +646,7 @@ const Index = () => {
               aria-label="Learn Buddy - Voltar para a página inicial"
               className="flex items-center gap-3 rounded-xl transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <img src={learnBuddyLogo} alt="Learn Buddy" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchPriority="high" />
+              <img src={learnBuddyLogo} alt="Learn Buddy" width="40" height="40" className="h-10 w-10 rounded-xl object-cover" loading="eager" fetchpriority="high" />
               <div className="hidden sm:block">
                 <span className="font-display text-xl font-bold text-foreground block">Learn Buddy</span>
                 <p className="text-xs text-muted-foreground">{t('header.subtitle')}</p>
