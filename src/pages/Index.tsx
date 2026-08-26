@@ -705,12 +705,16 @@ const Index = () => {
               {/* Engine Notice Banner */}
               <Suspense fallback={null}><EngineNoticeBanner /></Suspense>
 
+              {introOpen ? (
+                <IntroScreen onSubmitTopic={handlePickTopic} onExplore={() => setIntroOpen(false)} />
+              ) : (
+              <>
               {/* Promo Banners (admin-managed) */}
               {deferredReady && <Suspense fallback={null}><PromoBanners /></Suspense>}
 
 
               {/* Hero */}
-              <Hero onPickTopic={(topic) => { setActiveTab("study"); setPresetTema(topic); }} />
+              <Hero onPickTopic={handlePickTopic} />
 
               {/* Prova social */}
               {deferredReady && (
