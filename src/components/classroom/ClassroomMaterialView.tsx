@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import type { ClassroomMaterial } from '@/hooks/useClassroom';
 import type { Exercise } from '@/types/exercises';
+import { getMaterialParts } from '@/lib/classroomParts';
 
 interface Props {
   material: ClassroomMaterial;
@@ -15,6 +16,8 @@ interface Props {
   submitting?: boolean;
   submittedScore?: number | null;
   onSubmitAnswers?: (answers: Array<{ numero: number; resposta: string }>, score: number) => void;
+  /** When set, only this part of the material is shown (live presentation). */
+  sectionIndex?: number;
 }
 
 export function ClassroomMaterialView({ material, answerable, submitting, submittedScore, onSubmitAnswers, sectionIndex }: Props) {
@@ -56,7 +59,7 @@ export function ClassroomMaterialView({ material, answerable, submitting, submit
   }
 
 
-  const objectives = exercises.filter((e) => e.tipo === 'objetiva');
+  const objectives = allExercises.filter((e) => e.tipo === 'objetiva');
 
   const handleSubmit = () => {
     let correct = 0;
@@ -66,7 +69,7 @@ export function ClassroomMaterialView({ material, answerable, submitting, submit
     });
     const score = objectives.length ? Math.round((correct / objectives.length) * 100) : 0;
     onSubmitAnswers?.(
-      exercises.map((ex) => ({ numero: ex.numero, resposta: answers[ex.numero] || '' })),
+      allExercises.map((ex) => ({ numero: ex.numero, resposta: answers[ex.numero] || '' })),
       score,
     );
     setDone(true);
@@ -76,6 +79,7 @@ export function ClassroomMaterialView({ material, answerable, submitting, submit
 
   return (
     <div className="space-y-4">
+      {partHeader}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <h3 className="text-lg font-semibold text-foreground">{material.title}</h3>
         {submittedScore != null && (
@@ -141,7 +145,7 @@ export function ClassroomMaterialView({ material, answerable, submitting, submit
         </div>
       ))}
 
-      {answerable && !done && exercises.length > 0 && (
+      {answerable && !done && exercises.length > 0 && (!hasPart || partIdx === parts.length - 1) && (
         <Button onClick={handleSubmit} disabled={submitting} className="w-full">
           {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t('classroom.submitAnswers', 'Enviar respostas')}
         </Button>
