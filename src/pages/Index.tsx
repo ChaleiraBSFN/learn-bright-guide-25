@@ -143,11 +143,20 @@ const Index = () => {
   const [presetTema, setPresetTema] = useState<string | undefined>(undefined);
   const [introOpen, setIntroOpen] = useState(true);
 
+  const submitRef = useRef<((data: StudyFormData) => void) | null>(null);
+
   const handlePickTopic = useCallback((topic: string, tab: string = "study") => {
     setActiveTab(tab);
     if (topic) setPresetTema(topic);
     setIntroOpen(false);
+    // Gera imediatamente quando o usuário envia um tema na tela inicial
+    if (topic && tab === "study") {
+      setTimeout(() => {
+        submitRef.current?.({ tema: topic, nivel: "medio", duvidas: "" });
+      }, 0);
+    }
   }, []);
+
 
 
   
