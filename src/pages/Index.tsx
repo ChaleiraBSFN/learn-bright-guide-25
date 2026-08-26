@@ -148,14 +148,16 @@ const Index = () => {
   const handlePickTopic = useCallback((topic: string, tab: string = "study") => {
     setActiveTab(tab);
     if (topic) setPresetTema(topic);
-    setIntroOpen(false);
-    // Gera imediatamente quando o usuário envia um tema na tela inicial
+    // Gera na própria tela inicial, sem redirecionar para a home completa
     if (topic && tab === "study") {
       setTimeout(() => {
         submitRef.current?.({ tema: topic, nivel: "medio", duvidas: "" });
       }, 0);
+      return;
     }
+    setIntroOpen(false);
   }, []);
+
 
 
 
