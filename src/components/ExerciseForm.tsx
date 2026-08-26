@@ -62,7 +62,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
           value={tema}
           onChange={(e) => setTema(e.target.value)}
           required={!hasImage}
-          className="bg-card"
+          className="bg-card/60 rounded-full h-12 px-5 backdrop-blur-xl"
         />
       </div>
 
@@ -73,7 +73,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
             {t('form.level')} {hasImage && <span className="text-xs text-muted-foreground font-normal">(opcional)</span>}
           </Label>
           <Select value={nivel} onValueChange={setNivel} required={!hasImage}>
-            <SelectTrigger id="exercise-nivel" className="bg-card h-12">
+            <SelectTrigger id="exercise-nivel" className="bg-card/60 h-12 rounded-full px-5 backdrop-blur-xl">
               <SelectValue placeholder={hasImage ? "Opcional" : t('form.selectLevel')} />
             </SelectTrigger>
             <SelectContent className="bg-popover z-50">
@@ -97,7 +97,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
             value={quantidade}
             onChange={(e) => setQuantidade(e.target.value)}
             required
-            className="bg-card h-12"
+            className="bg-card/60 h-12 rounded-full px-5 backdrop-blur-xl"
           />
         </div>
 
@@ -107,7 +107,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
             {t('exercises.difficulty')}
           </Label>
           <Select value={dificuldade} onValueChange={setDificuldade}>
-            <SelectTrigger id="exercise-diff" className="bg-card h-12">
+            <SelectTrigger id="exercise-diff" className="bg-card/60 h-12 rounded-full px-5 backdrop-blur-xl">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-popover z-50">

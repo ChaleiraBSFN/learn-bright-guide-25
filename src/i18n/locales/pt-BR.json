@@ -1006,5 +1006,9 @@
       "planSample": "Exemplo: 30 dias para o ENEM com metas diárias e revisões espaçadas.",
       "cta": "Experimentar agora"
     }
+  },
+  "theme": {
+    "light": "Tema claro",
+    "dark": "Tema escuro"
   }
 }

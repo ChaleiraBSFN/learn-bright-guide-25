@@ -995,5 +995,9 @@
       "planSample": "Exemple : 30 jours avant l'examen avec objectifs quotidiens et révisions espacées.",
       "cta": "Essayer maintenant"
     }
+  },
+  "theme": {
+    "light": "Thème clair",
+    "dark": "Thème sombre"
   }
 }

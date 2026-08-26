@@ -751,17 +751,17 @@ const Index = () => {
                     className="mt-6"
                   >
                     {activeTab === "study" ? (
-                      <div className="card-elevated p-6 md:p-8">
+                      <div className="liquid-glass p-6 md:p-8">
                         <StudyForm onSubmit={handleSubmit} isLoading={isLoading} presetTema={presetTema} />
                       </div>
                     ) : activeTab === "exercises" ? (
-                      <div className="card-elevated p-6 md:p-8">
+                      <div className="liquid-glass p-6 md:p-8">
                         <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
                           <ExerciseForm onSubmit={handleExerciseSubmit} isLoading={isExerciseLoading} />
                         </Suspense>
                       </div>
                     ) : activeTab === "plan" ? (
-                      <div className="card-elevated p-6 md:p-8">
+                      <div className="liquid-glass p-6 md:p-8">
                         <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
                           <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
                         </Suspense>

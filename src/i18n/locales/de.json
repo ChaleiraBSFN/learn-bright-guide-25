@@ -995,5 +995,9 @@
       "planSample": "Beispiel: 30 Tage bis zur Prüfung mit Tageszielen und verteilten Wiederholungen.",
       "cta": "Jetzt ausprobieren"
     }
+  },
+  "theme": {
+    "light": "Helles Design",
+    "dark": "Dunkles Design"
   }
 }

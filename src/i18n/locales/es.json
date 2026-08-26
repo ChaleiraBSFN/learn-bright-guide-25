@@ -989,5 +989,9 @@
       "planSample": "Ejemplo: 30 días para el examen con metas diarias y repasos espaciados.",
       "cta": "Probar ahora"
     }
+  },
+  "theme": {
+    "light": "Tema claro",
+    "dark": "Tema oscuro"
   }
 }
