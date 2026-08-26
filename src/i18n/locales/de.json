@@ -999,5 +999,8 @@
   "theme": {
     "light": "Helles Design",
     "dark": "Dunkles Design"
+  },
+  "ads": {
+    "label": "Anzeige"
   }
 }

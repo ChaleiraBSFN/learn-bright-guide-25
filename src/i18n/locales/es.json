@@ -993,5 +993,8 @@
   "theme": {
     "light": "Tema claro",
     "dark": "Tema oscuro"
+  },
+  "ads": {
+    "label": "Anuncio"
   }
 }

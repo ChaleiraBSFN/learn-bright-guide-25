@@ -1010,5 +1010,8 @@
   "theme": {
     "light": "Tema claro",
     "dark": "Tema escuro"
+  },
+  "ads": {
+    "label": "Anúncio"
   }
 }
