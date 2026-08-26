@@ -996,5 +996,10 @@
   },
   "ads": {
     "label": "Anuncio"
+  },
+  "intro": {
+    "placeholder": "¿Qué quieres aprender hoy?",
+    "button": "Generar",
+    "explore": "Explorar la página de inicio"
   }
 }

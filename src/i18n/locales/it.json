@@ -1002,5 +1002,10 @@
   },
   "ads": {
     "label": "Pubblicità"
+  },
+  "intro": {
+    "placeholder": "Cosa vuoi imparare oggi?",
+    "button": "Genera",
+    "explore": "Esplora la home page"
   }
 }
