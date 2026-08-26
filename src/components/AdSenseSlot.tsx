@@ -53,6 +53,7 @@ export const AdSenseSlot = ({
   variant = 'card',
   houseOnly = false,
 }: { className?: string; hideCta?: boolean; variant?: 'card' | 'compact'; houseOnly?: boolean }) => {
+  const { t } = useTranslation();
   const { isBuddy } = useSubscription();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
