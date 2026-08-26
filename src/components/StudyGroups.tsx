@@ -420,61 +420,75 @@ export const StudyGroups = () => {
 
         {/* LIST VIEW */}
         {view === 'list' && (
-          <div className="flex-1 flex flex-col">
-            <div className="p-4">
-              <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full gap-2">
-                    <Plus className="h-4 w-4" />
-                    {t('groups.create')}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>{t('groups.create')}</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Input placeholder={t('groups.namePlaceholder')} value={groupName} onChange={e => setGroupName(e.target.value)} />
-                    <Textarea placeholder={t('groups.descPlaceholder')} value={groupDesc} onChange={e => setGroupDesc(e.target.value)} />
-                    <div>
-                      <label className="text-sm font-medium">{t('groups.maxMembers')}</label>
-                      <Input type="number" min={2} max={100} value={groupMax} onChange={e => setGroupMax(Number(e.target.value))} />
-                    </div>
-                    <Button onClick={createGroup} disabled={creating || !groupName.trim()} className="w-full">
-                      {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : t('groups.create')}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+          <Tabs defaultValue="groups" className="flex-1 flex flex-col min-h-0">
+            <div className="px-4 pt-3">
+              <TabsList className="w-full grid grid-cols-2">
+                <TabsTrigger value="groups">{t('groups.title')}</TabsTrigger>
+                <TabsTrigger value="classrooms">{t('classroom.title', 'Salas de Aula')}</TabsTrigger>
+              </TabsList>
             </div>
-            <ScrollArea className="flex-1 px-4">
-              {loading ? (
-                <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
-              ) : groups.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">{t('groups.empty')}</p>
-              ) : (
-                <div className="space-y-2 pb-4">
-                  {groups.map(g => (
-                    <button
-                      key={g.id}
-                      onClick={() => openGroup(g)}
-                      className="w-full text-left p-4 rounded-xl border border-border hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-foreground">{g.name}</h3>
-                        <Badge variant="secondary" className="text-xs">
-                          <Users className="h-3 w-3 mr-1" />
-                          {g.max_members}
-                        </Badge>
+
+            <TabsContent value="groups" className="flex-1 flex flex-col min-h-0 mt-0">
+              <div className="p-4">
+                <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('groups.create')}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>{t('groups.create')}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <Input placeholder={t('groups.namePlaceholder')} value={groupName} onChange={e => setGroupName(e.target.value)} />
+                      <Textarea placeholder={t('groups.descPlaceholder')} value={groupDesc} onChange={e => setGroupDesc(e.target.value)} />
+                      <div>
+                        <label className="text-sm font-medium">{t('groups.maxMembers')}</label>
+                        <Input type="number" min={2} max={100} value={groupMax} onChange={e => setGroupMax(Number(e.target.value))} />
                       </div>
-                      {g.description && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{g.description}</p>}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </div>
+                      <Button onClick={createGroup} disabled={creating || !groupName.trim()} className="w-full">
+                        {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : t('groups.create')}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <ScrollArea className="flex-1 px-4">
+                {loading ? (
+                  <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+                ) : groups.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">{t('groups.empty')}</p>
+                ) : (
+                  <div className="space-y-2 pb-4">
+                    {groups.map(g => (
+                      <button
+                        key={g.id}
+                        onClick={() => openGroup(g)}
+                        className="w-full text-left p-4 rounded-xl border border-border hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-foreground">{g.name}</h3>
+                          <Badge variant="secondary" className="text-xs">
+                            <Users className="h-3 w-3 mr-1" />
+                            {g.max_members}
+                          </Badge>
+                        </div>
+                        {g.description && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{g.description}</p>}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="classrooms" className="flex-1 flex flex-col min-h-0 mt-0">
+              <ClassroomsTabPanel onNavigate={() => setOpen(false)} />
+            </TabsContent>
+          </Tabs>
         )}
+
 
         {/* CHAT VIEW */}
         {view === 'chat' && selectedGroup && (
