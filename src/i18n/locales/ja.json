@@ -1119,6 +1119,9 @@
     "seoTitle": "クラスルーム | Learn Buddy",
     "seoDesc": "オンラインのクラスルームを作り、生徒に教材と練習問題を提示できます。",
     "joinSeoTitle": "クラスに参加 | Learn Buddy",
-    "joinSeoDesc": "アクセスキーで先生のクラスに参加しましょう。"
+    "joinSeoDesc": "アクセスキーで先生のクラスに参加しましょう。",
+    "studentEntry": "生徒です — クラスキーで参加",
+    "noAccountHint": "アカウント不要：ニックネームを決めるだけです。",
+    "teacherLoginHint": "先生ですか？ログインして教室を作成・管理しましょう。"
   }
 }

@@ -1130,6 +1130,9 @@
     "seoTitle": "Classrooms | Learn Buddy",
     "seoDesc": "Create online classrooms, present content and exercises to your students.",
     "joinSeoTitle": "Join the classroom | Learn Buddy",
-    "joinSeoDesc": "Join your teacher's classroom with the access key."
+    "joinSeoDesc": "Join your teacher's classroom with the access key.",
+    "studentEntry": "I'm a student — join with the class key",
+    "noAccountHint": "No account needed: just pick a nickname.",
+    "teacherLoginHint": "Are you a teacher? Sign in to create and manage classrooms."
   }
 }

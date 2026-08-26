@@ -1119,6 +1119,9 @@
     "seoTitle": "Salles de classe | Learn Buddy",
     "seoDesc": "Créez des salles de classe en ligne, présentez contenus et exercices à vos élèves.",
     "joinSeoTitle": "Rejoindre la salle | Learn Buddy",
-    "joinSeoDesc": "Rejoignez la salle de votre professeur avec la clé d'accès."
+    "joinSeoDesc": "Rejoignez la salle de votre professeur avec la clé d'accès.",
+    "studentEntry": "Je suis élève — rejoindre avec la clé de la classe",
+    "noAccountHint": "Sans compte : choisissez simplement un pseudo.",
+    "teacherLoginHint": "Vous êtes enseignant ? Connectez-vous pour créer et gérer des classes."
   }
 }
