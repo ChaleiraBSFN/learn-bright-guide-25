@@ -140,6 +140,245 @@ export type Database = {
         }
         Relationships: []
       }
+      classroom_answers: {
+        Row: {
+          answers: Json
+          classroom_id: string
+          created_at: string
+          id: string
+          material_id: string
+          score: number | null
+          student_id: string
+        }
+        Insert: {
+          answers?: Json
+          classroom_id: string
+          created_at?: string
+          id?: string
+          material_id: string
+          score?: number | null
+          student_id: string
+        }
+        Update: {
+          answers?: Json
+          classroom_id?: string
+          created_at?: string
+          id?: string
+          material_id?: string
+          score?: number | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_answers_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classroom_answers_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classroom_answers_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classroom_live_state: {
+        Row: {
+          classroom_id: string
+          is_live: boolean
+          material_id: string | null
+          section_index: number
+          updated_at: string
+        }
+        Insert: {
+          classroom_id: string
+          is_live?: boolean
+          material_id?: string | null
+          section_index?: number
+          updated_at?: string
+        }
+        Update: {
+          classroom_id?: string
+          is_live?: boolean
+          material_id?: string | null
+          section_index?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_live_state_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: true
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classroom_live_state_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_materials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classroom_materials: {
+        Row: {
+          classroom_id: string
+          content: Json
+          created_at: string
+          id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          classroom_id: string
+          content?: Json
+          created_at?: string
+          id?: string
+          title: string
+          type?: string
+        }
+        Update: {
+          classroom_id?: string
+          content?: Json
+          created_at?: string
+          id?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_materials_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classroom_messages: {
+        Row: {
+          author_name: string
+          classroom_id: string
+          created_at: string
+          id: string
+          message: string
+          student_id: string | null
+          teacher_id: string | null
+        }
+        Insert: {
+          author_name: string
+          classroom_id: string
+          created_at?: string
+          id?: string
+          message: string
+          student_id?: string | null
+          teacher_id?: string | null
+        }
+        Update: {
+          author_name?: string
+          classroom_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          student_id?: string | null
+          teacher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_messages_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classroom_messages_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "classroom_students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classroom_students: {
+        Row: {
+          classroom_id: string
+          display_name: string
+          id: string
+          joined_at: string
+          last_seen_at: string
+          session_token: string
+        }
+        Insert: {
+          classroom_id: string
+          display_name: string
+          id?: string
+          joined_at?: string
+          last_seen_at?: string
+          session_token?: string
+        }
+        Update: {
+          classroom_id?: string
+          display_name?: string
+          id?: string
+          joined_at?: string
+          last_seen_at?: string
+          session_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_students_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classrooms: {
+        Row: {
+          created_at: string
+          id: string
+          is_open: boolean
+          join_key: string
+          name: string
+          subject: string | null
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_open?: boolean
+          join_key: string
+          name: string
+          subject?: string | null
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_open?: boolean
+          join_key?: string
+          name?: string
+          subject?: string | null
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_buddies: {
         Row: {
           amount: number
@@ -962,7 +1201,43 @@ export type Database = {
         Returns: boolean
       }
       claim_ad_reward: { Args: never; Returns: Json }
+      classroom_join: {
+        Args: { _display_name: string; _join_key: string }
+        Returns: Json
+      }
+      classroom_leave: {
+        Args: { _classroom_id: string; _session_token: string }
+        Returns: Json
+      }
+      classroom_peek: { Args: { _join_key: string }; Returns: Json }
+      classroom_send_message: {
+        Args: {
+          _classroom_id: string
+          _message: string
+          _session_token: string
+        }
+        Returns: Json
+      }
+      classroom_state: {
+        Args: { _classroom_id: string; _session_token: string }
+        Returns: Json
+      }
+      classroom_student_id: {
+        Args: { _classroom_id: string; _session_token: string }
+        Returns: string
+      }
+      classroom_submit_answers: {
+        Args: {
+          _answers: Json
+          _classroom_id: string
+          _material_id: string
+          _score: number
+          _session_token: string
+        }
+        Returns: Json
+      }
       cleanup_expired_ai_cache: { Args: never; Returns: undefined }
+      cleanup_old_classroom_students: { Args: never; Returns: undefined }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       create_pending_subscription: {
         Args: never
@@ -1097,6 +1372,10 @@ export type Database = {
       }
       has_test_buddy: { Args: { _user_id: string }; Returns: boolean }
       is_buddy: { Args: { _user_id: string }; Returns: boolean }
+      is_classroom_teacher: {
+        Args: { _classroom_id: string }
+        Returns: boolean
+      }
       is_group_admin: {
         Args: { _group_id: string; _user_id: string }
         Returns: boolean
