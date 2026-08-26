@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AD_CONSENT_EVENT, applyAdConsent, getAdConsent } from '@/lib/adConsent';
 import { useSubscription } from '@/hooks/useSubscription';
 
