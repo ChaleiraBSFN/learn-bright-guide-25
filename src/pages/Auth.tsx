@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { supabase } from '@/integrations/supabase/client';
-import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
+import learnBuddyLogo from '@/assets/learn-buddy-logo.png';
 import { SEO } from '@/components/SEO';
 
 const countries = [

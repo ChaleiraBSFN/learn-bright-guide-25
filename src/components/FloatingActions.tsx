@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Download, Map, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Coins, Crown } from 'lucide-react';
-import learnBuddyLogo from "@/assets/learn-buddy-logo.jpeg";
+import learnBuddyLogo from "@/assets/learn-buddy-logo.png";
 
 
 import { Button } from '@/components/ui/button';

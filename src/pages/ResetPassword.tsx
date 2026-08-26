@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Lock, Loader2, Eye, EyeOff, CheckCircle, Mail } from 'lucide-react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { SEO } from '@/components/SEO';
-import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
+import learnBuddyLogo from '@/assets/learn-buddy-logo.png';
 
 const ResetPassword = () => {
   const { t } = useTranslation();
