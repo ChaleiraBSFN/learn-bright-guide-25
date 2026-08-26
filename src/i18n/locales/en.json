@@ -978,5 +978,33 @@
     "addImage": "Attach image",
     "placeholder": "Ask anything…",
     "disclaimer": "Powered by Gemini · may make mistakes, verify important information."
+  },
+  "home": {
+    "chipsLabel": "Start with:",
+    "chip1": "Photosynthesis",
+    "chip2": "French Revolution",
+    "chip3": "Quadratic equations",
+    "chip4": "Periodic table",
+    "chip5": "Present Perfect",
+    "stats": {
+      "title": "Platform numbers",
+      "studies": "studies generated",
+      "users": "students on the platform",
+      "languages": "languages available"
+    },
+    "how": {
+      "title": "See it in action",
+      "subtitle": "Three ways to study with Learn Buddy.",
+      "study": "Complete study",
+      "studyDesc": "Objective, summary, step by step, mind map and sources — all in one material.",
+      "studySample": "Example: “Photosynthesis” becomes a bulleted summary, a visual diagram and common exam mistakes.",
+      "exercises": "Graded exercises",
+      "exercisesDesc": "Multiple-choice and open questions with instant commented grading.",
+      "exercisesSample": "Example: 10 quadratic equation questions with step-by-step answer keys.",
+      "plan": "Study plan",
+      "planDesc": "Day-by-day schedule adapted to the time you have.",
+      "planSample": "Example: 30 days to the exam with daily goals and spaced reviews.",
+      "cta": "Try it now"
+    }
   }
 }

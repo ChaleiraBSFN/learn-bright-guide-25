@@ -967,5 +967,33 @@
     "studyDone": "Terminé ! 🎉",
     "exerciseDone": "Terminé ! 🎉",
     "complexityHint": "Cela peut prendre quelques secondes en raison de la génération de contenus complexes, d'images, de diagrammes et de détails personnalisés. Parfois, les images peuvent ne pas être générées si la limite de requêtes est dépassée."
+  },
+  "home": {
+    "chipsLabel": "Commencez par :",
+    "chip1": "Photosynthèse",
+    "chip2": "Révolution française",
+    "chip3": "Équation du second degré",
+    "chip4": "Tableau périodique",
+    "chip5": "Present Perfect",
+    "stats": {
+      "title": "Chiffres de la plateforme",
+      "studies": "fiches générées",
+      "users": "élèves sur la plateforme",
+      "languages": "langues disponibles"
+    },
+    "how": {
+      "title": "Voir en action",
+      "subtitle": "Trois façons d'étudier avec Learn Buddy.",
+      "study": "Étude complète",
+      "studyDesc": "Objectif, résumé, étapes, carte mentale et sources — tout dans un seul support.",
+      "studySample": "Exemple : « Photosynthèse » devient un résumé en points, un schéma visuel et les erreurs fréquentes.",
+      "exercises": "Exercices corrigés",
+      "exercisesDesc": "Questions à choix et rédactionnelles avec correction commentée immédiate.",
+      "exercisesSample": "Exemple : 10 questions sur l'équation du second degré avec corrigé détaillé.",
+      "plan": "Plan d'études",
+      "planDesc": "Planning quotidien adapté au temps dont vous disposez.",
+      "planSample": "Exemple : 30 jours avant l'examen avec objectifs quotidiens et révisions espacées.",
+      "cta": "Essayer maintenant"
+    }
   }
 }
