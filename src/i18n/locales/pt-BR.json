@@ -147,7 +147,10 @@
     "paymentCanceled": "O pagamento foi cancelado. Tente novamente."
   },
   "footer": {
-    "developed": "Desenvolvido com IA para potencializar seu aprendizado"
+    "developed": "Desenvolvido com IA para potencializar seu aprendizado",
+    "privacy": "Política de Privacidade",
+    "terms": "Termos de Uso",
+    "about": "Sobre e Contato"
   },
   "auth": {
     "login": "Entrar",
@@ -1024,5 +1027,34 @@
     "placeholder": "O que você quer aprender hoje?",
     "button": "Gerar",
     "explore": "Explorar a página inicial"
+  },
+  "terms": {
+    "title": "Termos de Uso",
+    "s1Title": "1. Aceitação",
+    "s1Body": "Ao usar o Learn Buddy você concorda com estes Termos e com a nossa Política de Privacidade.",
+    "s2Title": "2. O serviço",
+    "s2Body": "O Learn Buddy gera materiais de estudo com inteligência artificial (explicações, exercícios, resumos, flashcards e roteiros). O conteúdo é apoio ao estudo e pode conter erros; confira sempre fontes oficiais.",
+    "s3Title": "3. Conta e uso responsável",
+    "s3Body": "Você é responsável pela sua conta e pelo que publica na comunidade. É proibido conteúdo ilegal, ofensivo, adulto, violento, de ódio ou que viole direitos autorais.",
+    "s4Title": "4. Créditos e plano Buddy",
+    "s4Body": "Créditos gratuitos e recompensas seguem os limites exibidos no app. O plano Buddy é uma assinatura paga com renovação e cancelamento pelo próprio usuário.",
+    "s5Title": "5. Anúncios",
+    "s5Body": "A plataforma exibe anúncios do Google AdSense para se manter gratuita. Nunca pedimos nem incentivamos cliques em anúncios, e recompensas do app não estão vinculadas a clicar em anúncios.",
+    "s6Title": "6. Limitação de responsabilidade",
+    "s6Body": "O serviço é fornecido “como está”. Não nos responsabilizamos por decisões acadêmicas tomadas apenas com base no conteúdo gerado.",
+    "s7Title": "7. Alterações",
+    "s7Body": "Estes Termos podem ser atualizados; mudanças relevantes serão avisadas no app.",
+    "contactTitle": "Contato"
+  },
+  "about": {
+    "title": "Sobre e Contato",
+    "whoTitle": "Quem somos",
+    "whoBody": "O Learn Buddy é uma plataforma brasileira de estudos criada pela Equipe de Desenvolvimento da Learn Buddy (EDLB) para tornar o aprendizado mais rápido, visual e acessível.",
+    "contentTitle": "Como o conteúdo é criado",
+    "contentBody": "Cada material é gerado por inteligência artificial a partir do tema que você digita e revisado por regras próprias de formatação e didática. Você pode reportar erros pelo suporte dentro do app.",
+    "adsTitle": "Anúncios e privacidade",
+    "adsBody": "Exibimos anúncios do Google AdSense. Cookies de anúncios só são usados conforme a sua escolha no banner de cookies; sem escolha, servimos apenas anúncios não personalizados.",
+    "contactTitle": "Fale com a gente",
+    "contactBody": "Dúvidas, sugestões ou problemas? Escreva para o nosso e-mail e respondemos o mais rápido possível."
   }
 }
