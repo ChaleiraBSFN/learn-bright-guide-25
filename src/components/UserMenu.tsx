@@ -118,6 +118,10 @@ export const UserMenu = () => {
             <Settings className="h-4 w-4 mr-2" />
             {t('settings.title')}
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate('/classroom')}>
+            <GraduationCap className="h-4 w-4 mr-2 text-primary" />
+            {t('classroom.menuItem', 'Sala de Aula')}
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate('/buddy')}>
             <Crown className="h-4 w-4 mr-2 text-amber-500" />
             {t('buddy.menuItem', 'Plano Buddy')}
