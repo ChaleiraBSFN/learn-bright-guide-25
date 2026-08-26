@@ -830,7 +830,13 @@ const Index = () => {
                     <PlanComparison />
                   </Suspense>
                 )}
+                {deferredReady && (
+                  <div className="pt-6">
+                    <Suspense fallback={null}><AdSenseSlot variant="card" /></Suspense>
+                  </div>
+                )}
               </div>
+
               </>
               )}
 
