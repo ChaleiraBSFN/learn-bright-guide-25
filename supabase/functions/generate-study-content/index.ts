@@ -16,6 +16,7 @@ const requestSchema = z.object({
   duvidas: z.string().max(1000).optional().nullable(),
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
   imagemBase64: z.string().optional().nullable(),
+  rapido: z.boolean().optional().default(false),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').replace(/```/g, '').trim();
@@ -359,7 +360,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, nivel, prazo, duvidas, idioma, imagemBase64 } = validationResult.data;
+    const { tema, nivel, prazo, duvidas, idioma, imagemBase64, rapido } = validationResult.data;
     const imageAnalysisInstruction = imagemBase64
       ? `\n\nIMPORTANT: An image was provided. ${tema === 'Análise da imagem enviada' || nivel === 'auto' ? 'The user did NOT provide a topic, level or deadline — INFER the topic and appropriate education level FROM the image content itself, then build the entire study material around what you see in the image.' : ''} Analyze the image carefully. If it contains exercises or questions, SOLVE each one step by step. Include in the JSON an additional field "analiseImagem" with this structure:
 "analiseImagem": {
@@ -375,7 +376,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium) + imageAnalysisInstruction;
     const { temperature } = getSubjectStyle(tema);
     
-    const maxTokens = isPremium ? 9000 : 6000;
+    const maxTokens = rapido ? 5000 : (isPremium ? 9000 : 6000);
 
     const geminiKeys = getGeminiKeys();
     let content: string | null = null;
@@ -413,7 +414,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
       temperature,
       imagemBase64,
       label: "StudyContent",
-      race: isPremium ? 4 : 1,
+      race: rapido ? 4 : (isPremium ? 4 : 1),
     });
     content = poolResult.text;
     lastStatus = poolResult.lastStatus;
