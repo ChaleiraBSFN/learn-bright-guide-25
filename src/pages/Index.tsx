@@ -139,6 +139,14 @@ const Index = () => {
     if (s.exercisesEnabled) return "exercises";
     return "history";
   });
+  const [presetTema, setPresetTema] = useState<string | undefined>(undefined);
+
+  const handlePickTopic = useCallback((topic: string) => {
+    setActiveTab("study");
+    setPresetTema(topic);
+  }, []);
+
+
   
   // Image states
   const [aiImages, setAiImages] = useState<AIImage[]>([]);
