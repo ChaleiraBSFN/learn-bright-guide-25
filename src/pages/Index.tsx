@@ -406,6 +406,10 @@ const Index = () => {
     }
   };
 
+  submitRef.current = handleSubmit;
+
+
+
   const handleExerciseSubmit = async (data: ExerciseFormData) => {
     if (!hasCredits) {
       toast({ title: t('credits.noCredits'), description: user ? t('credits.earnMore') : t('credits.signupForMore'), variant: 'destructive' });
