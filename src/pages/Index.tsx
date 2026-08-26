@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
+import { Hero } from "@/components/home/Hero";
+
 import { triggerRateLimit } from "@/components/RateLimitBar";
 import { StudyContent, StudyFormData, StudyPlanContent, StudyPlanFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
