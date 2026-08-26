@@ -967,5 +967,33 @@
     "studyDone": "Fertig! 🎉",
     "exerciseDone": "Fertig! 🎉",
     "complexityHint": "Dies kann einige Sekunden dauern, da komplexe Inhalte, Bilder, Diagramme und personalisierte Details generiert werden. Manchmal können Bilder nicht generiert werden, wenn das Anforderungs-Limit überschritten wird."
+  },
+  "home": {
+    "chipsLabel": "Starte mit:",
+    "chip1": "Photosynthese",
+    "chip2": "Französische Revolution",
+    "chip3": "Quadratische Gleichung",
+    "chip4": "Periodensystem",
+    "chip5": "Present Perfect",
+    "stats": {
+      "title": "Zahlen der Plattform",
+      "studies": "erstellte Lernmaterialien",
+      "users": "Lernende auf der Plattform",
+      "languages": "verfügbare Sprachen"
+    },
+    "how": {
+      "title": "So funktioniert es",
+      "subtitle": "Drei Wege, mit Learn Buddy zu lernen.",
+      "study": "Komplettes Lernmaterial",
+      "studyDesc": "Ziel, Zusammenfassung, Schritt für Schritt, Mindmap und Quellen — alles in einem.",
+      "studySample": "Beispiel: „Photosynthese“ wird zu Stichpunkten, Schaubild und typischen Prüfungsfehlern.",
+      "exercises": "Korrigierte Übungen",
+      "exercisesDesc": "Multiple-Choice- und offene Fragen mit sofortiger kommentierter Korrektur.",
+      "exercisesSample": "Beispiel: 10 Aufgaben zu quadratischen Gleichungen mit Schritt-für-Schritt-Lösung.",
+      "plan": "Lernplan",
+      "planDesc": "Tagesplan, angepasst an deine verfügbare Zeit.",
+      "planSample": "Beispiel: 30 Tage bis zur Prüfung mit Tageszielen und verteilten Wiederholungen.",
+      "cta": "Jetzt ausprobieren"
+    }
   }
 }

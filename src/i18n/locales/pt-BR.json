@@ -978,5 +978,33 @@
     "addImage": "Anexar imagem",
     "placeholder": "Pergunte qualquer coisa…",
     "disclaimer": "Powered by Gemini · pode cometer erros, verifique informações importantes."
+  },
+  "home": {
+    "chipsLabel": "Comece por:",
+    "chip1": "Fotossíntese",
+    "chip2": "Revolução Francesa",
+    "chip3": "Equação do 2º grau",
+    "chip4": "Tabela periódica",
+    "chip5": "Present Perfect",
+    "stats": {
+      "title": "Números da plataforma",
+      "studies": "estudos gerados",
+      "users": "estudantes na plataforma",
+      "languages": "idiomas disponíveis"
+    },
+    "how": {
+      "title": "Veja funcionando",
+      "subtitle": "Três formas de estudar com o Learn Buddy.",
+      "study": "Estudo completo",
+      "studyDesc": "Objetivo, resumo, passo a passo, mapa mental e fontes — tudo em um material só.",
+      "studySample": "Exemplo: “Fotossíntese” vira resumo em tópicos, esquema visual do processo e erros comuns em provas.",
+      "exercises": "Exercícios corrigidos",
+      "exercisesDesc": "Questões objetivas e discursivas com correção comentada na hora.",
+      "exercisesSample": "Exemplo: 10 questões de equação do 2º grau com gabarito explicado passo a passo.",
+      "plan": "Plano de estudos",
+      "planDesc": "Cronograma dia a dia adaptado ao seu tempo disponível.",
+      "planSample": "Exemplo: 30 dias para o ENEM com metas diárias e revisões espaçadas.",
+      "cta": "Experimentar agora"
+    }
   }
 }

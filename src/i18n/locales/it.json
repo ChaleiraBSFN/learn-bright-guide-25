@@ -967,5 +967,33 @@
     "studyDone": "Fatto! 🎉",
     "exerciseDone": "Fatto! 🎉",
     "complexityHint": "Potrebbero volerci alcuni secondi a causa della generazione di contenuti complessi, immagini, diagrammi e dettagli personalizzati. A volte le immagini potrebbero non essere generate se il limite di richieste viene superato."
+  },
+  "home": {
+    "chipsLabel": "Inizia da:",
+    "chip1": "Fotosintesi",
+    "chip2": "Rivoluzione francese",
+    "chip3": "Equazione di secondo grado",
+    "chip4": "Tavola periodica",
+    "chip5": "Present Perfect",
+    "stats": {
+      "title": "Numeri della piattaforma",
+      "studies": "studi generati",
+      "users": "studenti sulla piattaforma",
+      "languages": "lingue disponibili"
+    },
+    "how": {
+      "title": "Guarda come funziona",
+      "subtitle": "Tre modi di studiare con Learn Buddy.",
+      "study": "Studio completo",
+      "studyDesc": "Obiettivo, riassunto, passo passo, mappa mentale e fonti — tutto in un unico materiale.",
+      "studySample": "Esempio: “Fotosintesi” diventa riassunto per punti, schema visivo ed errori comuni.",
+      "exercises": "Esercizi corretti",
+      "exercisesDesc": "Domande a scelta multipla e aperte con correzione commentata immediata.",
+      "exercisesSample": "Esempio: 10 domande sulle equazioni di secondo grado con soluzione passo passo.",
+      "plan": "Piano di studio",
+      "planDesc": "Programma giornaliero adattato al tempo che hai.",
+      "planSample": "Esempio: 30 giorni all'esame con obiettivi quotidiani e ripassi distribuiti.",
+      "cta": "Prova ora"
+    }
   }
 }

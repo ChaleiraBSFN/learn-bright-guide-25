@@ -26,7 +26,7 @@ export const SocialProof = () => {
       try {
         const { data, error } = await supabase.rpc("get_public_stats" as never);
         if (error || !active) return;
-        const row = Array.isArray(data) ? (data[0] as { studies_count: number; users_count: number } | undefined) : undefined;
+        const row = Array.isArray(data) ? ((data as unknown[])[0] as { studies_count: number; users_count: number } | undefined) : undefined;
         if (!row) return;
         const studies = Number(row.studies_count ?? 0);
         const users = Number(row.users_count ?? 0);
