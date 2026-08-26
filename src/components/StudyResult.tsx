@@ -116,12 +116,15 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
         )}
 
         {/* General images section */}
-        <ImagesSection
-          aiImages={generalAiImages}
-          isLoading={imagesLoading}
-          data={content.imagensIlustrativas}
-          tema={tema}
-        />
+        {(!compact || generalAiImages?.length || content.imagensIlustrativas) && (
+          <ImagesSection
+            aiImages={generalAiImages}
+            isLoading={imagesLoading}
+            data={content.imagensIlustrativas}
+            tema={tema}
+          />
+        )}
+
 
 
         {content.videosRecomendados && <VideosSection data={content.videosRecomendados} tema={tema} />}
