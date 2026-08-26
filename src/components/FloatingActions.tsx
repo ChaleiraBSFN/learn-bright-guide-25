@@ -39,7 +39,7 @@ export const FloatingActions = () => {
   const [rankingEnabled, setRankingEnabled] = useState(true);
   const [trailEnabled, setTrailEnabled] = useState(true);
   const [groupsEnabled, setGroupsEnabled] = useState(true);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   // Auto-collapse while generating content
   useEffect(() => {
