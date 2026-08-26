@@ -786,7 +786,13 @@
     "modFail": "Image verification failed",
     "bannerTitle": "✨ Meet the Community!",
     "bannerDesc": "Share exercises, solutions and doubts with students from everywhere. Donate buddies to support who you like!",
-    "bannerCta": "Explore"
+    "bannerCta": "Explore",
+    "donateSuccessN": "🎉 {{count}} Buddy(s) sent! +{{count}} credit(s) to the author",
+    "donateTitle": "Donate Buddies",
+    "donateAmount": "How many buddies do you want to donate?",
+    "donateConfirm": "Donate {{count}}",
+    "donateReceived": "🎉 {{name}} donated {{count}} buddy(s) to your post!",
+    "donorAnonymous": "Someone"
   },
   "fullscreen": {
     "enter": "Full Screen",

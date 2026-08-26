@@ -770,7 +770,13 @@
     "modFail": "图片验证失败",
     "bannerTitle": "✨ 加入社区！",
     "bannerDesc": "与全球学生分享练习、解答与疑问。给你喜欢的人捐赠buddy支持他们！",
-    "bannerCta": "探索"
+    "bannerCta": "探索",
+    "donateSuccessN": "🎉 已发送 {{count}} 个 Buddy！作者 +{{count}} 积分",
+    "donateTitle": "赠送 Buddy",
+    "donateAmount": "你想赠送多少个 Buddy？",
+    "donateConfirm": "赠送 {{count}}",
+    "donateReceived": "🎉 {{name}} 向你的帖子赠送了 {{count}} 个 Buddy！",
+    "donorAnonymous": "某人"
   },
   "fullscreen": {
     "enter": "全屏",

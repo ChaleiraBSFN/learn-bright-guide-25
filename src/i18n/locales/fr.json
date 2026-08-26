@@ -770,7 +770,13 @@
     "modFail": "Échec de la vérification de l'image",
     "bannerTitle": "✨ Découvrez la Communauté !",
     "bannerDesc": "Partagez exercices, solutions et doutes avec des étudiants du monde entier. Donnez des buddies pour soutenir vos préférés !",
-    "bannerCta": "Explorer"
+    "bannerCta": "Explorer",
+    "donateSuccessN": "🎉 {{count}} Buddy(s) envoyé(s) ! +{{count}} crédit(s) pour l'auteur",
+    "donateTitle": "Offrir des Buddies",
+    "donateAmount": "Combien de buddies voulez-vous offrir ?",
+    "donateConfirm": "Offrir {{count}}",
+    "donateReceived": "🎉 {{name}} vous a offert {{count}} buddy(s) sur votre publication !",
+    "donorAnonymous": "Quelqu'un"
   },
   "fullscreen": {
     "enter": "Plein Écran",

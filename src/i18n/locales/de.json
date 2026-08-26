@@ -770,7 +770,13 @@
     "modFail": "Bildüberprüfung fehlgeschlagen",
     "bannerTitle": "✨ Entdecke die Community!",
     "bannerDesc": "Teile Übungen, Lösungen und Zweifel mit Schülern weltweit. Spende Buddies, um deine Favoriten zu unterstützen!",
-    "bannerCta": "Erkunden"
+    "bannerCta": "Erkunden",
+    "donateSuccessN": "🎉 {{count}} Buddy(s) gesendet! +{{count}} Credit(s) für den Autor",
+    "donateTitle": "Buddies spenden",
+    "donateAmount": "Wie viele Buddies möchtest du spenden?",
+    "donateConfirm": "{{count}} spenden",
+    "donateReceived": "🎉 {{name}} hat dir {{count}} Buddy(s) für deinen Beitrag gespendet!",
+    "donorAnonymous": "Jemand"
   },
   "fullscreen": {
     "enter": "Vollbild",

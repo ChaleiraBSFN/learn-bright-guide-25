@@ -770,7 +770,13 @@
     "modFail": "Verifica immagine fallita",
     "bannerTitle": "✨ Scopri la Comunità!",
     "bannerDesc": "Condividi esercizi, soluzioni e dubbi con studenti di tutto il mondo. Dona buddy per supportare chi preferisci!",
-    "bannerCta": "Esplora"
+    "bannerCta": "Esplora",
+    "donateSuccessN": "🎉 {{count}} Buddy inviati! +{{count}} crediti per l'autore",
+    "donateTitle": "Dona Buddy",
+    "donateAmount": "Quanti buddy vuoi donare?",
+    "donateConfirm": "Dona {{count}}",
+    "donateReceived": "🎉 {{name}} ha donato {{count}} buddy al tuo post!",
+    "donorAnonymous": "Qualcuno"
   },
   "fullscreen": {
     "enter": "Schermo Intero",

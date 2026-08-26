@@ -770,7 +770,13 @@
     "modFail": "Сбой проверки изображения",
     "bannerTitle": "✨ Знакомьтесь с Сообществом!",
     "bannerDesc": "Делитесь упражнениями, решениями и вопросами со студентами со всего мира. Дарите buddy тем, кто вам нравится!",
-    "bannerCta": "Открыть"
+    "bannerCta": "Открыть",
+    "donateSuccessN": "🎉 Отправлено Buddy: {{count}}! +{{count}} кредитов автору",
+    "donateTitle": "Подарить Buddy",
+    "donateAmount": "Сколько Buddy вы хотите подарить?",
+    "donateConfirm": "Подарить {{count}}",
+    "donateReceived": "🎉 {{name}} подарил(а) {{count}} Buddy вашему посту!",
+    "donorAnonymous": "Кто-то"
   },
   "fullscreen": {
     "enter": "Полноэкранный режим",
