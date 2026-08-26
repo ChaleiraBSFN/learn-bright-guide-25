@@ -1106,7 +1106,7 @@
     "invalidName": "Inserisci un nome da 2 a 40 caratteri.",
     "leave": "Esci",
     "youAre": "Sei",
-    "liveNow": "Live ora",
+    "liveNow": "IN DIRETTA",
     "waitingTeacher": "In attesa che il docente inizi la presentazione...",
     "noMaterials": "Nessun materiale pubblicato.",
     "submitAnswers": "Invia risposte",
@@ -1122,6 +1122,16 @@
     "joinSeoDesc": "Entra nell'aula del tuo docente con la chiave di accesso.",
     "studentEntry": "Sono studente — entra con la chiave della classe",
     "noAccountHint": "Nessun account: scegli solo un soprannome.",
-    "teacherLoginHint": "Sei un insegnante? Accedi per creare e gestire le aule."
+    "teacherLoginHint": "Sei un insegnante? Accedi per creare e gestire le aule.",
+    "liveHowTitle": "Come funziona il Live",
+    "liveHowDesc": "Scegli un materiale qui sotto e clicca su Presenta. Lo schermo degli studenti mostrerà esattamente la parte che stai visualizzando. Usa Precedente/Successiva per avanzare e Termina alla fine.",
+    "liveWatching": "Gli studenti stanno guardando la parte {{n}} di questo materiale.",
+    "part": "Parte",
+    "liveNoMaterials": "Genera un materiale nella scheda Materiali per presentarlo in diretta.",
+    "livePick": "Scegli cosa presentare ora:",
+    "membersTitle": "Studenti nella stanza",
+    "kick": "Espelli",
+    "kickTitle": "Espellere lo studente?",
+    "kickDesc": "{{name}} verrà rimosso dalla stanza e perderà l'accesso ai contenuti. Potrà rientrare con la chiave, a meno che tu non chiuda l'ingresso."
   }
 }

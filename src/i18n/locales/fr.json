@@ -1106,7 +1106,7 @@
     "invalidName": "Saisissez un nom de 2 à 40 caractères.",
     "leave": "Quitter",
     "youAre": "Vous êtes",
-    "liveNow": "En direct",
+    "liveNow": "EN DIRECT",
     "waitingTeacher": "En attente du début de la présentation...",
     "noMaterials": "Aucun support publié pour l'instant.",
     "submitAnswers": "Envoyer les réponses",
@@ -1122,6 +1122,16 @@
     "joinSeoDesc": "Rejoignez la salle de votre professeur avec la clé d'accès.",
     "studentEntry": "Je suis élève — rejoindre avec la clé de la classe",
     "noAccountHint": "Sans compte : choisissez simplement un pseudo.",
-    "teacherLoginHint": "Vous êtes enseignant ? Connectez-vous pour créer et gérer des classes."
+    "teacherLoginHint": "Vous êtes enseignant ? Connectez-vous pour créer et gérer des classes.",
+    "liveHowTitle": "Comment fonctionne le direct",
+    "liveHowDesc": "Choisissez un support ci-dessous et cliquez sur Présenter. L'écran des élèves affichera exactement la partie que vous montrez. Utilisez Précédent/Suivant pour avancer et Terminer à la fin.",
+    "liveWatching": "Les élèves regardent la partie {{n}} de ce support.",
+    "part": "Partie",
+    "liveNoMaterials": "Générez un support dans l'onglet Supports pour le présenter en direct.",
+    "livePick": "Choisissez quoi présenter maintenant :",
+    "membersTitle": "Élèves dans la salle",
+    "kick": "Exclure",
+    "kickTitle": "Exclure l'élève ?",
+    "kickDesc": "{{name}} sera retiré de la salle et perdra l'accès au contenu. Il pourra revenir avec la clé, sauf si vous fermez l'entrée."
   }
 }
