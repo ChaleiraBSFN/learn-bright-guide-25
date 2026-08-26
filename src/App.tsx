@@ -1,6 +1,8 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { RateLimitBar } from "@/components/RateLimitBar";
+import { BuddyDonationNotifier } from "@/components/BuddyDonationNotifier";
+
 import { CookieConsent } from "@/components/CookieConsent";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -67,6 +69,8 @@ const AppContent = () => {
       <Toaster />
       <Sonner />
       <RateLimitBar />
+      <BuddyDonationNotifier />
+
       
       <BrowserRouter>
         <Suspense fallback={null}>

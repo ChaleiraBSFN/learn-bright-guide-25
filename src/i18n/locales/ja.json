@@ -770,7 +770,13 @@
     "modFail": "画像確認失敗",
     "bannerTitle": "✨ コミュニティへようこそ！",
     "bannerDesc": "世界中の学生と演習・解答・質問を共有しよう。気に入った人にバディを寄付して応援！",
-    "bannerCta": "見てみる"
+    "bannerCta": "見てみる",
+    "donateSuccessN": "🎉 バディ{{count}}個を送信！作者に+{{count}}クレジット",
+    "donateTitle": "バディを贈る",
+    "donateAmount": "いくつバディを贈りますか？",
+    "donateConfirm": "{{count}}個贈る",
+    "donateReceived": "🎉 {{name}}さんがあなたの投稿にバディ{{count}}個を贈りました！",
+    "donorAnonymous": "誰か"
   },
   "fullscreen": {
     "enter": "全画面表示",

@@ -786,7 +786,13 @@
     "modFail": "Falha na verificação da imagem",
     "bannerTitle": "✨ Conheça a Comunidade!",
     "bannerDesc": "Compartilhe exercícios, soluções e dúvidas com estudantes de todo o mundo. Doe buddies para ajudar quem você curte!",
-    "bannerCta": "Explorar"
+    "bannerCta": "Explorar",
+    "donateSuccessN": "🎉 {{count}} Buddy(s) enviado(s)! +{{count}} crédito(s) para o autor",
+    "donateTitle": "Doar Buddys",
+    "donateAmount": "Quantos buddys quer doar?",
+    "donateConfirm": "Doar {{count}}",
+    "donateReceived": "🎉 {{name}} doou {{count}} buddy(s) para o seu post!",
+    "donorAnonymous": "Alguém"
   },
   "fullscreen": {
     "enter": "Tela Cheia",
