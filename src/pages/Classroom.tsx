@@ -97,14 +97,15 @@ export default function ClassroomPage() {
       const endpoint = materialType === 'study' ? 'generate-study-content' : 'generate-exercises';
       const body =
         materialType === 'study'
-          ? { tema: tema.trim(), nivel: 'medio', idioma: i18n.language }
-          : { tema: tema.trim(), nivel: 'medio', quantidade: 5, dificuldade: 'media', idioma: i18n.language };
+          ? { tema: tema.trim(), nivel: 'medio', idioma: i18n.language, rapido: true }
+          : { tema: tema.trim(), nivel: 'medio', quantidade: 5, dificuldade: 'media', idioma: i18n.language, rapido: true };
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/${endpoint}`, {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
       });
+
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
