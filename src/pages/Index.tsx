@@ -717,8 +717,15 @@ const Index = () => {
                     ) : (
                       <div className="min-h-[200px] rounded-xl bg-muted/20" />
                     )}
+                    {/* Anúncio abaixo dos planos */}
+                    {deferredReady && (
+                      <div className="pt-6">
+                        <Suspense fallback={null}><AdSenseSlot variant="card" /></Suspense>
+                      </div>
+                    )}
                   </div>
                 </>
+
               ) : (
               <>
               {/* Promo Banners (admin-managed) */}
