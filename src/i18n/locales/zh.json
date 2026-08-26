@@ -1119,6 +1119,9 @@
     "seoTitle": "课堂 | Learn Buddy",
     "seoDesc": "创建在线课堂，向学生展示内容和练习题。",
     "joinSeoTitle": "加入课堂 | Learn Buddy",
-    "joinSeoDesc": "用访问密钥加入老师的课堂。"
+    "joinSeoDesc": "用访问密钥加入老师的课堂。",
+    "studentEntry": "我是学生 — 使用课堂密钥加入",
+    "noAccountHint": "无需账号：只要选个昵称即可。",
+    "teacherLoginHint": "您是老师吗？登录即可创建和管理课堂。"
   }
 }

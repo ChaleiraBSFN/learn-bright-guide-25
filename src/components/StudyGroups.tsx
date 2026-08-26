@@ -349,25 +349,8 @@ export const StudyGroups = () => {
 
   const navigate = useNavigate();
 
-  if (!user) {
-    return (
-      <Button
-        variant="outline"
-        size="icon"
-        aria-label={t('groups.title')}
-        className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]"
-        onClick={() => {
-          toast({
-            title: t('groups.loginRequired'),
-            description: t('groups.loginRequiredDesc'),
-          });
-          navigate('/auth');
-        }}
-      >
-        <Users className="h-4 w-4" />
-      </Button>
-    );
-  }
+  const isGuest = !user;
+
 
   return (
     <>
@@ -422,7 +405,7 @@ export const StudyGroups = () => {
 
         {/* LIST VIEW */}
         {view === 'list' && (
-          <Tabs defaultValue="groups" className="flex-1 flex flex-col min-h-0">
+          <Tabs defaultValue={isGuest ? 'classrooms' : 'groups'} className="flex-1 flex flex-col min-h-0">
             <div className="px-4 pt-3">
               <TabsList className="w-full grid grid-cols-2">
                 <TabsTrigger value="groups">{t('groups.title')}</TabsTrigger>
@@ -431,6 +414,16 @@ export const StudyGroups = () => {
             </div>
 
             <TabsContent value="groups" className="flex-1 flex flex-col min-h-0 mt-0">
+              {isGuest ? (
+                <div className="p-6 text-center space-y-3">
+                  <p className="text-sm text-muted-foreground">{t('groups.loginRequiredDesc')}</p>
+                  <Button className="w-full" onClick={() => { setOpen(false); navigate('/auth'); }}>
+                    {t('groups.loginRequired')}
+                  </Button>
+                </div>
+              ) : (
+              <>
+
               <div className="p-4">
                 <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                   <DialogTrigger asChild>
@@ -483,7 +476,10 @@ export const StudyGroups = () => {
                   </div>
                 )}
               </ScrollArea>
+              </>
+              )}
             </TabsContent>
+
 
             <TabsContent value="classrooms" className="flex-1 flex flex-col min-h-0 mt-0">
               <ClassroomsTabPanel onNavigate={() => setOpen(false)} />

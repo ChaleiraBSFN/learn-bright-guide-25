@@ -1130,6 +1130,9 @@
     "seoTitle": "Salas de Aula | Learn Buddy",
     "seoDesc": "Crie salas de aula online, apresente conteúdos e exercícios para seus alunos.",
     "joinSeoTitle": "Entrar na sala de aula | Learn Buddy",
-    "joinSeoDesc": "Entre na sala de aula do seu professor com a chave de acesso."
+    "joinSeoDesc": "Entre na sala de aula do seu professor com a chave de acesso.",
+    "studentEntry": "Sou aluno — entrar com a chave da turma",
+    "noAccountHint": "Sem conta: você só escolhe um apelido para entrar.",
+    "teacherLoginHint": "É professor? Entre na sua conta para criar e gerenciar salas de aula."
   }
 }

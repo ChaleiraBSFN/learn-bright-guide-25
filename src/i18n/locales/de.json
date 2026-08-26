@@ -1119,6 +1119,9 @@
     "seoTitle": "Klassenräume | Learn Buddy",
     "seoDesc": "Erstelle Online-Klassenräume und präsentiere Inhalte und Übungen.",
     "joinSeoTitle": "Klassenraum betreten | Learn Buddy",
-    "joinSeoDesc": "Betritt den Klassenraum deiner Lehrkraft mit dem Zugangsschlüssel."
+    "joinSeoDesc": "Betritt den Klassenraum deiner Lehrkraft mit dem Zugangsschlüssel.",
+    "studentEntry": "Ich bin Schüler – mit dem Klassenschlüssel beitreten",
+    "noAccountHint": "Kein Konto nötig: einfach einen Spitznamen wählen.",
+    "teacherLoginHint": "Lehrkraft? Melde dich an, um Klassenräume zu erstellen und zu verwalten."
   }
 }
