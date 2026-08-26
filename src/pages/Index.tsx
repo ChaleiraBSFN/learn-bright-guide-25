@@ -706,7 +706,19 @@ const Index = () => {
               <Suspense fallback={null}><EngineNoticeBanner /></Suspense>
 
               {introOpen ? (
-                <IntroScreen onSubmitTopic={handlePickTopic} onExplore={() => setIntroOpen(false)} />
+                <>
+                  <IntroScreen onSubmitTopic={handlePickTopic} onExplore={() => setIntroOpen(false)} />
+                  {/* Planos logo abaixo do botão explorar */}
+                  <div className="pt-2 pb-8">
+                    {deferredReady ? (
+                      <Suspense fallback={<div className="min-h-[200px] rounded-xl bg-muted/20" />}>
+                        <PlanComparison />
+                      </Suspense>
+                    ) : (
+                      <div className="min-h-[200px] rounded-xl bg-muted/20" />
+                    )}
+                  </div>
+                </>
               ) : (
               <>
               {/* Promo Banners (admin-managed) */}

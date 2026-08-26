@@ -78,7 +78,7 @@ export const IntroScreen = ({ onSubmitTopic, onExplore }: IntroScreenProps) => {
   const ModeIcon = MODE_ICONS[mode];
 
   return (
-    <section className="relative isolate flex min-h-[62vh] flex-col items-center justify-center gap-8 px-2 text-center">
+    <section className="relative isolate flex min-h-[calc(100svh-170px)] flex-col items-center justify-center gap-8 px-2 text-center">
       <motion.div
         className="hero-aurora"
         aria-hidden="true"
