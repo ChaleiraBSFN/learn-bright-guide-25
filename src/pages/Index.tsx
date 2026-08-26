@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
 import { Hero } from "@/components/home/Hero";
+import { IntroScreen } from "@/components/home/IntroScreen";
 
 import { triggerRateLimit } from "@/components/RateLimitBar";
 import { StudyContent, StudyFormData, StudyPlanContent, StudyPlanFormData } from "@/types/study";
@@ -140,10 +141,12 @@ const Index = () => {
     return "history";
   });
   const [presetTema, setPresetTema] = useState<string | undefined>(undefined);
+  const [introOpen, setIntroOpen] = useState(true);
 
   const handlePickTopic = useCallback((topic: string) => {
     setActiveTab("study");
     setPresetTema(topic);
+    setIntroOpen(false);
   }, []);
 
 
@@ -568,6 +571,7 @@ const Index = () => {
     setCurrentPlanTema("");
     setAiImages([]);
     setWebImages([]);
+    setIntroOpen(true);
   };
 
   const showingResult = studyContent || exerciseContent || planContent;
