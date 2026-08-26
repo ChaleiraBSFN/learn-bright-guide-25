@@ -51,13 +51,10 @@
       } catch (e) {
         window.adsbygoogle.requestNonPersonalizedAds = 1;
       }
-      // Habilita os Auto Ads (anúncios automáticos) do AdSense nesta página
-      window.adsbygoogle.push({
-        google_ad_client: "ca-pub-3378474598402206",
-        enable_page_level_ads: true,
-        overlays: { bottom: true }
-      });
+      // Auto Ads são ativados no painel do AdSense (não via enable_page_level_ads,
+      // que conflita com as unidades manuais <ins class="adsbygoogle">).
     </script>
+
 
 
     <meta property="og:type" content="website" />
