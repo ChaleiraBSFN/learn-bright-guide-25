@@ -705,27 +705,16 @@ const Index = () => {
               {deferredReady && <Suspense fallback={null}><PromoBanners /></Suspense>}
 
 
-              {/* Hero Section */}
-              <div className="text-center space-y-3 md:space-y-4 px-2">
-                <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-medium">
-                  <Sparkles className="h-3 w-3 md:h-4 md:w-4" />
-                  {t('hero.badge')}
-                </div>
-                <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                  {t('hero.title')}{" "}
-                  <span className="gradient-text">{t('hero.titleHighlight')}</span>
-                </h1>
-                <p className="text-sm md:text-lg text-muted-foreground max-w-xl mx-auto">
-                  {t('hero.description')}
-                </p>
-              </div>
+              {/* Hero */}
+              <Hero onPickTopic={(topic) => { setActiveTab("study"); setPresetTema(topic); }} />
 
-              {/* Feature Banner Carousel */}
-              {deferredReady ? (
-                <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-muted" />}><FeatureCarousel /></Suspense>
-              ) : (
-                <div className="h-32 rounded-xl bg-muted/40" />
+              {/* Prova social */}
+              {deferredReady && (
+                <Suspense fallback={null}>
+                  <SocialProof />
+                </Suspense>
               )}
+
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
