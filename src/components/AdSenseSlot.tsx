@@ -181,10 +181,13 @@ export const AdSenseSlot = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full min-w-0 overflow-hidden rounded-xl ${
+      className={`liquid-glass relative w-full min-w-0 overflow-hidden rounded-2xl ${
         variant === 'compact' ? 'min-h-[90px]' : 'min-h-[250px]'
       } ${className}`}
     >
+      <span className="pointer-events-none absolute left-3 top-2 z-10 rounded-full bg-background/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground backdrop-blur-sm">
+        {t('ads.label', 'Anúncio')}
+      </span>
       <ins
         key={cycle}
         ref={insRef}
