@@ -14,8 +14,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   ArrowLeft, Plus, Trash2, Copy, Loader2, GraduationCap, Users,
-  MonitorPlay, MessageSquare, ClipboardList, Send, ChevronLeft, ChevronRight, Square,
+  MonitorPlay, MessageSquare, ClipboardList, Send, ChevronLeft, ChevronRight, Square, UserMinus,
 } from 'lucide-react';
 import { useTeacherClassrooms, useClassroomRoom, normalizeKey, type Classroom } from '@/hooks/useClassroom';
 import { ClassroomMaterialView } from '@/components/classroom/ClassroomMaterialView';
