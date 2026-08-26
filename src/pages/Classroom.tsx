@@ -346,33 +346,68 @@ export default function ClassroomPage() {
 
                 <div className="liquid-glass rounded-2xl p-4 space-y-3">
                   {room.live?.is_live && room.live.material_id ? (
-                    <>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="flex items-center gap-1.5 text-xs font-semibold text-destructive">
-                          <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-                          {t('classroom.liveNow', 'AO VIVO')}
-                        </span>
-                        <p className="text-sm text-foreground">
-                          {room.materials.find((m) => m.id === room.live?.material_id)?.title}
-                        </p>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {t('classroom.liveWatching', 'Os alunos estão vendo a parte {{n}} deste material.', { n: (room.live?.section_index ?? 0) + 1 })}
-                      </p>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Button variant="outline" size="sm" className="gap-1" onClick={() => setLiveState({ section_index: Math.max(0, (room.live?.section_index ?? 0) - 1) })}>
-                          <ChevronLeft className="h-4 w-4" /> {t('classroom.prev', 'Anterior')}
-                        </Button>
-                        <Badge variant="secondary">{t('classroom.part', 'Parte')} {(room.live?.section_index ?? 0) + 1}</Badge>
-                        <Button variant="outline" size="sm" className="gap-1" onClick={() => setLiveState({ section_index: (room.live?.section_index ?? 0) + 1 })}>
-                          {t('classroom.next', 'Próxima')} <ChevronRight className="h-4 w-4" />
-                        </Button>
-                        <Button variant="destructive" size="sm" className="gap-1 ml-auto" onClick={() => setLiveState({ is_live: false })}>
-                          <Square className="h-3 w-3" /> {t('classroom.stopLive', 'Encerrar')}
-                        </Button>
-                      </div>
-                    </>
+                    (() => {
+                      const liveMat = room.materials.find((m) => m.id === room.live?.material_id);
+                      const parts = getMaterialParts(liveMat as any);
+                      const idx = Math.min(Math.max(room.live?.section_index ?? 0, 0), Math.max(parts.length - 1, 0));
+                      return (
+                        <>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="flex items-center gap-1.5 text-xs font-semibold text-destructive">
+                              <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                              {t('classroom.liveNow', 'AO VIVO')}
+                            </span>
+                            <p className="text-sm text-foreground">{liveMat?.title}</p>
+                          </div>
+
+                          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                            <div className="h-full bg-primary transition-all duration-500" style={{ width: `${((idx + 1) / Math.max(parts.length, 1)) * 100}%` }} />
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {t('classroom.liveWatchingPart', 'Os alunos estão vendo agora:')} <strong className="text-foreground">{parts[idx]?.title}</strong> ({idx + 1}/{parts.length})
+                          </p>
+
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Button variant="outline" size="sm" className="gap-1" disabled={idx === 0} onClick={() => setLiveState({ section_index: Math.max(0, idx - 1) })}>
+                              <ChevronLeft className="h-4 w-4" /> {t('classroom.prev', 'Anterior')}
+                            </Button>
+                            <Button size="sm" className="gap-1" disabled={idx >= parts.length - 1} onClick={() => setLiveState({ section_index: Math.min(parts.length - 1, idx + 1) })}>
+                              {t('classroom.next', 'Próxima')} <ChevronRight className="h-4 w-4" />
+                            </Button>
+                            <Button variant="destructive" size="sm" className="gap-1 ml-auto" onClick={() => setLiveState({ is_live: false })}>
+                              <Square className="h-3 w-3" /> {t('classroom.stopLive', 'Encerrar')}
+                            </Button>
+                          </div>
+
+                          <div className="space-y-1 max-h-52 overflow-y-auto pr-1">
+                            <p className="text-xs font-medium text-foreground">{t('classroom.partsList', 'Partes da aula (clique para pular)')}</p>
+                            {parts.map((p, i) => (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => setLiveState({ section_index: i })}
+                                className={`w-full text-left text-xs rounded-lg px-2 py-1.5 transition-colors ${
+                                  i === idx ? 'bg-primary/15 text-foreground font-semibold' : 'text-muted-foreground hover:bg-muted/50'
+                                }`}
+                              >
+                                {i + 1}. {p.title}
+                              </button>
+                            ))}
+                          </div>
+
+                          {liveMat && (
+                            <div className="rounded-xl border border-border p-3">
+                              <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-2">{t('classroom.livePreview', 'Prévia da tela do aluno')}</p>
+                              <div className="max-h-[45vh] overflow-y-auto">
+                                <ClassroomMaterialView material={liveMat} sectionIndex={idx} />
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()
                   ) : room.materials.length === 0 ? (
+
                     <p className="text-sm text-muted-foreground">
                       {t('classroom.liveNoMaterials', 'Gere um material na aba Materiais para poder apresentar ao vivo.')}
                     </p>
