@@ -793,6 +793,21 @@ const Index = () => {
                   </motion.div>
                 </AnimatePresence>
               </Tabs>
+
+              {/* Veja funcionando */}
+              {deferredReady && (
+                <Suspense fallback={null}>
+                  <HowItWorks onOpenTab={setActiveTab} />
+                </Suspense>
+              )}
+
+              {/* Feature Banner Carousel */}
+              {deferredReady ? (
+                <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-muted" />}><FeatureCarousel /></Suspense>
+              ) : (
+                <div className="h-32 rounded-xl bg-muted/40" />
+              )}
+
               <div className="pt-4">
                 {deferredReady && (
                   <Suspense fallback={<div className="min-h-[200px] rounded-xl bg-muted/20" />}>
@@ -800,6 +815,7 @@ const Index = () => {
                   </Suspense>
                 )}
               </div>
+
 
             </motion.div>
           ) : studyContent ? (
