@@ -143,11 +143,20 @@ const Index = () => {
   const [presetTema, setPresetTema] = useState<string | undefined>(undefined);
   const [introOpen, setIntroOpen] = useState(true);
 
+  const submitRef = useRef<((data: StudyFormData) => void) | null>(null);
+
   const handlePickTopic = useCallback((topic: string, tab: string = "study") => {
     setActiveTab(tab);
     if (topic) setPresetTema(topic);
     setIntroOpen(false);
+    // Gera imediatamente quando o usuário envia um tema na tela inicial
+    if (topic && tab === "study") {
+      setTimeout(() => {
+        submitRef.current?.({ tema: topic, nivel: "medio", duvidas: "" });
+      }, 0);
+    }
   }, []);
+
 
 
   
@@ -293,6 +302,7 @@ const Index = () => {
   };
 
   const handleSubmit = async (data: StudyFormData) => {
+
     if (!hasCredits) {
       toast({ title: t('credits.noCredits'), description: user ? t('credits.earnMore') : t('credits.signupForMore'), variant: 'destructive' });
       return;
@@ -395,6 +405,10 @@ const Index = () => {
       setIsFinishingStudy(false);
     }
   };
+
+  submitRef.current = handleSubmit;
+
+
 
   const handleExerciseSubmit = async (data: ExerciseFormData) => {
     if (!hasCredits) {
