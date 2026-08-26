@@ -17,19 +17,44 @@ interface Props {
   onSubmitAnswers?: (answers: Array<{ numero: number; resposta: string }>, score: number) => void;
 }
 
-export function ClassroomMaterialView({ material, answerable, submitting, submittedScore, onSubmitAnswers }: Props) {
+export function ClassroomMaterialView({ material, answerable, submitting, submittedScore, onSubmitAnswers, sectionIndex }: Props) {
   const { t } = useTranslation();
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [done, setDone] = useState(false);
 
-  const exercises: Exercise[] = useMemo(
+  const parts = useMemo(() => getMaterialParts(material), [material]);
+  const hasPart = typeof sectionIndex === 'number' && parts.length > 0;
+  const partIdx = hasPart ? Math.min(Math.max(sectionIndex as number, 0), parts.length - 1) : 0;
+  const part = hasPart ? parts[partIdx] : null;
+
+  const allExercises: Exercise[] = useMemo(
     () => (material.type === 'exercises' ? material.content?.exercicios || [] : []),
     [material],
   );
+  const exercises: Exercise[] = hasPart && part?.exercise ? [part.exercise as Exercise] : allExercises;
+
+  const partHeader = part ? (
+    <div className="mb-3 flex items-center gap-2 flex-wrap">
+      <Badge variant="secondary">
+        {t('classroom.part', 'Parte')} {partIdx + 1}/{parts.length}
+      </Badge>
+      <span className="text-sm font-semibold text-foreground">{part.title}</span>
+    </div>
+  ) : null;
 
   if (material.type === 'study') {
-    return <StudyResult content={material.content} tema={material.title} />;
+    return (
+      <div>
+        {partHeader}
+        <StudyResult
+          content={part ? part.content : material.content}
+          tema={material.title}
+          compact={!!part}
+        />
+      </div>
+    );
   }
+
 
   const objectives = exercises.filter((e) => e.tipo === 'objetiva');
 
