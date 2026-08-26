@@ -12,9 +12,11 @@ import { ImageUpload } from "./ImageUpload";
 interface StudyFormProps {
   onSubmit: (data: StudyFormData) => void;
   isLoading: boolean;
+  /** Tema sugerido (chips do hero). Preenche o campo quando muda. */
+  presetTema?: string;
 }
 
-export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
+export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
   const [tema, setTema] = useState("");
   const [nivel, setNivel] = useState("");
   const [duvidas, setDuvidas] = useState("");
@@ -32,6 +34,16 @@ export function StudyForm({ onSubmit, isLoading }: StudyFormProps) {
     }, 250);
     return () => window.clearTimeout(id);
   }, []);
+
+  // Chips do hero preenchem o tema e devolvem o foco ao campo.
+  useEffect(() => {
+    if (!presetTema) return;
+    setTema(presetTema);
+    const el = temaRef.current;
+    el?.focus({ preventScroll: true });
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [presetTema]);
+
 
 
   const niveis = [

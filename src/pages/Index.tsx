@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { StudyForm } from "@/components/StudyForm";
+import { Hero } from "@/components/home/Hero";
+
 import { triggerRateLimit } from "@/components/RateLimitBar";
 import { StudyContent, StudyFormData, StudyPlanContent, StudyPlanFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
@@ -35,6 +37,9 @@ const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").
 const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
 const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({ default: m.AdSenseSlot })));
 const PlanComparison = lazy(() => import("@/components/PlanComparison").then((m) => ({ default: m.PlanComparison })));
+const SocialProof = lazy(() => import("@/components/home/SocialProof").then((m) => ({ default: m.SocialProof })));
+const HowItWorks = lazy(() => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })));
+
 
 
 const pageVariants = {
@@ -134,6 +139,14 @@ const Index = () => {
     if (s.exercisesEnabled) return "exercises";
     return "history";
   });
+  const [presetTema, setPresetTema] = useState<string | undefined>(undefined);
+
+  const handlePickTopic = useCallback((topic: string) => {
+    setActiveTab("study");
+    setPresetTema(topic);
+  }, []);
+
+
   
   // Image states
   const [aiImages, setAiImages] = useState<AIImage[]>([]);
@@ -780,6 +793,21 @@ const Index = () => {
                   </motion.div>
                 </AnimatePresence>
               </Tabs>
+
+              {/* Veja funcionando */}
+              {deferredReady && (
+                <Suspense fallback={null}>
+                  <HowItWorks onOpenTab={setActiveTab} />
+                </Suspense>
+              )}
+
+              {/* Feature Banner Carousel */}
+              {deferredReady ? (
+                <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-muted" />}><FeatureCarousel /></Suspense>
+              ) : (
+                <div className="h-32 rounded-xl bg-muted/40" />
+              )}
+
               <div className="pt-4">
                 {deferredReady && (
                   <Suspense fallback={<div className="min-h-[200px] rounded-xl bg-muted/20" />}>
@@ -787,6 +815,7 @@ const Index = () => {
                   </Suspense>
                 )}
               </div>
+
 
             </motion.div>
           ) : studyContent ? (

@@ -1038,6 +1038,13 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_public_stats: {
+        Args: never
+        Returns: {
+          studies_count: number
+          users_count: number
+        }[]
+      }
       get_rate_limit_remaining: {
         Args: {
           _endpoint: string
