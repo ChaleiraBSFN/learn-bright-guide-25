@@ -131,7 +131,7 @@ export function ExerciseForm({ onSubmit, isLoading }: ExerciseFormProps) {
         type="submit"
         variant="hero"
         size="xl"
-        className="w-full"
+        className="w-full rounded-full"
         disabled={isLoading || (!hasImage && (!tema || !nivel))}
       >
         {isLoading ? (
