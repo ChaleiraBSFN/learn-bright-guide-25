@@ -17,6 +17,7 @@ const requestSchema = z.object({
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
   imagemBase64: z.string().optional().nullable(),
   primeBoost: z.boolean().optional().default(false),
+  rapido: z.boolean().optional().default(false),
 });
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').replace(/```/g, '').trim();
@@ -158,7 +159,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, nivel, quantidade, dificuldade, idioma, imagemBase64, primeBoost } = validationResult.data;
+    const { tema, nivel, quantidade, dificuldade, idioma, imagemBase64, primeBoost, rapido } = validationResult.data;
     const lang = languageMap[idioma] || "Português (Brasil)";
     const seed = Math.floor(Math.random() * 1000000);
 
@@ -255,7 +256,7 @@ Rules: Vary difficulty within the calibration. ONLY JSON output.`;
       temperature: 0.7,
       imagemBase64,
       label: "Exercises",
-      race: isPremium ? 4 : 1,
+      race: rapido ? 4 : (isPremium ? 4 : 1),
     });
 
 
