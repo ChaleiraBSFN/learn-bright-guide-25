@@ -145,9 +145,9 @@
   },
   "footer": {
     "developed": "AI驱动学习",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Use",
-    "about": "About & Contact"
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "about": "关于与联系"
   },
   "auth": {
     "login": "登录",
@@ -1018,7 +1018,7 @@
     "explore": "浏览主页"
   },
   "terms": {
-    "title": "Terms of Use",
+    "title": "使用条款",
     "s1Title": "1. Acceptance",
     "s1Body": "By using Learn Buddy you agree to these Terms and to our Privacy Policy.",
     "s2Title": "2. The service",
@@ -1036,7 +1036,7 @@
     "contactTitle": "Contact"
   },
   "about": {
-    "title": "About & Contact",
+    "title": "关于与联系",
     "whoTitle": "Who we are",
     "whoBody": "Learn Buddy is a Brazilian study platform built by the Learn Buddy Development Team (EDLB) to make learning faster, more visual and more accessible.",
     "contentTitle": "How content is created",
