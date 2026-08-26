@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Sparkles, Moon, Sun } from "lucide-react";
-import { useTheme } from "@/hooks/useTheme";
+import { Sparkles } from "lucide-react";
 
 interface HeroProps {
   onPickTopic: (topic: string) => void;
@@ -8,7 +7,6 @@ interface HeroProps {
 
 export const Hero = ({ onPickTopic }: HeroProps) => {
   const { t } = useTranslation();
-  const { theme, toggleTheme } = useTheme();
 
   const chips = [
     t("home.chip1", "Fotossíntese"),
@@ -27,14 +25,6 @@ export const Hero = ({ onPickTopic }: HeroProps) => {
           <Sparkles className="h-3 w-3 md:h-4 md:w-4" />
           {t("hero.badge")}
         </span>
-        <button
-          type="button"
-          onClick={toggleTheme}
-          aria-label={theme === "dark" ? t("theme.light", "Tema claro") : t("theme.dark", "Tema escuro")}
-          className="liquid-glass-soft inline-flex h-9 w-9 items-center justify-center text-foreground"
-        >
-          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </button>
       </div>
 
       <h1 className="font-display text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl">
