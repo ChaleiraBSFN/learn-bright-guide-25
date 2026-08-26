@@ -148,7 +148,7 @@ export default function RewardShop() {
 
               {phase === 'watching' && (
                 <div className="space-y-3">
-                  <AdSenseSlot className="max-w-full" hideCta />
+                  <AdSenseSlot className="max-w-full" hideCta houseOnly />
                   <Progress value={progress} className="h-2" />
                   <p className="text-xs text-center text-muted-foreground">
                     {t('rewardShop.watching', 'Aguarde o anúncio terminar…')} {Math.ceil(AD_DURATION_SECONDS * (1 - progress / 100))}s
