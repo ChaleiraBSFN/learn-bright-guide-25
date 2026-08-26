@@ -143,9 +143,9 @@ const Index = () => {
   const [presetTema, setPresetTema] = useState<string | undefined>(undefined);
   const [introOpen, setIntroOpen] = useState(true);
 
-  const handlePickTopic = useCallback((topic: string) => {
-    setActiveTab("study");
-    setPresetTema(topic);
+  const handlePickTopic = useCallback((topic: string, tab: string = "study") => {
+    setActiveTab(tab);
+    if (topic) setPresetTema(topic);
     setIntroOpen(false);
   }, []);
 
