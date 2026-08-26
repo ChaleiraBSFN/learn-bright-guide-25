@@ -437,3 +437,67 @@ export default function ClassroomPage() {
     </div>
   );
 }
+
+function StudentsPanel({ room, onRemove }: { room: ReturnType<typeof useClassroomRoom>; onRemove: (id: string) => void }) {
+  const { t } = useTranslation();
+  const [target, setTarget] = useState<{ id: string; name: string } | null>(null);
+  const isOnline = (iso: string) => new Date(iso).getTime() > Date.now() - 5 * 60_000;
+
+  return (
+    <div className="liquid-glass rounded-2xl p-4 space-y-3">
+      <h3 className="font-semibold text-foreground flex items-center gap-2">
+        <Users className="h-4 w-4 text-primary" />
+        {t('classroom.membersTitle', 'Alunos na sala')}
+        <Badge variant="secondary" className="text-xs">{room.students.length}</Badge>
+      </h3>
+
+      {room.students.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{t('classroom.noStudents', 'Nenhum aluno entrou ainda.')}</p>
+      ) : (
+        <div className="space-y-2">
+          {room.students.map((s) => (
+            <div key={s.id} className="flex items-center gap-3 rounded-xl border border-border p-2">
+              <div className="h-8 w-8 rounded-full bg-primary/15 text-primary flex items-center justify-center text-xs font-bold shrink-0">
+                {s.display_name.slice(0, 2).toUpperCase()}
+              </div>
+              <p className="flex-1 text-sm text-foreground truncate">{s.display_name}</p>
+              <Badge variant={isOnline(s.last_seen_at) ? 'default' : 'secondary'} className="text-xs">
+                {isOnline(s.last_seen_at) ? t('classroom.online', 'Online') : t('classroom.offline', 'Offline')}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1 text-destructive hover:text-destructive"
+                onClick={() => setTarget({ id: s.id, name: s.display_name })}
+              >
+                <UserMinus className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('classroom.kick', 'Expulsar')}</span>
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <AlertDialog open={!!target} onOpenChange={(o) => !o && setTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('classroom.kickTitle', 'Expulsar aluno?')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('classroom.kickDesc', '{{name}} será removido(a) da sala e perderá o acesso ao conteúdo. Ele(a) pode entrar novamente com a chave, a menos que você feche a entrada.', { name: target?.name ?? '' })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel', 'Cancelar')}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => { if (target) onRemove(target.id); setTarget(null); }}
+            >
+              {t('classroom.kick', 'Expulsar')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
