@@ -35,6 +35,9 @@ const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").
 const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
 const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({ default: m.AdSenseSlot })));
 const PlanComparison = lazy(() => import("@/components/PlanComparison").then((m) => ({ default: m.PlanComparison })));
+const SocialProof = lazy(() => import("@/components/home/SocialProof").then((m) => ({ default: m.SocialProof })));
+const HowItWorks = lazy(() => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })));
+
 
 
 const pageVariants = {
