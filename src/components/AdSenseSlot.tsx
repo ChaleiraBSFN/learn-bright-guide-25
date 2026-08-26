@@ -14,12 +14,10 @@ const ADSENSE_SCRIPT_ID = 'learn-buddy-adsense-script';
 const ADSENSE_FALLBACK_DELAY_MS = 6000;
 const ADSENSE_RETRY_DELAY_MS = 20000;
 const ADSENSE_MAX_RETRIES = 3;
-const ADSENSE_ALLOWED_HOSTS = [
-  'studdybuddy.com.br',
-  'www.studdybuddy.com.br',
-  'learn-bright-guide-25.lovable.app',
-  'id-preview--9687ee74-66ca-4d7e-ac8e-7257bce45838.lovable.app',
-];
+const ADSENSE_ALLOWED_HOST_SUFFIXES = ['studdybuddy.com.br', 'learnbuddy.com.br', '.lovable.app'];
+const isAdsenseHost = (host: string) =>
+  ADSENSE_ALLOWED_HOST_SUFFIXES.some((suffix) => host === suffix || host.endsWith(suffix));
+const isPreviewHost = (host: string) => host.endsWith('.lovable.app') || host === 'localhost';
 
 declare global {
   interface Window {
@@ -69,8 +67,8 @@ export const AdSenseSlot = ({
     return () => window.removeEventListener(AD_CONSENT_EVENT, onChange);
   }, []);
 
-  const canRequestAdsense =
-    typeof window !== 'undefined' && ADSENSE_ALLOWED_HOSTS.includes(window.location.hostname);
+  const canRequestAdsense = typeof window !== 'undefined' && isAdsenseHost(window.location.hostname);
+  const showPlaceholder = typeof window !== 'undefined' && isPreviewHost(window.location.hostname);
   // AdSense policy: never request ads where the user is rewarded for viewing them,
   // never before the user has made a cookie/ads consent choice, and never for Buddy members.
   const hasAdsense = Boolean(
@@ -174,7 +172,13 @@ export const AdSenseSlot = ({
     };
   }, [hasAdsense, cycle]);
 
-  if (!hasAdsense || adState === 'fallback') {
+  if (!hasAdsense) {
+    return null;
+  }
+
+  // Enquanto o Google não devolve inventário, mantemos o espaço reservado apenas
+  // em preview (em produção o bloco recolhe para não deixar buraco na página).
+  if (adState === 'fallback' && !showPlaceholder) {
     return null;
   }
 
@@ -188,6 +192,11 @@ export const AdSenseSlot = ({
       <span className="pointer-events-none absolute left-3 top-2 z-10 rounded-full bg-background/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground backdrop-blur-sm">
         {t('ads.label', 'Anúncio')}
       </span>
+      {adState !== 'filled' && showPlaceholder && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-xs text-muted-foreground">
+          {adState === 'fallback' ? 'AdSense: sem inventário agora' : 'Carregando anúncio…'}
+        </div>
+      )}
       <ins
         key={cycle}
         ref={insRef}
