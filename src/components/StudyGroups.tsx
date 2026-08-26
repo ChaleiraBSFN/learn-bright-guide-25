@@ -405,7 +405,7 @@ export const StudyGroups = () => {
 
         {/* LIST VIEW */}
         {view === 'list' && (
-          <Tabs defaultValue="groups" className="flex-1 flex flex-col min-h-0">
+          <Tabs defaultValue={isGuest ? 'classrooms' : 'groups'} className="flex-1 flex flex-col min-h-0">
             <div className="px-4 pt-3">
               <TabsList className="w-full grid grid-cols-2">
                 <TabsTrigger value="groups">{t('groups.title')}</TabsTrigger>
@@ -414,6 +414,16 @@ export const StudyGroups = () => {
             </div>
 
             <TabsContent value="groups" className="flex-1 flex flex-col min-h-0 mt-0">
+              {isGuest ? (
+                <div className="p-6 text-center space-y-3">
+                  <p className="text-sm text-muted-foreground">{t('groups.loginRequiredDesc')}</p>
+                  <Button className="w-full" onClick={() => { setOpen(false); navigate('/auth'); }}>
+                    {t('groups.loginRequired')}
+                  </Button>
+                </div>
+              ) : (
+              <>
+
               <div className="p-4">
                 <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                   <DialogTrigger asChild>
