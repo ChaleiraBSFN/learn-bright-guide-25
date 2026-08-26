@@ -57,6 +57,8 @@ const AppContent = () => {
       import("./pages/Community");
       import("./pages/Buddy");
       import("./pages/Settings");
+      import("./pages/Classroom");
+
     };
     const idle = (window as any).requestIdleCallback as undefined | ((cb: () => void, o?: any) => number);
     if (idle) {
