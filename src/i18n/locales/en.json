@@ -1117,7 +1117,7 @@
     "invalidName": "Enter a name with 2 to 40 characters.",
     "leave": "Leave",
     "youAre": "You are",
-    "liveNow": "Live now",
+    "liveNow": "LIVE",
     "waitingTeacher": "Waiting for the teacher to start the presentation...",
     "noMaterials": "No material published yet.",
     "submitAnswers": "Submit answers",
@@ -1133,6 +1133,16 @@
     "joinSeoDesc": "Join your teacher's classroom with the access key.",
     "studentEntry": "I'm a student — join with the class key",
     "noAccountHint": "No account needed: just pick a nickname.",
-    "teacherLoginHint": "Are you a teacher? Sign in to create and manage classrooms."
+    "teacherLoginHint": "Are you a teacher? Sign in to create and manage classrooms.",
+    "liveHowTitle": "How Live works",
+    "liveHowDesc": "Pick a material below and click Present. Your students' screens will show exactly the part you're displaying. Use Previous/Next to move through the lesson and End when you're done.",
+    "liveWatching": "Students are watching part {{n}} of this material.",
+    "part": "Part",
+    "liveNoMaterials": "Generate a material in the Materials tab to present live.",
+    "livePick": "Choose what to present now:",
+    "membersTitle": "Students in the room",
+    "kick": "Remove",
+    "kickTitle": "Remove student?",
+    "kickDesc": "{{name}} will be removed from the room and lose access to the content. They can join again with the key unless you close entry."
   }
 }

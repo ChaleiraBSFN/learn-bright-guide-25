@@ -1106,7 +1106,7 @@
     "invalidName": "Gib einen Namen mit 2 bis 40 Zeichen ein.",
     "leave": "Verlassen",
     "youAre": "Du bist",
-    "liveNow": "Jetzt live",
+    "liveNow": "LIVE",
     "waitingTeacher": "Warten auf den Start der Präsentation...",
     "noMaterials": "Noch kein Material veröffentlicht.",
     "submitAnswers": "Antworten senden",
@@ -1122,6 +1122,16 @@
     "joinSeoDesc": "Betritt den Klassenraum deiner Lehrkraft mit dem Zugangsschlüssel.",
     "studentEntry": "Ich bin Schüler – mit dem Klassenschlüssel beitreten",
     "noAccountHint": "Kein Konto nötig: einfach einen Spitznamen wählen.",
-    "teacherLoginHint": "Lehrkraft? Melde dich an, um Klassenräume zu erstellen und zu verwalten."
+    "teacherLoginHint": "Lehrkraft? Melde dich an, um Klassenräume zu erstellen und zu verwalten.",
+    "liveHowTitle": "So funktioniert Live",
+    "liveHowDesc": "Wähle unten ein Material und klicke auf Präsentieren. Der Bildschirm der Schüler zeigt genau den Teil, den du anzeigst. Mit Zurück/Weiter navigierst du, mit Beenden schließt du ab.",
+    "liveWatching": "Die Schüler sehen Teil {{n}} dieses Materials.",
+    "part": "Teil",
+    "liveNoMaterials": "Erstelle ein Material im Tab Materialien, um live zu präsentieren.",
+    "livePick": "Wähle, was du jetzt präsentieren möchtest:",
+    "membersTitle": "Schüler im Raum",
+    "kick": "Entfernen",
+    "kickTitle": "Schüler entfernen?",
+    "kickDesc": "{{name}} wird aus dem Raum entfernt und verliert den Zugriff. Der Beitritt mit dem Schlüssel ist wieder möglich, sofern du den Zutritt nicht schließt."
   }
 }

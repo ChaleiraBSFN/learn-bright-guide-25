@@ -1085,8 +1085,8 @@
     "hide": "隐藏",
     "presenting": "正在演示",
     "section": "章节",
-    "prev": "上一个",
-    "next": "下一个",
+    "prev": "上一部分",
+    "next": "下一部分",
     "stopLive": "结束",
     "noLive": "当前没有直播演示。请在资料标签中选择并点击演示。",
     "noStudents": "还没有学生加入。",
@@ -1106,7 +1106,7 @@
     "invalidName": "请输入2到40个字符的名字。",
     "leave": "退出",
     "youAre": "你的身份",
-    "liveNow": "正在直播",
+    "liveNow": "直播中",
     "waitingTeacher": "等待老师开始演示……",
     "noMaterials": "还没有发布资料。",
     "submitAnswers": "提交答案",
@@ -1122,6 +1122,16 @@
     "joinSeoDesc": "用访问密钥加入老师的课堂。",
     "studentEntry": "我是学生 — 使用课堂密钥加入",
     "noAccountHint": "无需账号：只要选个昵称即可。",
-    "teacherLoginHint": "您是老师吗？登录即可创建和管理课堂。"
+    "teacherLoginHint": "您是老师吗？登录即可创建和管理课堂。",
+    "liveHowTitle": "直播功能说明",
+    "liveHowDesc": "在下方选择一个材料并点击「演示」。学生的屏幕将显示你当前展示的内容。使用「上一部分／下一部分」推进课程，结束时点击「结束」。",
+    "liveWatching": "学生正在观看该材料的第 {{n}} 部分。",
+    "part": "部分",
+    "liveNoMaterials": "请先在「材料」标签中生成材料，才能进行直播演示。",
+    "livePick": "选择现在要演示的内容：",
+    "membersTitle": "教室中的学生",
+    "kick": "移出",
+    "kickTitle": "移出该学生？",
+    "kickDesc": "{{name}} 将被移出教室并失去内容访问权限。除非你关闭入口，否则他可以用密钥再次加入。"
   }
 }

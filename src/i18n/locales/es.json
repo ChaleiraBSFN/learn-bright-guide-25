@@ -1100,7 +1100,7 @@
     "invalidName": "Escribe un nombre de 2 a 40 caracteres.",
     "leave": "Salir",
     "youAre": "Estás como",
-    "liveNow": "En vivo ahora",
+    "liveNow": "EN VIVO",
     "waitingTeacher": "Esperando a que el profesor inicie la presentación...",
     "noMaterials": "Todavía no hay material publicado.",
     "submitAnswers": "Enviar respuestas",
@@ -1116,6 +1116,16 @@
     "joinSeoDesc": "Entra al aula de tu profesor con la clave de acceso.",
     "studentEntry": "Soy alumno: entrar con la clave de la clase",
     "noAccountHint": "Sin cuenta: solo eliges un apodo para entrar.",
-    "teacherLoginHint": "¿Eres profesor? Inicia sesión para crear y gestionar aulas."
+    "teacherLoginHint": "¿Eres profesor? Inicia sesión para crear y gestionar aulas.",
+    "liveHowTitle": "Cómo funciona En vivo",
+    "liveHowDesc": "Elige un material abajo y pulsa Presentar. La pantalla de los alumnos mostrará exactamente la parte que estás exhibiendo. Usa Anterior/Siguiente para avanzar y Finalizar al terminar.",
+    "liveWatching": "Los alumnos están viendo la parte {{n}} de este material.",
+    "part": "Parte",
+    "liveNoMaterials": "Genera un material en la pestaña Materiales para presentarlo en vivo.",
+    "livePick": "Elige qué presentar ahora:",
+    "membersTitle": "Alumnos en la sala",
+    "kick": "Expulsar",
+    "kickTitle": "¿Expulsar al alumno?",
+    "kickDesc": "{{name}} será eliminado de la sala y perderá el acceso al contenido. Podrá volver a entrar con la clave, a menos que cierres la entrada."
   }
 }
