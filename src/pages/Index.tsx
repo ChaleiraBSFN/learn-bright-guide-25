@@ -812,7 +812,8 @@ const Index = () => {
                   </Suspense>
                 )}
               </div>
-
+              </>
+              )}
 
             </motion.div>
           ) : studyContent ? (
