@@ -219,7 +219,7 @@ export default function Community() {
                   currentUserId={user?.id}
                   timeAgo={timeAgo}
                   onLike={() => toggleLike(post)}
-                  onDonate={() => donateBuddy(post)}
+                  onDonate={() => setDonateFor(post)}
                   onDelete={() => deletePost(post)}
                   onToggleComments={() => setOpenCommentsFor(openCommentsFor === post.id ? null : post.id)}
                   commentsOpen={openCommentsFor === post.id}
