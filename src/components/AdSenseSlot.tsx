@@ -17,7 +17,7 @@ const ADSENSE_MAX_RETRIES = 3;
 const ADSENSE_ALLOWED_HOST_SUFFIXES = ['studdybuddy.com.br', 'learnbuddy.com.br', '.lovable.app'];
 const isAdsenseHost = (host: string) =>
   ADSENSE_ALLOWED_HOST_SUFFIXES.some((suffix) => host === suffix || host.endsWith(suffix));
-const isPreviewHost = (host: string) => host.endsWith('.lovable.app') || host === 'localhost';
+const isPreviewHost = (host: string) => host.endsWith(".lovable.app") || host === "localhost";
 
 declare global {
   interface Window {
@@ -70,9 +70,11 @@ export const AdSenseSlot = ({
   const canRequestAdsense = typeof window !== 'undefined' && isAdsenseHost(window.location.hostname);
   const showPlaceholder = typeof window !== 'undefined' && isPreviewHost(window.location.hostname);
   // AdSense policy: never request ads where the user is rewarded for viewing them,
-  // never before the user has made a cookie/ads consent choice, and never for Buddy members.
+  // and never for Buddy members. Sem escolha explícita de cookies, servimos apenas
+  // anúncios NÃO personalizados (applyAdConsent cuida disso antes do push).
+  void consent;
   const hasAdsense = Boolean(
-    ADSENSE_CLIENT && ADSENSE_SLOT && canRequestAdsense && !houseOnly && !isBuddy && consent !== null,
+    ADSENSE_CLIENT && ADSENSE_SLOT && canRequestAdsense && !houseOnly && !isBuddy,
   );
 
   useEffect(() => {
