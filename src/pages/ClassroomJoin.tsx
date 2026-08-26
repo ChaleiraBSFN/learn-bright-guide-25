@@ -88,9 +88,15 @@ export default function ClassroomJoin() {
     };
   }, [session, refresh]);
 
+  // Auto-switch to the live tab as soon as the teacher starts presenting
+  useEffect(() => {
+    if ((state as any)?.live?.is_live) setTab('live');
+  }, [(state as any)?.live?.is_live, (state as any)?.live?.material_id]);
+
   useEffect(() => {
     chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight });
   }, [state?.messages?.length]);
+
 
   const handleJoin = async () => {
     const k = (routeKey || keyInput).trim();
