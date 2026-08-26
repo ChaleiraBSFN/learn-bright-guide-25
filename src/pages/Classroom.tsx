@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useTeacherClassrooms, useClassroomRoom, normalizeKey, type Classroom } from '@/hooks/useClassroom';
 import { ClassroomMaterialView } from '@/components/classroom/ClassroomMaterialView';
+import { getMaterialParts } from '@/lib/classroomParts';
 
 export default function ClassroomPage() {
   const { t, i18n } = useTranslation();
