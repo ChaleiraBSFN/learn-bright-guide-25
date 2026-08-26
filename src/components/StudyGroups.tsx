@@ -476,7 +476,10 @@ export const StudyGroups = () => {
                   </div>
                 )}
               </ScrollArea>
+              </>
+              )}
             </TabsContent>
+
 
             <TabsContent value="classrooms" className="flex-1 flex flex-col min-h-0 mt-0">
               <ClassroomsTabPanel onNavigate={() => setOpen(false)} />
