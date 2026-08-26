@@ -12,9 +12,7 @@ interface ThemeCtx {
 const ThemeContext = createContext<ThemeCtx | undefined>(undefined);
 
 const getInitial = (): Theme => {
-  if (typeof window === 'undefined') return 'dark';
-  const stored = localStorage.getItem(KEY);
-  if (stored === 'light' || stored === 'dark') return stored;
+  // Dark is the product's main theme
   return 'dark';
 };
 
