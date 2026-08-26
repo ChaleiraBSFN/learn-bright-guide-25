@@ -1132,6 +1132,10 @@
     "membersTitle": "Schüler im Raum",
     "kick": "Entfernen",
     "kickTitle": "Schüler entfernen?",
-    "kickDesc": "{{name}} wird aus dem Raum entfernt und verliert den Zugriff. Der Beitritt mit dem Schlüssel ist wieder möglich, sofern du den Zutritt nicht schließt."
+    "kickDesc": "{{name}} wird aus dem Raum entfernt und verliert den Zugriff. Der Beitritt mit dem Schlüssel ist wieder möglich, sofern du den Zutritt nicht schließt.",
+    "liveWatchingPart": "Die Schüler sehen jetzt:",
+    "partsList": "Unterrichtsteile (zum Springen klicken)",
+    "livePreview": "Vorschau des Schülerbildschirms",
+    "ofParts": "von"
   }
 }

@@ -1132,6 +1132,10 @@
     "membersTitle": "Studenti nella stanza",
     "kick": "Espelli",
     "kickTitle": "Espellere lo studente?",
-    "kickDesc": "{{name}} verrà rimosso dalla stanza e perderà l'accesso ai contenuti. Potrà rientrare con la chiave, a meno che tu non chiuda l'ingresso."
+    "kickDesc": "{{name}} verrà rimosso dalla stanza e perderà l'accesso ai contenuti. Potrà rientrare con la chiave, a meno che tu non chiuda l'ingresso.",
+    "liveWatchingPart": "Gli studenti stanno vedendo:",
+    "partsList": "Parti della lezione (clicca per saltare)",
+    "livePreview": "Anteprima dello schermo dello studente",
+    "ofParts": "di"
   }
 }

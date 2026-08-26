@@ -1132,6 +1132,10 @@
     "membersTitle": "教室中的学生",
     "kick": "移出",
     "kickTitle": "移出该学生？",
-    "kickDesc": "{{name}} 将被移出教室并失去内容访问权限。除非你关闭入口，否则他可以用密钥再次加入。"
+    "kickDesc": "{{name}} 将被移出教室并失去内容访问权限。除非你关闭入口，否则他可以用密钥再次加入。",
+    "liveWatchingPart": "学生正在看:",
+    "partsList": "课程部分（点击跳转）",
+    "livePreview": "学生屏幕预览",
+    "ofParts": "/"
   }
 }

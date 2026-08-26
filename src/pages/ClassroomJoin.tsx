@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GraduationCap, Loader2, MonitorPlay, ClipboardList, MessageSquare, Send, ShieldCheck, LogOut } from 'lucide-react';
 import { ClassroomMaterialView } from '@/components/classroom/ClassroomMaterialView';
+import { getMaterialParts } from '@/lib/classroomParts';
 
 interface Session {
   classroom_id: string;
@@ -35,6 +36,7 @@ export default function ClassroomJoin() {
   const [peek, setPeek] = useState<any>(null);
   const [joining, setJoining] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [tab, setTab] = useState<string>('live');
   const [state, setState] = useState<any>(null);
   const [chatText, setChatText] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -86,9 +88,15 @@ export default function ClassroomJoin() {
     };
   }, [session, refresh]);
 
+  // Auto-switch to the live tab as soon as the teacher starts presenting
+  useEffect(() => {
+    if ((state as any)?.live?.is_live) setTab('live');
+  }, [(state as any)?.live?.is_live, (state as any)?.live?.material_id]);
+
   useEffect(() => {
     chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight });
   }, [state?.messages?.length]);
+
 
   const handleJoin = async () => {
     const k = (routeKey || keyInput).trim();
@@ -222,6 +230,9 @@ export default function ClassroomJoin() {
     ? (state?.materials || []).find((m: any) => m.id === state.live.material_id)
     : null;
   const myAnswers: any[] = state?.my_answers || [];
+  const liveSection: number = state?.live?.section_index ?? 0;
+  const liveParts = getMaterialParts(liveMaterial);
+  const livePart = liveParts[Math.min(Math.max(liveSection, 0), Math.max(liveParts.length - 1, 0))];
 
   return (
     <div className="min-h-screen bg-background">
@@ -240,7 +251,7 @@ export default function ClassroomJoin() {
         {!state ? (
           <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
         ) : (
-          <Tabs defaultValue={liveMaterial ? 'live' : 'materials'}>
+          <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="w-full grid grid-cols-3">
               <TabsTrigger value="live" className="gap-1"><MonitorPlay className="h-3.5 w-3.5" />{t('classroom.tabLive', 'Ao vivo')}</TabsTrigger>
               <TabsTrigger value="materials" className="gap-1"><ClipboardList className="h-3.5 w-3.5" />{t('classroom.tabMaterials', 'Materiais')}</TabsTrigger>
@@ -250,9 +261,31 @@ export default function ClassroomJoin() {
             <TabsContent value="live" className="mt-4">
               {liveMaterial ? (
                 <div className="liquid-glass rounded-2xl p-4">
-                  <Badge variant="default" className="mb-3">{t('classroom.liveNow', 'Ao vivo agora')}</Badge>
+                  <div className="flex items-center gap-2 flex-wrap mb-3">
+                    <span className="flex items-center gap-1.5 text-xs font-bold text-destructive">
+                      <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                      {t('classroom.liveNow', 'AO VIVO')}
+                    </span>
+                    <span className="text-sm font-semibold text-foreground">{liveMaterial.title}</span>
+                  </div>
+                  {liveParts.length > 1 && (
+                    <div className="mb-4 space-y-1">
+                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                        <div
+                          className="h-full bg-primary transition-all duration-500"
+                          style={{ width: `${((Math.min(liveSection, liveParts.length - 1) + 1) / liveParts.length) * 100}%` }}
+                        />
+                      </div>
+                      <p className="text-[11px] text-muted-foreground">
+                        {t('classroom.part', 'Parte')} {Math.min(liveSection, liveParts.length - 1) + 1} {t('classroom.ofParts', 'de')} {liveParts.length}
+                        {livePart ? ` · ${livePart.title}` : ''}
+                      </p>
+                    </div>
+                  )}
                   <ClassroomMaterialView
+                    key={`${liveMaterial.id}-${liveSection}`}
                     material={liveMaterial}
+                    sectionIndex={liveSection}
                     answerable={liveMaterial.type === 'exercises'}
                     submitting={submitting}
                     submittedScore={myAnswers.find((a) => a.material_id === liveMaterial.id)?.score ?? null}

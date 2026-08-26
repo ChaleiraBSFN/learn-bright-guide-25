@@ -35,13 +35,18 @@ interface StudyResultProps {
   imagesLoading?: boolean;
   onGenerateExercise?: (taskDescription: string) => void;
   isGeneratingExercise?: boolean;
+  /** Hides the big "study material" header (used when showing a single part live). */
+  compact?: boolean;
 }
 
-export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesLoading, onGenerateExercise, isGeneratingExercise }: StudyResultProps) {
+export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesLoading, onGenerateExercise, isGeneratingExercise, compact }: StudyResultProps) {
   const { t } = useTranslation();
 
-  // Allow render when the AI returned only image analysis (no full study material)
-  const hasAnyContent = content && (content.objetivo || content.resumo || content.analiseImagem);
+  // Allow render when the AI returned only part of the material (live classroom parts)
+  const hasAnyContent = content && (
+    content.objetivo || content.resumo || content.analiseImagem || content.demonstracoes ||
+    content.exercicios || content.errosComuns || content.mapaVisual || content.planoEstudo || content.fontes
+  );
   if (!hasAnyContent) {
     return (
       <div className="text-center py-12 space-y-4">
@@ -62,16 +67,19 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
 
   return (
     <div className="space-y-6 md:space-y-8 px-1 md:px-0">
-      <div className="text-center space-y-2 slide-up">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
-            {t('result.studyMaterial')}
-          </h2>
+      {!compact && (
+        <div className="text-center space-y-2 slide-up">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
+              {t('result.studyMaterial')}
+            </h2>
+          </div>
+          <p className="text-base md:text-lg text-muted-foreground">
+            {t('result.topic')}: <span className="font-semibold text-primary">{tema}</span>
+          </p>
         </div>
-        <p className="text-base md:text-lg text-muted-foreground">
-          {t('result.topic')}: <span className="font-semibold text-primary">{tema}</span>
-        </p>
-      </div>
+      )}
+
 
       <div className="space-y-4 md:space-y-6 lb-expand-sections">
         {content.analiseImagem && <ImageAnalysisSection data={content.analiseImagem} />}
@@ -108,12 +116,15 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
         )}
 
         {/* General images section */}
-        <ImagesSection
-          aiImages={generalAiImages}
-          isLoading={imagesLoading}
-          data={content.imagensIlustrativas}
-          tema={tema}
-        />
+        {(!compact || generalAiImages?.length || content.imagensIlustrativas) && (
+          <ImagesSection
+            aiImages={generalAiImages}
+            isLoading={imagesLoading}
+            data={content.imagensIlustrativas}
+            tema={tema}
+          />
+        )}
+
 
 
         {content.videosRecomendados && <VideosSection data={content.videosRecomendados} tema={tema} />}

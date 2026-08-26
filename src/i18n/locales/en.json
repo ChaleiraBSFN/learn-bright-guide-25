@@ -1143,6 +1143,10 @@
     "membersTitle": "Students in the room",
     "kick": "Remove",
     "kickTitle": "Remove student?",
-    "kickDesc": "{{name}} will be removed from the room and lose access to the content. They can join again with the key unless you close entry."
+    "kickDesc": "{{name}} will be removed from the room and lose access to the content. They can join again with the key unless you close entry.",
+    "liveWatchingPart": "Students are now seeing:",
+    "partsList": "Lesson parts (click to jump)",
+    "livePreview": "Preview of student screen",
+    "ofParts": "of"
   }
 }
