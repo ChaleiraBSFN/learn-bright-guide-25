@@ -128,15 +128,18 @@ export default function Community() {
     }
   };
 
-  const donateBuddy = async (post: CommunityPost) => {
+  const donateBuddy = async (post: CommunityPost, amount: number) => {
     if (!user) { toast.error(t('community.donateLogin')); return; }
     if (post.user_id === user.id) { toast.info(t('community.donateSelf')); return; }
-    const { data, error } = await supabase.rpc('donate_buddy', { _post_id: post.id });
+    const qty = Math.max(1, Math.min(100, Math.round(amount) || 1));
+    const { data, error } = await supabase.rpc('donate_buddy', { _post_id: post.id, _amount: qty });
     if (error) { toast.error(error.message.includes('Insufficient') ? t('community.donateInsufficient') : t('community.donateError')); return; }
-    setPosts(prev => prev.map(p => p.id === post.id ? { ...p, buddy_count: p.buddy_count + 1 } : p));
+    setPosts(prev => prev.map(p => p.id === post.id ? { ...p, buddy_count: p.buddy_count + qty } : p));
     window.dispatchEvent(new CustomEvent('credits_changed', { detail: { newTotal: data } }));
-    toast.success(t('community.donateSuccess'));
+    toast.success(t('community.donateSuccessN', { count: qty }));
+    setDonateFor(null);
   };
+
 
   const deletePost = async (post: CommunityPost) => {
     if (!confirm(t('community.deleteConfirm'))) return;
