@@ -233,9 +233,60 @@ export default function Community() {
       </main>
 
       <CreatePostDialog open={createOpen} onClose={() => setCreateOpen(false)} onCreated={() => { setCreateOpen(false); loadPosts(); }} />
+      <DonateDialog post={donateFor} onClose={() => setDonateFor(null)} onConfirm={(qty) => donateFor && donateBuddy(donateFor, qty)} />
     </div>
   );
 }
+
+// ============ Donate dialog ============
+function DonateDialog({ post, onClose, onConfirm }: { post: CommunityPost | null; onClose: () => void; onConfirm: (qty: number) => void }) {
+  const { t } = useTranslation();
+  const [qty, setQty] = useState(1);
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => { if (post) { setQty(1); setSending(false); } }, [post]);
+
+  return (
+    <Dialog open={!!post} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2"><Coins className="h-5 w-5 text-amber-500" /> {t('community.donateTitle')}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <p className="text-sm text-muted-foreground line-clamp-2">{post?.title}</p>
+          <Label htmlFor="donate-qty">{t('community.donateAmount')}</Label>
+          <Input
+            id="donate-qty"
+            type="number"
+            min={1}
+            max={100}
+            value={qty}
+            onChange={(e) => setQty(Math.max(1, Math.min(100, Number(e.target.value) || 1)))}
+          />
+          <div className="flex gap-2">
+            {[1, 5, 10, 25].map(v => (
+              <Button key={v} type="button" variant={qty === v ? 'default' : 'outline'} size="sm" className="flex-1" onClick={() => setQty(v)}>
+                {v}
+              </Button>
+            ))}
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>{t('common.cancel', 'Cancelar')}</Button>
+          <Button
+            disabled={sending}
+            onClick={() => { setSending(true); onConfirm(qty); }}
+            className="gap-1.5"
+          >
+            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Coins className="h-4 w-4" />}
+            {t('community.donateConfirm', { count: qty })}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 
 // ============ Post card ============
 function PostCard({ post, meta, currentUserId, timeAgo, onLike, onDonate, onDelete, onToggleComments, commentsOpen, onCommentAdded, onCommentRemoved }: {
