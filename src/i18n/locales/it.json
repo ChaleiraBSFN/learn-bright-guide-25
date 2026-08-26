@@ -999,5 +999,8 @@
   "theme": {
     "light": "Tema chiaro",
     "dark": "Tema scuro"
+  },
+  "ads": {
+    "label": "Pubblicità"
   }
 }

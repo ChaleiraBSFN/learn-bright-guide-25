@@ -1010,5 +1010,8 @@
   "theme": {
     "light": "Light theme",
     "dark": "Dark theme"
+  },
+  "ads": {
+    "label": "Ad"
   }
 }

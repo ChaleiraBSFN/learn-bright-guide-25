@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AD_CONSENT_EVENT, applyAdConsent, getAdConsent } from '@/lib/adConsent';
 import { useSubscription } from '@/hooks/useSubscription';
 
@@ -52,6 +53,7 @@ export const AdSenseSlot = ({
   variant = 'card',
   houseOnly = false,
 }: { className?: string; hideCta?: boolean; variant?: 'card' | 'compact'; houseOnly?: boolean }) => {
+  const { t } = useTranslation();
   const { isBuddy } = useSubscription();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -179,10 +181,13 @@ export const AdSenseSlot = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full min-w-0 overflow-hidden rounded-xl ${
+      className={`liquid-glass relative w-full min-w-0 overflow-hidden rounded-2xl ${
         variant === 'compact' ? 'min-h-[90px]' : 'min-h-[250px]'
       } ${className}`}
     >
+      <span className="pointer-events-none absolute left-3 top-2 z-10 rounded-full bg-background/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground backdrop-blur-sm">
+        {t('ads.label', 'Anúncio')}
+      </span>
       <ins
         key={cycle}
         ref={insRef}
