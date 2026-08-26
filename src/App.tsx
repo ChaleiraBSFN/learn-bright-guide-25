@@ -33,6 +33,8 @@ const PlatformControl = lazy(() => import("./pages/PlatformControl"));
 const AIConfigAdmin = lazy(() => import("./pages/AIConfigAdmin"));
 const Downloads = lazy(() => import("./pages/Downloads"));
 const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
+const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Community = lazy(() => import("./pages/Community"));
 const ChatBuddy = lazy(() => import("./pages/ChatBuddy"));
@@ -90,6 +92,8 @@ const AppContent = () => {
             <Route path="/ai-config" element={<AIConfigAdmin />} />
             <Route path="/downloads" element={<Downloads />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/about" element={<About />} />
             <Route path="/community" element={<Community />} />
             <Route path="/chat-buddy" element={<ChatBuddy />} />
             <Route path="/reward-shop" element={<RewardShop />} />

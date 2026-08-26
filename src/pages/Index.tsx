@@ -1051,9 +1051,17 @@ const Index = () => {
       <footer className="border-t border-border bg-muted/30 py-6 mt-12">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground space-y-2">
           <p>{t('footer.developed')}</p>
-          <Link to="/privacy" className="text-primary hover:underline font-medium">
-            Política de Privacidade
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <Link to="/privacy" className="text-primary hover:underline font-medium">
+              {t('footer.privacy', 'Política de Privacidade')}
+            </Link>
+            <Link to="/terms" className="text-primary hover:underline font-medium">
+              {t('footer.terms', 'Termos de Uso')}
+            </Link>
+            <Link to="/about" className="text-primary hover:underline font-medium">
+              {t('footer.about', 'Sobre e Contato')}
+            </Link>
+          </div>
         </div>
       </footer>
     </div>
