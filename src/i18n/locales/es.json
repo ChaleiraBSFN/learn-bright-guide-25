@@ -1126,6 +1126,10 @@
     "membersTitle": "Alumnos en la sala",
     "kick": "Expulsar",
     "kickTitle": "¿Expulsar al alumno?",
-    "kickDesc": "{{name}} será eliminado de la sala y perderá el acceso al contenido. Podrá volver a entrar con la clave, a menos que cierres la entrada."
+    "kickDesc": "{{name}} será eliminado de la sala y perderá el acceso al contenido. Podrá volver a entrar con la clave, a menos que cierres la entrada.",
+    "liveWatchingPart": "Los alumnos están viendo ahora:",
+    "partsList": "Partes de la clase (clic para saltar)",
+    "livePreview": "Vista previa de la pantalla del alumno",
+    "ofParts": "de"
   }
 }
