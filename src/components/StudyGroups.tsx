@@ -29,6 +29,8 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ClassroomsTabPanel } from '@/components/classroom/ClassroomsTabPanel';
 
 interface Group {
   id: string;
