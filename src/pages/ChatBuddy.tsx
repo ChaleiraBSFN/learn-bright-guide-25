@@ -10,7 +10,7 @@ import { AdSenseSlot } from "@/components/AdSenseSlot";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import learnBuddyLogo from "@/assets/learn-buddy-logo.jpeg";
+import learnBuddyLogo from "@/assets/learn-buddy-logo.png";
 
 interface ChatImage {
   mimeType: string;

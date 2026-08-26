@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Mail, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { SEO } from '@/components/SEO';
-import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
+import learnBuddyLogo from '@/assets/learn-buddy-logo.png';
 
 const ForgotPassword = () => {
   const { t } = useTranslation();

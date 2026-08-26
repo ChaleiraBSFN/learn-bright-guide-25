@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Loader2, Users, Crown, BarChart3, Clock, BookOpen, PenTool, TrendingUp, RefreshCw, Wifi } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { LanguageSelector } from '@/components/LanguageSelector';
-import learnBuddyLogo from '@/assets/learn-buddy-logo.jpeg';
+import learnBuddyLogo from '@/assets/learn-buddy-logo.png';
 
 interface AnalyticsData {
   totalUsers: number;
