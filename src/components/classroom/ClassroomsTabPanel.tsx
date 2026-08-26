@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,11 +8,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { GraduationCap, Loader2, Plus } from 'lucide-react';
 import { useTeacherClassrooms } from '@/hooks/useClassroom';
 
+const prefetchClassroom = () => { void import('@/pages/Classroom'); };
+
 /** Compact classroom list shown inside the Study Groups sheet. */
 export function ClassroomsTabPanel({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { classrooms, loading } = useTeacherClassrooms();
+
+  // Baixa o código da página assim que a aba abre, para o clique ser instantâneo.
+  useEffect(() => { prefetchClassroom(); }, []);
 
   const go = (path: string) => {
     onNavigate?.();
@@ -20,10 +27,11 @@ export function ClassroomsTabPanel({ onNavigate }: { onNavigate?: () => void }) 
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div className="p-4">
-        <Button className="w-full gap-2" onClick={() => go('/classroom')}>
+        <Button className="w-full gap-2" onMouseEnter={prefetchClassroom} onClick={() => go('/classroom')}>
           <Plus className="h-4 w-4" />
           {t('classroom.manage', 'Gerenciar salas de aula')}
         </Button>
+
         <p className="text-xs text-muted-foreground mt-2">
           {t('classroom.tabHint', 'Crie turmas com chave de acesso. Seus alunos entram sem precisar de conta.')}
         </p>

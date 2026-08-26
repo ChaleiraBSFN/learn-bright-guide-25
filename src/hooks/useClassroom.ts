@@ -50,25 +50,31 @@ export const normalizeKey = (key: string) =>
   key.trim().toUpperCase().replace(/\s+/g, '-').replace(/[^A-Z0-9-]/g, '').slice(0, 24);
 
 /** Teacher-side classroom management. */
+let classroomsCache: Classroom[] | null = null;
+
 export function useTeacherClassrooms() {
   const { user } = useAuth();
-  const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [classrooms, setClassrooms] = useState<Classroom[]>(classroomsCache ?? []);
+  const [loading, setLoading] = useState(classroomsCache === null);
 
   const load = useCallback(async () => {
     if (!user) {
+      classroomsCache = null;
       setClassrooms([]);
       setLoading(false);
       return;
     }
-    setLoading(true);
+    // Revalida em segundo plano quando já temos dados em cache (nada de tela vazia).
+    if (classroomsCache === null) setLoading(true);
     const { data } = await supabase
       .from('classrooms')
       .select('*')
       .order('created_at', { ascending: false });
-    setClassrooms((data as Classroom[]) || []);
+    classroomsCache = (data as Classroom[]) || [];
+    setClassrooms(classroomsCache);
     setLoading(false);
   }, [user]);
+
 
   useEffect(() => {
     load();
