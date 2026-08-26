@@ -330,49 +330,76 @@ export default function ClassroomPage() {
 
               {/* LIVE */}
               <TabsContent value="live" className="space-y-4 mt-4">
+                <div className="liquid-glass rounded-2xl p-4 space-y-2">
+                  <h3 className="font-semibold text-foreground flex items-center gap-2">
+                    <MonitorPlay className="h-4 w-4 text-primary" />
+                    {t('classroom.liveHowTitle', 'Como funciona o Ao vivo')}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t('classroom.liveHowDesc', 'Escolha um material abaixo e clique em Apresentar. A tela dos alunos passa a mostrar exatamente a parte que você está exibindo. Use Anterior/Próxima para avançar a aula e Encerrar quando terminar.')}
+                  </p>
+                </div>
+
                 <div className="liquid-glass rounded-2xl p-4 space-y-3">
                   {room.live?.is_live && room.live.material_id ? (
                     <>
-                      <p className="text-sm text-foreground">
-                        {t('classroom.presenting', 'Apresentando')}: <strong>{room.materials.find((m) => m.id === room.live?.material_id)?.title}</strong>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="flex items-center gap-1.5 text-xs font-semibold text-destructive">
+                          <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                          {t('classroom.liveNow', 'AO VIVO')}
+                        </span>
+                        <p className="text-sm text-foreground">
+                          {room.materials.find((m) => m.id === room.live?.material_id)?.title}
+                        </p>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {t('classroom.liveWatching', 'Os alunos estão vendo a parte {{n}} deste material.', { n: (room.live?.section_index ?? 0) + 1 })}
                       </p>
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="icon" onClick={() => setLiveState({ section_index: Math.max(0, (room.live?.section_index ?? 0) - 1) })} aria-label={t('classroom.prev', 'Anterior')}>
-                          <ChevronLeft className="h-4 w-4" />
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Button variant="outline" size="sm" className="gap-1" onClick={() => setLiveState({ section_index: Math.max(0, (room.live?.section_index ?? 0) - 1) })}>
+                          <ChevronLeft className="h-4 w-4" /> {t('classroom.prev', 'Anterior')}
                         </Button>
-                        <Badge variant="secondary">{t('classroom.section', 'Seção')} {(room.live?.section_index ?? 0) + 1}</Badge>
-                        <Button variant="outline" size="icon" onClick={() => setLiveState({ section_index: (room.live?.section_index ?? 0) + 1 })} aria-label={t('classroom.next', 'Próxima')}>
-                          <ChevronRight className="h-4 w-4" />
+                        <Badge variant="secondary">{t('classroom.part', 'Parte')} {(room.live?.section_index ?? 0) + 1}</Badge>
+                        <Button variant="outline" size="sm" className="gap-1" onClick={() => setLiveState({ section_index: (room.live?.section_index ?? 0) + 1 })}>
+                          {t('classroom.next', 'Próxima')} <ChevronRight className="h-4 w-4" />
                         </Button>
                         <Button variant="destructive" size="sm" className="gap-1 ml-auto" onClick={() => setLiveState({ is_live: false })}>
                           <Square className="h-3 w-3" /> {t('classroom.stopLive', 'Encerrar')}
                         </Button>
                       </div>
                     </>
+                  ) : room.materials.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      {t('classroom.liveNoMaterials', 'Gere um material na aba Materiais para poder apresentar ao vivo.')}
+                    </p>
                   ) : (
-                    <p className="text-sm text-muted-foreground">{t('classroom.noLive', 'Nenhuma apresentação ao vivo. Escolha um material na aba Materiais e clique em Apresentar.')}</p>
+                    <>
+                      <p className="text-sm text-muted-foreground">{t('classroom.livePick', 'Escolha o que apresentar agora:')}</p>
+                      <div className="space-y-2">
+                        {room.materials.map((m) => (
+                          <div key={m.id} className="flex items-center gap-2 rounded-xl border border-border p-2">
+                            <Badge variant="outline" className="text-[10px]">
+                              {m.type === 'study' ? t('classroom.typeStudy', 'Conteúdo de estudo') : t('classroom.typeExercises', 'Exercícios')}
+                            </Badge>
+                            <p className="flex-1 text-sm text-foreground truncate">{m.title}</p>
+                            <Button size="sm" className="gap-1" onClick={() => setLiveState({ material_id: m.id, is_live: true, section_index: 0 })}>
+                              <MonitorPlay className="h-3.5 w-3.5" /> {t('classroom.present', 'Apresentar')}
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
+
+                <StudentsPanel room={room} onRemove={removeStudent} />
               </TabsContent>
 
               {/* STUDENTS */}
               <TabsContent value="students" className="space-y-2 mt-4">
-                {room.students.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">{t('classroom.noStudents', 'Nenhum aluno entrou ainda.')}</p>
-                ) : (
-                  room.students.map((s) => (
-                    <div key={s.id} className="liquid-glass rounded-2xl p-3 flex items-center gap-3">
-                      <p className="flex-1 text-sm text-foreground">{s.display_name}</p>
-                      <Badge variant={new Date(s.last_seen_at).getTime() > Date.now() - 5 * 60_000 ? 'default' : 'secondary'} className="text-xs">
-                        {new Date(s.last_seen_at).getTime() > Date.now() - 5 * 60_000 ? t('classroom.online', 'Online') : t('classroom.offline', 'Offline')}
-                      </Badge>
-                      <Button variant="ghost" size="icon" onClick={() => removeStudent(s.id)} aria-label={t('classroom.removeStudent', 'Remover aluno')}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  ))
-                )}
+                <StudentsPanel room={room} onRemove={removeStudent} />
               </TabsContent>
+
 
               {/* CHAT */}
               <TabsContent value="chat" className="mt-4">
