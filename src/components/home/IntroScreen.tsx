@@ -88,15 +88,20 @@ export const IntroScreen = ({ onSubmitTopic, onExplore }: IntroScreenProps) => {
         transition={{ duration: 0.6, delay: 0.35, ease: "easeOut" }}
       />
 
-      {/* Input zooms in first */}
+      {/* Input zooms in first (Gemini-style) */}
       <motion.form
         onSubmit={submit}
         className="order-2 w-full max-w-xl"
-        initial={{ opacity: 0, scale: 1.18 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, scale: 0.9, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="liquid-glass relative flex items-center gap-2 rounded-full p-2 pl-3 transition-shadow focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.5)]">
+        <motion.div
+          className="liquid-glass relative flex items-center gap-2 rounded-full p-2 pl-3 transition-shadow focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.5)]"
+          initial={{ boxShadow: "0 0 0 0 hsl(var(--primary)/0)" }}
+          animate={{ boxShadow: "0 0 0 2px hsl(var(--primary)/0.45)" }}
+          transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
+        >
           <div className="relative" ref={menuRef}>
             <button
               type="button"
