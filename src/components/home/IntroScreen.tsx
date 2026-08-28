@@ -39,7 +39,8 @@ export const IntroScreen = ({ onSubmitTopic, onExplore }: IntroScreenProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 500);
+    inputRef.current?.focus({ preventScroll: true });
+    const timer = window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 120);
     return () => window.clearTimeout(timer);
   }, []);
 
