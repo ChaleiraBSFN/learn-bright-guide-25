@@ -118,7 +118,7 @@ export function LanguageSelector() {
 
   const handleLanguageChange = (langCode: string) => {
     localStorage.setItem('i18nextLng', langCode);
-    i18n.changeLanguage(langCode);
+    void changeLanguage(langCode);
   };
 
   return (
