@@ -163,7 +163,7 @@ export const IntroScreen = ({ onSubmitTopic, onExplore }: IntroScreenProps) => {
           >
             <ArrowRight className="h-5 w-5" />
           </button>
-        </div>
+        </motion.div>
       </motion.form>
 
       {/* Texts, chips and actions fade in right after */}
