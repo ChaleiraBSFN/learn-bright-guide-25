@@ -92,9 +92,9 @@ export const IntroScreen = ({ onSubmitTopic, onExplore }: IntroScreenProps) => {
       <motion.form
         onSubmit={submit}
         className="order-2 w-full max-w-xl"
-        initial={{ opacity: 0, scale: 0.9, y: 8 }}
+        initial={{ opacity: 0, scale: 0.78, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.div
           className="liquid-glass relative flex items-center gap-2 rounded-full p-2 pl-3 transition-shadow focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.5)]"

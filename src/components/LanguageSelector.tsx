@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { changeLanguage } from '@/i18n';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -118,7 +119,7 @@ export function LanguageSelector() {
 
   const handleLanguageChange = (langCode: string) => {
     localStorage.setItem('i18nextLng', langCode);
-    i18n.changeLanguage(langCode);
+    void changeLanguage(langCode);
   };
 
   return (
