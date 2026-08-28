@@ -74,8 +74,12 @@ const removeStaleServiceWorkersAndCaches = async (forcePreviewFreshness = false)
 removeStaleServiceWorkersAndCaches(isPreviewOrEditor);
 startVersionCheck();
 
-createRoot(document.getElementById("root")!).render(
-  <HelmetProvider>
-    <App />
-  </HelmetProvider>
-);
+const mount = () =>
+  createRoot(document.getElementById("root")!).render(
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  );
+
+// Waits only when the user's saved language is not the bundled default.
+i18nReady.then(mount).catch(mount);
