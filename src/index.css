@@ -217,7 +217,7 @@
 
   /* Aurora ambiente do hero */
   .hero-aurora {
-    @apply pointer-events-none absolute inset-x-0 -top-24 -z-10 mx-auto h-[420px] max-w-3xl blur-3xl;
+    @apply pointer-events-none absolute inset-x-0 -top-40 -z-10 mx-auto h-[600px] max-w-5xl blur-3xl;
     background:
       radial-gradient(45% 55% at 30% 40%, hsl(var(--primary) / 0.35) 0%, transparent 70%),
       radial-gradient(45% 55% at 70% 35%, hsl(var(--secondary) / 0.28) 0%, transparent 70%),
