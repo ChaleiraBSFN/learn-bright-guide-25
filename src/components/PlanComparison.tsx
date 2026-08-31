@@ -72,9 +72,11 @@ export const PlanComparison = () => {
           ))}
         </ul>
         <Button className="w-full" onClick={() => navigate('/buddy')}>
-          {isBuddy
+{isBuddy
             ? t('plans.manageBuddy', 'Gerenciar meu plano Buddy')
-            : t('plans.upgradeCta', 'Quero ser Buddy')}
+            : t('plans.upgradeCta', 'Assinar por apenas {{price}}', {
+                price: formatPlanPrice(i18n.language),
+              })}
         </Button>
       </div>
     </section>

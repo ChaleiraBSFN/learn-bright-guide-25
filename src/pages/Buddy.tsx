@@ -275,9 +275,11 @@ const Buddy = () => {
                   {t('buddy.manage', 'Gerenciar assinatura')}
                 </Button>
               ) : (
-                <Button onClick={handleSubscribe} disabled={busy || loading} className="flex-1">
+<Button onClick={handleSubscribe} disabled={busy || loading} className="flex-1">
                   {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {t('buddy.subscribe', 'Assinar o plano Buddy')}
+                  {t('buddy.subscribe', 'Assinar por apenas {{price}}', {
+                    price: formatPlanPrice(i18n.language),
+                  })}
                 </Button>
               )}
               <Button variant="outline" onClick={() => void refresh()} disabled={loading} className="sm:w-auto">

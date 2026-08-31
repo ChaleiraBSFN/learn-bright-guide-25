@@ -886,7 +886,7 @@
     "ctaDesc": "Kündige jederzeit direkt im Stripe-Portal.",
     "cancelScheduled": "Dein Abonnement endet am Ende des aktuellen Zeitraums.",
     "manage": "Abonnement verwalten",
-    "subscribe": "Buddy-Plan abonnieren",
+    "subscribe": "Jetzt für nur {{price}} abonnieren",
     "refresh": "Status aktualisieren",
     "testTitle": "Testmodus (nur CEO/Admin)",
     "testDesc": "Aktiviere Premium für 30 Tage für dein Konto, ohne Bezahlung, um alles zu testen.",
@@ -943,7 +943,7 @@
     "freeSubtitle": "Alles, was du brauchst, um noch heute mit dem Lernen zu beginnen.",
     "buddyPrice": "{{price}}/Monat",
     "manageBuddy": "Verwalte meinen Buddy-Plan",
-    "upgradeCta": "Ich möchte Buddy werden"
+    "upgradeCta": "Jetzt für nur {{price}} abonnieren"
   },
   "common": {
     "showActions": "Aktionen anzeigen",

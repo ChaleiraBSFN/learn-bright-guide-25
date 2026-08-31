@@ -921,7 +921,7 @@
     "ctaDesc": "Cancel anytime, directly in the Stripe portal.",
     "cancelScheduled": "Your subscription will end at the end of the current period.",
     "manage": "Manage subscription",
-    "subscribe": "Subscribe to the Buddy plan",
+    "subscribe": "Subscribe for just {{price}}",
     "refresh": "Refresh status",
     "testTitle": "Test mode (CEO/admin only)",
     "testDesc": "Activate Premium on your account for 30 days, without payment, to test everything.",
@@ -959,7 +959,7 @@
     "freeSubtitle": "Everything you need to start studying today.",
     "buddyPrice": "{{price}}/month",
     "manageBuddy": "Manage my Buddy plan",
-    "upgradeCta": "I want to be a Buddy"
+    "upgradeCta": "Subscribe for just {{price}}"
   },
   "common": {
     "showActions": "Show actions",

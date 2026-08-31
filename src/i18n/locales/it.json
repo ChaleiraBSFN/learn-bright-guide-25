@@ -885,7 +885,7 @@
     "ctaDesc": "Annulla quando vuoi, direttamente dal portale Stripe.",
     "cancelScheduled": "Il tuo abbonamento terminerà alla fine del periodo corrente.",
     "manage": "Gestisci abbonamento",
-    "subscribe": "Iscriviti al piano Buddy",
+    "subscribe": "Abbonati per soli {{price}}",
     "refresh": "Aggiorna stato",
     "testTitle": "Modalità di test (solo CEO/admin)",
     "testDesc": "Attiva il Premium sul tuo account per 30 giorni, senza pagamento, per testare tutto.",
@@ -970,7 +970,7 @@
     "freeSubtitle": "Tutto ciò di cui hai bisogno per iniziare a studiare oggi.",
     "buddyPrice": "{{price}}/mese",
     "manageBuddy": "Gestisci il mio piano Buddy",
-    "upgradeCta": "Voglio essere Buddy"
+    "upgradeCta": "Abbonati per soli {{price}}"
   },
   "generating": {
     "studyDone": "Fatto! 🎉",
