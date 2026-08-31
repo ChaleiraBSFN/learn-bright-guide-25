@@ -905,7 +905,7 @@
     "ctaDesc": "您可以随时在 Stripe 门户直接取消。",
     "cancelScheduled": "您的订阅将在当前周期结束后终止。",
     "manage": "管理订阅",
-    "subscribe": "订阅 Buddy 套餐",
+    "subscribe": "仅需{{price}}即可订阅",
     "refresh": "刷新状态",
     "testTitle": "测试模式（仅限 CEO/管理员）",
     "testDesc": "为您的账户激活高级功能 30 天，无需付款，用于测试所有功能。",
@@ -943,7 +943,7 @@
     "freeSubtitle": "今天开始学习所需的一切。",
     "buddyPrice": "{{price}}/月",
     "manageBuddy": "管理我的 Buddy 计划",
-    "upgradeCta": "我想成为 Buddy"
+    "upgradeCta": "仅需{{price}}即可订阅"
   },
   "common": {
     "showActions": "显示操作",

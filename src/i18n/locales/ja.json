@@ -885,7 +885,7 @@
     "ctaDesc": "いつでもキャンセルできます。Stripeポータルから直接。",
     "cancelScheduled": "現在の期間の終わりにサブスクリプションが終了します。",
     "manage": "サブスクリプションを管理",
-    "subscribe": "Buddyプランに登録",
+    "subscribe": "たったの{{price}}で登録",
     "refresh": "ステータスを更新",
     "testTitle": "テストモード（CEO/管理者のみ）",
     "testDesc": "すべてをテストするために、支払いなしで30日間アカウントでプレミアムを有効にします。",
@@ -950,7 +950,7 @@
     "freeSubtitle": "今日から学習を始めるために必要なすべて。",
     "buddyPrice": "{{price}}/月",
     "manageBuddy": "Buddyプランを管理",
-    "upgradeCta": "Buddyになりたい"
+    "upgradeCta": "たったの{{price}}で登録"
   },
   "chatBuddy": {
     "tooltip": "Learn Buddyとチャット",
