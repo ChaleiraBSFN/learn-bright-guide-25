@@ -14,9 +14,10 @@ import { useTheme } from '@/hooks/useTheme';
 import { useAccent, ACCENT_PRESETS } from '@/hooks/useAccent';
 import { useSubscription } from '@/hooks/useSubscription';
 import { SEO } from '@/components/SEO';
+import { formatPlanPrice } from '@/lib/currency';
 
 const Settings = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { profile, updateProfile } = useProfile();
   const navigate = useNavigate();
@@ -172,8 +173,10 @@ const Settings = () => {
                 ))}
               </div>
               {!isBuddy && (
-                <Button variant="outline" size="sm" className="mt-3" onClick={() => navigate('/buddy')}>
-                  {t('plans.upgradeCta', 'Quero ser Buddy')}
+<Button variant="outline" size="sm" className="mt-3" onClick={() => navigate('/buddy')}>
+                  {t('plans.upgradeCta', 'Assinar por apenas {{price}}', {
+                    price: formatPlanPrice(i18n.language),
+                  })}
                 </Button>
               )}
             </div>
