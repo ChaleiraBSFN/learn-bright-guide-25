@@ -17,7 +17,42 @@ const requestSchema = z.object({
   idioma: z.enum(["pt-BR", "en", "es", "fr", "de", "it", "ja", "zh", "ru"]).optional().default("pt-BR"),
   imagemBase64: z.string().optional().nullable(),
   rapido: z.boolean().optional().default(false),
+  materia: z.string().max(50).optional().nullable(),
+  objetivo: z.enum(["understand", "exam", "review"]).optional().nullable(),
+  dataProva: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
+  notaAlvo: z.number().min(0).max(10).optional().nullable(),
+  modoResumo: z.boolean().optional().default(false),
 });
+
+interface StudyContext {
+  objetivo?: string | null;
+  dataProva?: string | null;
+  notaAlvo?: number | null;
+  modoResumo?: boolean;
+}
+
+function daysUntil(iso: string): number {
+  const target = new Date(`${iso}T00:00:00Z`).getTime();
+  const today = new Date();
+  const start = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  return Math.round((target - start) / 86400000);
+}
+
+function buildContextInstructions(ctx: StudyContext, lang: string): string {
+  let out = "";
+  if (ctx.objetivo === "exam") {
+    const days = ctx.dataProva ? daysUntil(ctx.dataProva) : null;
+    out += `\n\nEXAM MODE: The student has an exam${days !== null && days >= 0 ? ` in ${days} day(s)` : ""}. Prioritize what is most likely to be tested, add memory tricks and quick checks. `;
+    if (typeof ctx.notaAlvo === "number") out += `Target grade: ${ctx.notaAlvo}/10 — calibrate difficulty to reach it. `;
+    if (days !== null && days >= 0) out += `Include "planoEstudo" divided across exactly ${Math.max(1, Math.min(30, days || 1))} day(s) until the exam, one bloco per day.`;
+  } else if (ctx.objetivo === "review") {
+    out += `\n\nREVIEW MODE: The student already saw this content. Be direct, focus on the essentials, key formulas and quick practice.`;
+  }
+  if (ctx.modoResumo) {
+    out += `\n\nQUICK SUMMARY MODE (CRITICAL): Write everything as SHORT bullet topics in ${lang}. Each bullet starts with a fitting emoji, max 2 short lines. ZERO jargon: if a technical term is unavoidable, explain it in plain words right after. Write for a 14-year-old student. NO dense paragraphs. In "demonstracoes", each "conceito" must be 3-5 short bullets instead of a long paragraph.`;
+  }
+  return out;
+}
 
 const sanitize = (str: string): string => str.replace(/[<>]/g, '').replace(/```/g, '').trim();
 
@@ -258,7 +293,7 @@ const languageMap: Record<string, string> = {
   de: "Deutsch", it: "Italiano", ja: "日本語", zh: "中文", ru: "Русский",
 };
 
-function buildPrompt(tema: string, nivel: string, prazo: number, duvidas: string | null, idioma: string, isPremium: boolean): string {
+function buildPrompt(tema: string, nivel: string, prazo: number, duvidas: string | null, idioma: string, isPremium: boolean, ctx: StudyContext = {}): string {
   const lang = languageMap[idioma] || "Português (Brasil)";
   const { style } = getSubjectStyle(tema);
 
@@ -286,6 +321,8 @@ Internal level code: "${nivel}"
 ACADEMIC LEVEL CALIBRATION (CRITICAL): ${nivelInstrucao}
 The content depth MUST strictly match this calibration. For graduação/pós-graduação use real exam-grade depth (ENADE, concursos, qualifying exams).
 ${duvidas ? `Specific questions (respond in ${lang}): ${duvidas}` : ""}
+${buildContextInstructions(ctx, lang)}
+
 
 
 Return this JSON structure:
@@ -360,7 +397,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Dados inválidos.' }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, nivel, prazo, duvidas, idioma, imagemBase64, rapido } = validationResult.data;
+    const { tema, nivel, prazo, duvidas, idioma, imagemBase64, rapido, objetivo, dataProva, notaAlvo, modoResumo } = validationResult.data;
     const imageAnalysisInstruction = imagemBase64
       ? `\n\nIMPORTANT: An image was provided. ${tema === 'Análise da imagem enviada' || nivel === 'auto' ? 'The user did NOT provide a topic, level or deadline — INFER the topic and appropriate education level FROM the image content itself, then build the entire study material around what you see in the image.' : ''} Analyze the image carefully. If it contains exercises or questions, SOLVE each one step by step. Include in the JSON an additional field "analiseImagem" with this structure:
 "analiseImagem": {
@@ -373,7 +410,7 @@ serve(async (req) => {
 If the image contains exercises, the "exerciciosIdentificados" array MUST have the solved exercises. If no exercises, omit that field but still include "conceitosExtraidos" with concepts visible in the image. Your text must still follow the JSON format strictly.`
       : "";
 
-    const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium) + imageAnalysisInstruction;
+    const prompt = buildPrompt(sanitize(tema), sanitize(nivel), prazo, duvidas ? sanitize(duvidas) : null, idioma, isPremium, { objetivo, dataProva, notaAlvo, modoResumo }) + imageAnalysisInstruction;
     const { temperature } = getSubjectStyle(tema);
     
     const maxTokens = rapido ? 5000 : (isPremium ? 9000 : 6000);

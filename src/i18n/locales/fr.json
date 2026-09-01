@@ -75,7 +75,50 @@
     "doubtsOptional": "(optionnel)",
     "doubtsPlaceholder": "Décrivez vos questions ou sujets à approfondir...",
     "generate": "Générer le matériel d'étude",
-    "generating": "Génération de votre matériel..."
+    "generating": "Génération de votre matériel...",
+    "optional": "(facultatif)",
+    "next": "Continuer",
+    "back": "Retour",
+    "imageDetected": "Image détectée — le sujet et le niveau deviennent facultatifs. L'IA analyse seule.",
+    "imageOnlyTopic": "Analyse de l'image envoyée",
+    "steps": {
+      "subject": "Matière",
+      "goal": "Objectif",
+      "details": "Détails"
+    },
+    "subjectTitle": "Quelle matière veux-tu étudier ?",
+    "goalTitle": "Quel est ton objectif ?",
+    "examDate": "Date de l'examen",
+    "targetGrade": "Note visée (0 à 10)",
+    "summaryMode": "Résumé rapide",
+    "summaryModeHint": "Points courts, avec émojis et sans mots compliqués",
+    "subjects": {
+      "math": "Mathématiques",
+      "physics": "Physique",
+      "chemistry": "Chimie",
+      "biology": "Biologie",
+      "history": "Histoire",
+      "geography": "Géographie",
+      "portuguese": "Portugais",
+      "english": "Anglais",
+      "essay": "Rédaction",
+      "programming": "Programmation",
+      "other": "Autre"
+    },
+    "goals": {
+      "understand": {
+        "title": "Juste comprendre",
+        "desc": "Apprendre le sujet tranquillement"
+      },
+      "exam": {
+        "title": "J'ai un examen",
+        "desc": "Se concentrer sur l'essentiel de l'examen"
+      },
+      "review": {
+        "title": "Révision rapide",
+        "desc": "Seulement l'essentiel, droit au but"
+      }
+    }
   },
   "result": {
     "studyMaterial": "Matériel d'étude",
@@ -311,7 +354,8 @@
     "study": "Matériel d'étude",
     "exercises": "Générer des exercices",
     "history": "Historique",
-    "plan": "Plan d'étude"
+    "plan": "Plan d'étude",
+    "stats": "Progression"
   },
   "history": {
     "title": "Votre historique",
@@ -1137,5 +1181,25 @@
     "partsList": "Parties du cours (cliquez pour aller)",
     "livePreview": "Aperçu de l'écran de l'élève",
     "ofParts": "sur"
+  },
+  "examMode": {
+    "title": "Mode Examen",
+    "daysLeft": "Encore {{days}} jours",
+    "today": "Ton examen est aujourd'hui !",
+    "goal": "Objectif : note {{grade}}",
+    "train": "S'entraîner",
+    "clear": "Retirer le mode examen"
+  },
+  "stats": {
+    "title": "Progression",
+    "studies": "Études",
+    "exercises": "Exercices",
+    "streak": "Jours d'affilée",
+    "time": "Temps d'étude",
+    "week": "Ta semaine",
+    "topTopics": "Sujets les plus étudiés",
+    "empty": "Pas encore de données. Crée ta première étude pour commencer !",
+    "signedOut": "Connecte-toi pour voir ta progression.",
+    "signIn": "Se connecter"
   }
 }
