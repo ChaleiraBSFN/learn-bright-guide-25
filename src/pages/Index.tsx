@@ -9,7 +9,7 @@ import { IntroScreen } from "@/components/home/IntroScreen";
 import { triggerRateLimit } from "@/components/RateLimitBar";
 import { StudyContent, StudyFormData, StudyPlanContent, StudyPlanFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
-import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages, CalendarDays } from "lucide-react";
+import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages, CalendarDays, BarChart3 } from "lucide-react";
 import learnBuddyLogo from "@/assets/learn-buddy-logo.png";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
