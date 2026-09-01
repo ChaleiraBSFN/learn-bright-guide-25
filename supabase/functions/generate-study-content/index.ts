@@ -321,6 +321,8 @@ Internal level code: "${nivel}"
 ACADEMIC LEVEL CALIBRATION (CRITICAL): ${nivelInstrucao}
 The content depth MUST strictly match this calibration. For graduação/pós-graduação use real exam-grade depth (ENADE, concursos, qualifying exams).
 ${duvidas ? `Specific questions (respond in ${lang}): ${duvidas}` : ""}
+${buildContextInstructions(ctx, lang)}
+
 
 
 Return this JSON structure:
