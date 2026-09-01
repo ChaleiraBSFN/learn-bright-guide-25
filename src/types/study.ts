@@ -94,6 +94,8 @@ export interface StudyContent {
   };
 }
 
+export type StudyGoal = "understand" | "exam" | "review";
+
 export interface StudyFormData {
   tema: string;
   nivel: string;
@@ -101,7 +103,18 @@ export interface StudyFormData {
   duvidas: string;
   isPremium?: boolean;
   imagemBase64?: string;
+  /** Matéria escolhida no primeiro passo (chave de tradução, ex.: "math"). */
+  materia?: string;
+  /** Objetivo do estudo. */
+  objetivo?: StudyGoal;
+  /** Data da prova em ISO (YYYY-MM-DD), quando o objetivo é "exam". */
+  dataProva?: string;
+  /** Nota que o aluno quer tirar (0-10). */
+  notaAlvo?: number;
+  /** Resumo rápido em tópicos, sem jargão. */
+  modoResumo?: boolean;
 }
+
 
 export interface StudyPlanFormData {
   tema: string;
