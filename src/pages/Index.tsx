@@ -340,6 +340,12 @@ const Index = () => {
             tema: data.tema, nivel: data.nivel,
             duvidas: data.duvidas, idioma: i18n.language,
             imagemBase64: data.imagemBase64,
+            materia: data.materia,
+            objetivo: data.objetivo,
+            dataProva: data.dataProva,
+            notaAlvo: data.notaAlvo,
+            modoResumo: data.modoResumo,
+
           }),
           signal: controller.signal,
         }
