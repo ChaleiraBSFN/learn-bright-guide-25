@@ -76,7 +76,50 @@
     "doubtsOptional": "(opcional)",
     "doubtsPlaceholder": "Descreva aqui suas dúvidas ou pontos que gostaria de aprofundar...",
     "generate": "Gerar Material de Estudo",
-    "generating": "Gerando seu material..."
+    "generating": "Gerando seu material...",
+    "optional": "(opcional)",
+    "next": "Continuar",
+    "back": "Voltar",
+    "imageDetected": "Imagem detectada — tema e nível viraram opcionais. A IA analisa sozinha.",
+    "imageOnlyTopic": "Análise da imagem enviada",
+    "steps": {
+      "subject": "Matéria",
+      "goal": "Objetivo",
+      "details": "Detalhes"
+    },
+    "subjectTitle": "Qual matéria você quer estudar?",
+    "goalTitle": "Qual é o seu objetivo?",
+    "examDate": "Data da prova",
+    "targetGrade": "Nota que você quer tirar (0 a 10)",
+    "summaryMode": "Resumo rápido",
+    "summaryModeHint": "Tópicos curtos, com emoji e sem palavra difícil",
+    "subjects": {
+      "math": "Matemática",
+      "physics": "Física",
+      "chemistry": "Química",
+      "biology": "Biologia",
+      "history": "História",
+      "geography": "Geografia",
+      "portuguese": "Português",
+      "english": "Inglês",
+      "essay": "Redação",
+      "programming": "Programação",
+      "other": "Outra"
+    },
+    "goals": {
+      "understand": {
+        "title": "Só entender",
+        "desc": "Aprender o assunto com calma"
+      },
+      "exam": {
+        "title": "Tenho prova",
+        "desc": "Foco no que mais cai"
+      },
+      "review": {
+        "title": "Revisar rápido",
+        "desc": "Só o essencial, direto ao ponto"
+      }
+    }
   },
   "result": {
     "studyMaterial": "Material de Estudo",
@@ -314,7 +357,8 @@
     "study": "Tirar Dúvidas",
     "exercises": "Gerar Exercícios",
     "history": "Histórico",
-    "plan": "Roteiro de Estudo"
+    "plan": "Roteiro de Estudo",
+    "stats": "Progresso"
   },
   "history": {
     "title": "Seu Histórico",
@@ -1148,5 +1192,25 @@
     "partsList": "Partes da aula (clique para pular)",
     "livePreview": "Prévia da tela do aluno",
     "ofParts": "de"
+  },
+  "examMode": {
+    "title": "Modo Prova",
+    "daysLeft": "Faltam {{count}} dias",
+    "today": "Sua prova é hoje!",
+    "goal": "Meta: nota {{grade}}",
+    "train": "Treinar agora",
+    "clear": "Remover modo prova"
+  },
+  "stats": {
+    "title": "Progresso",
+    "studies": "Estudos",
+    "exercises": "Exercícios",
+    "streak": "Dias seguidos",
+    "time": "Tempo de estudo",
+    "week": "Sua semana",
+    "topTopics": "Assuntos mais estudados",
+    "empty": "Ainda não há dados. Gere seu primeiro estudo para começar!",
+    "signedOut": "Entre na sua conta para ver seu progresso.",
+    "signIn": "Entrar"
   }
 }

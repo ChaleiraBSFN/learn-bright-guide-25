@@ -75,7 +75,50 @@
     "doubtsOptional": "(opzionale)",
     "doubtsPlaceholder": "Descrivi le domande...",
     "generate": "Genera materiale",
-    "generating": "Generazione..."
+    "generating": "Generazione...",
+    "optional": "(facoltativo)",
+    "next": "Continua",
+    "back": "Indietro",
+    "imageDetected": "Immagine rilevata — argomento e livello diventano facoltativi. L'IA analizza da sola.",
+    "imageOnlyTopic": "Analisi dell'immagine caricata",
+    "steps": {
+      "subject": "Materia",
+      "goal": "Obiettivo",
+      "details": "Dettagli"
+    },
+    "subjectTitle": "Quale materia vuoi studiare?",
+    "goalTitle": "Qual è il tuo obiettivo?",
+    "examDate": "Data dell'esame",
+    "targetGrade": "Voto che vuoi prendere (0 a 10)",
+    "summaryMode": "Riassunto veloce",
+    "summaryModeHint": "Punti brevi, con emoji e senza parole difficili",
+    "subjects": {
+      "math": "Matematica",
+      "physics": "Fisica",
+      "chemistry": "Chimica",
+      "biology": "Biologia",
+      "history": "Storia",
+      "geography": "Geografia",
+      "portuguese": "Portoghese",
+      "english": "Inglese",
+      "essay": "Tema",
+      "programming": "Programmazione",
+      "other": "Altra"
+    },
+    "goals": {
+      "understand": {
+        "title": "Solo capire",
+        "desc": "Imparare l'argomento con calma"
+      },
+      "exam": {
+        "title": "Ho un esame",
+        "desc": "Focus su ciò che esce di più"
+      },
+      "review": {
+        "title": "Ripasso veloce",
+        "desc": "Solo l'essenziale, dritto al punto"
+      }
+    }
   },
   "result": {
     "studyMaterial": "Materiale di studio",
@@ -311,7 +354,8 @@
     "study": "Materiale",
     "exercises": "Esercizi",
     "history": "Cronologia",
-    "plan": "Piano di Studio"
+    "plan": "Piano di Studio",
+    "stats": "Progressi"
   },
   "history": {
     "title": "Cronologia",
@@ -1137,5 +1181,25 @@
     "partsList": "Parti della lezione (clicca per saltare)",
     "livePreview": "Anteprima dello schermo dello studente",
     "ofParts": "di"
+  },
+  "examMode": {
+    "title": "Modalità Esame",
+    "daysLeft": "Mancano {{count}} giorni",
+    "today": "Il tuo esame è oggi!",
+    "goal": "Obiettivo: voto {{grade}}",
+    "train": "Allenati ora",
+    "clear": "Togli modalità esame"
+  },
+  "stats": {
+    "title": "Progressi",
+    "studies": "Studi",
+    "exercises": "Esercizi",
+    "streak": "Giorni di fila",
+    "time": "Tempo di studio",
+    "week": "La tua settimana",
+    "topTopics": "Argomenti più studiati",
+    "empty": "Ancora nessun dato. Crea il tuo primo studio per iniziare!",
+    "signedOut": "Accedi per vedere i tuoi progressi.",
+    "signIn": "Accedi"
   }
 }

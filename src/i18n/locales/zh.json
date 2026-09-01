@@ -75,7 +75,50 @@
     "doubtsOptional": "（可选）",
     "doubtsPlaceholder": "描述问题...",
     "generate": "生成材料",
-    "generating": "生成中..."
+    "generating": "生成中...",
+    "optional": "（选填）",
+    "next": "继续",
+    "back": "返回",
+    "imageDetected": "已识别图片——主题和年级变为选填，AI 会自动分析。",
+    "imageOnlyTopic": "上传图片的分析",
+    "steps": {
+      "subject": "科目",
+      "goal": "目标",
+      "details": "详情"
+    },
+    "subjectTitle": "你想学哪个科目？",
+    "goalTitle": "你的目标是什么？",
+    "examDate": "考试日期",
+    "targetGrade": "想拿到的分数（0-10）",
+    "summaryMode": "快速摘要",
+    "summaryModeHint": "简短要点，带表情符号，不用难词",
+    "subjects": {
+      "math": "数学",
+      "physics": "物理",
+      "chemistry": "化学",
+      "biology": "生物",
+      "history": "历史",
+      "geography": "地理",
+      "portuguese": "葡萄牙语",
+      "english": "英语",
+      "essay": "写作",
+      "programming": "编程",
+      "other": "其他"
+    },
+    "goals": {
+      "understand": {
+        "title": "只想弄懂",
+        "desc": "慢慢学明白"
+      },
+      "exam": {
+        "title": "我要考试",
+        "desc": "专注最常考的内容"
+      },
+      "review": {
+        "title": "快速复习",
+        "desc": "只讲重点，直截了当"
+      }
+    }
   },
   "result": {
     "studyMaterial": "学习材料",
@@ -311,7 +354,8 @@
     "study": "学习材料",
     "exercises": "生成练习",
     "history": "历史",
-    "plan": "学习计划"
+    "plan": "学习计划",
+    "stats": "学习进度"
   },
   "history": {
     "title": "历史",
@@ -1137,5 +1181,25 @@
     "partsList": "课程部分（点击跳转）",
     "livePreview": "学生屏幕预览",
     "ofParts": "/"
+  },
+  "examMode": {
+    "title": "考试模式",
+    "daysLeft": "还有 {{count}} 天",
+    "today": "今天就是考试日！",
+    "goal": "目标：{{grade}} 分",
+    "train": "马上练习",
+    "clear": "退出考试模式"
+  },
+  "stats": {
+    "title": "学习进度",
+    "studies": "学习内容",
+    "exercises": "练习",
+    "streak": "连续天数",
+    "time": "学习时间",
+    "week": "本周",
+    "topTopics": "学得最多的主题",
+    "empty": "还没有数据。先生成第一份学习内容吧！",
+    "signedOut": "登录后即可查看学习进度。",
+    "signIn": "登录"
   }
 }

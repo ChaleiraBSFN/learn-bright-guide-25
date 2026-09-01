@@ -76,7 +76,50 @@
     "doubtsOptional": "(optional)",
     "doubtsPlaceholder": "Describe your questions or topics you'd like to explore further...",
     "generate": "Generate Study Material",
-    "generating": "Generating your material..."
+    "generating": "Generating your material...",
+    "optional": "(optional)",
+    "next": "Continue",
+    "back": "Back",
+    "imageDetected": "Image detected — topic and level are now optional. The AI analyzes it for you.",
+    "imageOnlyTopic": "Analysis of the uploaded image",
+    "steps": {
+      "subject": "Subject",
+      "goal": "Goal",
+      "details": "Details"
+    },
+    "subjectTitle": "Which subject do you want to study?",
+    "goalTitle": "What is your goal?",
+    "examDate": "Exam date",
+    "targetGrade": "Grade you want (0 to 10)",
+    "summaryMode": "Quick summary",
+    "summaryModeHint": "Short bullet points, with emojis and no hard words",
+    "subjects": {
+      "math": "Math",
+      "physics": "Physics",
+      "chemistry": "Chemistry",
+      "biology": "Biology",
+      "history": "History",
+      "geography": "Geography",
+      "portuguese": "Portuguese",
+      "english": "English",
+      "essay": "Essay writing",
+      "programming": "Programming",
+      "other": "Other"
+    },
+    "goals": {
+      "understand": {
+        "title": "Just understand",
+        "desc": "Learn the topic calmly"
+      },
+      "exam": {
+        "title": "I have an exam",
+        "desc": "Focus on what shows up most"
+      },
+      "review": {
+        "title": "Quick review",
+        "desc": "Only the essentials, straight to the point"
+      }
+    }
   },
   "result": {
     "studyMaterial": "Study Material",
@@ -314,7 +357,8 @@
     "study": "Study Material",
     "exercises": "Generate Exercises",
     "history": "History",
-    "plan": "Study Plan"
+    "plan": "Study Plan",
+    "stats": "Progress"
   },
   "history": {
     "title": "Your History",
@@ -1148,5 +1192,25 @@
     "partsList": "Lesson parts (click to jump)",
     "livePreview": "Preview of student screen",
     "ofParts": "of"
+  },
+  "examMode": {
+    "title": "Exam Mode",
+    "daysLeft": "{{count}} days left",
+    "today": "Your exam is today!",
+    "goal": "Target: grade {{grade}}",
+    "train": "Practice now",
+    "clear": "Remove exam mode"
+  },
+  "stats": {
+    "title": "Progress",
+    "studies": "Studies",
+    "exercises": "Exercises",
+    "streak": "Day streak",
+    "time": "Study time",
+    "week": "Your week",
+    "topTopics": "Most studied topics",
+    "empty": "No data yet. Create your first study to get started!",
+    "signedOut": "Sign in to see your progress.",
+    "signIn": "Sign in"
   }
 }
