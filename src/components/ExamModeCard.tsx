@@ -23,7 +23,7 @@ export default function ExamModeCard({ onTrain }: ExamModeCardProps) {
   if (!exam) return null;
 
   const days = daysUntil(exam.dataProva);
-  const label = days === 0 ? t("examMode.today") : t("examMode.daysLeft", { count: days });
+  const label = days === 0 ? t("examMode.today") : t("examMode.daysLeft", { days });
 
   return (
     <AnimatePresence>
