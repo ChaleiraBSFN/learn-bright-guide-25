@@ -1184,7 +1184,7 @@
   },
   "examMode": {
     "title": "Prüfungsmodus",
-    "daysLeft": "Noch {{count}} Tage",
+    "daysLeft": "Noch {{days}} Tage",
     "today": "Deine Prüfung ist heute!",
     "goal": "Ziel: Note {{grade}}",
     "train": "Jetzt üben",

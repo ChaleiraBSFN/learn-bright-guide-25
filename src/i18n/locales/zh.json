@@ -1184,7 +1184,7 @@
   },
   "examMode": {
     "title": "考试模式",
-    "daysLeft": "还有 {{count}} 天",
+    "daysLeft": "还有 {{days}} 天",
     "today": "今天就是考试日！",
     "goal": "目标：{{grade}} 分",
     "train": "马上练习",

@@ -1184,7 +1184,7 @@
   },
   "examMode": {
     "title": "Modalità Esame",
-    "daysLeft": "Mancano {{count}} giorni",
+    "daysLeft": "Mancano {{days}} giorni",
     "today": "Il tuo esame è oggi!",
     "goal": "Obiettivo: voto {{grade}}",
     "train": "Allenati ora",

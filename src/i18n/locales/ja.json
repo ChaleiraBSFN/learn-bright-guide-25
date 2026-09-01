@@ -1184,7 +1184,7 @@
   },
   "examMode": {
     "title": "試験モード",
-    "daysLeft": "あと{{count}}日",
+    "daysLeft": "あと{{days}}日",
     "today": "今日が試験日です！",
     "goal": "目標：{{grade}}点",
     "train": "今すぐ練習",
