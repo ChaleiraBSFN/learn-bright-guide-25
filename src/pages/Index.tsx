@@ -834,7 +834,12 @@ const Index = () => {
                           <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
                         </Suspense>
                       </div>
+                    ) : activeTab === "stats" ? (
+                      <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+                        <StatsPanel />
+                      </Suspense>
                     ) : (
+
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
                         <HistoryTab
                           onViewStudy={(content, topic) => {
