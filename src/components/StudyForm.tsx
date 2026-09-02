@@ -198,7 +198,7 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
                     data-selected={materia === s.key}
                     className="chip-glass flex items-center gap-2"
                   >
-                    <span aria-hidden>{s.emoji}</span>
+                    <s.icon className="h-4 w-4 shrink-0 text-primary" />
                     <span className="truncate">{t(`form.subjects.${s.key}`)}</span>
                   </motion.button>
                 ))}
