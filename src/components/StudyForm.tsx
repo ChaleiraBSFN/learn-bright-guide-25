@@ -18,6 +18,16 @@ import {
   CalendarClock,
   RefreshCw,
   Target,
+  Calculator,
+  Magnet,
+  FlaskConical,
+  Dna,
+  Landmark,
+  Globe2,
+  Languages,
+  PenLine,
+  Code2,
+  type LucideIcon,
 } from "lucide-react";
 import { StudyFormData, StudyGoal } from "@/types/study";
 import { setExamMode } from "@/lib/examMode";
@@ -30,19 +40,19 @@ interface StudyFormProps {
   presetTema?: string;
 }
 
-const SUBJECTS = [
-  { key: "math", emoji: "🔢" },
-  { key: "physics", emoji: "🧲" },
-  { key: "chemistry", emoji: "⚗️" },
-  { key: "biology", emoji: "🧬" },
-  { key: "history", emoji: "🏛️" },
-  { key: "geography", emoji: "🌎" },
-  { key: "portuguese", emoji: "📖" },
-  { key: "english", emoji: "🗣️" },
-  { key: "essay", emoji: "✍️" },
-  { key: "programming", emoji: "💻" },
-  { key: "other", emoji: "✨" },
-] as const;
+const SUBJECTS: Array<{ key: string; icon: LucideIcon }> = [
+  { key: "math", icon: Calculator },
+  { key: "physics", icon: Magnet },
+  { key: "chemistry", icon: FlaskConical },
+  { key: "biology", icon: Dna },
+  { key: "history", icon: Landmark },
+  { key: "geography", icon: Globe2 },
+  { key: "portuguese", icon: BookOpen },
+  { key: "english", icon: Languages },
+  { key: "essay", icon: PenLine },
+  { key: "programming", icon: Code2 },
+  { key: "other", icon: Sparkles },
+];
 
 const GOALS: Array<{ key: StudyGoal; icon: typeof Brain }> = [
   { key: "understand", icon: Brain },
@@ -188,7 +198,7 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
                     data-selected={materia === s.key}
                     className="chip-glass flex items-center gap-2"
                   >
-                    <span aria-hidden>{s.emoji}</span>
+                    <s.icon className="h-4 w-4 shrink-0 text-primary" />
                     <span className="truncate">{t(`form.subjects.${s.key}`)}</span>
                   </motion.button>
                 ))}
