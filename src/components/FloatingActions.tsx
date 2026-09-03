@@ -82,7 +82,7 @@ export const FloatingActions = () => {
     checkSettings();
     window.addEventListener('storage', checkSettings);
     window.addEventListener('lb_settings_changed', checkSettings);
-    const interval = setInterval(checkSettings, 2000);
+    const interval = setInterval(checkSettings, 15000);
     return () => {
       window.removeEventListener('storage', checkSettings);
       window.removeEventListener('lb_settings_changed', checkSettings);
