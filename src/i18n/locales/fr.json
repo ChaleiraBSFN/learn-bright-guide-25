@@ -5,7 +5,8 @@
     "newStudy": "Nouvelle étude",
     "premiumPlan": "Plan Premium",
     "back": "Retour",
-    "translating": "Traduction en cours..."
+    "translating": "Traduction en cours...",
+    "translatingHint": "Cela peut prendre quelques secondes"
   },
   "hero": {
     "badge": "Apprentissage intelligent",
@@ -164,7 +165,9 @@
     "illustrativeImages": "Images illustratives",
     "imagesGoogleHint": "Voir de vraies images sur le sujet directement dans la recherche Google.",
     "searchGoogleImages": "Rechercher sur Google Images",
-    "searchGoogle": "Rechercher sur Google"
+    "searchGoogle": "Rechercher sur Google",
+    "generateNow": "S'entraîner maintenant",
+    "generating": "Génération..."
   },
   "premium": {
     "unlock": "S'abonner Premium",
@@ -348,7 +351,13 @@
     "joined": "Inscrit",
     "until": "Jusqu'au",
     "pending": "En attente",
-    "free": "Gratuit"
+    "free": "Gratuit",
+    "allTime": "Total général",
+    "analytics": "Analytique",
+    "exercisesGenerated": "Exercices générés",
+    "last30Days": "30 derniers jours",
+    "last7Days": "7 derniers jours",
+    "studiesGenerated": "Contenus générés"
   },
   "tabs": {
     "study": "Matériel d'étude",
@@ -1019,7 +1028,15 @@
   "generating": {
     "studyDone": "Terminé ! 🎉",
     "exerciseDone": "Terminé ! 🎉",
-    "complexityHint": "Cela peut prendre quelques secondes en raison de la génération de contenus complexes, d'images, de diagrammes et de détails personnalisés. Parfois, les images peuvent ne pas être générées si la limite de requêtes est dépassée."
+    "complexityHint": "Cela peut prendre quelques secondes en raison de la génération de contenus complexes, d'images, de diagrammes et de détails personnalisés. Parfois, les images peuvent ne pas être générées si la limite de requêtes est dépassée.",
+    "exerciseTitle": "Génération des exercices",
+    "studyTitle": "Génération du matériel d'étude",
+    "tipExercise1": "Analyse du sujet et du niveau...",
+    "tipExercise2": "Création de questions variées...",
+    "tipExercise3": "Préparation des corrigés et des explications...",
+    "tipStudy1": "Analyse du sujet demandé...",
+    "tipStudy2": "Création des résumés et des explications...",
+    "tipStudy3": "Construction de la carte mentale et du plan d'étude..."
   },
   "home": {
     "chipsLabel": "Commencez par :",

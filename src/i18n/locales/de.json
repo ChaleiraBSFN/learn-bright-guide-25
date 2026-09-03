@@ -5,7 +5,8 @@
     "newStudy": "Neue Studie",
     "premiumPlan": "Premium-Plan",
     "back": "Zurück",
-    "translating": "Übersetzen..."
+    "translating": "Übersetzen...",
+    "translatingHint": "Das kann einige Sekunden dauern"
   },
   "hero": {
     "badge": "Intelligentes Lernen",
@@ -164,7 +165,9 @@
     "illustrativeImages": "Illustrative Bilder",
     "imagesGoogleHint": "Sehen Sie sich echte Bilder zum Thema direkt in der Google-Suche an.",
     "searchGoogleImages": "Auf Google Bilder suchen",
-    "searchGoogle": "Auf Google suchen"
+    "searchGoogle": "Auf Google suchen",
+    "generateNow": "Jetzt üben",
+    "generating": "Wird erstellt..."
   },
   "premium": {
     "unlock": "Premium abonnieren",
@@ -348,7 +351,13 @@
     "joined": "Beigetreten",
     "until": "Bis",
     "pending": "Ausstehend",
-    "free": "Kostenlos"
+    "free": "Kostenlos",
+    "allTime": "Gesamt",
+    "analytics": "Analysen",
+    "exercisesGenerated": "Erstellte Übungen",
+    "last30Days": "Letzte 30 Tage",
+    "last7Days": "Letzte 7 Tage",
+    "studiesGenerated": "Erstellte Lerninhalte"
   },
   "tabs": {
     "study": "Lernmaterial",
@@ -1019,7 +1028,15 @@
   "generating": {
     "studyDone": "Fertig! 🎉",
     "exerciseDone": "Fertig! 🎉",
-    "complexityHint": "Dies kann einige Sekunden dauern, da komplexe Inhalte, Bilder, Diagramme und personalisierte Details generiert werden. Manchmal können Bilder nicht generiert werden, wenn das Anforderungs-Limit überschritten wird."
+    "complexityHint": "Dies kann einige Sekunden dauern, da komplexe Inhalte, Bilder, Diagramme und personalisierte Details generiert werden. Manchmal können Bilder nicht generiert werden, wenn das Anforderungs-Limit überschritten wird.",
+    "exerciseTitle": "Übungen werden erstellt",
+    "studyTitle": "Lernmaterial wird erstellt",
+    "tipExercise1": "Thema und Niveau werden analysiert...",
+    "tipExercise2": "Verschiedene Fragen werden erstellt...",
+    "tipExercise3": "Lösungen und Erklärungen werden vorbereitet...",
+    "tipStudy1": "Das gewünschte Thema wird analysiert...",
+    "tipStudy2": "Zusammenfassungen und Erklärungen werden erstellt...",
+    "tipStudy3": "Mindmap und Lernplan werden erstellt..."
   },
   "home": {
     "chipsLabel": "Starte mit:",

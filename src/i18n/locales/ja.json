@@ -5,7 +5,8 @@
     "newStudy": "新しい学習",
     "premiumPlan": "プレミアムプラン",
     "back": "戻る",
-    "translating": "翻訳中..."
+    "translating": "翻訳中...",
+    "translatingHint": "数秒かかる場合があります"
   },
   "hero": {
     "badge": "スマート学習",
@@ -164,7 +165,9 @@
     "illustrativeImages": "説明画像",
     "imagesGoogleHint": "Google検索でテーマに関する実際の画像をご覧ください。",
     "searchGoogleImages": "Google画像検索",
-    "searchGoogle": "Google検索"
+    "searchGoogle": "Google検索",
+    "generateNow": "今すぐ練習",
+    "generating": "作成中..."
   },
   "premium": {
     "unlock": "プレミアム登録",
@@ -348,7 +351,13 @@
     "joined": "参加日",
     "until": "まで",
     "pending": "保留",
-    "free": "無料"
+    "free": "無料",
+    "allTime": "全期間の合計",
+    "analytics": "分析",
+    "exercisesGenerated": "作成した演習",
+    "last30Days": "過去30日",
+    "last7Days": "過去7日",
+    "studiesGenerated": "作成した学習コンテンツ"
   },
   "tabs": {
     "study": "学習教材",
@@ -1019,7 +1028,15 @@
   "generating": {
     "studyDone": "完了！ 🎉",
     "exerciseDone": "完了！ 🎉",
-    "complexityHint": "複雑なコンテンツ、画像、図、カスタムの詳細の生成には数秒かかる場合があります。リクエスト制限を超えた場合、画像が生成されないことがあります。"
+    "complexityHint": "複雑なコンテンツ、画像、図、カスタムの詳細の生成には数秒かかる場合があります。リクエスト制限を超えた場合、画像が生成されないことがあります。",
+    "exerciseTitle": "演習を作成中",
+    "studyTitle": "学習教材を作成中",
+    "tipExercise1": "テーマとレベルを分析中...",
+    "tipExercise2": "さまざまな問題を作成中...",
+    "tipExercise3": "解答と解説を準備中...",
+    "tipStudy1": "リクエストされたテーマを分析中...",
+    "tipStudy2": "要約と解説を作成中...",
+    "tipStudy3": "マインドマップと学習計画を作成中..."
   },
   "home": {
     "chipsLabel": "まずはここから:",

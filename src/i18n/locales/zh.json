@@ -5,7 +5,8 @@
     "newStudy": "新学习",
     "premiumPlan": "高级计划",
     "back": "返回",
-    "translating": "翻译中..."
+    "translating": "翻译中...",
+    "translatingHint": "这可能需要几秒钟"
   },
   "hero": {
     "badge": "智能学习",
@@ -164,7 +165,9 @@
     "illustrativeImages": "插图",
     "imagesGoogleHint": "直接在Google搜索中查看有关该主题的真实图片。",
     "searchGoogleImages": "在Google图片中搜索",
-    "searchGoogle": "在Google中搜索"
+    "searchGoogle": "在Google中搜索",
+    "generateNow": "立即练习",
+    "generating": "正在生成..."
   },
   "premium": {
     "unlock": "订阅高级版",
@@ -348,7 +351,13 @@
     "joined": "加入",
     "until": "至",
     "pending": "待处理",
-    "free": "免费"
+    "free": "免费",
+    "allTime": "总计",
+    "analytics": "数据分析",
+    "exercisesGenerated": "已生成练习",
+    "last30Days": "最近30天",
+    "last7Days": "最近7天",
+    "studiesGenerated": "已生成学习内容"
   },
   "tabs": {
     "study": "学习材料",
@@ -1019,7 +1028,15 @@
   "generating": {
     "studyDone": "完成！🎉",
     "exerciseDone": "完成！🎉",
-    "complexityHint": "由于生成复杂内容、图像、图表和个性化详细信息，可能需要几秒钟。有时如果超出请求限制，图像可能无法生成。"
+    "complexityHint": "由于生成复杂内容、图像、图表和个性化详细信息，可能需要几秒钟。有时如果超出请求限制，图像可能无法生成。",
+    "exerciseTitle": "正在生成练习",
+    "studyTitle": "正在生成学习材料",
+    "tipExercise1": "正在分析主题和难度...",
+    "tipExercise2": "正在创建多样化题目...",
+    "tipExercise3": "正在准备答案和讲解...",
+    "tipStudy1": "正在分析所选主题...",
+    "tipStudy2": "正在创建摘要和讲解...",
+    "tipStudy3": "正在构建思维导图和学习计划..."
   },
   "home": {
     "chipsLabel": "从这里开始：",

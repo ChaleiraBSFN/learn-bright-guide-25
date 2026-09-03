@@ -5,7 +5,8 @@
     "newStudy": "Nuovo studio",
     "premiumPlan": "Piano Premium",
     "back": "Indietro",
-    "translating": "Traduzione in corso..."
+    "translating": "Traduzione in corso...",
+    "translatingHint": "Può richiedere alcuni secondi"
   },
   "hero": {
     "badge": "Apprendimento intelligente",
@@ -164,7 +165,9 @@
     "illustrativeImages": "Immagini Illustrative",
     "imagesGoogleHint": "Vedi immagini reali sull'argomento direttamente nella ricerca di Google.",
     "searchGoogleImages": "Cerca su Google Immagini",
-    "searchGoogle": "Cerca su Google"
+    "searchGoogle": "Cerca su Google",
+    "generateNow": "Esercitati ora",
+    "generating": "Generazione..."
   },
   "premium": {
     "unlock": "Abbonati Premium",
@@ -348,7 +351,13 @@
     "joined": "Iscritto",
     "until": "Fino al",
     "pending": "In sospeso",
-    "free": "Gratuito"
+    "free": "Gratuito",
+    "allTime": "Totale generale",
+    "analytics": "Analisi",
+    "exercisesGenerated": "Esercizi generati",
+    "last30Days": "Ultimi 30 giorni",
+    "last7Days": "Ultimi 7 giorni",
+    "studiesGenerated": "Contenuti generati"
   },
   "tabs": {
     "study": "Materiale",
@@ -1019,7 +1028,15 @@
   "generating": {
     "studyDone": "Fatto! 🎉",
     "exerciseDone": "Fatto! 🎉",
-    "complexityHint": "Potrebbero volerci alcuni secondi a causa della generazione di contenuti complessi, immagini, diagrammi e dettagli personalizzati. A volte le immagini potrebbero non essere generate se il limite di richieste viene superato."
+    "complexityHint": "Potrebbero volerci alcuni secondi a causa della generazione di contenuti complessi, immagini, diagrammi e dettagli personalizzati. A volte le immagini potrebbero non essere generate se il limite di richieste viene superato.",
+    "exerciseTitle": "Generazione degli esercizi",
+    "studyTitle": "Generazione del materiale di studio",
+    "tipExercise1": "Analisi dell'argomento e del livello...",
+    "tipExercise2": "Creazione di domande variate...",
+    "tipExercise3": "Preparazione di soluzioni e spiegazioni...",
+    "tipStudy1": "Analisi dell'argomento richiesto...",
+    "tipStudy2": "Creazione di riassunti e spiegazioni...",
+    "tipStudy3": "Creazione della mappa mentale e del piano di studio..."
   },
   "home": {
     "chipsLabel": "Inizia da:",
