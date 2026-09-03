@@ -113,13 +113,15 @@ export default function Community() {
   useEffect(() => { loadPosts(); }, [loadPosts]);
 
   useEffect(() => {
+    if (!user) return;
     const ch = supabase
       .channel('community-feed')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'community_posts' }, () => loadPosts())
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'community_posts' }, () => loadPosts())
       .subscribe();
     return () => { supabase.removeChannel(ch); };
-  }, [loadPosts]);
+  }, [loadPosts, user]);
+
 
   const toggleLike = async (post: CommunityPost) => {
     if (!user) { toast.error(t('community.likeLogin')); return; }
