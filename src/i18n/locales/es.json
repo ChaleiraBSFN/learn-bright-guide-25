@@ -5,7 +5,8 @@
     "newStudy": "Nuevo Estudio",
     "premiumPlan": "Plan Premium",
     "back": "Volver",
-    "translating": "Traduciendo..."
+    "translating": "Traduciendo...",
+    "translatingHint": "Esto puede tardar unos segundos"
   },
   "hero": {
     "badge": "Aprendizaje Inteligente",
@@ -164,7 +165,9 @@
     "illustrativeImages": "Imágenes Ilustrativas",
     "imagesGoogleHint": "Ver imágenes reales sobre el tema directamente en la búsqueda de Google.",
     "searchGoogleImages": "Buscar en Google Imágenes",
-    "searchGoogle": "Buscar en Google"
+    "searchGoogle": "Buscar en Google",
+    "generateNow": "Practicar ahora",
+    "generating": "Generando..."
   },
   "premium": {
     "unlock": "Suscribirse Premium",
@@ -342,7 +345,13 @@
     "joined": "Registro",
     "until": "Hasta",
     "pending": "Pendiente",
-    "free": "Gratuito"
+    "free": "Gratuito",
+    "allTime": "Total general",
+    "analytics": "Analítica",
+    "exercisesGenerated": "Ejercicios generados",
+    "last30Days": "Últimos 30 días",
+    "last7Days": "Últimos 7 días",
+    "studiesGenerated": "Estudios generados"
   },
   "tabs": {
     "study": "Material de Estudio",
@@ -1013,7 +1022,15 @@
   "generating": {
     "studyDone": "¡Listo! 🎉",
     "exerciseDone": "¡Listo! 🎉",
-    "complexityHint": "Puede tardar unos segundos debido a la generación de contenidos complejos, imágenes, diagramas y detalles personalizados. A veces las imágenes pueden no generarse si se excede el límite de solicitudes."
+    "complexityHint": "Puede tardar unos segundos debido a la generación de contenidos complejos, imágenes, diagramas y detalles personalizados. A veces las imágenes pueden no generarse si se excede el límite de solicitudes.",
+    "exerciseTitle": "Generando ejercicios",
+    "studyTitle": "Generando material de estudio",
+    "tipExercise1": "Analizando el tema y el nivel...",
+    "tipExercise2": "Creando preguntas variadas...",
+    "tipExercise3": "Preparando respuestas y explicaciones...",
+    "tipStudy1": "Analizando el tema solicitado...",
+    "tipStudy2": "Creando resúmenes y explicaciones...",
+    "tipStudy3": "Armando el mapa mental y el plan de estudio..."
   },
   "home": {
     "chipsLabel": "Empieza por:",
