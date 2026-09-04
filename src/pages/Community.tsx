@@ -210,11 +210,12 @@ export default function Community() {
 
         {loading ? (
           <div className="text-center py-12"><Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" /></div>
-        ) : posts.length === 0 ? (
+        ) : !user ? null : posts.length === 0 ? (
           <Card className="p-8 text-center text-muted-foreground">
             {t('community.empty')}
           </Card>
         ) : (
+
           <div>
             {posts.map(post => (
               <div key={post.id} className="mb-4">
