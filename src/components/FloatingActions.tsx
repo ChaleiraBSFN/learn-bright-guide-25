@@ -90,6 +90,102 @@ export const FloatingActions = () => {
     };
   }, []);
 
+  // Ações do dock mobile (Liquid Glass, na parte de baixo)
+  const dockItems = [
+    trailEnabled && {
+      key: 'trail',
+      icon: <Map className="h-5 w-5 text-primary" />,
+      label: t('trail.title', 'Trilha'),
+      onClick: trailGate.guard(() => setShowTrail(true)),
+    },
+    {
+      key: 'shop',
+      icon: <Coins className="h-5 w-5 text-amber-500" />,
+      label: t('rewardShop.short', 'Créditos'),
+      onClick: shopGate.guard(() => setShowShop(true)),
+    },
+    {
+      key: 'chat',
+      icon: <img src={learnBuddyLogo} alt="" className="h-6 w-6 rounded-md object-cover" />,
+      label: t('chatBuddy.short', 'Perguntar'),
+      onClick: chatBuddyGate.guard(() => navigate('/chat-buddy')),
+    },
+    rankingEnabled && {
+      key: 'ranking',
+      icon: <Trophy className="h-5 w-5 text-yellow-500" />,
+      label: t('ranking.short', 'Ranking'),
+      onClick: rankingGate.guard(() => setShowRanking(true)),
+    },
+    {
+      key: 'community',
+      icon: <MessageSquare className="h-5 w-5 text-violet-500" />,
+      label: t('community.short', 'Comunidade'),
+      onClick: communityGate.guard(() => navigate('/community')),
+    },
+    groupsEnabled && {
+      key: 'groups',
+      icon: <Users className="h-5 w-5 text-cyan-500" />,
+      label: t('groups.short', 'Salas'),
+      onClick: groupsGate.guard(() => {
+        if (groupsGate.enabled) window.dispatchEvent(new CustomEvent('open_study_groups'));
+      }),
+    },
+    !isInstalled && {
+      key: 'install',
+      icon: <Download className="h-5 w-5 text-secondary" />,
+      label: t('install.short', 'App'),
+      onClick: () => navigate('/install'),
+    },
+  ].filter(Boolean) as { key: string; icon: JSX.Element; label: string; onClick: () => void }[];
+
+  if (isMobile) {
+    return (
+      <>
+        <div className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.6rem,env(safe-area-inset-bottom))]">
+          <div className="mx-auto max-w-md rounded-[26px] border border-foreground/20 bg-background/55 p-2 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),inset_0_-18px_30px_hsl(var(--primary)/0.08),0_18px_40px_-20px_hsl(var(--foreground)/0.75)] backdrop-blur-2xl supports-[backdrop-filter]:bg-background/40">
+            <div className="flex items-center justify-between gap-1">
+              <div className={collapsed ? 'flex flex-1 items-center gap-1 overflow-x-auto no-scrollbar' : 'grid flex-1 grid-cols-4 gap-1'}>
+                {(collapsed ? dockItems.slice(0, 4) : dockItems).map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={item.onClick}
+                    className="flex min-w-[64px] flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[10px] font-semibold text-muted-foreground transition-all active:scale-95 hover:bg-foreground/10"
+                  >
+                    {item.icon}
+                    <span className="truncate">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setCollapsed((c) => !c)}
+                aria-label={collapsed ? t('common.showActions', 'Mostrar ações') : t('common.hideActions', 'Recolher ações')}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-foreground/20 bg-background/70 text-foreground transition-all active:scale-95"
+              >
+                {collapsed ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Espaço para o dock não cobrir o conteúdo */}
+        <div className="h-24" aria-hidden />
+
+        <ProgressTrail open={showTrail} onClose={() => setShowTrail(false)} />
+        <RankingDialog open={showRanking} onClose={() => setShowRanking(false)} />
+        <RewardShopModal open={showShop} onOpenChange={setShowShop} />
+        {groupsEnabled && groupsGate.enabled && <StudyGroups hidden />}
+        {trailGate.dialog}
+        {rankingGate.dialog}
+        {communityGate.dialog}
+        {chatBuddyGate.dialog}
+        {groupsGate.dialog}
+        {shopGate.dialog}
+      </>
+    );
+  }
+
   return (
     <>
       {collapsed ? (
@@ -105,6 +201,7 @@ export const FloatingActions = () => {
           </Button>
         </div>
       ) : (
+
         <div className="fixed right-3 bottom-6 md:right-4 md:bottom-8 z-40 flex flex-col items-center gap-2 rounded-full border-2 border-foreground/25 bg-background/55 px-2 py-2.5 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),inset_0_-18px_30px_hsl(var(--primary)/0.08),0_14px_34px_-18px_hsl(var(--foreground)/0.55)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/45">
           <Button
             variant="ghost"

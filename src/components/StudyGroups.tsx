@@ -69,11 +69,19 @@ interface HistoryItem {
 
 type View = 'list' | 'chat' | 'settings' | 'history';
 
-export const StudyGroups = () => {
+export const StudyGroups = ({ hidden = false }: { hidden?: boolean } = {}) => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+
+  // Permite abrir o painel a partir do dock inferior no celular
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener('open_study_groups', onOpen);
+    return () => window.removeEventListener('open_study_groups', onOpen);
+  }, []);
+
   const [view, setView] = useState<View>('list');
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(false);
@@ -362,11 +370,14 @@ export const StudyGroups = () => {
       fileName="group-image.jpg"
     />
     <Sheet open={open} onOpenChange={setOpen}>
+      {!hidden && (
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" aria-label={t('groups.title')} className="h-10 w-10 !min-w-10 !min-h-10 shrink-0 p-0 flex items-center justify-center rounded-full bg-background/95 backdrop-blur-sm border-2 border-accent/40 hover:bg-accent hover:text-accent-foreground transition-all shadow-[0_0_24px_-2px_hsl(var(--accent)/0.6),0_4px_14px_-3px_hsl(var(--accent)/0.5),inset_0_1px_0_hsl(0_0%_100%/0.2),inset_0_-2px_0_hsl(var(--accent)/0.2)] hover:shadow-[0_0_36px_-2px_hsl(var(--accent)/0.85),0_6px_20px_-4px_hsl(var(--accent)/0.7)]">
           <Users className="h-4 w-4" />
         </Button>
       </SheetTrigger>
+      )}
+
       <SheetContent className="w-full sm:max-w-lg flex flex-col p-0">
         {/* HEADER */}
         <div className="p-4 border-b border-border flex items-center gap-2">
