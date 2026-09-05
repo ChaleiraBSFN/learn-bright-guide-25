@@ -69,11 +69,19 @@ interface HistoryItem {
 
 type View = 'list' | 'chat' | 'settings' | 'history';
 
-export const StudyGroups = () => {
+export const StudyGroups = ({ hidden = false }: { hidden?: boolean } = {}) => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+
+  // Permite abrir o painel a partir do dock inferior no celular
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener('open_study_groups', onOpen);
+    return () => window.removeEventListener('open_study_groups', onOpen);
+  }, []);
+
   const [view, setView] = useState<View>('list');
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(false);
