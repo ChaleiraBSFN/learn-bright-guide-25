@@ -42,6 +42,9 @@ const SocialProof = lazy(() => import("@/components/home/SocialProof").then((m) 
 const HowItWorks = lazy(() => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })));
 const StatsPanel = lazy(() => import("@/components/StatsPanel"));
 const ExamModeCard = lazy(() => import("@/components/ExamModeCard"));
+const StudyChat = lazy(() => import("@/components/StudyChat").then((m) => ({ default: m.StudyChat })));
+const AccountPanel = lazy(() => import("@/components/AccountPanel"));
+
 
 
 
