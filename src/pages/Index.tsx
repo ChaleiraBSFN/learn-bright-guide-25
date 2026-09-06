@@ -40,8 +40,10 @@ const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({
 const PlanComparison = lazy(() => import("@/components/PlanComparison").then((m) => ({ default: m.PlanComparison })));
 const SocialProof = lazy(() => import("@/components/home/SocialProof").then((m) => ({ default: m.SocialProof })));
 const HowItWorks = lazy(() => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })));
-const StatsPanel = lazy(() => import("@/components/StatsPanel"));
 const ExamModeCard = lazy(() => import("@/components/ExamModeCard"));
+const StudyChat = lazy(() => import("@/components/StudyChat").then((m) => ({ default: m.StudyChat })));
+const AccountPanel = lazy(() => import("@/components/AccountPanel"));
+
 
 
 
@@ -798,10 +800,11 @@ const Index = () => {
                     <CalendarDays className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.plan')}</span>
                   </TabsTrigger>
-                  <TabsTrigger value="stats" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                  <TabsTrigger value="account" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <BarChart3 className="h-4 w-4" />
-                    <span className="hidden sm:inline">{t('tabs.stats')}</span>
+                    <span className="hidden sm:inline">{t('tabs.account', 'Conta')}</span>
                   </TabsTrigger>
+
                   <TabsTrigger value="history" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <History className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.history')}</span>
@@ -834,10 +837,11 @@ const Index = () => {
                           <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
                         </Suspense>
                       </div>
-                    ) : activeTab === "stats" ? (
+                    ) : activeTab === "stats" || activeTab === "account" ? (
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
-                        <StatsPanel />
+                        <AccountPanel onCreateExam={handleExerciseSubmit} isCreatingExam={isExerciseLoading} />
                       </Suspense>
+
                     ) : (
 
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
@@ -916,6 +920,23 @@ const Index = () => {
                   isGeneratingExercise={isExerciseLoading}
                 />
               </Suspense>
+              {/* Chat de continuação sobre o estudo gerado */}
+              <Suspense fallback={null}>
+                <StudyChat
+                  tema={currentTema}
+                  contexto={[
+                    studyContent.objetivo?.conteudo,
+                    studyContent.resumo?.conteudo,
+                    (studyContent.demonstracoes?.passos ?? [])
+                      .map((p) => `${p.titulo}: ${p.conceito}`)
+                      .join("\n"),
+                  ]
+                    .filter(Boolean)
+                    .join("\n\n")}
+                />
+              </Suspense>
+
+
             </motion.div>
           ) : exerciseContent ? (
             <motion.div

@@ -364,7 +364,8 @@
     "exercises": "Esercizi",
     "history": "Cronologia",
     "plan": "Piano di Studio",
-    "stats": "Progressi"
+    "stats": "Progressi",
+    "account": "Account"
   },
   "history": {
     "title": "Cronologia",
@@ -464,7 +465,8 @@
     "noHistory": "Vuota.",
     "imageError": "Errore immagine.",
     "loginRequired": "Crea account",
-    "loginRequiredDesc": "Accedi per i gruppi."
+    "loginRequiredDesc": "Accedi per i gruppi.",
+    "short": "Aule"
   },
   "aiInfo": {
     "menuTitle": "Dettagli IA",
@@ -568,7 +570,8 @@
     "iosStep4": "Cerca <strong>\"Aggiungi alla schermata Home\"</strong>. Altrimenti: <strong>\"Altre azioni\"</strong>.",
     "iosStep5": "Tocca <strong>\"Aggiungi\"</strong>. 🎉",
     "iosNote": "💡 L'opzione potrebbe essere nascosta. Scorri in basso.",
-    "backToSite": "Torna al sito"
+    "backToSite": "Torna al sito",
+    "short": "App"
   },
   "imageCrop": {
     "title": "Ritaglia immagine",
@@ -651,7 +654,8 @@
     "noSurreal": "Nessuno ha ancora raggiunto il rango massimo!",
     "noSurrealHint": "Completa tutte le sfide per apparire qui!",
     "allPlayers": "Tutti i giocatori",
-    "youAreHere": "Sei qui"
+    "youAreHere": "Sei qui",
+    "short": "Classifica"
   },
   "ranks": {
     "bronze": "Bronzo",
@@ -832,7 +836,8 @@
     "donateAmount": "Quanti buddy vuoi donare?",
     "donateConfirm": "Dona {{count}}",
     "donateReceived": "🎉 {{name}} ha donato {{count}} buddy al tuo post!",
-    "donorAnonymous": "Qualcuno"
+    "donorAnonymous": "Qualcuno",
+    "short": "Community"
   },
   "fullscreen": {
     "enter": "Schermo Intero",
@@ -870,7 +875,8 @@
     "tapForMore": "Tocca per guadagnarne di più!",
     "waitFullAd": "Attendi la fine dell'annuncio per ricevere i crediti.",
     "openShop": "Apri il negozio crediti",
-    "adLabel": "Annuncio"
+    "adLabel": "Annuncio",
+    "short": "Crediti"
   },
   "sectionGate": {
     "title": "In sviluppo",
@@ -992,7 +998,8 @@
     "addImage": "Allega immagine",
     "placeholder": "Chiedi qualsiasi cosa…",
     "disclaimer": "Powered by Gemini · Potrebbe commettere errori, verifica le informazioni importanti.",
-    "tooltip": "Chatta con Learn Buddy"
+    "tooltip": "Chatta con Learn Buddy",
+    "short": "Chiedi"
   },
   "common": {
     "save": "Salva",
@@ -1036,7 +1043,15 @@
     "tipExercise3": "Preparazione di soluzioni e spiegazioni...",
     "tipStudy1": "Analisi dell'argomento richiesto...",
     "tipStudy2": "Creazione di riassunti e spiegazioni...",
-    "tipStudy3": "Creazione della mappa mentale e del piano di studio..."
+    "tipStudy3": "Creazione della mappa mentale e del piano di studio...",
+    "progressLabel": "Progresso",
+    "stepDone": "Tutto pronto",
+    "step": {
+      "understanding": "Capire l argomento",
+      "topics": "Costruire i punti",
+      "examples": "Creare gli esempi",
+      "finishing": "Completamento"
+    }
   },
   "home": {
     "chipsLabel": "Inizia da:",
@@ -1218,5 +1233,35 @@
     "empty": "Ancora nessun dato. Crea il tuo primo studio per iniziare!",
     "signedOut": "Accedi per vedere i tuoi progressi.",
     "signIn": "Accedi"
+  },
+  "studyChat": {
+    "title": "Continua a chiedere",
+    "subtitle": "Fai domande su questo studio senza lasciare la pagina.",
+    "placeholder": "Chiedi qualcosa su questo contenuto",
+    "thinking": "Sto pensando...",
+    "send": "Invia",
+    "errorTitle": "Non riesco a rispondere ora",
+    "errorDesc": "Riprova tra qualche secondo.",
+    "suggestions": {
+      "exercise": "Voglio provare un esercizio",
+      "simpler": "Spiegalo in modo più semplice",
+      "example": "Dammi un altro esempio",
+      "exam": "Come esce nel compito?"
+    }
+  },
+  "account": {
+    "statsTitle": "Il tuo percorso e le statistiche",
+    "trailTitle": "Percorso di progresso",
+    "trailDesc": "Guarda le sfide completate e le prossime.",
+    "rankingTitle": "Classifica",
+    "rankingDesc": "Confronta i tuoi progressi con gli altri.",
+    "examTitle": "Crea una verifica",
+    "examDesc": "Crea una verifica con il numero di domande e la difficoltà che vuoi.",
+    "examSubject": "Argomento della verifica",
+    "examSubjectPlaceholder": "Es.: Rivoluzione francese",
+    "examCount": "Domande",
+    "examDifficulty": "Difficoltà",
+    "examLevel": "Livello scolastico",
+    "examSubmit": "Genera verifica"
   }
 }

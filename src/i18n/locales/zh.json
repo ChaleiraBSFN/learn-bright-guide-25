@@ -364,7 +364,8 @@
     "exercises": "生成练习",
     "history": "历史",
     "plan": "学习计划",
-    "stats": "学习进度"
+    "stats": "学习进度",
+    "account": "账户"
   },
   "history": {
     "title": "历史",
@@ -464,7 +465,8 @@
     "noHistory": "无。",
     "imageError": "图片错误。",
     "loginRequired": "需要账户",
-    "loginRequiredDesc": "请登录。"
+    "loginRequiredDesc": "请登录。",
+    "short": "教室"
   },
   "aiInfo": {
     "menuTitle": "AI详情",
@@ -568,7 +570,8 @@
     "iosStep4": "查找<strong>\"添加到主屏幕\"</strong>。如果未显示：<strong>\"更多操作\"</strong>。",
     "iosStep5": "点击<strong>\"添加\"</strong>。🎉",
     "iosNote": "💡 选项可能被隐藏。向下滚动。",
-    "backToSite": "返回网站"
+    "backToSite": "返回网站",
+    "short": "应用"
   },
   "imageCrop": {
     "title": "裁剪图片",
@@ -651,7 +654,8 @@
     "noSurreal": "还没有人达到最高段位！",
     "noSurrealHint": "完成所有挑战即可出现在这里！",
     "allPlayers": "所有玩家",
-    "youAreHere": "你在这里"
+    "youAreHere": "你在这里",
+    "short": "排行榜"
   },
   "ranks": {
     "bronze": "青铜",
@@ -832,7 +836,8 @@
     "donateAmount": "你想赠送多少个 Buddy？",
     "donateConfirm": "赠送 {{count}}",
     "donateReceived": "🎉 {{name}} 向你的帖子赠送了 {{count}} 个 Buddy！",
-    "donorAnonymous": "某人"
+    "donorAnonymous": "某人",
+    "short": "社区"
   },
   "fullscreen": {
     "enter": "全屏",
@@ -870,7 +875,8 @@
     "tapForMore": "点击获取更多!",
     "waitFullAd": "请等待广告结束后再领取积分。",
     "openShop": "打开积分商店",
-    "adLabel": "广告"
+    "adLabel": "广告",
+    "short": "积分"
   },
   "sectionGate": {
     "title": "开发中",
@@ -1023,7 +1029,8 @@
     "s4": "给我 3 道关于二次方程的练习题",
     "addImage": "附加图片",
     "placeholder": "问任何问题…",
-    "disclaimer": "由 Gemini 提供支持 · 可能会出错，请核实重要信息。"
+    "disclaimer": "由 Gemini 提供支持 · 可能会出错，请核实重要信息。",
+    "short": "提问"
   },
   "generating": {
     "studyDone": "完成！🎉",
@@ -1036,7 +1043,15 @@
     "tipExercise3": "正在准备答案和讲解...",
     "tipStudy1": "正在分析所选主题...",
     "tipStudy2": "正在创建摘要和讲解...",
-    "tipStudy3": "正在构建思维导图和学习计划..."
+    "tipStudy3": "正在构建思维导图和学习计划...",
+    "progressLabel": "进度",
+    "stepDone": "全部就绪",
+    "step": {
+      "understanding": "正在理解主题",
+      "topics": "正在整理要点",
+      "examples": "正在生成示例",
+      "finishing": "正在收尾"
+    }
   },
   "home": {
     "chipsLabel": "从这里开始：",
@@ -1218,5 +1233,35 @@
     "empty": "还没有数据。先生成第一份学习内容吧！",
     "signedOut": "登录后即可查看学习进度。",
     "signIn": "登录"
+  },
+  "studyChat": {
+    "title": "继续提问",
+    "subtitle": "无需离开页面，就能追问这份学习内容。",
+    "placeholder": "针对这份内容提问",
+    "thinking": "思考中...",
+    "send": "发送",
+    "errorTitle": "现在无法回答",
+    "errorDesc": "请几秒后再试。",
+    "suggestions": {
+      "exercise": "我想做一道练习",
+      "simpler": "请讲得更简单一些",
+      "example": "再给我一个例子",
+      "exam": "考试会怎么考？"
+    }
+  },
+  "account": {
+    "statsTitle": "你的学习记录与统计",
+    "trailTitle": "进度路线",
+    "trailDesc": "查看已完成和接下来的挑战。",
+    "rankingTitle": "排行榜",
+    "rankingDesc": "和其他同学比较进度。",
+    "examTitle": "创建一份试卷",
+    "examDesc": "按你想要的题量和难度生成试卷。",
+    "examSubject": "试卷主题",
+    "examSubjectPlaceholder": "例如：法国大革命",
+    "examCount": "题目数量",
+    "examDifficulty": "难度",
+    "examLevel": "学习阶段",
+    "examSubmit": "生成试卷"
   }
 }

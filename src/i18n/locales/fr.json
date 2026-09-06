@@ -364,7 +364,8 @@
     "exercises": "Générer des exercices",
     "history": "Historique",
     "plan": "Plan d'étude",
-    "stats": "Progression"
+    "stats": "Progression",
+    "account": "Compte"
   },
   "history": {
     "title": "Votre historique",
@@ -464,7 +465,8 @@
     "noHistory": "Aucun historique.",
     "imageError": "Erreur d'image.",
     "loginRequired": "Créez un compte",
-    "loginRequiredDesc": "Connectez-vous pour accéder aux groupes."
+    "loginRequiredDesc": "Connectez-vous pour accéder aux groupes.",
+    "short": "Salles"
   },
   "aiInfo": {
     "menuTitle": "Détails IA",
@@ -568,7 +570,8 @@
     "iosStep4": "Cherchez <strong>\"Sur l'écran d'accueil\"</strong>. Sinon, tapez <strong>\"Plus d'actions\"</strong>.",
     "iosStep5": "Tapez <strong>\"Ajouter\"</strong>. 🎉",
     "iosNote": "💡 L'option peut être cachée. Faites défiler.",
-    "backToSite": "Retour au site"
+    "backToSite": "Retour au site",
+    "short": "App"
   },
   "imageCrop": {
     "title": "Recadrer l'image",
@@ -651,7 +654,8 @@
     "noSurreal": "Personne n'a encore atteint le rang maximum !",
     "noSurrealHint": "Complétez tous les défis pour apparaître ici !",
     "allPlayers": "Tous les joueurs",
-    "youAreHere": "Vous êtes ici"
+    "youAreHere": "Vous êtes ici",
+    "short": "Classement"
   },
   "ranks": {
     "bronze": "Bronze",
@@ -832,7 +836,8 @@
     "donateAmount": "Combien de buddies voulez-vous offrir ?",
     "donateConfirm": "Offrir {{count}}",
     "donateReceived": "🎉 {{name}} vous a offert {{count}} buddy(s) sur votre publication !",
-    "donorAnonymous": "Quelqu'un"
+    "donorAnonymous": "Quelqu'un",
+    "short": "Communauté"
   },
   "fullscreen": {
     "enter": "Plein Écran",
@@ -870,7 +875,8 @@
     "tapForMore": "Touchez pour en gagner plus !",
     "waitFullAd": "Attendez la fin de la pub pour recevoir les crédits.",
     "openShop": "Ouvrir la boutique",
-    "adLabel": "Annonce"
+    "adLabel": "Annonce",
+    "short": "Crédits"
   },
   "sectionGate": {
     "title": "En développement",
@@ -992,7 +998,8 @@
     "addImage": "Joindre une image",
     "placeholder": "Demandez n'importe quoi…",
     "disclaimer": "Propulsé par Gemini · peut faire des erreurs, vérifiez les informations importantes.",
-    "tooltip": "Chat avec Learn Buddy"
+    "tooltip": "Chat avec Learn Buddy",
+    "short": "Demander"
   },
   "common": {
     "save": "Sauvegarder",
@@ -1036,7 +1043,15 @@
     "tipExercise3": "Préparation des corrigés et des explications...",
     "tipStudy1": "Analyse du sujet demandé...",
     "tipStudy2": "Création des résumés et des explications...",
-    "tipStudy3": "Construction de la carte mentale et du plan d'étude..."
+    "tipStudy3": "Construction de la carte mentale et du plan d'étude...",
+    "progressLabel": "Progression",
+    "stepDone": "Tout est prêt",
+    "step": {
+      "understanding": "Comprendre le sujet",
+      "topics": "Construire les points clés",
+      "examples": "Créer les exemples",
+      "finishing": "Finalisation"
+    }
   },
   "home": {
     "chipsLabel": "Commencez par :",
@@ -1218,5 +1233,35 @@
     "empty": "Pas encore de données. Crée ta première étude pour commencer !",
     "signedOut": "Connecte-toi pour voir ta progression.",
     "signIn": "Se connecter"
+  },
+  "studyChat": {
+    "title": "Continuez à poser des questions",
+    "subtitle": "Posez vos questions sur cette étude sans quitter la page.",
+    "placeholder": "Posez une question sur ce contenu",
+    "thinking": "Réflexion...",
+    "send": "Envoyer",
+    "errorTitle": "Je ne peux pas répondre maintenant",
+    "errorDesc": "Réessayez dans quelques secondes.",
+    "suggestions": {
+      "exercise": "Je veux essayer un exercice",
+      "simpler": "Explique plus simplement",
+      "example": "Donne-moi un autre exemple",
+      "exam": "Comment cela tombe à l examen ?"
+    }
+  },
+  "account": {
+    "statsTitle": "Votre parcours et vos statistiques",
+    "trailTitle": "Parcours de progression",
+    "trailDesc": "Voyez vos défis terminés et les suivants.",
+    "rankingTitle": "Classement",
+    "rankingDesc": "Comparez votre progression avec les autres.",
+    "examTitle": "Créer un contrôle",
+    "examDesc": "Composez un contrôle avec le nombre de questions et la difficulté souhaitée.",
+    "examSubject": "Sujet du contrôle",
+    "examSubjectPlaceholder": "Ex. : Révolution française",
+    "examCount": "Questions",
+    "examDifficulty": "Difficulté",
+    "examLevel": "Niveau scolaire",
+    "examSubmit": "Générer le contrôle"
   }
 }

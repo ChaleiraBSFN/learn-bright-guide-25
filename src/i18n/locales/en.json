@@ -358,7 +358,8 @@
     "exercises": "Generate Exercises",
     "history": "History",
     "plan": "Study Plan",
-    "stats": "Progress"
+    "stats": "Progress",
+    "account": "Account"
   },
   "history": {
     "title": "Your History",
@@ -458,7 +459,8 @@
     "noHistory": "No history found.",
     "imageError": "Error uploading image.",
     "loginRequired": "Create an account first",
-    "loginRequiredDesc": "To access study groups, you need to create an account or log in."
+    "loginRequiredDesc": "To access study groups, you need to create an account or log in.",
+    "short": "Rooms"
   },
   "aiInfo": {
     "menuTitle": "AI Details",
@@ -562,7 +564,8 @@
     "iosStep4": "Look for <strong>\"Add to Home Screen\"</strong>. <strong>If it doesn't appear</strong>, scroll down and tap <strong>\"More Actions...\"</strong> — the option may be hidden there.",
     "iosStep5": "Tap <strong>\"Add to Home Screen\"</strong> and confirm by tapping <strong>\"Add\"</strong>. Done! The Learn Buddy icon will appear on your home screen! 🎉",
     "iosNote": "💡 <strong>Tip:</strong> On iPhone, \"Add to Home Screen\" may not appear in the main Share list. Scroll to the bottom and tap <strong>\"More Actions\"</strong> to find it.",
-    "backToSite": "Back to site"
+    "backToSite": "Back to site",
+    "short": "App"
   },
   "imageCrop": {
     "title": "Crop Image",
@@ -630,7 +633,15 @@
     "tipExercise3": "Preparing answer keys and explanations...",
     "studyDone": "Done! 🎉",
     "exerciseDone": "Done! 🎉",
-    "complexityHint": "This may take a few seconds due to the generation of complex content, images, diagrams, and personalized details. Sometimes images may not be generated if the request limit is exceeded."
+    "complexityHint": "This may take a few seconds due to the generation of complex content, images, diagrams, and personalized details. Sometimes images may not be generated if the request limit is exceeded.",
+    "progressLabel": "Progress",
+    "stepDone": "All set",
+    "step": {
+      "understanding": "Understanding the topic",
+      "topics": "Building the topics",
+      "examples": "Creating examples",
+      "finishing": "Finishing up"
+    }
   },
   "credits": {
     "remaining": "{{count}} credits remaining",
@@ -658,7 +669,8 @@
     "noSurreal": "No one has reached the maximum rank yet!",
     "noSurrealHint": "Complete all trail challenges to appear here!",
     "allPlayers": "All players",
-    "youAreHere": "You are here"
+    "youAreHere": "You are here",
+    "short": "Ranking"
   },
   "ranks": {
     "bronze": "Bronze",
@@ -839,7 +851,8 @@
     "donateAmount": "How many buddies do you want to donate?",
     "donateConfirm": "Donate {{count}}",
     "donateReceived": "🎉 {{name}} donated {{count}} buddy(s) to your post!",
-    "donorAnonymous": "Someone"
+    "donorAnonymous": "Someone",
+    "short": "Community"
   },
   "fullscreen": {
     "enter": "Full Screen",
@@ -877,7 +890,8 @@
     "tapForMore": "Tap to earn more!",
     "waitFullAd": "Wait for the ad to finish to receive the credits.",
     "openShop": "Open credit shop",
-    "adLabel": "Ad"
+    "adLabel": "Ad",
+    "short": "Credits"
   },
   "sectionGate": {
     "title": "Under development",
@@ -1030,7 +1044,8 @@
     "s4": "Give me 3 exercises on quadratic equations",
     "addImage": "Attach image",
     "placeholder": "Ask anything…",
-    "disclaimer": "Powered by Gemini · may make mistakes, verify important information."
+    "disclaimer": "Powered by Gemini · may make mistakes, verify important information.",
+    "short": "Ask"
   },
   "home": {
     "chipsLabel": "Start with:",
@@ -1212,5 +1227,35 @@
     "empty": "No data yet. Create your first study to get started!",
     "signedOut": "Sign in to see your progress.",
     "signIn": "Sign in"
+  },
+  "studyChat": {
+    "title": "Keep asking",
+    "subtitle": "Ask questions about this study without leaving the page.",
+    "placeholder": "Ask something about this content",
+    "thinking": "Thinking...",
+    "send": "Send",
+    "errorTitle": "I could not answer right now",
+    "errorDesc": "Please try again in a few seconds.",
+    "suggestions": {
+      "exercise": "I want to try an exercise",
+      "simpler": "Explain it in a simpler way",
+      "example": "Give me another example",
+      "exam": "How does this show up on tests?"
+    }
+  },
+  "account": {
+    "statsTitle": "Your record and stats",
+    "trailTitle": "Progress trail",
+    "trailDesc": "See your finished and upcoming challenges.",
+    "rankingTitle": "Ranking",
+    "rankingDesc": "Compare your progress with other students.",
+    "examTitle": "Create a test",
+    "examDesc": "Build a test with the number of questions and difficulty you want.",
+    "examSubject": "Test subject",
+    "examSubjectPlaceholder": "e.g. French Revolution",
+    "examCount": "Questions",
+    "examDifficulty": "Difficulty",
+    "examLevel": "School level",
+    "examSubmit": "Generate test"
   }
 }
