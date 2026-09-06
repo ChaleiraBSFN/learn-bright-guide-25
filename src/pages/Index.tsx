@@ -916,6 +916,24 @@ const Index = () => {
                   isGeneratingExercise={isExerciseLoading}
                 />
               </Suspense>
+              {/* Chat de continuação sobre o estudo gerado */}
+              <Suspense fallback={null}>
+                <StudyChat
+                  tema={currentTema}
+                  contexto={[
+                    studyContent.objetivo,
+                    studyContent.resumo,
+                    Array.isArray(studyContent.passos)
+                      ? studyContent.passos
+                          .map((p: { titulo?: string; explicacao?: string }) => `${p?.titulo ?? ""}: ${p?.explicacao ?? ""}`)
+                          .join("\n")
+                      : "",
+                  ]
+                    .filter(Boolean)
+                    .join("\n\n")}
+                />
+              </Suspense>
+
             </motion.div>
           ) : exerciseContent ? (
             <motion.div
