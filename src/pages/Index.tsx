@@ -40,7 +40,6 @@ const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({
 const PlanComparison = lazy(() => import("@/components/PlanComparison").then((m) => ({ default: m.PlanComparison })));
 const SocialProof = lazy(() => import("@/components/home/SocialProof").then((m) => ({ default: m.SocialProof })));
 const HowItWorks = lazy(() => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })));
-const StatsPanel = lazy(() => import("@/components/StatsPanel"));
 const ExamModeCard = lazy(() => import("@/components/ExamModeCard"));
 const StudyChat = lazy(() => import("@/components/StudyChat").then((m) => ({ default: m.StudyChat })));
 const AccountPanel = lazy(() => import("@/components/AccountPanel"));
