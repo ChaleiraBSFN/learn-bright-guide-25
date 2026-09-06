@@ -358,7 +358,8 @@
     "exercises": "Gerar Exercícios",
     "history": "Histórico",
     "plan": "Roteiro de Estudo",
-    "stats": "Progresso"
+    "stats": "Progresso",
+    "account": "Conta"
   },
   "history": {
     "title": "Seu Histórico",
@@ -458,7 +459,8 @@
     "noHistory": "Nenhum histórico encontrado.",
     "imageError": "Erro ao enviar imagem.",
     "loginRequired": "Crie uma conta primeiro",
-    "loginRequiredDesc": "Para acessar os grupos de estudo, você precisa criar uma conta ou fazer login."
+    "loginRequiredDesc": "Para acessar os grupos de estudo, você precisa criar uma conta ou fazer login.",
+    "short": "Salas"
   },
   "aiInfo": {
     "menuTitle": "Dados da IA",
@@ -562,7 +564,8 @@
     "iosStep4": "Procure a opção <strong>\"Adicionar à Tela de Início\"</strong>. <strong>Se ela não aparecer diretamente</strong>, role a lista para baixo e toque em <strong>\"Mais Ações...\"</strong> (ou <strong>\"Editar Ações\"</strong>) — a opção pode estar escondida lá dentro.",
     "iosStep5": "Toque em <strong>\"Adicionar à Tela de Início\"</strong> e confirme tocando em <strong>\"Adicionar\"</strong> no canto superior direito. Pronto! O ícone do Learn Buddy vai aparecer na sua tela inicial! 🎉",
     "iosNote": "💡 <strong>Dica:</strong> No iPhone, a opção \"Adicionar à Tela de Início\" às vezes não aparece na lista principal do Compartilhar. Nesse caso, role até o final e toque em <strong>\"Mais Ações\"</strong> para encontrá-la.",
-    "backToSite": "Voltar ao site"
+    "backToSite": "Voltar ao site",
+    "short": "App"
   },
   "imageCrop": {
     "title": "Recortar Imagem",
@@ -581,7 +584,15 @@
     "tipExercise3": "Preparando gabaritos e explicações...",
     "studyDone": "Pronto! 🎉",
     "exerciseDone": "Pronto! 🎉",
-    "complexityHint": "Pode demorar alguns segundos devido à geração de conteúdos complexos, imagens, diagramas e detalhes personalizados. Às vezes as imagens podem não ser geradas caso o limite de requisições seja excedido."
+    "complexityHint": "Pode demorar alguns segundos devido à geração de conteúdos complexos, imagens, diagramas e detalhes personalizados. Às vezes as imagens podem não ser geradas caso o limite de requisições seja excedido.",
+    "progressLabel": "Progresso",
+    "stepDone": "Tudo pronto",
+    "step": {
+      "understanding": "Entendendo o tema",
+      "topics": "Montando os tópicos",
+      "examples": "Criando os exemplos",
+      "finishing": "Finalizando"
+    }
   },
   "settings": {
     "title": "Configurações",
@@ -649,7 +660,8 @@
     "noSurreal": "Ninguém atingiu o rank máximo ainda!",
     "noSurrealHint": "Complete todos os desafios da trilha para aparecer aqui!",
     "allPlayers": "Todos os jogadores",
-    "youAreHere": "Você está aqui"
+    "youAreHere": "Você está aqui",
+    "short": "Ranking"
   },
   "ranks": {
     "bronze": "Bronze",
@@ -839,7 +851,8 @@
     "donateAmount": "Quantos buddys quer doar?",
     "donateConfirm": "Doar {{count}}",
     "donateReceived": "🎉 {{name}} doou {{count}} buddy(s) para o seu post!",
-    "donorAnonymous": "Alguém"
+    "donorAnonymous": "Alguém",
+    "short": "Comunidade"
   },
   "fullscreen": {
     "enter": "Tela Cheia",
@@ -877,7 +890,8 @@
     "tapForMore": "Toque para ganhar mais!",
     "waitFullAd": "Aguarde o anúncio terminar para receber os créditos.",
     "openShop": "Abrir mercadinho",
-    "adLabel": "Anúncio"
+    "adLabel": "Anúncio",
+    "short": "Créditos"
   },
   "sectionGate": {
     "title": "Em desenvolvimento",
@@ -1030,7 +1044,8 @@
     "s4": "Me dê 3 exercícios sobre equação do 2º grau",
     "addImage": "Anexar imagem",
     "placeholder": "Pergunte qualquer coisa…",
-    "disclaimer": "Powered by Gemini · pode cometer erros, verifique informações importantes."
+    "disclaimer": "Powered by Gemini · pode cometer erros, verifique informações importantes.",
+    "short": "Perguntar"
   },
   "home": {
     "chipsLabel": "Comece por:",
@@ -1212,5 +1227,35 @@
     "empty": "Ainda não há dados. Gere seu primeiro estudo para começar!",
     "signedOut": "Entre na sua conta para ver seu progresso.",
     "signIn": "Entrar"
+  },
+  "studyChat": {
+    "title": "Continue perguntando",
+    "subtitle": "Tire dúvidas sobre este estudo, sem sair da página.",
+    "placeholder": "Pergunte alguma coisa sobre este conteúdo",
+    "thinking": "Pensando...",
+    "send": "Enviar",
+    "errorTitle": "Não consegui responder agora",
+    "errorDesc": "Tente de novo em alguns segundos.",
+    "suggestions": {
+      "exercise": "Quero tentar um exercício",
+      "simpler": "Explica de um jeito mais simples",
+      "example": "Me dá outro exemplo",
+      "exam": "Como isso cai na prova?"
+    }
+  },
+  "account": {
+    "statsTitle": "Seu currículo e estatísticas",
+    "trailTitle": "Trilha de progresso",
+    "trailDesc": "Veja seus desafios concluídos e os próximos.",
+    "rankingTitle": "Ranking",
+    "rankingDesc": "Compare seu progresso com outros estudantes.",
+    "examTitle": "Criar uma prova",
+    "examDesc": "Monte uma prova com o número de questões e a dificuldade que quiser.",
+    "examSubject": "Assunto da prova",
+    "examSubjectPlaceholder": "Ex.: Revolução Francesa",
+    "examCount": "Questões",
+    "examDifficulty": "Dificuldade",
+    "examLevel": "Nível de ensino",
+    "examSubmit": "Gerar prova"
   }
 }

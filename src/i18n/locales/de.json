@@ -364,7 +364,8 @@
     "exercises": "Übungen",
     "history": "Verlauf",
     "plan": "Lernplan",
-    "stats": "Fortschritt"
+    "stats": "Fortschritt",
+    "account": "Konto"
   },
   "history": {
     "title": "Verlauf",
@@ -464,7 +465,8 @@
     "noHistory": "Leer.",
     "imageError": "Bildfehler.",
     "loginRequired": "Konto nötig",
-    "loginRequiredDesc": "Bitte anmelden."
+    "loginRequiredDesc": "Bitte anmelden.",
+    "short": "Räume"
   },
   "aiInfo": {
     "menuTitle": "KI-Details",
@@ -568,7 +570,8 @@
     "iosStep4": "Suchen Sie <strong>\"Zum Home-Bildschirm\"</strong>. Falls nicht sichtbar: <strong>\"Weitere Aktionen\"</strong>.",
     "iosStep5": "Tippen Sie <strong>\"Hinzufügen\"</strong>. 🎉",
     "iosNote": "💡 Die Option kann versteckt sein. Scrollen Sie nach unten.",
-    "backToSite": "Zurück"
+    "backToSite": "Zurück",
+    "short": "App"
   },
   "imageCrop": {
     "title": "Bild zuschneiden",
@@ -651,7 +654,8 @@
     "noSurreal": "Noch niemand hat den höchsten Rang erreicht!",
     "noSurrealHint": "Schließe alle Herausforderungen ab!",
     "allPlayers": "Alle Spieler",
-    "youAreHere": "Du bist hier"
+    "youAreHere": "Du bist hier",
+    "short": "Rangliste"
   },
   "ranks": {
     "bronze": "Bronze",
@@ -832,7 +836,8 @@
     "donateAmount": "Wie viele Buddies möchtest du spenden?",
     "donateConfirm": "{{count}} spenden",
     "donateReceived": "🎉 {{name}} hat dir {{count}} Buddy(s) für deinen Beitrag gespendet!",
-    "donorAnonymous": "Jemand"
+    "donorAnonymous": "Jemand",
+    "short": "Community"
   },
   "fullscreen": {
     "enter": "Vollbild",
@@ -870,7 +875,8 @@
     "tapForMore": "Tippen, um mehr zu verdienen!",
     "waitFullAd": "Warte, bis die Anzeige endet, um die Credits zu erhalten.",
     "openShop": "Credit-Shop öffnen",
-    "adLabel": "Anzeige"
+    "adLabel": "Anzeige",
+    "short": "Credits"
   },
   "sectionGate": {
     "title": "In Entwicklung",
@@ -1023,7 +1029,8 @@
     "s4": "Geben Sie mir 3 Übungen zur quadratischen Gleichung",
     "addImage": "Bild anhängen",
     "placeholder": "Fragen Sie alles…",
-    "disclaimer": "Powered by Gemini · kann Fehler machen, überprüfen Sie wichtige Informationen."
+    "disclaimer": "Powered by Gemini · kann Fehler machen, überprüfen Sie wichtige Informationen.",
+    "short": "Fragen"
   },
   "generating": {
     "studyDone": "Fertig! 🎉",
@@ -1036,7 +1043,15 @@
     "tipExercise3": "Lösungen und Erklärungen werden vorbereitet...",
     "tipStudy1": "Das gewünschte Thema wird analysiert...",
     "tipStudy2": "Zusammenfassungen und Erklärungen werden erstellt...",
-    "tipStudy3": "Mindmap und Lernplan werden erstellt..."
+    "tipStudy3": "Mindmap und Lernplan werden erstellt...",
+    "progressLabel": "Fortschritt",
+    "stepDone": "Alles bereit",
+    "step": {
+      "understanding": "Thema verstehen",
+      "topics": "Themenpunkte aufbauen",
+      "examples": "Beispiele erstellen",
+      "finishing": "Abschluss"
+    }
   },
   "home": {
     "chipsLabel": "Starte mit:",
@@ -1218,5 +1233,35 @@
     "empty": "Noch keine Daten. Erstelle deinen ersten Lerninhalt!",
     "signedOut": "Melde dich an, um deinen Fortschritt zu sehen.",
     "signIn": "Anmelden"
+  },
+  "studyChat": {
+    "title": "Frag einfach weiter",
+    "subtitle": "Stelle Fragen zu diesem Lernstoff, ohne die Seite zu verlassen.",
+    "placeholder": "Frag etwas zu diesem Inhalt",
+    "thinking": "Denkt nach...",
+    "send": "Senden",
+    "errorTitle": "Ich konnte gerade nicht antworten",
+    "errorDesc": "Versuche es in ein paar Sekunden erneut.",
+    "suggestions": {
+      "exercise": "Ich möchte eine Übung probieren",
+      "simpler": "Erkläre es einfacher",
+      "example": "Gib mir ein weiteres Beispiel",
+      "exam": "Wie kommt das in der Prüfung vor?"
+    }
+  },
+  "account": {
+    "statsTitle": "Dein Verlauf und deine Statistiken",
+    "trailTitle": "Fortschrittspfad",
+    "trailDesc": "Sieh deine erledigten und nächsten Aufgaben.",
+    "rankingTitle": "Rangliste",
+    "rankingDesc": "Vergleiche deinen Fortschritt mit anderen.",
+    "examTitle": "Test erstellen",
+    "examDesc": "Erstelle einen Test mit Fragenanzahl und Schwierigkeit deiner Wahl.",
+    "examSubject": "Thema des Tests",
+    "examSubjectPlaceholder": "z. B. Französische Revolution",
+    "examCount": "Fragen",
+    "examDifficulty": "Schwierigkeit",
+    "examLevel": "Schulstufe",
+    "examSubmit": "Test erstellen"
   }
 }
