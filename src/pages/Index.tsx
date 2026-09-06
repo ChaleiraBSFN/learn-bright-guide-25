@@ -921,18 +921,17 @@ const Index = () => {
                 <StudyChat
                   tema={currentTema}
                   contexto={[
-                    studyContent.objetivo,
-                    studyContent.resumo,
-                    Array.isArray(studyContent.passos)
-                      ? studyContent.passos
-                          .map((p: { titulo?: string; explicacao?: string }) => `${p?.titulo ?? ""}: ${p?.explicacao ?? ""}`)
-                          .join("\n")
-                      : "",
+                    studyContent.objetivo?.conteudo,
+                    studyContent.resumo?.conteudo,
+                    (studyContent.demonstracoes?.passos ?? [])
+                      .map((p) => `${p.titulo}: ${p.conceito}`)
+                      .join("\n"),
                   ]
                     .filter(Boolean)
                     .join("\n\n")}
                 />
               </Suspense>
+
 
             </motion.div>
           ) : exerciseContent ? (
