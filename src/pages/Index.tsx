@@ -801,10 +801,11 @@ const Index = () => {
                     <CalendarDays className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.plan')}</span>
                   </TabsTrigger>
-                  <TabsTrigger value="stats" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
+                  <TabsTrigger value="account" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <BarChart3 className="h-4 w-4" />
-                    <span className="hidden sm:inline">{t('tabs.stats')}</span>
+                    <span className="hidden sm:inline">{t('tabs.account', 'Conta')}</span>
                   </TabsTrigger>
+
                   <TabsTrigger value="history" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
                     <History className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('tabs.history')}</span>
