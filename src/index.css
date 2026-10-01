@@ -192,9 +192,6 @@
     .section-card::before {
       display: none;
     }
-    .section-card > .absolute.left-0.top-0.h-full {
-      display: none;
-    }
   }
 
   /* Barra de progresso Liquid Glass */
