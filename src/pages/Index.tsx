@@ -926,9 +926,11 @@ const Index = () => {
               </Suspense>
 
               {/* Ads accompany a finished, substantial lesson — never forms or navigation. */}
-              <div className="mt-8">
-                <Suspense fallback={null}><AdSenseSlot variant="card" /></Suspense>
-              </div>
+              {studyContent.demonstracoes?.passos?.length > 0 && studyContent.resumo?.conteudo && (
+                <div className="mt-8">
+                  <Suspense fallback={null}><AdSenseSlot variant="card" /></Suspense>
+                </div>
+              )}
 
             </motion.div>
           ) : exerciseContent ? (

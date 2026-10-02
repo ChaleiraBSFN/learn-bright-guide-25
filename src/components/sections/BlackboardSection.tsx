@@ -14,7 +14,7 @@ interface Props {
 /** The board uses the actual lesson's reasoning; it never invents calculations. */
 export function BlackboardSection({ data, steps, tema }: Props) {
   const { t } = useTranslation();
-  const generated = data?.linhas?.filter(line => line?.texto?.trim()).slice(0, 6);
+  const generated = Array.isArray(data?.linhas) ? data.linhas.filter(line => typeof line?.texto === 'string' && line.texto.trim()).slice(0, 6) : [];
   const lines = generated?.length ? generated : steps?.slice(0, 4).map(step => ({
     titulo: step.titulo,
     texto: step.exemplo?.trim() || step.conceito?.trim() || '',
