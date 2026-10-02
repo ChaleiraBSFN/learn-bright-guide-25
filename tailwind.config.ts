@@ -78,6 +78,12 @@ export default {
           plan: "hsl(var(--section-plan))",
           sources: "hsl(var(--section-sources))",
         },
+        board: {
+          frame: "hsl(var(--board-frame))",
+          chalk: "hsl(var(--board-chalk))",
+          soft: "hsl(var(--board-soft))",
+          accent: "hsl(var(--board-accent))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

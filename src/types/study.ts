@@ -17,6 +17,11 @@ export interface StudyContent {
       dicaImportante?: string;
     }>;
   };
+  quadroNegro?: {
+    titulo: string;
+    linhas: Array<{ titulo?: string; texto: string }>;
+    conclusao?: string;
+  };
   exercicios: {
     titulo: string;
     lista: Array<{

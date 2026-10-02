@@ -744,12 +744,6 @@ const Index = () => {
                     ) : (
                       <div className="min-h-[200px] rounded-xl bg-muted/20" />
                     )}
-                    {/* Anúncio abaixo dos planos */}
-                    {deferredReady && (
-                      <div className="pt-6">
-                        <Suspense fallback={null}><AdSenseSlot variant="card" /></Suspense>
-                      </div>
-                    )}
                   </div>
                 </>
 
@@ -880,11 +874,6 @@ const Index = () => {
                     <PlanComparison />
                   </Suspense>
                 )}
-                {deferredReady && (
-                  <div className="pt-6">
-                    <Suspense fallback={null}><AdSenseSlot variant="card" /></Suspense>
-                  </div>
-                )}
               </div>
 
               </>
@@ -936,6 +925,12 @@ const Index = () => {
                 />
               </Suspense>
 
+              {/* Ads accompany a finished, substantial lesson — never forms or navigation. */}
+              {studyContent.demonstracoes?.passos?.length > 0 && studyContent.resumo?.conteudo && (
+                <div className="mt-8">
+                  <Suspense fallback={null}><AdSenseSlot variant="card" /></Suspense>
+                </div>
+              )}
 
             </motion.div>
           ) : exerciseContent ? (
@@ -1102,17 +1097,6 @@ const Index = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Learn Buddy Footer Ad */}
-      <section className="w-full px-4 py-6">
-        <div className="container mx-auto max-w-4xl">
-          {deferredReady && (
-            <Suspense fallback={null}>
-              <AdSenseSlot variant="card" />
-            </Suspense>
-          )}
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="border-t border-border bg-muted/30 py-6 mt-12">

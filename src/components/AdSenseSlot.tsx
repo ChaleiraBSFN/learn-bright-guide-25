@@ -14,10 +14,9 @@ const ADSENSE_SCRIPT_ID = 'learn-buddy-adsense-script';
 const ADSENSE_FALLBACK_DELAY_MS = 6000;
 const ADSENSE_RETRY_DELAY_MS = 20000;
 const ADSENSE_MAX_RETRIES = 3;
-const ADSENSE_ALLOWED_HOST_SUFFIXES = ['studdybuddy.com.br', 'learnbuddy.com.br', '.lovable.app'];
-const isAdsenseHost = (host: string) =>
-  ADSENSE_ALLOWED_HOST_SUFFIXES.some((suffix) => host === suffix || host.endsWith(suffix));
-const isPreviewHost = (host: string) => host.endsWith(".lovable.app") || host === "localhost";
+const ADSENSE_ALLOWED_HOSTS = ['studdybuddy.com.br', 'www.studdybuddy.com.br', 'learnbuddy.com.br', 'www.learnbuddy.com.br', 'learn-bright-guide-25.lovable.app'];
+const isAdsenseHost = (host: string) => ADSENSE_ALLOWED_HOSTS.includes(host);
+const isPreviewHost = (host: string) => host.includes('preview--') || host === 'localhost';
 
 declare global {
   interface Window {

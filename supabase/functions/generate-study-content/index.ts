@@ -330,6 +330,7 @@ Return this JSON structure:
   "objetivo": {"titulo": "string", "conteudo": "2 sentences"},
   "resumo": {"titulo": "string", "conteudo": "4-5 sentences covering key points"},
   "demonstracoes": {"titulo": "string", "passos": [{"numero": 1, "titulo": "string", "conceito": "DEEP explanation: minimum 7 lines / 7-9 full sentences. Define key terms, explain the underlying principle/rule/formula with reasoning, mention historical or contextual background when useful, why it matters, and how it connects to the bigger picture. Substantial paragraph, not a summary.", "exemplo": "string"}]},
+  "quadroNegro": {"titulo": "short title in ${lang} (e.g. board explanation)", "linhas": [{"titulo": "short step label in ${lang}", "texto": "one short calculation or explanation in ${lang}"}], "conclusao": "one short conclusion in ${lang}"},
   "exercicios": {"titulo": "string", "lista": [{"nivel": "string", "pergunta": "string", "resposta": "string", "explicacao": "1 sentence"}]},
   "errosComuns": {"titulo": "string", "lista": [{"erro": "string", "comoEvitar": "string"}]},
   "mapaVisual": {"titulo": "string", "temaCentral": "string", "ramos": [{"nome": "string", "icone": "emoji", "cor": "string", "subitens": ["string"]}]},
@@ -340,6 +341,7 @@ Return this JSON structure:
 
 Rules:
 - ${isPremium ? "5 steps, 6 exercises, 4 errors, 6 branches" : "3 steps, 3 exercises, 2 errors, 4 branches"}
+- Make quadroNegro a helpful chalkboard with 2-4 ordered lines about THIS topic, not a generic diagram. For math/science, use an accurate worked calculation with numbers and units, one operation per line, and a checked result. For other subjects, use a clear cause → process → result scheme with concrete facts. Keep lines short and readable on a phone. Never invent a formula if it does not apply.
 - Be CONCISE in most fields, BUT the "conceito" field MUST be deep and detailed: at least 7 lines / 7-9 sentences each. Never short.
 - Respond ONLY in ${lang}, even if the topic is written in another language. Translate the topic internally and produce ALL prose in ${lang}.
 - NARROW EXCEPTION (only when the topic explicitly asks to LEARN vocabulary/phrases in a foreign language, e.g. "aprender palavras em russo"): keep only the specific vocabulary tokens being taught in their original script; ALL surrounding explanations, titles, translations, and instructions still MUST be in ${lang}.

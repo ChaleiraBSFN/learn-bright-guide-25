@@ -11,6 +11,7 @@ import { SourcesSection } from "./sections/SourcesSection";
 import { VideosSection } from "./sections/VideosSection";
 import { ImagesSection } from "./sections/ImagesSection";
 import { ImageAnalysisSection } from "./sections/ImageAnalysisSection";
+import { BlackboardSection } from "./sections/BlackboardSection";
 
 interface AIImage {
   tipo: "ai";
@@ -44,7 +45,7 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
 
   // Allow render when the AI returned only part of the material (live classroom parts)
   const hasAnyContent = content && (
-    content.objetivo || content.resumo || content.analiseImagem || content.demonstracoes ||
+    content.objetivo || content.resumo || content.analiseImagem || content.demonstracoes || content.quadroNegro ||
     content.exercicios || content.errosComuns || content.mapaVisual || content.planoEstudo || content.fontes
   );
   if (!hasAnyContent) {
@@ -92,6 +93,10 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
             tema={tema}
             nivel={nivel}
           />
+        )}
+
+        {(content.quadroNegro || content.demonstracoes?.passos?.length) && (
+          <BlackboardSection data={content.quadroNegro} steps={content.demonstracoes?.passos} tema={tema} />
         )}
 
         {content.objetivo && <ObjectiveSection data={content.objetivo} />}
