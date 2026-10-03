@@ -43,6 +43,10 @@ export function getMaterialParts(material: ClassroomMaterial | null | undefined)
     });
   }
 
+  if (c.quadroNegro?.linhas?.length) {
+    parts.push({ title: c.quadroNegro.titulo || material.title, kind: 'study', content: { quadroNegro: c.quadroNegro } });
+  }
+
   if (c.resumo) parts.push({ title: c.resumo.titulo || 'Resumo', kind: 'study', content: { resumo: c.resumo } });
 
   if (c.mapaVisual) parts.push({ title: c.mapaVisual.titulo || 'Mapa visual', kind: 'study', content: { mapaVisual: c.mapaVisual } });
