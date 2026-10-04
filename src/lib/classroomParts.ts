@@ -6,6 +6,7 @@ export interface MaterialPart {
   kind: 'study' | 'exercise';
   /** Partial study content to render (study parts) */
   content?: any;
+  boardOnly?: boolean;
   /** Single exercise (exercise parts) */
   exercise?: Exercise;
 }
