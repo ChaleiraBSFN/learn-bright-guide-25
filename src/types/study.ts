@@ -21,6 +21,10 @@ export interface StudyContent {
     titulo: string;
     linhas: Array<{ titulo?: string; texto: string }>;
     conclusao?: string;
+    esquema?: {
+      tipo?: 'fluxo' | 'ciclo' | 'comparacao';
+      nos: Array<{ rotulo: string; detalhe?: string }>;
+    };
   };
   exercicios: {
     titulo: string;

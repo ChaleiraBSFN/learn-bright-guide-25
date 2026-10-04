@@ -53,6 +53,7 @@ export function ClassroomMaterialView({ material, answerable, submitting, submit
           content={part ? part.content : material.content}
           tema={material.title}
           compact={!!part}
+          boardOnly={part?.boardOnly}
         />
       </div>
     );
