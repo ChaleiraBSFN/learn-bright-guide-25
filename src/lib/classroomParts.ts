@@ -6,6 +6,7 @@ export interface MaterialPart {
   kind: 'study' | 'exercise';
   /** Partial study content to render (study parts) */
   content?: any;
+  boardOnly?: boolean;
   /** Single exercise (exercise parts) */
   exercise?: Exercise;
 }
@@ -31,6 +32,12 @@ export function getMaterialParts(material: ClassroomMaterial | null | undefined)
   const c: any = material.content || {};
   const parts: MaterialPart[] = [];
 
+  if (c.quadroNegro?.linhas?.length || c.demonstracoes?.passos?.length || c.resumo?.conteudo || c.objetivo?.conteudo) {
+    parts.push({ title: c.quadroNegro?.titulo || material.title, kind: 'study', content: {
+      quadroNegro: c.quadroNegro, demonstracoes: c.demonstracoes, resumo: c.resumo, objetivo: c.objetivo,
+    }, boardOnly: true });
+  }
+
   if (c.objetivo) parts.push({ title: c.objetivo.titulo || 'Objetivo', kind: 'study', content: { objetivo: c.objetivo } });
 
   if (c.demonstracoes?.passos?.length) {
@@ -41,10 +48,6 @@ export function getMaterialParts(material: ClassroomMaterial | null | undefined)
         content: { demonstracoes: { titulo: c.demonstracoes.titulo, passos: [p] } },
       });
     });
-  }
-
-  if (c.quadroNegro?.linhas?.length) {
-    parts.push({ title: c.quadroNegro.titulo || material.title, kind: 'study', content: { quadroNegro: c.quadroNegro } });
   }
 
   if (c.resumo) parts.push({ title: c.resumo.titulo || 'Resumo', kind: 'study', content: { resumo: c.resumo } });

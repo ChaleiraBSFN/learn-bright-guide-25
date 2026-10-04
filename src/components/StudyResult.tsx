@@ -38,9 +38,10 @@ interface StudyResultProps {
   isGeneratingExercise?: boolean;
   /** Hides the big "study material" header (used when showing a single part live). */
   compact?: boolean;
+  boardOnly?: boolean;
 }
 
-export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesLoading, onGenerateExercise, isGeneratingExercise, compact }: StudyResultProps) {
+export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesLoading, onGenerateExercise, isGeneratingExercise, compact, boardOnly }: StudyResultProps) {
   const { t } = useTranslation();
 
   // Allow render when the AI returned only part of the material (live classroom parts)
@@ -83,6 +84,9 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
 
 
       <div className="space-y-4 md:space-y-6 lb-expand-sections">
+        {(!compact || boardOnly) && <BlackboardSection data={content.quadroNegro} steps={content.demonstracoes?.passos} summary={content.resumo} objective={content.objetivo} tema={tema} />}
+        {!boardOnly && <>
+
         {content.analiseImagem && <ImageAnalysisSection data={content.analiseImagem} />}
 
         {content.demonstracoes && (
@@ -93,10 +97,6 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
             tema={tema}
             nivel={nivel}
           />
-        )}
-
-        {(content.quadroNegro || content.demonstracoes?.passos?.length) && (
-          <BlackboardSection data={content.quadroNegro} steps={content.demonstracoes?.passos} tema={tema} />
         )}
 
         {content.objetivo && <ObjectiveSection data={content.objetivo} />}
@@ -141,6 +141,7 @@ export function StudyResult({ content, tema, nivel, aiImages, webImages, imagesL
           />
         )}
         {content.fontes && <SourcesSection data={content.fontes} tema={tema} />}
+        </>}
       </div>
     </div>
   );
