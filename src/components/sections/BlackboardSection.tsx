@@ -49,13 +49,13 @@ export function BlackboardSection({ data, steps, summary, objective, tema }: Pro
           <div className="relative z-10 mb-8 rounded-lg border border-board-soft/40 p-4 sm:p-5" aria-label={data?.titulo || t('sections.steps')}>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-[repeat(auto-fit,minmax(130px,1fr))] sm:items-stretch">
               {visualNodes.map((node, index) => (
-                <div key={index} className="flex min-w-0 flex-col items-center gap-2 text-center">
+                <div key={index} className="relative flex min-w-0 flex-col items-center gap-2 text-center">
                   <div className="flex w-full flex-1 flex-col justify-center rounded-md border border-board-soft/60 bg-board-chalk/5 px-3 py-3">
                     <span className="mb-1 text-xs font-bold text-board-accent">{String(index + 1).padStart(2, '0')}</span>
                     <span className="break-words text-sm font-semibold text-board-chalk">{node.rotulo}</span>
                     {node.detalhe && <span className="mt-1 break-words text-xs leading-5 text-board-soft">{node.detalhe}</span>}
                   </div>
-                  {index < visualNodes.length - 1 && <ArrowDown className="h-4 w-4 text-board-accent sm:rotate-[-90deg]" aria-hidden="true" />}
+                  {index < visualNodes.length - 1 && <ArrowDown className="h-4 w-4 text-board-accent sm:absolute sm:-right-3 sm:top-1/2 sm:z-10 sm:-translate-y-1/2 sm:rotate-[-90deg]" aria-hidden="true" />}
                 </div>
               ))}
             </div>
