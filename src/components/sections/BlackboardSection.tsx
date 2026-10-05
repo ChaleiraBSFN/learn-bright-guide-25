@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ArrowDown, BookOpen, MoveDown, RefreshCw } from 'lucide-react';
 import type { StudyContent } from '@/types/study';
+import { isBoardEquation, readableBoardMath } from '@/lib/boardMath';
 
 type Blackboard = NonNullable<StudyContent['quadroNegro']>;
 type Step = StudyContent['demonstracoes']['passos'][number];
@@ -52,8 +53,8 @@ export function BlackboardSection({ data, steps, summary, objective, tema }: Pro
                 <div key={index} className="relative flex min-w-0 flex-col items-center gap-2 text-center">
                   <div className="flex w-full flex-1 flex-col justify-center rounded-md border border-board-soft/60 bg-board-chalk/5 px-3 py-3">
                     <span className="mb-1 text-xs font-bold text-board-accent">{String(index + 1).padStart(2, '0')}</span>
-                    <span className="break-words text-sm font-semibold text-board-chalk">{node.rotulo}</span>
-                    {node.detalhe && <span className="mt-1 break-words text-xs leading-5 text-board-soft">{node.detalhe}</span>}
+                     <span className="break-words text-sm font-semibold text-board-chalk">{readableBoardMath(node.rotulo)}</span>
+                     {node.detalhe && <span className="mt-1 break-words text-xs leading-5 text-board-soft">{readableBoardMath(node.detalhe)}</span>}
                   </div>
                   {index < visualNodes.length - 1 && <ArrowDown className="h-4 w-4 text-board-accent sm:absolute sm:-right-3 sm:top-1/2 sm:z-10 sm:-translate-y-1/2 sm:rotate-[-90deg]" aria-hidden="true" />}
                 </div>
@@ -69,14 +70,21 @@ export function BlackboardSection({ data, steps, summary, objective, tema }: Pro
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-board-soft/60 text-sm font-bold text-board-soft">{index + 1}</span>
                 <div className="min-w-0 flex-1">
                   {line.titulo && <h5 className="mb-2 font-display text-base font-bold text-board-accent sm:text-lg">{line.titulo}</h5>}
-                  <p className="whitespace-pre-line break-words [overflow-wrap:anywhere] font-sans text-sm leading-7 text-board-chalk sm:text-base sm:leading-8">{line.texto}</p>
+                   <div className="space-y-2 text-sm leading-7 text-board-chalk sm:text-base sm:leading-8">
+                     {line.texto.split(/\n+/).filter(Boolean).map((part, partIndex) => {
+                       const readable = readableBoardMath(part);
+                       return isBoardEquation(readable)
+                         ? <div key={partIndex} className="overflow-x-auto rounded-md border border-board-soft/40 bg-board-chalk/5 px-3 py-2 font-mono text-base leading-relaxed text-board-accent [overflow-wrap:anywhere] sm:text-lg">{readable}</div>
+                         : <p key={partIndex} className="break-words [overflow-wrap:anywhere]">{readable}</p>;
+                     })}
+                   </div>
                 </div>
               </div>
               {index < lines.length - 1 && <MoveDown className="ml-2 mt-4 h-4 w-4 text-board-soft" aria-hidden="true" />}
             </li>
           ))}
         </ol>
-        {data?.conclusao && <p className="relative z-10 mt-8 border-t border-board-chalk/25 pt-5 font-display text-base font-bold text-board-accent sm:text-lg">{data.conclusao}</p>}
+         {data?.conclusao && <p className="relative z-10 mt-8 border-t border-board-chalk/25 pt-5 font-display text-base font-bold text-board-accent sm:text-lg">{readableBoardMath(data.conclusao)}</p>}
       </div>
     </section>
   );
