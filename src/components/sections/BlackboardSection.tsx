@@ -30,7 +30,7 @@ export function BlackboardSection({ data, steps, summary, objective, tema }: Pro
     ? data.esquema.nos.filter(node => typeof node?.rotulo === 'string' && node.rotulo.trim()).slice(0, 5)
     : [];
   const schemeType = data?.esquema?.tipo;
-  const visualNodes = schemeNodes.length >= 2 ? schemeNodes : lines.slice(0, 4).map(line => ({ rotulo: line.titulo || line.texto.split(/[.!?\n]/)[0].slice(0, 48) }));
+  const visualNodes: Array<{ rotulo: string; detalhe?: string }> = schemeNodes.length >= 2 ? schemeNodes : lines.slice(0, 4).map(line => ({ rotulo: line.titulo || line.texto.split(/[.!?\n]/)[0].slice(0, 48) }));
 
   if (!lines?.length) return null;
 
