@@ -9,10 +9,14 @@ export function readableBoardMath(value: string): string {
   text = text.replace(/\\(?:pi|theta|alpha|beta|Delta)\b/g, (_, symbol: string) => ({ pi: 'π', theta: 'θ', alpha: 'α', beta: 'β', Delta: 'Δ' })[symbol] ?? symbol);
   text = text.replace(/\^\{?([0-9n+-]+)\}?/g, (_, power: string) => [...power].map(c => ({ '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', n: 'ⁿ', '+': '⁺', '-': '⁻' })[c] ?? c).join(''));
   text = text.replace(/\\(?:text|mathrm)\{([^{}]+)\}/g, '$1');
+  // In the quadratic formula the whole denominator is 2a, never just 2.
+  text = text.replace(/(\(\s*-\s*b\s*±\s*√\s*(?:\(?Δ\)?)\s*\))\s*\/\s*2\s*a\b/g, '$1 ÷ (2 × a)');
+  text = text.replace(/(\(\s*-\s*\(-?\d+(?:[.,]\d+)?\)\s*±\s*√\s*\d+(?:[.,]\d+)?\s*\))\s*\/\s*2\s*\(\s*(-?\d+(?:[.,]\d+)?)\s*\)/g, '$1 ÷ (2 × $2)');
   return text.replace(/\*\*/g, '').replace(/[ \t]{2,}/g, ' ').trim();
 }
 
 export function isBoardEquation(line: string): boolean {
   const trimmed = line.trim();
-  return /[=≈≤≥]/.test(trimmed) && /[\d+×÷√²³ⁿ()+−-]|[a-zA-Z]\s*=/.test(trimmed) && trimmed.length < 180;
+  return /^(?:[\p{L}Δπθ][\p{L}\d₀-₉²³ⁿ_ ]{0,20}\s*[:=≈≤≥<>]|[([]?[-+\d√])/u.test(trimmed)
+    && /[=≈≤≥<>]/.test(trimmed) && /[\d+×÷√²³ⁿ()+−-]/.test(trimmed) && trimmed.length < 160;
 }
