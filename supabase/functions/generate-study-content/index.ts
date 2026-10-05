@@ -425,7 +425,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     // === CACHE LOOKUP (24h) — só quando não houve imagem ===
     let cacheKey: string | null = null;
     if (!imagemBase64) {
-      const keyInput = JSON.stringify({ tema, nivel, prazo, duvidas, idioma, isPremium });
+      const keyInput = JSON.stringify({ tema, nivel, prazo, duvidas, idioma, isPremium, boardVersion: 2 });
       const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(keyInput));
       cacheKey = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
 
