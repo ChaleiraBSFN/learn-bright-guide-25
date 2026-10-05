@@ -18,7 +18,6 @@ export function readableBoardMath(value: string): string {
 
 export function isBoardEquation(line: string): boolean {
   const trimmed = line.trim();
-  if (/^(?:calcule|use|substitua|verifique|calculate|use|substitute|check)\b/i.test(trimmed)) return false;
-  return /^(?:[\p{L}Δπθ][\p{L}\d₀-₉²³ⁿ_ ]{0,20}\s*[:=≈≤≥<>]|[([]?[-+\d√])/u.test(trimmed)
-    && /[=≈≤≥<>]/.test(trimmed) && /[\d+×÷√²³ⁿ()+−-]/.test(trimmed) && trimmed.length < 160;
+  return /^(?:[a-zA-ZΔπθ][a-zA-Z₀-₉_]{0,5}|\d+[a-zA-Z]?)\s*(?:=|≈|≤|≥|<|>)/.test(trimmed)
+    && /[\d+×÷√²³ⁿ()+−-]/.test(trimmed) && trimmed.length < 160;
 }
