@@ -347,6 +347,7 @@ Rules:
 - NARROW EXCEPTION (only when the topic explicitly asks to LEARN vocabulary/phrases in a foreign language, e.g. "aprender palavras em russo"): keep only the specific vocabulary tokens being taught in their original script; ALL surrounding explanations, titles, translations, and instructions still MUST be in ${lang}.
 
 - MATH NOTATION (MANDATORY): NEVER use LaTeX. NEVER use "$", "$$", "\\(", "\\)", "\\[", "\\]". For powers use Unicode superscripts directly: x², x³, x⁴, xⁿ (NEVER "x^2" nor "x**2"). For subscripts use x₁, x₂, H₂O. Square root: √(x). Fractions: (a)/(b). Multiplication: × or ·. Division: ÷. Use normal parentheses ( and ), NEVER "$" as a delimiter. Symbols: π θ α β Δ ≤ ≥ ≠ ≈ ∞.
+- BOARD QUALITY CHECK: A numeric math topic's "quadroNegro.linhas" MUST contain at least one COMPLETE worked numeric example, not only symbolic formulas or instructions to calculate. E.g. for a quadratic use x² − 5x + 6 = 0, then a = 1, b = −5, c = 6; Δ = 25 − 24 = 1; x₁ = (5 + 1) ÷ 2 = 3; x₂ = (5 − 1) ÷ 2 = 2; verify each root in the original equation. Explain the meaning of ± as two separate results. For other math topics invent a SIMPLE valid numeric example and show the intermediate values and units when applicable. If space is tight, shorten other fields, never omit the numeric worked example. Do not label an equation as a calculation unless it actually substitutes numbers and reaches a result.
 - OUTPUT MUST NEVER contain HTML/XML tags, pseudo-tags or unbalanced bracket runs like "<>", "<<>>", "<><>", ">>>", "<eq>", "<math>", "<br>", "<p>", "</p>". Plain readable text only.
 - ONLY output JSON, no extra text.`;
 }
@@ -425,7 +426,7 @@ If the image contains exercises, the "exerciciosIdentificados" array MUST have t
     // === CACHE LOOKUP (24h) — só quando não houve imagem ===
     let cacheKey: string | null = null;
     if (!imagemBase64) {
-      const keyInput = JSON.stringify({ tema, nivel, prazo, duvidas, idioma, isPremium, boardVersion: 4 });
+      const keyInput = JSON.stringify({ tema, nivel, prazo, duvidas, idioma, isPremium, boardVersion: 5 });
       const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(keyInput));
       cacheKey = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
 

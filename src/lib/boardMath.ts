@@ -11,12 +11,14 @@ export function readableBoardMath(value: string): string {
   text = text.replace(/\\(?:text|mathrm)\{([^{}]+)\}/g, '$1');
   // In the quadratic formula the whole denominator is 2a, never just 2.
   text = text.replace(/(\(\s*-\s*b\s*±\s*√\s*(?:\(?Δ\)?)\s*\))\s*\/\s*2\s*a\b/g, '$1 ÷ (2 × a)');
+  text = text.replace(/(\(\s*-\s*b\s*±\s*√\s*(?:\(?Δ\)?)\s*\))\s*\/\s*\(\s*2\s*a\s*\)/g, '$1 ÷ (2 × a)');
   text = text.replace(/(\(\s*-\s*\(-?\d+(?:[.,]\d+)?\)\s*±\s*√\s*\d+(?:[.,]\d+)?\s*\))\s*\/\s*2\s*\(\s*(-?\d+(?:[.,]\d+)?)\s*\)/g, '$1 ÷ (2 × $2)');
   return text.replace(/\*\*/g, '').replace(/[ \t]{2,}/g, ' ').trim();
 }
 
 export function isBoardEquation(line: string): boolean {
   const trimmed = line.trim();
+  if (/^(?:calcule|use|substitua|verifique|calculate|use|substitute|check)\b/i.test(trimmed)) return false;
   return /^(?:[\p{L}Δπθ][\p{L}\d₀-₉²³ⁿ_ ]{0,20}\s*[:=≈≤≥<>]|[([]?[-+\d√])/u.test(trimmed)
     && /[=≈≤≥<>]/.test(trimmed) && /[\d+×÷√²³ⁿ()+−-]/.test(trimmed) && trimmed.length < 160;
 }
