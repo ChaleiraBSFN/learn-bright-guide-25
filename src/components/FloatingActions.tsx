@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Map, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Coins, Crown } from 'lucide-react';
+import { Download, Map, Users, MessageSquare, Maximize, Minimize, ChevronUp, ChevronDown, Coins, Trophy } from 'lucide-react';
 import learnBuddyLogo from "@/assets/learn-buddy-logo.png";
 
 
@@ -9,7 +9,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { StudyGroups } from '@/components/StudyGroups';
 import { ProgressTrail } from '@/components/ProgressTrail';
 import { RankingDialog } from '@/components/RankingDialog';
-import { Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useFullscreen } from '@/hooks/useFullscreen';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -17,7 +16,11 @@ import { useSectionFlag } from '@/hooks/useSectionFlag';
 import { useUnderDevGate } from '@/hooks/useUnderDevGate';
 import { RewardShopModal } from '@/components/RewardShopModal';
 
-export const FloatingActions = () => {
+interface FloatingActionsProps {
+  showSideActions?: boolean;
+}
+
+export const FloatingActions = ({ showSideActions = false }: FloatingActionsProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   
@@ -138,57 +141,47 @@ export const FloatingActions = () => {
     },
   ].filter(Boolean) as { key: string; icon: JSX.Element; label: string; onClick: () => void }[];
 
-  if (isMobile) {
-    return (
-      <>
-        <div className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.6rem,env(safe-area-inset-bottom))]">
-          <div className="mx-auto max-w-md rounded-[26px] border border-foreground/20 bg-background/55 p-2 shadow-[inset_0_1px_0_hsl(0_0%_100%/0.28),inset_0_-18px_30px_hsl(var(--primary)/0.08),0_18px_40px_-20px_hsl(var(--foreground)/0.75)] backdrop-blur-2xl supports-[backdrop-filter]:bg-background/40">
-            <div className="flex items-center justify-between gap-1">
-              <div className={collapsed ? 'flex flex-1 items-center gap-1 overflow-x-auto no-scrollbar' : 'grid flex-1 grid-cols-4 gap-1'}>
-                {(collapsed ? dockItems.slice(0, 4) : dockItems).map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={item.onClick}
-                    className="flex min-w-[64px] flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[10px] font-semibold text-muted-foreground transition-all active:scale-95 hover:bg-foreground/10"
-                  >
-                    {item.icon}
-                    <span className="truncate">{item.label}</span>
-                  </button>
-                ))}
-              </div>
-              <button
-                type="button"
-                onClick={() => setCollapsed((c) => !c)}
-                aria-label={collapsed ? t('common.showActions', 'Mostrar ações') : t('common.hideActions', 'Recolher ações')}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-foreground/20 bg-background/70 text-foreground transition-all active:scale-95"
-              >
-                {collapsed ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Espaço para o dock não cobrir o conteúdo */}
-        <div className="h-24" aria-hidden />
-
-        <ProgressTrail open={showTrail} onClose={() => setShowTrail(false)} />
-        <RankingDialog open={showRanking} onClose={() => setShowRanking(false)} />
-        <RewardShopModal open={showShop} onOpenChange={setShowShop} />
-        {groupsEnabled && groupsGate.enabled && <StudyGroups hidden />}
-        {trailGate.dialog}
-        {rankingGate.dialog}
-        {communityGate.dialog}
-        {chatBuddyGate.dialog}
-        {groupsGate.dialog}
-        {shopGate.dialog}
-      </>
-    );
-  }
+  const showBottomDock = isMobile || !showSideActions;
 
   return (
     <>
-      {collapsed ? (
+      {showBottomDock && (
+        <div className="fixed inset-x-0 bottom-0 z-40 px-2.5 pb-[max(0.55rem,env(safe-area-inset-bottom))] sm:px-4 md:px-6" data-testid="actions-dock">
+          <nav className={`ios-liquid-dock mx-auto ${collapsed ? 'max-w-[430px] md:max-w-[650px]' : 'max-w-[430px] md:max-w-[760px]'}`} aria-label={t('common.actions', 'Ações')}>
+            <div className="ios-liquid-dock__highlight" aria-hidden="true" />
+            <div className="relative z-10 flex items-center gap-1 p-1.5 sm:p-2">
+              <div className={collapsed ? 'flex min-w-0 flex-1 items-center justify-around gap-0.5' : 'grid min-w-0 flex-1 grid-cols-4 gap-1 md:flex md:justify-around'}>
+                {(collapsed ? dockItems.slice(0, 4) : dockItems).map((item) => (
+                  <Button
+                    key={item.key}
+                    type="button"
+                    variant="ghost"
+                    onClick={item.onClick}
+                    aria-label={item.label}
+                    className="ios-liquid-dock__item group h-[54px] min-w-0 flex-1 flex-col gap-0.5 rounded-[18px] px-1.5 py-1.5 text-[10px] font-bold text-muted-foreground sm:min-w-[68px] sm:px-2 md:h-[58px] md:min-w-[76px] md:text-[11px]"
+                  >
+                    <span className="ios-liquid-dock__icon">{item.icon}</span>
+                    <span className="w-full truncate leading-none">{item.label}</span>
+                  </Button>
+                ))}
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setCollapsed((current) => !current)}
+                aria-expanded={!collapsed}
+                aria-label={collapsed ? t('common.showActions', 'Mostrar ações') : t('common.hideActions', 'Recolher ações')}
+                className="ios-liquid-dock__toggle h-11 w-11 shrink-0 rounded-[16px] text-foreground sm:h-12 sm:w-12"
+              >
+                {collapsed ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </Button>
+            </div>
+          </nav>
+        </div>
+      )}
+
+      {!showBottomDock && (collapsed ? (
         <div className="fixed right-3 bottom-6 md:right-4 md:bottom-8 z-40">
           <Button
             variant="outline"
@@ -368,7 +361,7 @@ export const FloatingActions = () => {
           </Tooltip>
         )}
         </div>
-      )}
+      ))}
 
 
       {/* Progress Trail Dialog */}
@@ -379,6 +372,8 @@ export const FloatingActions = () => {
 
       {/* Reward Shop Modal */}
       <RewardShopModal open={showShop} onOpenChange={setShowShop} />
+
+      {groupsEnabled && groupsGate.enabled && showBottomDock && <StudyGroups hidden />}
 
       {/* Under-development dialogs (shown when admin disables a section) */}
       {trailGate.dialog}
