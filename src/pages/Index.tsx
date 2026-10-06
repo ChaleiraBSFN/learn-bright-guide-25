@@ -711,7 +711,7 @@ const Index = () => {
       {/* Floating Actions - Study Groups & Install */}
       {deferredReady && (
         <Suspense fallback={null}>
-          <FloatingActions />
+          <FloatingActions showSideActions={Boolean(showingResult)} />
         </Suspense>
       )}
 
