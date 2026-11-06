@@ -1,3 +1,4 @@
+import { resolveGeminiModel } from "../_shared/gemini-models.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
@@ -98,7 +99,7 @@ const safetySettings = [
 
 async function streamGemini(model: string, contents: any[], systemInstruction: string, apiKey: string, signal: AbortSignal) {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${await resolveGeminiModel(model, apiKey)}:streamGenerateContent?alt=sse&key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

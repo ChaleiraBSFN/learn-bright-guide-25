@@ -1,3 +1,4 @@
+import { resolveGeminiModel } from "./gemini-models.ts";
 // Shared Gemini free-tier throughput pool.
 // Strategy: for each model (fastest first), try every API key in round-robin order,
 // skipping key+model pairs that were rate-limited recently (per-isolate cooldown).
@@ -109,7 +110,7 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${await resolveGeminiModel(model, key)}:generateContent?key=${key}`,
         { method: "POST", headers: { "Content-Type": "application/json" }, body, signal: controller.signal },
       );
       clearTimeout(timeoutId);
@@ -183,7 +184,7 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
         try {
           const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/${await resolveGeminiModel(model, key)}:generateContent?key=${key}`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
