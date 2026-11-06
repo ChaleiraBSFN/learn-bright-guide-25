@@ -104,6 +104,7 @@ export function StudyForm({ onSubmit, isLoading, presetTema }: StudyFormProps) {
   const niveis = [
     { value: "fundamental1", label: t("form.levelFundamental1") },
     { value: "fundamental2", label: t("form.levelFundamental2") },
+    { value: "vestibular", label: t("form.levelVestibular") },
     { value: "medio", label: t("form.levelMedio") },
     { value: "superior", label: t("form.levelSuperior") },
   ];

@@ -170,6 +170,7 @@ serve(async (req) => {
       fundamental1: "ELEMENTARY SCHOOL (ages 6-10). Simple language, basic arithmetic, intuitive examples.",
       fundamental2: "MIDDLE/HIGH SCHOOL (ages 11-17). ENEM-style questions, algebra, basic geometry, reading comprehension.",
       medio: "UNDERGRADUATE / GRADUAÇÃO (university level — ENADE, vestibulares IME/ITA/Fuvest exatas, OAB 1ª fase, engineering/medicine/law/economics undergraduate courses). Use REAL exam-style questions: rigorous calculus, linear algebra, statistics, formal definitions, multi-step derivations, case analysis. NEVER trivial or high-school level. Cite theorems, laws, articles when relevant.",
+      vestibular: "VESTIBULAR at GRADUAÇÃO/PÓS difficulty (hardest Brazilian entrance exams: ITA, IME, Fuvest 2ª fase, Unicamp 2ª fase, UFRJ discursivas, olimpíadas OBM/OBF/OBQ, top medicine vestibulares). Use REAL past exam questions or faithful adaptations, citing the source as (BANCA ANO) e.g. (ITA 2019), (Fuvest 2022). Multi-step, multi-concept problems, traps in alternatives, full step-by-step solutions with every calculation shown. NEVER easy or ENEM-basic.",
       superior: "GRADUATE / PÓS-GRADUAÇÃO (Mestrado/Doutorado, MBA, residência médica, OAB 2ª fase, concursos federais de alto nível como AFRFB/Magistratura/MPF, ANPAD, GRE/GMAT advanced, PhD qualifying exams). EXTREMELY rigorous: formal proofs, research-paper critique, advanced abstraction, open-ended argumentation, synthesis across multiple sources. Must match published comprehensive exams.",
       auto: "Infer the appropriate academic level from the topic and context."
     };
@@ -178,6 +179,7 @@ serve(async (req) => {
       fundamental2: "fundamental1",
       medio: "fundamental2",
       superior: "medio",
+      vestibular: "medio",
       fundamental1: "fundamental1",
       auto: "fundamental2",
     };
@@ -217,7 +219,7 @@ Every string in the JSON (titles, statements, alternatives, answers, explanation
 ACADEMIC LEVEL CALIBRATION (CRITICAL — DO NOT IGNORE):
 Internal level code received: "${sanitize(nivel)}"${primeBoost ? ` (downshifted to "${effectiveNivel}" by Prime boost)` : ''}
 What it means: ${nivelInstrucao}
-Difficulty MUST strictly match this calibration.${primeBoost ? ' Because Prime is active, stay near the EASY end of this band.' : ' For graduação/pós-graduação use questions inspired by REAL exams (ENADE, OAB, concursos, qualifying exams, residências). NEVER produce school-level content for university levels.'}
+Difficulty MUST strictly match this calibration.${primeBoost ? ' Because Prime is active, stay near the EASY end of this band.' : ' For vestibular/graduação/pós-graduação use questions inspired by REAL exams (ENADE, OAB, concursos, qualifying exams, residências). NEVER produce school-level content for university levels.'}
 ${imageInstructions}
 ~60% multiple choice (tipo "objetiva"), ~40% open-ended (tipo "dissertativa"). Seed: ${seed}. User difficulty modifier: ${effectiveDificuldade}.
 

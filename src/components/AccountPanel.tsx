@@ -133,6 +133,7 @@ export default function AccountPanel({ onCreateExam, isCreatingExam }: AccountPa
                 <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="fundamental">{t("levels.fundamental", "Fundamental")}</SelectItem>
+                  <SelectItem value="vestibular">{t("form.levelVestibular", "Vestibular")}</SelectItem>
                   <SelectItem value="medio">{t("levels.medio", "Médio")}</SelectItem>
                   <SelectItem value="superior">{t("levels.superior", "Superior")}</SelectItem>
                 </SelectContent>

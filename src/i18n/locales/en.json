@@ -69,6 +69,7 @@
     "selectLevel": "Select level",
     "levelFundamental1": "Elementary School",
     "levelFundamental2": "High School",
+    "levelVestibular": "College entrance (hard, real questions)",
     "levelMedio": "Undergraduate",
     "levelSuperior": "Graduate",
     "deadline": "Deadline (Days)",

@@ -302,6 +302,7 @@ function buildPrompt(tema: string, nivel: string, prazo: number, duvidas: string
     fundamental1: "ELEMENTARY SCHOOL (ages 6-10). Simple language, intuitive examples.",
     fundamental2: "MIDDLE/HIGH SCHOOL (ages 11-17). ENEM-style content, algebra, basic geometry.",
     medio: "UNDERGRADUATE / GRADUAÇÃO (university — ENADE, vestibulares IME/ITA/Fuvest, OAB 1ª fase, engineering/medicine/law college). REAL exam-style depth: rigorous calculus, formal definitions, multi-step derivations, theorems with conditions. NEVER trivial.",
+    vestibular: "VESTIBULAR at GRADUAÇÃO/PÓS difficulty (hardest Brazilian entrance exams: ITA, IME, Fuvest 2ª fase, Unicamp 2ª fase, UFRJ discursivas, olimpíadas OBM/OBF/OBQ, top medicine vestibulares). Use REAL past exam questions or faithful adaptations, citing the source as (BANCA ANO) e.g. (ITA 2019), (Fuvest 2022). Multi-step, multi-concept problems, traps in alternatives, full step-by-step solutions with every calculation shown. NEVER easy or ENEM-basic.",
     superior: "GRADUATE / PÓS-GRADUAÇÃO (Mestrado/Doutorado, MBA, residência, OAB 2ª fase, concursos federais top-tier, ANPAD, qualifying exams). EXTREMELY rigorous: formal proofs, research-paper-level analysis, advanced abstraction, critical synthesis.",
   };
   const nivelInstrucao = levelCalibration[nivel] || `Custom level: ${nivel}`;
