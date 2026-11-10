@@ -1,4 +1,5 @@
 import { BookText, Loader2 } from "lucide-react";
+import { FormattedExplanation } from "@/components/FormattedExplanation";
 
 interface AIImage {
   tipo: "ai";
@@ -31,9 +32,7 @@ export function SummarySection({ data, summaryImage, imagesLoading }: SummarySec
 
           {/* Inline image alongside summary */}
           <div className={`flex flex-col ${summaryImage ? 'md:flex-row' : ''} gap-4`}>
-            <p className="text-base leading-relaxed text-foreground/90 whitespace-pre-line flex-1">
-              {data.conteudo}
-            </p>
+            <FormattedExplanation text={data.conteudo} className="min-w-0 flex-1 break-words" />
             {imagesLoading && !summaryImage && (
               <div className="w-full md:w-48 h-36 rounded-xl border border-border bg-muted/30 flex items-center justify-center shrink-0">
                 <Loader2 className="h-5 w-5 animate-spin text-section-summary/50" />

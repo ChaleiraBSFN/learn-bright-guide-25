@@ -126,9 +126,7 @@ export function StepsSection({ data, stepsImage, stepImages, imagesLoading, tema
                       <span className="text-xs font-semibold uppercase tracking-wider text-primary mb-1 block">
                         {t('sections.concept')}
                       </span>
-                      <p className="text-foreground leading-relaxed text-sm md:text-base">
-                        {passo.conceito}
-                      </p>
+                      <FormattedExplanation text={passo.conceito} className="min-w-0 break-words" />
                     </div>
                   </div>
 

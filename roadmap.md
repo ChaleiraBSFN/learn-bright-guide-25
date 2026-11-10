@@ -1,4 +1,5 @@
 # Current tasks
+- [x] Replace dense AI explanations with visual short topics, separated examples and readable lesson lists.
 - [x] Replace the desktop home side rail with the shared Liquid Glass bottom dock and keep the side rail only for generated results.
 - [x] Refine the bottom dock with layered iOS-like glass, safer mobile sizing and accessible controls.
 - [x] Make chalkboard formulas readable with separated operations, plain-language symbol explanations and legacy notation cleanup.

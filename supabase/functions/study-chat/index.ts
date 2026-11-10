@@ -116,7 +116,7 @@ ${contexto}
 CONVERSA ATÉ AGORA:
 ${history}
 
-Responda a ÚLTIMA mensagem do aluno seguindo EXATAMENTE este formato:
+Responda SOMENTE à última dúvida, sem repetir o estudo. Use apenas as seções úteis deste formato, não todas automaticamente:
 
 **Resposta direta**
 1 ou 2 linhas com a ideia principal, em linguagem simples.
@@ -137,7 +137,9 @@ REGRAS:
 - Idioma obrigatório: ${lang}.
 - Nada de jargão acadêmico, LaTeX, código ou símbolos confusos. Matemática em Unicode simples (x², √x, π, ≤, ≈).
 - Frases curtas (até ~15 palavras), como explicando para alguém de 14 anos.
-- Máximo ~250 palavras.
+- Em geral 80-150 palavras e 3-5 tópicos curtos. Mais detalhes só quando pedidos ou necessários para resolver uma conta corretamente.
+- Use emojis nos títulos e tópicos, uma ideia por linha e espaço entre seções. Quando útil, mostre um esquema causa → processo → resultado ou uma comparação curta. Nunca use diagramas em código.
+- Não repita a resposta no resumo. Um exemplo por resposta é suficiente.
 - Responda apenas com o texto formatado, sem JSON.`;
 
     const { text, lastStatus } = await callGeminiPool({

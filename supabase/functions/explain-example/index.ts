@@ -211,7 +211,7 @@ EXEMPLO: ${sanitize(exemplo)}
 
 IDIOMA OBRIGATÓRIO DE SAÍDA: ${langName}. Escreva TUDO em ${langName}, mesmo que o TEMA, CONTEXTO ou EXEMPLO estejam em outro idioma — traduza mentalmente para ${langName} antes de responder. Nunca espelhe o idioma do input.
 
-Responda em ${langName} usando EXATAMENTE estas 5 seções com Markdown leve. CADA seção tem um TÍTULO em negrito (**) seguido de BULLETS curtos (cada um começando com "- "). NUNCA escreva parágrafos longos — sempre quebre em bullets de no máximo 2 linhas cada.
+Responda em ${langName} usando apenas as seções úteis abaixo, sem repetir informações. Em geral 100-180 palavras; preserve etapas adicionais quando necessárias para resolver corretamente. CADA seção tem um TÍTULO em negrito (**) seguido de BULLETS curtos (cada um começando com "- "). NUNCA escreva parágrafos longos — sempre quebre em bullets de no máximo 2 linhas cada. Para temas sem números, use um exemplo concreto em vez de inventar cálculos.
 
 
 **🎯 O que está acontecendo**
