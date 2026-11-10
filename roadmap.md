@@ -1,4 +1,6 @@
 # Current tasks
+- [ ] Reduce wasted parallel AI work and verify throughput behavior without removing abuse protection.
+- [ ] Assess simultaneous usage capacity and explain external quota limitations.
 - [x] Replace dense AI explanations with visual short topics, separated examples and readable lesson lists.
 - [x] Replace the desktop home side rail with the shared Liquid Glass bottom dock and keep the side rail only for generated results.
 - [x] Refine the bottom dock with layered iOS-like glass, safer mobile sizing and accessible controls.
