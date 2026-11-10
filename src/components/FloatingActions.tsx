@@ -43,14 +43,18 @@ export const FloatingActions = ({ showSideActions = false }: FloatingActionsProp
   const [rankingEnabled, setRankingEnabled] = useState(true);
   const [trailEnabled, setTrailEnabled] = useState(true);
   const [groupsEnabled, setGroupsEnabled] = useState(true);
-  const [collapsed, setCollapsed] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [collapsed, setCollapsed] = useState(() => showSideActions || (typeof window !== 'undefined' && window.innerWidth < 768));
+
+  // A completed result starts with only the reopen control visible.
+  useEffect(() => {
+    if (showSideActions) setCollapsed(true);
+  }, [showSideActions]);
 
   // Auto-collapse while generating content
   useEffect(() => {
     const onGen = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.generating) setCollapsed(true);
-      else setCollapsed(false);
     };
     window.addEventListener('lb_generating_changed', onGen);
     return () => window.removeEventListener('lb_generating_changed', onGen);
@@ -142,15 +146,16 @@ export const FloatingActions = ({ showSideActions = false }: FloatingActionsProp
   ].filter(Boolean) as { key: string; icon: JSX.Element; label: string; onClick: () => void }[];
 
   const showBottomDock = isMobile || !showSideActions;
+  const dockHidden = showSideActions && collapsed;
 
   return (
     <>
       {showBottomDock && (
         <div className="fixed inset-x-0 bottom-0 z-40 px-2.5 pb-[max(0.55rem,env(safe-area-inset-bottom))] sm:px-4 md:px-6" data-testid="actions-dock">
-          <nav className={`ios-liquid-dock mx-auto ${collapsed ? 'max-w-[430px] md:max-w-[650px]' : 'max-w-[430px] md:max-w-[760px]'}`} aria-label={t('common.actions', 'Ações')}>
+          <nav className={`ios-liquid-dock mx-auto ${dockHidden ? 'w-fit' : collapsed ? 'max-w-[430px] md:max-w-[650px]' : 'max-w-[430px] md:max-w-[760px]'}`} aria-label={t('common.actions', 'Ações')}>
             <div className="ios-liquid-dock__highlight" aria-hidden="true" />
             <div className="relative z-10 flex items-center gap-1 p-1.5 sm:p-2">
-              <div className={collapsed ? 'flex min-w-0 flex-1 items-center justify-around gap-0.5' : 'grid min-w-0 flex-1 grid-cols-4 gap-1 md:flex md:justify-around'}>
+              {!dockHidden && <div className={collapsed ? 'flex min-w-0 flex-1 items-center justify-around gap-0.5' : 'grid min-w-0 flex-1 grid-cols-4 gap-1 md:flex md:justify-around'}>
                 {(collapsed ? dockItems.slice(0, 4) : dockItems).map((item) => (
                   <Button
                     key={item.key}
@@ -164,7 +169,7 @@ export const FloatingActions = ({ showSideActions = false }: FloatingActionsProp
                     <span className="w-full truncate leading-none">{item.label}</span>
                   </Button>
                 ))}
-              </div>
+              </div>}
               <Button
                 type="button"
                 variant="ghost"
