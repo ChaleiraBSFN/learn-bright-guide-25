@@ -2,7 +2,7 @@ import { resolveGeminiModel } from "./gemini-models.ts";
 // Shared Gemini free-tier throughput pool.
 // Strategy: for each model (fastest first), try every API key in round-robin order,
 // skipping key+model pairs that were rate-limited recently (per-isolate cooldown).
-// This multiplies the effective RPM by the number of configured keys.
+// Keys in the same Google project share quotas; rotating keys does not multiply them.
 
 const cooldowns = new Map<string, number>();
 let cursor = 0;
@@ -16,7 +16,7 @@ export function getGeminiKeys(): string[] {
     Deno.env.get("GOOGLE_GEMINI_API_KEY_3"),
     Deno.env.get("GOOGLE_GEMINI_API_KEY_4"),
     Deno.env.get("GOOGLE_GEMINI_API_KEY_5"),
-  ].filter(Boolean) as string[];
+  ].filter((key): key is string => Boolean(key)).filter((key, index, all) => all.indexOf(key) === index);
 }
 
 function pairId(key: string, model: string) {
@@ -104,28 +104,36 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
 
   // Rotate the starting key so concurrent invocations don't all hammer key #1.
   const start = cursor++ % keys.length;
+  const attempted = new Set<string>();
+  const active = new Set<AbortController>();
 
   const single = async (key: string, model: string): Promise<GeminiCallResult> => {
+    const resolvedModel = await resolveGeminiModel(model, key);
+    const id = pairId(key, resolvedModel);
+    if (attempted.has(id) || isCooling(key, resolvedModel)) return { text: null, lastStatus: 429 };
+    attempted.add(id);
     const controller = new AbortController();
+    active.add(controller);
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${await resolveGeminiModel(model, key)}:generateContent?key=${key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${resolvedModel}:generateContent?key=${key}`,
         { method: "POST", headers: { "Content-Type": "application/json" }, body, signal: controller.signal },
       );
-      clearTimeout(timeoutId);
       if (response.ok) {
         const data = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (text) return { text, lastStatus: 200 };
         return { text: null, lastStatus: 200 };
       }
-      if (response.status === 429 || response.status === 403) markCooling(key, model);
+      if (response.status === 429) markCooling(key, resolvedModel);
       return { text: null, lastStatus: response.status };
     } catch (e: any) {
-      clearTimeout(timeoutId);
-      console.error(`[${label}] race ${model}:`, e?.message);
+      if (!controller.signal.aborted) console.error(`[${label}] request failed`);
       return { text: null, lastStatus: 0 };
+    } finally {
+      clearTimeout(timeoutId);
+      active.delete(controller);
     }
   };
 
@@ -149,6 +157,7 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
             .then((r) => {
               if (r.text && !settled) {
                 settled = true;
+                for (const controller of active) controller.abort();
                 resolve(r);
                 return;
               }
@@ -174,57 +183,13 @@ export async function callGeminiPool(opts: GeminiCallOptions): Promise<GeminiCal
   }
 
   for (const model of models) {
-    // Two passes: first only "fresh" keys, then any key (cooldown may be stale).
-    for (let pass = 0; pass < 2; pass++) {
       for (let i = 0; i < keys.length; i++) {
         const key = keys[(start + i) % keys.length];
-        if (pass === 0 && isCooling(key, model)) continue;
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-        try {
-          const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${await resolveGeminiModel(model, key)}:generateContent?key=${key}`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body,
-              signal: controller.signal,
-            },
-          );
-          clearTimeout(timeoutId);
-          lastStatus = response.status;
-
-          if (response.ok) {
-            const data = await response.json();
-            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-              console.log(`[${label}] Success with ${model}`);
-              return { text, lastStatus: 200 };
-            }
-            continue;
-          }
-
-          if (response.status === 429 || response.status === 403) {
-            markCooling(key, model);
-            continue;
-          }
-          if (response.status >= 500) continue;
-          // 400-class problem with the request itself: other keys won't help.
-          console.error(`[${label}] ${model} error ${response.status}`);
-          break;
-        } catch (e: any) {
-          clearTimeout(timeoutId);
-          console.error(`[${label}] ${model}:`, e?.message);
-          continue;
-        }
+        const result = await single(key, model);
+        if (result.text) return result;
+        if (result.lastStatus) lastStatus = result.lastStatus;
+        if (lastStatus && lastStatus !== 429 && lastStatus < 500) return result;
       }
-      if (pass === 0) {
-        // If no key was cooling, the second pass would be a pure duplicate.
-        const anyCooling = keys.some((k) => isCooling(k, model));
-        if (!anyCooling) break;
-      }
-    }
   }
 
   return { text: null, lastStatus };

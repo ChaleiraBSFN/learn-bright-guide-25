@@ -100,7 +100,7 @@ const safetySettings = [
 
 async function streamGemini(model: string, contents: any[], systemInstruction: string, apiKey: string, signal: AbortSignal) {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${await resolveGeminiModel(model, apiKey)}:streamGenerateContent?alt=sse&key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -202,9 +202,13 @@ serve(async (req) => {
     let upstream: Response | null = null;
     let lastStatus = 0;
     outer: for (const key of geminiKeys) {
+      const attemptedModels = new Set<string>();
       for (const model of models) {
         try {
-          const r = await streamGemini(model, contents, systemInstruction, key, req.signal);
+          const resolvedModel = await resolveGeminiModel(model, key);
+          if (attemptedModels.has(resolvedModel)) continue;
+          attemptedModels.add(resolvedModel);
+          const r = await streamGemini(resolvedModel, contents, systemInstruction, key, req.signal);
           if (r.ok) { upstream = r; break outer; }
           lastStatus = r.status;
           const errText = await r.text().catch(() => "");

@@ -1,6 +1,7 @@
 # Current tasks
-- [ ] Reduce wasted parallel AI work and verify throughput behavior without removing abuse protection.
-- [ ] Assess simultaneous usage capacity and explain external quota limitations.
+- [x] Reduce wasted parallel AI work and verify throughput behavior without removing abuse protection.
+- [x] Assess current server health and explain external quota limitations.
+- [ ] Establish a verified simultaneous-generation ceiling (requires actual Google project quotas and a controlled load test).
 - [x] Replace dense AI explanations with visual short topics, separated examples and readable lesson lists.
 - [x] Replace the desktop home side rail with the shared Liquid Glass bottom dock and keep the side rail only for generated results.
 - [x] Refine the bottom dock with layered iOS-like glass, safer mobile sizing and accessible controls.
