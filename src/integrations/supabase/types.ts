@@ -487,6 +487,7 @@ export type Database = {
           title: string
           type: string
           user_id: string
+          visibility: string
         }
         Insert: {
           buddy_count?: number
@@ -499,6 +500,7 @@ export type Database = {
           title: string
           type: string
           user_id: string
+          visibility?: string
         }
         Update: {
           buddy_count?: number
@@ -511,6 +513,7 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+          visibility?: string
         }
         Relationships: []
       }
