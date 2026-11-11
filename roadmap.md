@@ -1,4 +1,5 @@
 # Current tasks
+- [ ] Expand Buddy Pro with visual maps, review plans, saved materials, flashcard mastery, mistake review, exports and a focus timer; verify subscriber access and translations.
 - [x] Reduce wasted parallel AI work and verify throughput behavior without removing abuse protection.
 - [x] Assess current server health and explain external quota limitations.
 - [ ] Establish a verified simultaneous-generation ceiling (requires actual Google project quotas and a controlled load test).
