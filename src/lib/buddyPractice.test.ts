@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import { describe, test, expect } from 'bun:test';
 import { quizScore, missedQuestions, recordAnswer, reviewCardIndexes, materialText } from './buddyPractice';
 const questions = [{ question: '2 + 2?', options: ['3', '4'], correctIndex: 1 }, { question: '3 + 3?', options: ['6', '5'], correctIndex: 0 }];
