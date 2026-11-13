@@ -1,4 +1,6 @@
 # Project decisions
+- Keep Buddy study-tool authorization server-side through the existing subscription RPC; validate tool requests and AI output before rendering or returning results.
+- Store the Pro material library per account in the current browser with explicit device-only wording; never use this storage to determine subscription or role privileges.
 - Use the shared bottom action dock on mobile and on empty desktop views; reserve the desktop side rail for generated content so navigation never competes with the study input.
 - Collapse result navigation to its reopen control when completed content appears; generation events must not automatically reopen it, so the study stays unobstructed.
 - Render the chalkboard before other lesson sections from structured AI content, falling back to steps or summary for saved studies; classroom presentations show it first, so every subject retains a visual explanation.

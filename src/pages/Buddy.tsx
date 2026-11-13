@@ -175,6 +175,7 @@ const Buddy = () => {
     { icon: Palette, title: t('buddy.b4Title', 'Personalização avançada'), desc: t('buddy.b4Desc', 'Paletas e temas extras nas suas páginas.') },
     { icon: Sparkles, title: t('buddy.b5Title', 'Ferramentas premium'), desc: t('buddy.b5Desc', 'Flashcards, resumos, quizzes e analytics.') },
     { icon: BellOff, title: t('buddy.b6Title', 'Sem anúncios'), desc: t('buddy.b6Desc', 'Estude sem interrupções.') },
+    ...['benefitMap', 'benefitReview', 'benefitCards', 'benefitQuiz', 'benefitLibrary', 'benefitExport', 'benefitFocus', 'benefitSettings'].map(key => ({icon: Sparkles, title: t(`buddy.pro.${key}`), desc: ''})),
   ];
 
   return (
@@ -256,7 +257,7 @@ const Buddy = () => {
                   <Icon className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                   <div>
                     <p className="text-sm font-bold text-foreground">{title}</p>
-                    <p className="text-xs text-muted-foreground">{desc}</p>
+                    {desc && <p className="text-xs text-muted-foreground">{desc}</p>}
                   </div>
                 </div>
               ))}
@@ -315,14 +316,16 @@ const Buddy = () => {
           </Card>
         )}
 
-        <Card>
+        <section className="space-y-4 border-t border-border pt-6">
+          <h2 className="text-lg font-bold">{t('buddy.pro.benefitsTitle')}</h2>
+          <p className="text-sm text-muted-foreground">{t('buddy.pro.benefitsDesc')}</p>
           <CardHeader>
             <CardTitle>{t('buddy.toolsTitle', 'Ferramentas de estudo Buddy')}</CardTitle>
             <CardDescription>
               {t('buddy.toolsDesc', 'Gere flashcards, resumos e quizzes sobre qualquer tema.')}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <div>
             {isBuddy ? (
               <BuddyTools />
             ) : (
@@ -333,8 +336,8 @@ const Buddy = () => {
                 </p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </section>
 
         {isBuddy && (
           <Card>

@@ -24,6 +24,7 @@ export const PlanComparison = () => {
     t('plans.buddy.item4', 'Personalização avançada de tema e layout'),
     t('plans.buddy.item5', 'Flashcards, resumos, quizzes e analytics'),
     t('plans.buddy.item6', 'Experiência sem anúncios'),
+    ...['benefitMap', 'benefitReview', 'benefitCards', 'benefitQuiz', 'benefitLibrary', 'benefitExport', 'benefitFocus', 'benefitSettings'].map(key => t(`buddy.pro.${key}`)),
   ];
 
   return (
