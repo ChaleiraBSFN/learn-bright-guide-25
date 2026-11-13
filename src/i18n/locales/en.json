@@ -1033,6 +1033,21 @@
       "benefitExport": "Download materials with answers",
       "benefitFocus": "15, 25 or 50-minute focus timer",
       "benefitSettings": "Choose difficulty and up to 20 cards or questions"
+    },
+    "home": {
+      "title": "Your Buddy Pro is active",
+      "renews": "Renews on {{date}}",
+      "perkSpeed": "Priority generation on",
+      "perkCredits": "+30 credits every month",
+      "perkLibrary": "{{count}} saved materials",
+      "quickTitle": "Create Pro material in 1 click",
+      "placeholder": "Type a topic, e.g. Photosynthesis",
+      "tool_flashcards": "Flashcards",
+      "tool_summary": "Summary",
+      "tool_quiz": "Quiz",
+      "tool_map": "Visual map",
+      "tool_review": "7-day review",
+      "tool_focus": "Focus mode"
     }
   },
   "plans": {

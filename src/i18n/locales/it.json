@@ -1018,6 +1018,21 @@
       "benefitExport": "Download di materiali con risposte",
       "benefitFocus": "Timer di 15, 25 o 50 minuti",
       "benefitSettings": "Scelta della difficoltà e fino a 20 carte o domande"
+    },
+    "home": {
+      "title": "Il tuo Buddy Pro è attivo",
+      "renews": "Si rinnova il {{date}}",
+      "perkSpeed": "Generazione prioritaria attiva",
+      "perkCredits": "+30 crediti ogni mese",
+      "perkLibrary": "{{count}} materiali salvati",
+      "quickTitle": "Crea materiale Pro in 1 clic",
+      "placeholder": "Scrivi un tema, es.: Fotosintesi",
+      "tool_flashcards": "Flashcard",
+      "tool_summary": "Riassunto",
+      "tool_quiz": "Quiz",
+      "tool_map": "Mappa visiva",
+      "tool_review": "Ripasso 7 giorni",
+      "tool_focus": "Modalità focus"
     }
   },
   "chatBuddy": {

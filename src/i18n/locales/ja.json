@@ -1018,6 +1018,21 @@
       "benefitExport": "解答付き教材のダウンロード",
       "benefitFocus": "15・25・50分の集中タイマー",
       "benefitSettings": "難易度と最大20枚・20問を選択"
+    },
+    "home": {
+      "title": "Buddy Proが有効です",
+      "renews": "{{date}}に更新",
+      "perkSpeed": "優先生成オン",
+      "perkCredits": "毎月+30クレジット",
+      "perkLibrary": "保存した教材 {{count}}件",
+      "quickTitle": "ワンクリックでPro教材を作成",
+      "placeholder": "テーマを入力（例：光合成）",
+      "tool_flashcards": "単語カード",
+      "tool_summary": "要約",
+      "tool_quiz": "クイズ",
+      "tool_map": "ビジュアルマップ",
+      "tool_review": "7日間復習",
+      "tool_focus": "集中モード"
     }
   },
   "common": {

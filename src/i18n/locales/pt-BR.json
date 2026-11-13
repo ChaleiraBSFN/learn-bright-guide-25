@@ -1033,6 +1033,21 @@
       "benefitExport": "Download de materiais com respostas",
       "benefitFocus": "Temporizador de foco de 15, 25 ou 50 minutos",
       "benefitSettings": "Escolha de dificuldade e até 20 cartões ou questões"
+    },
+    "home": {
+      "title": "Seu Buddy Pro está ativo",
+      "renews": "Renova em {{date}}",
+      "perkSpeed": "Geração prioritária ligada",
+      "perkCredits": "+30 créditos todo mês",
+      "perkLibrary": "{{count}} materiais salvos",
+      "quickTitle": "Crie material Pro em 1 clique",
+      "placeholder": "Digite um tema, ex: Fotossíntese",
+      "tool_flashcards": "Flashcards",
+      "tool_summary": "Resumo",
+      "tool_quiz": "Quiz",
+      "tool_map": "Mapa visual",
+      "tool_review": "Revisão 7 dias",
+      "tool_focus": "Modo foco"
     }
   },
   "plans": {

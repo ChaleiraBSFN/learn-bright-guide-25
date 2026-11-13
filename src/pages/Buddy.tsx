@@ -327,7 +327,7 @@ const Buddy = () => {
           </CardHeader>
           <div>
             {isBuddy ? (
-              <BuddyTools />
+              <div id="tools" className="scroll-mt-24"><BuddyTools /></div>
             ) : (
               <div className="rounded-xl border-2 border-dashed border-accent/50 p-6 text-center">
                 <Crown className="mx-auto mb-2 h-6 w-6 text-accent" />

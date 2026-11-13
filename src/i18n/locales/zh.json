@@ -1018,6 +1018,21 @@
       "benefitExport": "下载附答案的资料",
       "benefitFocus": "15、25或50分钟专注计时器",
       "benefitSettings": "选择难度和最多20张卡片或20道题"
+    },
+    "home": {
+      "title": "你的 Buddy Pro 已开通",
+      "renews": "{{date}} 续订",
+      "perkSpeed": "优先生成已开启",
+      "perkCredits": "每月 +30 积分",
+      "perkLibrary": "已保存 {{count}} 份资料",
+      "quickTitle": "一键生成 Pro 资料",
+      "placeholder": "输入主题，例如：光合作用",
+      "tool_flashcards": "记忆卡片",
+      "tool_summary": "摘要",
+      "tool_quiz": "测验",
+      "tool_map": "可视化导图",
+      "tool_review": "7天复习",
+      "tool_focus": "专注模式"
     }
   },
   "plans": {

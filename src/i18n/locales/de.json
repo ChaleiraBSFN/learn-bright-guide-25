@@ -1018,6 +1018,21 @@
       "benefitExport": "Materialien mit Antworten herunterladen",
       "benefitFocus": "Fokus-Timer für 15, 25 oder 50 Minuten",
       "benefitSettings": "Schwierigkeit und bis zu 20 Karten oder Fragen wählen"
+    },
+    "home": {
+      "title": "Dein Buddy Pro ist aktiv",
+      "renews": "Verlängert am {{date}}",
+      "perkSpeed": "Bevorzugte Erstellung aktiv",
+      "perkCredits": "+30 Credits jeden Monat",
+      "perkLibrary": "{{count}} gespeicherte Materialien",
+      "quickTitle": "Pro-Material mit 1 Klick erstellen",
+      "placeholder": "Thema eingeben, z. B. Photosynthese",
+      "tool_flashcards": "Lernkarten",
+      "tool_summary": "Zusammenfassung",
+      "tool_quiz": "Quiz",
+      "tool_map": "Visuelle Karte",
+      "tool_review": "7-Tage-Wiederholung",
+      "tool_focus": "Fokusmodus"
     }
   },
   "plans": {

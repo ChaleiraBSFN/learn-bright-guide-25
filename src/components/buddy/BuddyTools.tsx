@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Layers, FileText, ListChecks, RotateCcw, Sparkles, Network, CalendarDays, Download, Save, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -45,8 +46,10 @@ export const BuddyTools = () => {
     try { localStorage.setItem(storageKey, JSON.stringify(items)); setSaved(items); }
     catch { toast({title:t('buddy.pro.storageError'),variant:'destructive'}); }
   };
-  const [topic, setTopic] = useState('');
-  const [tool, setTool] = useState<Tool>('flashcards');
+  const [params] = useSearchParams();
+  const initialTool = params.get('tool');
+  const [topic, setTopic] = useState(() => (params.get('topic') || '').slice(0, 120));
+  const [tool, setTool] = useState<Tool>(() => (['flashcards','summary','quiz','map','review'].includes(initialTool || '') ? initialTool as Tool : 'flashcards'));
   const [loading, setLoading] = useState(false);
   const [cards, setCards] = useState<Flashcard[] | null>(null);
   const [flipped, setFlipped] = useState<Record<number, boolean>>({});

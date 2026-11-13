@@ -1018,6 +1018,21 @@
       "benefitExport": "Téléchargement des supports avec réponses",
       "benefitFocus": "Minuteur de 15, 25 ou 50 minutes",
       "benefitSettings": "Choix de difficulté et jusqu’à 20 cartes ou questions"
+    },
+    "home": {
+      "title": "Votre Buddy Pro est actif",
+      "renews": "Renouvellement le {{date}}",
+      "perkSpeed": "Génération prioritaire activée",
+      "perkCredits": "+30 crédits chaque mois",
+      "perkLibrary": "{{count}} supports enregistrés",
+      "quickTitle": "Créez un support Pro en 1 clic",
+      "placeholder": "Tapez un sujet, ex. : Photosynthèse",
+      "tool_flashcards": "Cartes mémoire",
+      "tool_summary": "Résumé",
+      "tool_quiz": "Quiz",
+      "tool_map": "Carte visuelle",
+      "tool_review": "Révision 7 jours",
+      "tool_focus": "Mode focus"
     }
   },
   "chatBuddy": {

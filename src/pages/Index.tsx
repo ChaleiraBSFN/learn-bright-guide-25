@@ -37,6 +37,7 @@ const PromoBanners = lazy(() => import("@/components/PromoBanners").then((m) => 
 const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").then((m) => ({ default: m.EngineNoticeBanner })));
 const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
 const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({ default: m.AdSenseSlot })));
+const ProHomePanel = lazy(() => import("@/components/buddy/ProHomePanel").then((m) => ({ default: m.ProHomePanel })));
 const PlanComparison = lazy(() => import("@/components/PlanComparison").then((m) => ({ default: m.PlanComparison })));
 const SocialProof = lazy(() => import("@/components/home/SocialProof").then((m) => ({ default: m.SocialProof })));
 const HowItWorks = lazy(() => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })));
@@ -739,7 +740,7 @@ const Index = () => {
                   <div className="pt-2 pb-8">
                     {deferredReady ? (
                       <Suspense fallback={<div className="min-h-[200px] rounded-xl bg-muted/20" />}>
-                        <PlanComparison />
+                        <ProHomePanel fallback={<PlanComparison />} />
                       </Suspense>
                     ) : (
                       <div className="min-h-[200px] rounded-xl bg-muted/20" />
@@ -871,7 +872,7 @@ const Index = () => {
               <div className="pt-4">
                 {deferredReady && (
                   <Suspense fallback={<div className="min-h-[200px] rounded-xl bg-muted/20" />}>
-                    <PlanComparison />
+                    <ProHomePanel fallback={<PlanComparison />} />
                   </Suspense>
                 )}
               </div>
