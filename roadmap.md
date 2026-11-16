@@ -13,3 +13,4 @@
 - [x] Remove manual AdSense placements from low-content and action-only screens.
 - [x] Check the lesson view and ad behavior in the running preview.
 - [ ] Disable unverifiable reward claims in the live database (requires database migration access).
+- [x] Create a translated home Pro benefits tab with categorized resources and direct links to existing tools.

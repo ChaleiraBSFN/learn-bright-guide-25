@@ -8,3 +8,4 @@
 - Deduplicate resolved Gemini key/model pairs and abort unfinished race losers; respect cooldowns because duplicate requests waste shared provider quotas.
 - Community post reads require signed-in published visibility or owner/admin access; comments inherit post visibility, likes are owner-only, and donations are donor/recipient-only to avoid exposing interaction histories.
 - Public configuration reads must allow only documented presentation sections/fields and user-facing section keys; other configuration remains administrator-only to prevent accidental exposure.
+- Keep the home Pro benefits tab as a lazy-loaded catalog linking to existing subscription-gated tools; it must not grant entitlements or duplicate generation logic.

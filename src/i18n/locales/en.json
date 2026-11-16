@@ -1,4 +1,16 @@
 {
+  "proHub": {
+    "tab": "Pro benefits",
+    "subtitle": "Everything in your plan, in one place.",
+    "exclusive": "Pro exclusive",
+    "viewPlan": "View plan",
+    "all": "All",
+    "create": "Create",
+    "organize": "Organize",
+    "open": "Open tool",
+    "unlock": "Unlock",
+    "included": "Also included"
+},
   "header": {
     "title": "Learn Buddy",
     "subtitle": "Your learning assistant",

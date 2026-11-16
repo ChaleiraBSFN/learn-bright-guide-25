@@ -9,7 +9,7 @@ import { IntroScreen } from "@/components/home/IntroScreen";
 import { triggerRateLimit } from "@/components/RateLimitBar";
 import { StudyContent, StudyFormData, StudyPlanContent, StudyPlanFormData } from "@/types/study";
 import { ExerciseContent, ExerciseFormData } from "@/types/exercises";
-import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages, CalendarDays, BarChart3 } from "lucide-react";
+import { BookOpen, Brain, Sparkles, ArrowLeft, Dumbbell, PenTool, History, Loader2, Languages, CalendarDays, BarChart3, Crown } from "lucide-react";
 import learnBuddyLogo from "@/assets/learn-buddy-logo.png";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -38,6 +38,7 @@ const EngineNoticeBanner = lazy(() => import("@/components/EngineNoticeBanner").
 const UpdateNoticeBanner = lazy(() => import("@/components/UpdateNoticeBanner").then((m) => ({ default: m.UpdateNoticeBanner })));
 const AdSenseSlot = lazy(() => import("@/components/AdSenseSlot").then((m) => ({ default: m.AdSenseSlot })));
 const ProHomePanel = lazy(() => import("@/components/buddy/ProHomePanel").then((m) => ({ default: m.ProHomePanel })));
+const ProBenefitsTab = lazy(() => import("@/components/buddy/ProBenefitsTab").then((m) => ({ default: m.ProBenefitsTab })));
 const PlanComparison = lazy(() => import("@/components/PlanComparison").then((m) => ({ default: m.PlanComparison })));
 const SocialProof = lazy(() => import("@/components/home/SocialProof").then((m) => ({ default: m.SocialProof })));
 const HowItWorks = lazy(() => import("@/components/home/HowItWorks").then((m) => ({ default: m.HowItWorks })));
@@ -736,6 +737,7 @@ const Index = () => {
               {introOpen ? (
                 <>
                   <IntroScreen onSubmitTopic={handlePickTopic} onExplore={() => setIntroOpen(false)} />
+                  <Button variant="outline" className="mx-auto flex gap-2 rounded-full border-buddy/40" onClick={() => { setIntroOpen(false); setActiveTab("pro"); }}><Crown className="h-4 w-4 text-buddy" />{t("proHub.tab")}</Button>
                   {/* Planos logo abaixo do botão explorar */}
                   <div className="pt-2 pb-8">
                     {deferredReady ? (
@@ -777,7 +779,7 @@ const Index = () => {
 
               {/* Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full grid h-auto gap-3 bg-transparent p-0" style={{ gridTemplateColumns: `repeat(${[settings.studyGenEnabled, settings.exercisesEnabled, true, true, true].filter(Boolean).length}, minmax(0, 1fr))` }}>
+                <TabsList className="w-full grid grid-cols-3 h-auto gap-2 bg-transparent p-0">
 
                   {settings.studyGenEnabled && (
                     <TabsTrigger value="study" className="flex items-center justify-center gap-2 rounded-xl text-sm md:text-base py-3.5 px-4 border-2 border-border/60 bg-card text-muted-foreground font-semibold transition-all hover:border-primary/50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-lg">
@@ -805,6 +807,7 @@ const Index = () => {
                     <span className="hidden sm:inline">{t('tabs.history')}</span>
                   </TabsTrigger>
 
+                  <TabsTrigger value="pro" aria-label={t("proHub.tab")} className="flex items-center justify-center gap-2 rounded-xl text-sm py-3.5 px-2 border-2 border-buddy/40 bg-card text-buddy font-semibold data-[state=active]:bg-buddy data-[state=active]:text-buddy-foreground"><Crown className="h-4 w-4 shrink-0" /><span>Pro</span></TabsTrigger>
                 </TabsList>
 
                 <AnimatePresence mode="wait">
@@ -832,6 +835,8 @@ const Index = () => {
                           <StudyPlanForm onSubmit={handlePlanSubmit} isLoading={isPlanLoading} />
                         </Suspense>
                       </div>
+                    ) : activeTab === "pro" ? (
+                      <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}><ProBenefitsTab /></Suspense>
                     ) : activeTab === "stats" || activeTab === "account" ? (
                       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
                         <AccountPanel onCreateExam={handleExerciseSubmit} isCreatingExam={isExerciseLoading} />

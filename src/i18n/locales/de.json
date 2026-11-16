@@ -1,4 +1,16 @@
 {
+  "proHub": {
+    "tab": "Pro-Vorteile",
+    "subtitle": "Alles aus deinem Abo an einem Ort.",
+    "exclusive": "Exklusiv für Pro",
+    "viewPlan": "Abo ansehen",
+    "all": "Alle",
+    "create": "Erstellen",
+    "organize": "Organisieren",
+    "open": "Werkzeug öffnen",
+    "unlock": "Freischalten",
+    "included": "Auch enthalten"
+},
   "header": {
     "title": "Learn Buddy",
     "subtitle": "Ihr Lernassistent",

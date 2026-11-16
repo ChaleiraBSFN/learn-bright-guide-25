@@ -1,4 +1,16 @@
 {
+  "proHub": {
+    "tab": "Vantaggi Pro",
+    "subtitle": "Tutto il tuo piano in un solo posto.",
+    "exclusive": "Esclusivo Pro",
+    "viewPlan": "Vedi piano",
+    "all": "Tutti",
+    "create": "Creare",
+    "organize": "Organizzare",
+    "open": "Apri strumento",
+    "unlock": "Sblocca",
+    "included": "Anche incluso"
+},
   "header": {
     "title": "Learn Buddy",
     "subtitle": "Il tuo assistente di studio",

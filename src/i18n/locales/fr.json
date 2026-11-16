@@ -1,4 +1,16 @@
 {
+  "proHub": {
+    "tab": "Avantages Pro",
+    "subtitle": "Tout votre abonnement au même endroit.",
+    "exclusive": "Exclusivité Pro",
+    "viewPlan": "Voir le forfait",
+    "all": "Tout",
+    "create": "Créer",
+    "organize": "Organiser",
+    "open": "Ouvrir l’outil",
+    "unlock": "Débloquer",
+    "included": "Également inclus"
+},
   "header": {
     "title": "Learn Buddy",
     "subtitle": "Votre assistant d'apprentissage",

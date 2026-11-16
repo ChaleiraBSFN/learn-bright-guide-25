@@ -1,4 +1,16 @@
 {
+  "proHub": {
+    "tab": "Pro权益",
+    "subtitle": "所有套餐权益，集中在一处。",
+    "exclusive": "Pro专属",
+    "viewPlan": "查看套餐",
+    "all": "全部",
+    "create": "创建",
+    "organize": "整理",
+    "open": "打开工具",
+    "unlock": "解锁",
+    "included": "还包含"
+},
   "header": {
     "title": "Learn Buddy",
     "subtitle": "您的学习助手",

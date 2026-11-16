@@ -1,4 +1,16 @@
 {
+  "proHub": {
+    "tab": "Proの特典",
+    "subtitle": "プランのすべてを一か所に。",
+    "exclusive": "Pro限定",
+    "viewPlan": "プランを見る",
+    "all": "すべて",
+    "create": "作成",
+    "organize": "整理",
+    "open": "ツールを開く",
+    "unlock": "利用を開始",
+    "included": "その他の特典"
+},
   "header": {
     "title": "Learn Buddy",
     "subtitle": "あなたの学習アシスタント",
